@@ -21,9 +21,9 @@
                     </OnMouseEnter>
                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>
-                <Button name="$(parent)SaveButton" inherits="ZO_DefaultButton" tier="HIGH" text="Save CP">
-                    <Dimensions x="190"/>
-                    <Anchor point="TOP" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOM" offsetY="6"/>
+                <Button name="$(parent)SaveButton" inherits="ZO_DefaultButton" tier="HIGH" text="Save">
+                    <Dimensions x="95"/>
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOMLEFT" offsetY="6"/>
                     <OnClicked>DynamicCP:OnSaveClicked(self)</OnClicked>
                     <OnMouseEnter>
                         ZO_Tooltips_ShowTextTooltip(self, LEFT, "Save your current Champion Points to this preset")
@@ -31,8 +31,8 @@
                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>
                 <Button name="$(parent)DeleteButton" inherits="ZO_DefaultButton" tier="HIGH" text="Delete">
-                    <Dimensions x="190"/>
-                    <Anchor point="TOP" relativeTo="$(parent)SaveButton" relativePoint="BOTTOM" offsetY="6"/>
+                    <Dimensions x="95"/>
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOM" offsetY="6"/>
                     <OnClicked>DynamicCP:OnDeleteClicked(self)</OnClicked>
                     <OnMouseEnter>
                         ZO_Tooltips_ShowTextTooltip(self, LEFT, "Delete this preset")
@@ -41,7 +41,7 @@
                 </Button>
                 <Control name="$(parent)Buttons">
                     <Dimensions x="190" y="80"/>
-                    <Anchor point="TOP" relativeTo="$(parent)DeleteButton" relativePoint="BOTTOM" offsetY="8"/>
+                    <Anchor point="TOP" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOM" offsetY="48"/>
                     <Controls>
                         <!-- <Backdrop name="$(parent)Backdrop" centerColor="55000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop> -->
                         <!-- Class -->

@@ -92,7 +92,7 @@ function DynamicCP:OnApplyClicked(button)
         end
     end
 
-    -- TODO: add message saying done and the delta
+    -- TODO: add message saying done
 end
 
 ---------------------------------------------------------------------
@@ -112,8 +112,8 @@ end
 
 ---------------------------------------------------------------------
 -- When save button is clicked
-function DynamicCP:OnSaveClicked(button)
-    local tree = GetTreeName(button:GetName(), "DynamicCPContainer", "OptionsSaveButton")
+function DynamicCP:OnSaveClicked(button, tree)
+    tree = tree or GetTreeName(button:GetName(), "DynamicCPContainer", "OptionsSaveButton")
     local presetName = selected[tree]
     if (presetName == nil) then
         -- TODO: error message
@@ -137,10 +137,13 @@ function DynamicCP:OnSaveClicked(button)
     if (presetName == CREATE_NEW_STRING) then
         DynamicCP.dbg("Saving to new preset")
         SavePreset(tree, presetName, newName, newCP)
+        return true
     else
         DynamicCP.dbg("Not yet implemented")
         d(presetName)
         -- todo: confirm overwrite, show delta
+        -- TODO: if toggle button for new preset but name is duplicate and user cancels, do not toggle button
+        return false
     end
 end
 
@@ -183,8 +186,8 @@ local function AdjustDividers()
     local g = not DynamicCPContainer:GetNamedChild("GreenOptions"):IsHidden()
     local b = not DynamicCPContainer:GetNamedChild("BlueOptions"):IsHidden()
 
-    DynamicCPContainerRedGreenDivider:SetHeight((r or g) and 260 or 60)
-    DynamicCPContainerGreenBlueDivider:SetHeight((g or b) and 260 or 60)
+    DynamicCPContainerRedGreenDivider:SetHeight((r or g) and 230 or 60)
+    DynamicCPContainerGreenBlueDivider:SetHeight((g or b) and 230 or 60)
 
     -- TODO: settings for this
     DynamicCPContainerInstructions:SetHidden(r or g or b)
@@ -227,8 +230,15 @@ local function SetTextureButtonEnabled(textureButton, enabled)
 end
 
 function DynamicCP:ToggleOptionButton(textureButton)
-    SetTextureButtonEnabled(textureButton, not textureButton.enabled)
     local tree = GetTreeName(textureButton:GetName(), "DynamicCPContainer", "OptionsButtons" .. (textureButton.class or textureButton.role))
+
+    -- In case user doesn't press Save first, we will save the current name for them
+    if (selected[tree] == CREATE_NEW_STRING) then
+        DynamicCP:OnSaveClicked(nil, tree)
+        -- TODO: if OnSaveClicked returns false, need to cancel
+    end
+
+    SetTextureButtonEnabled(textureButton, not textureButton.enabled)
     local presetName = selected[tree]
 
     -- Immediately save to the preset when buttons are toggled
@@ -280,16 +290,16 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
         UnhideOptions(tree)
 
         if (presetName == CREATE_NEW_STRING) then
-            d("create new")
-            -- TODO
             -- TODO: prevent color codes?
             DynamicCPContainer:GetNamedChild(tree .. "OptionsTextField"):SetText("Preset 1") -- TODO: generate number
             DynamicCPContainer:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(true)
             DynamicCPContainer:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(true)
+            DynamicCPContainer:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(190)
         else
             DynamicCPContainer:GetNamedChild(tree .. "OptionsTextField"):SetText(presetName)
             DynamicCPContainer:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(false)
             DynamicCPContainer:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(false)
+            DynamicCPContainer:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(95)
         end
 
 
@@ -302,6 +312,8 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
         for role, _ in pairs(ROLES) do
             SetTextureButtonEnabled(buttons:GetNamedChild(role), data.roles == nil or data.roles[role] == nil or data.roles[role]) -- Both nil or true
         end
+
+        -- TODO: show delta
     end
 
     -- Add entries to dropdown
