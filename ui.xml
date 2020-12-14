@@ -1,0 +1,232 @@
+<GuiXml>
+    <Controls>
+<!-- ======================================================================================================================= -->
+        <Control name="DynamicCPTreeOptions" virtual="true" hidden="true">
+            <Dimensions x="200"/>
+            <Anchor point="TOP" relativeTo="$(parent)Dropdown" relativePoint="BOTTOM" offsetY="4"/>
+            <Controls>
+                <EditBox name="$(parent)TextField" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" tier="HIGH">
+                    <Dimensions x="190"/>
+                    <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP"/>
+                    <Controls><Backdrop name="$(parent)Backdrop" centerColor="55000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
+                    <OnInitialized>ZO_EditDefaultText_Initialize(self, "   Name")</OnInitialized>
+                    <!-- <OnTextChanged>IIfA:GuiOnSearchboxText(self)</OnTextChanged> -->
+                </EditBox>
+                <Button name="$(parent)ApplyButton" inherits="ZO_DefaultButton" tier="HIGH" text="Apply">
+                    <Dimensions x="190"/>
+                    <Anchor point="TOP" relativeTo="$(parent)TextField" relativePoint="BOTTOM" offsetY="6"/>
+                    <OnClicked>DynamicCP:OnApplyClicked(self)</OnClicked>
+                    <OnMouseEnter>
+                        ZO_Tooltips_ShowTextTooltip(self, LEFT, "Apply this preset to your Champion Points")
+                    </OnMouseEnter>
+                    <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
+                </Button>
+                <Button name="$(parent)SaveButton" inherits="ZO_DefaultButton" tier="HIGH" text="Save CP">
+                    <Dimensions x="190"/>
+                    <Anchor point="TOP" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOM" offsetY="6"/>
+                    <OnClicked>DynamicCP:OnSaveClicked(self)</OnClicked>
+                    <OnMouseEnter>
+                        ZO_Tooltips_ShowTextTooltip(self, LEFT, "Save your current Champion Points to this preset")
+                    </OnMouseEnter>
+                    <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
+                </Button>
+                <Button name="$(parent)DeleteButton" inherits="ZO_DefaultButton" tier="HIGH" text="Delete">
+                    <Dimensions x="190"/>
+                    <Anchor point="TOP" relativeTo="$(parent)SaveButton" relativePoint="BOTTOM" offsetY="6"/>
+                    <OnClicked>DynamicCP:OnDeleteClicked(self)</OnClicked>
+                    <OnMouseEnter>
+                        ZO_Tooltips_ShowTextTooltip(self, LEFT, "Delete this preset")
+                    </OnMouseEnter>
+                    <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
+                </Button>
+                <Control name="$(parent)Buttons">
+                    <Dimensions x="190" y="80"/>
+                    <Anchor point="TOP" relativeTo="$(parent)DeleteButton" relativePoint="BOTTOM" offsetY="8"/>
+                    <Controls>
+                        <!-- <Backdrop name="$(parent)Backdrop" centerColor="55000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop> -->
+                        <!-- Class -->
+                        <Texture name="$(parent)Dragonknight" textureFile="esoui/art/icons/class/class_dragonknight.dds" tier="HIGH" mouseEnabled="true" movable="false">
+                            <Dimensions x="30" y="30"/>
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="2"/>
+                            <OnMouseUp>DynamicCP:ToggleOptionButton(self)</OnMouseUp>
+                            <OnInitialized>
+                                self.enabled = true
+                                self.class = "Dragonknight"
+                            </OnInitialized>
+                        </Texture>
+                        <Texture name="$(parent)Sorcerer" textureFile="esoui/art/icons/class/class_sorcerer.dds" tier="HIGH" mouseEnabled="true" movable="false">
+                            <Anchor point="LEFT" relativeTo="$(parent)Dragonknight" relativePoint="RIGHT" offsetX="2"/>
+                            <Dimensions x="30" y="30"/>
+                            <OnMouseUp>DynamicCP:ToggleOptionButton(self)</OnMouseUp>
+                            <OnInitialized>
+                                self.enabled = true
+                                self.class = "Sorcerer"
+                            </OnInitialized>
+                        </Texture>
+                        <Texture name="$(parent)Nightblade" textureFile="esoui/art/icons/class/class_nightblade.dds" tier="HIGH" mouseEnabled="true" movable="false">
+                            <Anchor point="LEFT" relativeTo="$(parent)Sorcerer" relativePoint="RIGHT" offsetX="2"/>
+                            <Dimensions x="30" y="30"/>
+                            <OnMouseUp>DynamicCP:ToggleOptionButton(self)</OnMouseUp>
+                            <OnInitialized>
+                                self.enabled = true
+                                self.class = "Nightblade"
+                            </OnInitialized>
+                        </Texture>
+                        <Texture name="$(parent)Templar" textureFile="esoui/art/icons/class/class_templar.dds" tier="HIGH" mouseEnabled="true" movable="false">
+                            <Anchor point="LEFT" relativeTo="$(parent)Nightblade" relativePoint="RIGHT" offsetX="2"/>
+                            <Dimensions x="30" y="30"/>
+                            <OnMouseUp>DynamicCP:ToggleOptionButton(self)</OnMouseUp>
+                            <OnInitialized>
+                                self.enabled = true
+                                self.class = "Templar"
+                            </OnInitialized>
+                        </Texture>
+                        <Texture name="$(parent)Warden" textureFile="esoui/art/icons/class/class_warden.dds" tier="HIGH" mouseEnabled="true" movable="false">
+                            <Anchor point="LEFT" relativeTo="$(parent)Templar" relativePoint="RIGHT" offsetX="2"/>
+                            <Dimensions x="30" y="30"/>
+                            <OnMouseUp>DynamicCP:ToggleOptionButton(self)</OnMouseUp>
+                            <OnInitialized>
+                                self.enabled = true
+                                self.class = "Warden"
+                            </OnInitialized>
+                        </Texture>
+                        <Texture name="$(parent)Necromancer" textureFile="esoui/art/icons/class/class_necromancer.dds" tier="HIGH" mouseEnabled="true" movable="false">
+                            <Anchor point="LEFT" relativeTo="$(parent)Warden" relativePoint="RIGHT" offsetX="2"/>
+                            <Dimensions x="30" y="30"/>
+                            <OnMouseUp>DynamicCP:ToggleOptionButton(self)</OnMouseUp>
+                            <OnInitialized>
+                                self.enabled = true
+                                self.class = "Necromancer"
+                            </OnInitialized>
+                        </Texture>
+                        <!-- Role -->
+                        <Texture name="$(parent)Tank" textureFile="esoui/art/lfg/lfg_tank_down_no_glow_64.dds" tier="HIGH" mouseEnabled="true" movable="false">
+                            <Anchor point="TOP" relativeTo="$(parent)Dragonknight" relativePoint="BOTTOM" offsetX="4" offsetY="6"/>
+                            <Dimensions x="30" y="30"/>
+                            <OnMouseUp>DynamicCP:ToggleOptionButton(self)</OnMouseUp>
+                            <OnInitialized>
+                                self.enabled = true
+                                self.role = "Tank"
+                            </OnInitialized>
+                        </Texture>
+                        <Texture name="$(parent)Healer" textureFile="esoui/art/lfg/lfg_healer_down_no_glow_64.dds" tier="HIGH" mouseEnabled="true" movable="false">
+                            <Anchor point="LEFT" relativeTo="$(parent)Tank" relativePoint="RIGHT" offsetX="2"/>
+                            <Dimensions x="30" y="30"/>
+                            <OnMouseUp>DynamicCP:ToggleOptionButton(self)</OnMouseUp>
+                            <OnInitialized>
+                                self.enabled = true
+                                self.role = "Healer"
+                            </OnInitialized>
+                        </Texture>
+                        <Texture name="$(parent)Dps" textureFile="esoui/art/lfg/lfg_dps_down_no_glow_64.dds" tier="HIGH" mouseEnabled="true" movable="false">
+                            <Anchor point="LEFT" relativeTo="$(parent)Healer" relativePoint="RIGHT" offsetX="2"/>
+                            <Dimensions x="30" y="30"/>
+                            <OnMouseUp>DynamicCP:ToggleOptionButton(self)</OnMouseUp>
+                            <OnInitialized>
+                                self.enabled = true
+                                self.role = "Dps"
+                            </OnInitialized>
+                        </Texture>
+
+                        <Button name="$(parent)Help" alpha="1" clickSound="Default_Click" topmost="true">
+                            <Textures normal="/esoui/art/miscellaneous/help_icon.dds"/>
+                            <Anchor point="TOP" relativeTo="$(parent)Necromancer" relativePoint="BOTTOM" offsetY="6"/>
+                            <Dimensions x="30" y="30"/>
+                            <OnMouseEnter>
+                                ZO_Tooltips_ShowTextTooltip(self, BOTTOM, "Toggle which classes/roles this preset applies to. When your character doesn't match the classes or LFG roles for this preset, the preset will be less prominent.")
+                            </OnMouseEnter>
+                            <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
+                        </Button>
+                    </Controls>
+                </Control>
+            </Controls>
+        </Control>
+
+<!-- ======================================================================================================================= -->
+        <TopLevelControl name="DynamicCPContainer" clampedToScreen="true" mouseEnabled="true" movable="false" hidden="false">
+            <Dimensions x="660" y="300"/>
+            <Anchor point="TOPRIGHT" relativeTo="ZO_ChampionPerksCanvas" relativePoint="TOPRIGHT" offsetX="-20" offsetY="20"/>
+            <OnInitialized>
+                CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
+                self:SetHidden(true)
+            </OnInitialized>
+            <Controls>
+                <!-- <Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop> -->
+                <!-- RED TREE -->
+                <Control name="$(parent)Red">
+                    <Dimensions x="200" y="300"/>
+                    <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT"/>
+                    <OnInitialized>CreateControlFromVirtual("$(parent)Options", self, "DynamicCPTreeOptions", "")</OnInitialized>
+                    <Controls>
+                        <!-- <Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop> -->
+                        <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_health_icon-hud-32.dds" tier="HIGH">
+                            <Dimensions x="32" y="32"/>
+                            <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP"/>
+                        </Texture>
+                        <Control name="$(parent)Dropdown" inherits="ZO_ComboBox" tier="HIGH">
+                            <Dimensions x="200"/>
+                            <Anchor point="TOP" relativeTo="$(parent)Icon" relativePoint="BOTTOM" offsetY="8"/>
+                        </Control>
+                    </Controls>
+                </Control>
+
+                <!-- GREEN TREE -->
+                <Control name="$(parent)Green">
+                    <Dimensions x="200" y="300"/>
+                    <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
+                    <OnInitialized>CreateControlFromVirtual("$(parent)Options", self, "DynamicCPTreeOptions", "")</OnInitialized>
+                    <Controls>
+                        <!-- <Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop> -->
+                        <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_stamina_icon-hud-32.dds" tier="HIGH">
+                            <Dimensions x="32" y="32"/>
+                            <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP"/>
+                        </Texture>
+                        <Control name="$(parent)Dropdown" inherits="ZO_ComboBox" tier="HIGH">
+                            <Dimensions x="200"/>
+                            <Anchor point="TOP" relativeTo="$(parent)Icon" relativePoint="BOTTOM" offsetY="8"/>
+                        </Control>
+                    </Controls>
+                </Control>
+
+                <!-- BLUE TREE -->
+                <Control name="$(parent)Blue">
+                    <Dimensions x="200" y="300"/>
+                    <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT"/>
+                    <OnInitialized>CreateControlFromVirtual("$(parent)Options", self, "DynamicCPTreeOptions", "")</OnInitialized>
+                    <Controls>
+                        <!-- <Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop> -->
+                        <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_magicka_icon-hud-32.dds" tier="HIGH">
+                            <Dimensions x="32" y="32"/>
+                            <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP"/>
+                        </Texture>
+                        <Control name="$(parent)Dropdown" inherits="ZO_ComboBox" tier="HIGH">
+                            <Dimensions x="200"/>
+                            <Anchor point="TOP" relativeTo="$(parent)Icon" relativePoint="BOTTOM" offsetY="8"/>
+                        </Control>
+                    </Controls>
+                </Control>
+
+                <Control name="$(parent)RedGreenDivider" tier="HIGH">
+                    <Dimensions x="4" y="60"/>
+                    <!-- <Dimensions x="4" y="260"/> -->
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Green" relativePoint="TOPLEFT" offsetX="-13" offsetY="20"/>
+                    <Controls><Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
+                </Control>
+                <Control name="$(parent)GreenBlueDivider" tier="HIGH">
+                    <Dimensions x="4" y="60"/>
+                    <!-- <Dimensions x="4" y="260"/> -->
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Green" relativePoint="TOPRIGHT" offsetX="13" offsetY="20"/>
+                    <Controls><Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
+                </Control>
+
+                <Label name="$(parent)Instructions" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="HIGH" hidden="false"
+                    text="Select a preset from a dropdown above and click &quot;Apply&quot; to apply the preset to your Champion Points. To create a new preset, select &quot;Create New Preset&quot; from the dropdown and click &quot;Save&quot; once you are happy with the name and settings. You can turn off these hints in the add-on settings.">
+                    <Dimensions x="400" y="200"/>
+                    <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="100"/>
+                </Label>
+            </Controls>
+        </TopLevelControl>
+
+<!-- ======================================================================================================================= -->
+    </Controls>
+</GuiXml>

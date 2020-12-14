@@ -1,0 +1,14 @@
+## Title: Dynamic CP
+## Champion Point presets per tree
+## Author: Kyzeragon
+## Version: 0.0.0
+## APIVersion: 100033
+
+## DependsOn: LibAddonMenu-2.0>=31 LibDialog>=126
+
+## SavedVariables: DynamicCPSavedVariables
+
+src/init.lua
+src/presetData.lua
+src/core.lua
+ui.xml
