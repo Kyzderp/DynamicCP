@@ -52,7 +52,7 @@ DynamicCP = DynamicCP or {}
 DynamicCP.kyzerPresets = {
     ["Green"] = 
     {
-        ["PvP Generic Stamblade"] = 
+        ["PvP Stamblade Generic"] = 
         {
             [8] = 
             {
@@ -643,7 +643,7 @@ DynamicCP.kyzerPresets = {
                 [3] = 56,
             },
         },
-        ["PvP Generic Dps"] = 
+        ["PvP Dps Generic"] = 
         {
             [4] = 
             {
@@ -1294,7 +1294,7 @@ DynamicCP.kyzerPresets = {
                 [3] = 56,
             },
         },
-        ["PvP Generic Stamblade"] = 
+        ["PvP Stamblade Generic"] = 
         {
             ["roles"] = 
             {
@@ -2083,7 +2083,7 @@ DynamicCP.kyzerPresets = {
 DynamicCP.defaultPresets = {
         ["Green"] = 
     {
-        ["PvP Generic Stamblade"] = 
+        ["PvP Stamblade Generic"] = 
         {
             [8] = 
             {
@@ -2545,7 +2545,7 @@ DynamicCP.defaultPresets = {
                 [3] = 49,
             },
         },
-        ["PvP Generic Dps"] = 
+        ["PvP Dps Generic"] = 
         {
             [4] = 
             {
@@ -3373,7 +3373,7 @@ DynamicCP.defaultPresets = {
                 [3] = 0,
             },
         },
-        ["PvP Generic Stamblade"] = 
+        ["PvP Stamblade Generic"] = 
         {
             [6] = 
             {

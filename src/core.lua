@@ -252,7 +252,7 @@ end
 -- When focus is lost on the text field
 function DynamicCP:OnTextFocusLost(textfield)
     DynamicCP.dbg("focus lost")
-    tree = tree or GetTreeName(textfield:GetName(), "DynamicCPContainer", "OptionsTextField")
+    local tree = GetTreeName(textfield:GetName(), "DynamicCPContainer", "OptionsTextField")
     local presetName = selected[tree]
     if (presetName == nil) then
         d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnTextFocusLost")
