@@ -1,7 +1,7 @@
 ## Title: Dynamic CP
 ## Champion Point presets per tree
 ## Author: Kyzeragon
-## Version: 0.0.0
+## Version: 0.0.1
 ## APIVersion: 100033
 
 ## DependsOn: LibAddonMenu-2.0>=31 LibDialog>=126

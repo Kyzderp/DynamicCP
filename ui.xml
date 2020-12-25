@@ -10,6 +10,7 @@
                     <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP"/>
                     <Controls><Backdrop name="$(parent)Backdrop" centerColor="55000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
                     <OnInitialized>ZO_EditDefaultText_Initialize(self, "   Name")</OnInitialized>
+                    <OnFocusLost>DynamicCP:OnTextFocusLost(self)</OnFocusLost>
                     <!-- <OnTextChanged>IIfA:GuiOnSearchboxText(self)</OnTextChanged> -->
                 </EditBox>
                 <Button name="$(parent)ApplyButton" inherits="ZO_DefaultButton" tier="HIGH" text="Apply">
@@ -167,6 +168,10 @@
                             <Dimensions x="200"/>
                             <Anchor point="TOP" relativeTo="$(parent)Icon" relativePoint="BOTTOM" offsetY="8"/>
                         </Control>
+                        <Label name="$(parent)Messages" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="HIGH" hidden="true" text="Done">
+                            <Dimensions x="190" y="400"/>
+                            <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="260"/>
+                        </Label>
                     </Controls>
                 </Control>
 
@@ -185,6 +190,10 @@
                             <Dimensions x="200"/>
                             <Anchor point="TOP" relativeTo="$(parent)Icon" relativePoint="BOTTOM" offsetY="8"/>
                         </Control>
+                        <Label name="$(parent)Messages" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="HIGH" hidden="true" text="Done">
+                            <Dimensions x="190" y="400"/>
+                            <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="260"/>
+                        </Label>
                     </Controls>
                 </Control>
 
@@ -203,6 +212,10 @@
                             <Dimensions x="200"/>
                             <Anchor point="TOP" relativeTo="$(parent)Icon" relativePoint="BOTTOM" offsetY="8"/>
                         </Control>
+                        <Label name="$(parent)Messages" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="HIGH" hidden="true" text="Changes:&#13;&#10;Physical Weapon Expert: 100 → 100">
+                            <Dimensions x="190" y="400"/>
+                            <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="260"/>
+                        </Label>
                     </Controls>
                 </Control>
 
@@ -220,7 +233,7 @@
                 </Control>
 
                 <Label name="$(parent)Instructions" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="HIGH" hidden="false"
-                    text="Select a preset from a dropdown above and click &quot;Apply&quot; to apply the preset to your Champion Points. To create a new preset, select &quot;Create New Preset&quot; from the dropdown and click &quot;Save&quot; once you are happy with the name and settings. You can turn off these hints in the add-on settings.">
+                    text="Select a preset from a dropdown above and click &quot;Apply&quot; to apply the preset to your Champion Points. To create a new preset, select &quot;Create New&quot; from the dropdown and click &quot;Save&quot; once you are happy with the name and settings.">
                     <Dimensions x="400" y="200"/>
                     <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="100"/>
                 </Label>

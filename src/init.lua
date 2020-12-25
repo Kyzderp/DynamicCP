@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "0.0.0"
+DynamicCP.version = "0.0.1"
 
 local defaultOptions = {
     firstTime = true,
@@ -40,8 +40,11 @@ local function Initialize()
     DynamicCP.savedOptions = ZO_SavedVars:NewAccountWide("DynamicCPSavedVariables", 1, "Options", defaultOptions)
     -- TODO: create settings menu
 
-    -- TODO: only populate on the first time
-    -- DynamicCP.savedOptions.cp = DynamicCP.kyzerPresets
+    -- Populate defaults only on first time, otherwise the keys will be remade even if user deletes
+    if (DynamicCP.savedOptions.firstTime) then
+        DynamicCP.savedOptions.cp = DynamicCP.defaultPresets
+        DynamicCP.savedOptions.firstTime = false
+    end
 
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name, EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
 

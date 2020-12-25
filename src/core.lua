@@ -30,7 +30,7 @@ local TREE_TO_DISCIPLINES = {
 }
 
 ---------------------------------------------------------------------
-
+-- TODO: use heuristics to make non-stam/non-mag more grayed out? needs more sorting then
 local libDialog = LibDialog
 
 local selected = {
@@ -48,8 +48,11 @@ end
 
 ---------------------------------------------------------------------
 -- Get current CP because apparently if you set respec mode it yeets everything, yay
-local function GetCurrentCP()
+local function GetCurrentCP(ignorePending)
     local respec = IsChampionInRespecMode()
+    if (ignorePending) then
+        respec = false
+    end
 
     local current = {}
     for discipline = 1, 9 do
@@ -61,15 +64,70 @@ local function GetCurrentCP()
     return current
 end
 
+-- TODO: non-capped CP
+---------------------------------------------------------------------
+-- Show a message in the area under the options
+local function ShowMessage(tree, text)
+    local label = DynamicCPContainer:GetNamedChild(tree .. "Messages")
+    label:SetHidden(false)
+    label:SetText(text)
+
+    -- Need to move it upwards if it's a "delete" which means nothing is selected and it looks empty
+    if (DynamicCPContainer:GetNamedChild(tree .. "Options"):IsHidden()) then
+        label:SetAnchor(TOP, DynamicCPContainer:GetNamedChild(tree), TOP, 0, 70)
+    else
+        label:SetAnchor(TOP, DynamicCPContainer:GetNamedChild(tree), TOP, 0, 260)
+    end
+end
+
+local function HideMessage(tree)
+    local label = DynamicCPContainer:GetNamedChild(tree .. "Messages")
+    label:SetHidden(true)
+end
+
+
+---------------------------------------------------------------------
+-- Find and build string of the diff between two cp sets
+local function GenerateDiff(before, after)
+    local result = "Changes:"
+
+    for discipline = 1, 9 do
+        if (before[discipline] and after[discipline]) then
+            for skill = 1, 4 do
+                local first = before[discipline][skill] or 0
+                local second = after[discipline][skill] or 0
+                if (first ~= second and (first ~= 0 or second ~= 0)) then
+                    local line = string.format("\n|cBBBBBB%s:  %d → %d",
+                        GetAbilityName(GetChampionAbilityId(discipline, skill)),
+                        first,
+                        second)
+
+                    if (first < second) then
+                        line = line .. "|c00FF00↑|r"
+                    else
+                        line = line .. "|cFF0000↓|r"
+                    end
+                    result = result .. line
+                end
+            end
+        end
+    end
+
+    if (result == "Changes:") then
+        result = "|cBBBBBBNo changes.|r"
+    end
+    return result
+end
+
+
 ---------------------------------------------------------------------
 -- When apply button is clicked
 function DynamicCP:OnApplyClicked(button)
     local tree = GetTreeName(button:GetName(), "DynamicCPContainer", "OptionsApplyButton")
     local presetName = selected[tree]
 
-    -- TODO: handle if it's "create new"
     if (not presetName) then
-        d("This code path shouldn't be possible! S.P.E. buttons should be hidden.")
+        d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnApplyClicked")
         return
     end
 
@@ -92,21 +150,24 @@ function DynamicCP:OnApplyClicked(button)
         end
     end
 
-    -- TODO: add message saying done
+    ShowMessage(tree, GenerateDiff(GetCurrentCP(true), cp) .. "\n\n|c00FF00Preset loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
 end
 
 ---------------------------------------------------------------------
 -- Perform saving of CP preset
-local function SavePreset(tree, oldName, presetName, newCP)
-    DynamicCP.savedOptions.cp[tree][presetName] = newCP
-
+local function SavePreset(tree, oldName, presetName, newCP, message)
     if (oldName ~= CREATE_NEW_STRING) then
         DynamicCP.savedOptions.cp[tree][oldName] = nil
     end
 
+    DynamicCP.savedOptions.cp[tree][presetName] = newCP
+
     DynamicCP:InitializeDropdown(tree, presetName)
     DynamicCP.dbg("Saved preset " .. presetName)
-    -- TODO: display done msg
+
+    message = message or ("|c00FF00Done! Saved preset \"" .. presetName .. "\"|r")
+    ShowMessage(tree, message)
+    -- TODO: show the saved points
 end
 
 
@@ -116,8 +177,7 @@ function DynamicCP:OnSaveClicked(button, tree)
     tree = tree or GetTreeName(button:GetName(), "DynamicCPContainer", "OptionsSaveButton")
     local presetName = selected[tree]
     if (presetName == nil) then
-        -- TODO: error message
-        DynamicCP.dbg("Must select an existing preset or -- Create New Preset --!")
+        d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnSaveClicked")
         return
     end
 
@@ -131,20 +191,67 @@ function DynamicCP:OnSaveClicked(button, tree)
         end
     end
 
+    -- Don't want to deal with formatting, colors are stripped when parsing name from dropdown
     local newName = DynamicCPContainer:GetNamedChild(tree .. "OptionsTextField"):GetText()
-    -- TODO: do something about invalid names? color codes?
+    if (newName:find("|")) then
+        ShowMessage(tree, "|cFF0000\"||\" is not allowed in preset names.|r")
+        return
+    end
 
-    if (presetName == CREATE_NEW_STRING) then
+    -- New and no conflict
+    if (presetName == CREATE_NEW_STRING and not DynamicCP.savedOptions.cp[tree][newName]) then
         DynamicCP.dbg("Saving to new preset")
         SavePreset(tree, presetName, newName, newCP)
-        return true
+
+    -- New but has the same name as existing... OR overwrite existing that has been selected
+    elseif (presetName == CREATE_NEW_STRING or presetName == newName) then
+        DynamicCP.dbg("Overwriting existing preset")
+        local function OverwritePreset()
+            SavePreset(tree, presetName, newName, newCP,
+                "|c00FF00Done! Overwrote preset \"" .. presetName .. "\"|r")
+        end
+
+        libDialog:RegisterDialog(
+            DynamicCP.name,
+            "OverwriteConfirmation",
+            "Overwrite Preset",
+            "Overwrite the \"" .. newName .. "\" preset?\n" .. GenerateDiff(DynamicCP.savedOptions.cp[tree][newName], currentCP),
+            OverwritePreset,
+            nil,
+            nil,
+            true)
+        libDialog:ShowDialog(DynamicCP.name, "OverwriteConfirmation")
+
     else
-        DynamicCP.dbg("Not yet implemented")
-        d(presetName)
-        -- todo: confirm overwrite, show delta
-        -- TODO: if toggle button for new preset but name is duplicate and user cancels, do not toggle button
-        return false
+        d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnSaveClicked fallthrough")
     end
+end
+
+
+---------------------------------------------------------------------
+-- When focus is lost on the text field
+function DynamicCP:OnTextFocusLost(textfield)
+    DynamicCP.dbg("focus lost")
+    tree = tree or GetTreeName(textfield:GetName(), "DynamicCPContainer", "OptionsTextField")
+    local presetName = selected[tree]
+    if (presetName == nil) then
+        d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnTextFocusLost")
+        return
+    end
+
+    if (presetName == CREATE_NEW_STRING) then
+        return
+    end
+
+    local newName = DynamicCPContainer:GetNamedChild(tree .. "OptionsTextField"):GetText()
+
+    if (presetName == newName) then
+        return
+    end
+
+    -- We are renaming an existing preset
+    SavePreset(tree, presetName, newName, DynamicCP.savedOptions.cp[tree][presetName],
+        "|c00FF00Renamed preset \"" .. presetName .. "\" to \"" .. newName .. "\"|r")
 end
 
 
@@ -154,8 +261,7 @@ function DynamicCP:OnDeleteClicked(button)
     local tree = GetTreeName(button:GetName(), "DynamicCPContainer", "OptionsDeleteButton")
     local presetName = selected[tree]
     if (presetName == nil or presetName == CREATE_NEW_STRING) then
-        -- TODO: error message
-        DynamicCP.dbg("Can't delete nothing!")
+        d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnDeleteClicked")
         return
     end
 
@@ -163,7 +269,7 @@ function DynamicCP:OnDeleteClicked(button)
         DynamicCP.savedOptions.cp[tree][presetName] = nil
         DynamicCP:InitializeDropdown(tree)
         DynamicCP.dbg("Deleted " .. presetName)
-        -- TODO: message
+        ShowMessage(tree, "Preset \"" .. presetName .. "\" deleted.")
     end
 
     libDialog:RegisterDialog(
@@ -189,7 +295,6 @@ local function AdjustDividers()
     DynamicCPContainerRedGreenDivider:SetHeight((r or g) and 230 or 60)
     DynamicCPContainerGreenBlueDivider:SetHeight((g or b) and 230 or 60)
 
-    -- TODO: settings for this
     DynamicCPContainerInstructions:SetHidden(r or g or b)
 end
 
@@ -232,10 +337,9 @@ end
 function DynamicCP:ToggleOptionButton(textureButton)
     local tree = GetTreeName(textureButton:GetName(), "DynamicCPContainer", "OptionsButtons" .. (textureButton.class or textureButton.role))
 
-    -- In case user doesn't press Save first, we will save the current name for them
     if (selected[tree] == CREATE_NEW_STRING) then
-        DynamicCP:OnSaveClicked(nil, tree)
-        -- TODO: if OnSaveClicked returns false, need to cancel
+        d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. ToggleOptionButton")
+        return
     end
 
     SetTextureButtonEnabled(textureButton, not textureButton.enabled)
@@ -290,16 +394,21 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
         UnhideOptions(tree)
 
         if (presetName == CREATE_NEW_STRING) then
-            -- TODO: prevent color codes?
-            DynamicCPContainer:GetNamedChild(tree .. "OptionsTextField"):SetText("Preset 1") -- TODO: generate number
+            local newIndex = 1
+            while (DynamicCP.savedOptions.cp[tree]["Preset " .. newIndex] ~= nil) do
+                newIndex = newIndex + 1
+            end
+            DynamicCPContainer:GetNamedChild(tree .. "OptionsTextField"):SetText("Preset " .. newIndex)
             DynamicCPContainer:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(true)
             DynamicCPContainer:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(true)
             DynamicCPContainer:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(190)
+            DynamicCPContainer:GetNamedChild(tree .. "OptionsButtons"):SetHidden(true)
         else
             DynamicCPContainer:GetNamedChild(tree .. "OptionsTextField"):SetText(presetName)
             DynamicCPContainer:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(false)
             DynamicCPContainer:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(false)
             DynamicCPContainer:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(95)
+            DynamicCPContainer:GetNamedChild(tree .. "OptionsButtons"):SetHidden(false)
         end
 
 
@@ -313,7 +422,12 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
             SetTextureButtonEnabled(buttons:GetNamedChild(role), data.roles == nil or data.roles[role] == nil or data.roles[role]) -- Both nil or true
         end
 
-        -- TODO: show delta
+        if (presetName == CREATE_NEW_STRING) then
+            -- TODO: show the cp that is about to be saved
+            ShowMessage(tree, "|cBBBBBBRename and click \"Save\" to create a new preset.|r")
+        else
+            ShowMessage(tree, GenerateDiff(GetCurrentCP(true), data) .. "\n\n|cBBBBBBClick \"Apply\" to load this preset.|r")
+        end
     end
 
     -- Add entries to dropdown
