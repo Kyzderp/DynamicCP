@@ -121,6 +121,27 @@ end
 
 
 ---------------------------------------------------------------------
+-- Build string for this CP, but only for certain tree
+local function GenerateTree(cp, tree)
+    local result = "|cBBBBBB"
+
+    for _, discipline in pairs(TREE_TO_DISCIPLINES[tree]) do
+        for skill = 1, 4 do
+            local points = cp[discipline][skill]
+            if (points ~= 0) then
+                local line = string.format("\n%s:  %d",
+                    GetAbilityName(GetChampionAbilityId(discipline, skill)),
+                    points)
+                result = result .. line
+            end
+        end
+    end
+
+    return result .. "|r"
+end
+
+
+---------------------------------------------------------------------
 -- When apply button is clicked
 function DynamicCP:OnApplyClicked(button)
     local tree = GetTreeName(button:GetName(), "DynamicCPContainer", "OptionsApplyButton")
@@ -165,9 +186,8 @@ local function SavePreset(tree, oldName, presetName, newCP, message)
     DynamicCP:InitializeDropdown(tree, presetName)
     DynamicCP.dbg("Saved preset " .. presetName)
 
-    message = message or ("|c00FF00Done! Saved preset \"" .. presetName .. "\"|r")
+    message = message or ("|c00FF00Done! Saved preset \"" .. presetName .. "\"|r\n" .. GenerateTree(newCP, tree))
     ShowMessage(tree, message)
-    -- TODO: show the saved points
 end
 
 
@@ -423,8 +443,7 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
         end
 
         if (presetName == CREATE_NEW_STRING) then
-            -- TODO: show the cp that is about to be saved
-            ShowMessage(tree, "|cBBBBBBRename and click \"Save\" to create a new preset.|r")
+            ShowMessage(tree, "|cBBBBBBRename and click \"Save\" to create a new preset.|r\n\nCurrent points:" .. GenerateTree(GetCurrentCP(), tree))
         else
             ShowMessage(tree, GenerateDiff(GetCurrentCP(true), data) .. "\n\n|cBBBBBBClick \"Apply\" to load this preset.|r")
         end

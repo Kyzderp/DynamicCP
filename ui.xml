@@ -233,8 +233,8 @@
                 </Control>
 
                 <Label name="$(parent)Instructions" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="HIGH" hidden="false"
-                    text="Select a preset from a dropdown above and click &quot;Apply&quot; to apply the preset to your Champion Points. To create a new preset, select &quot;Create New&quot; from the dropdown and click &quot;Save&quot; once you are happy with the name and settings.">
-                    <Dimensions x="400" y="200"/>
+                    text="Select a preset from a dropdown above and click &quot;Apply&quot; to apply the preset to your Champion Points. To create a new preset, select &quot;Create New&quot; from the dropdown and click &quot;Save&quot; once you have renamed it.">
+                    <Dimensions x="540" y="200"/>
                     <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="100"/>
                 </Label>
             </Controls>
