@@ -5,6 +5,7 @@
 ## APIVersion: 100033
 
 ## DependsOn: LibAddonMenu-2.0>=31 LibDialog>=126
+## OptionalDependsOn: pChat
 
 ## SavedVariables: DynamicCPSavedVariables
 

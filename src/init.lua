@@ -25,7 +25,7 @@ end
 
 ---------------------------------------------------------------------
 -- Post Load (player loaded)
-function OnPlayerActivated(_, initial)
+local function OnPlayerActivated(_, initial)
     -- Soft dependency on pChat because its chat restore will overwrite
     for i = 1, #DynamicCP.messages do
         d("|c6666FF[DCPdelay]|r " .. DynamicCP.messages[i])
