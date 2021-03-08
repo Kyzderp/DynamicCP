@@ -23,11 +23,14 @@ local ROLES = {
     Dps = true,
 }
 
-local TREE_TO_DISCIPLINES = {
-    Red = {2, 3, 4},
-    Green = {1, 8, 9},
-    Blue = {5, 6, 7},
+-- This is the INDEX, not ID
+local TREE_TO_DISCIPLINE = {
+    Green = 1,
+    Blue = 2,
+    Red = 3,
 }
+
+local isRespeccing = false
 
 ---------------------------------------------------------------------
 -- TODO: use heuristics to make non-stam/non-mag more grayed out? needs more sorting then
@@ -47,18 +50,14 @@ end
 
 
 ---------------------------------------------------------------------
--- Get current CP because apparently if you set respec mode it yeets everything, yay
+-- Get current CP
 local function GetCurrentCP(ignorePending)
-    local respec = IsChampionInRespecMode()
-    if (ignorePending) then
-        respec = false
-    end
-
     local current = {}
-    for discipline = 1, 9 do
-        current[discipline] = {}
-        for skill = 1, 4 do
-            current[discipline][skill] = respec and GetNumPendingChampionPoints(discipline, skill) or GetNumPointsSpentOnChampionSkill(discipline, skill)
+    for disciplineIndex = 1, GetNumChampionDisciplines() do
+        current[disciplineIndex] = {}
+        for skill = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
+            local id = GetChampionSkillId(disciplineIndex, skill)
+            current[disciplineIndex][skill] = GetNumPointsSpentOnChampionSkill(id)
         end
     end
     return current
@@ -74,9 +73,9 @@ local function ShowMessage(tree, text)
 
     -- Need to move it upwards if it's a "delete" which means nothing is selected and it looks empty
     if (DynamicCPContainer:GetNamedChild(tree .. "Options"):IsHidden()) then
-        label:SetAnchor(TOP, DynamicCPContainer:GetNamedChild(tree), TOP, 0, 70)
+        label:SetAnchor(TOP, DynamicCPContainer:GetNamedChild(tree), TOP, 0, 80)
     else
-        label:SetAnchor(TOP, DynamicCPContainer:GetNamedChild(tree), TOP, 0, 260)
+        label:SetAnchor(TOP, DynamicCPContainer:GetNamedChild(tree), TOP, 0, 300)
     end
 end
 
@@ -91,14 +90,14 @@ end
 local function GenerateDiff(before, after)
     local result = "Changes:"
 
-    for discipline = 1, 9 do
-        if (before[discipline] and after[discipline]) then
-            for skill = 1, 4 do
-                local first = before[discipline][skill] or 0
-                local second = after[discipline][skill] or 0
+    for disciplineIndex = 1, GetNumChampionDisciplines() do
+        if (before[disciplineIndex] and after[disciplineIndex]) then
+            for skill = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
+                local first = before[disciplineIndex][skill] or 0
+                local second = after[disciplineIndex][skill] or 0
                 if (first ~= second and (first ~= 0 or second ~= 0)) then
                     local line = string.format("\n|cBBBBBB%s:  %d → %d",
-                        GetAbilityName(GetChampionAbilityId(discipline, skill)),
+                        GetChampionSkillName(GetChampionSkillId(disciplineIndex, skill)),
                         first,
                         second)
 
@@ -125,15 +124,14 @@ end
 local function GenerateTree(cp, tree)
     local result = "|cBBBBBB"
 
-    for _, discipline in pairs(TREE_TO_DISCIPLINES[tree]) do
-        for skill = 1, 4 do
-            local points = cp[discipline][skill]
-            if (points ~= 0) then
-                local line = string.format("\n%s:  %d",
-                    GetAbilityName(GetChampionAbilityId(discipline, skill)),
-                    points)
-                result = result .. line
-            end
+    local disciplineIndex = TREE_TO_DISCIPLINE[tree]
+    for skill = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
+        local points = cp[disciplineIndex][skill]
+        if (points ~= 0) then
+            local line = string.format("\n%s:  %d",
+                GetChampionSkillName(GetChampionSkillId(disciplineIndex, skill)),
+                points)
+            result = result .. line
         end
     end
 
@@ -156,23 +154,53 @@ function DynamicCP:OnApplyClicked(button)
 
     local currentCP = GetCurrentCP()
 
-    if (not IsChampionInRespecMode()) then
-        SetChampionIsInRespecMode(true)
+    -- First find all of the slottable skillIds to check them later
+    local currentHotbar = {}
+    for slotIndex = 1, 12 do
+        local skillId = GetSlotBoundId(slotIndex, HOTBAR_CATEGORY_CHAMPION)
+        currentHotbar[skillId] = slotIndex
     end
 
+    if (not isRespeccing) then
+        PrepareChampionPurchaseRequest(true)
+        isRespeccing = true
+    end
+
+    -- Apply all stars within the tree
     local cp = DynamicCP.savedOptions.cp[tree][presetName]
-    for discipline = 1, 9 do
-        for skill = 1, 4 do
-            if (cp[discipline] and cp[discipline][skill]) then
-                SetNumPendingChampionPoints(discipline, skill, cp[discipline][skill])
-            else
-                SetNumPendingChampionPoints(discipline, skill, currentCP[discipline][skill])
-            end
+    local disciplineIndex = TREE_TO_DISCIPLINE[tree]
+    for skill = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
+        local id = GetChampionSkillId(disciplineIndex, skill)
+        local numPoints = 0
+        if (cp[disciplineIndex] and cp[disciplineIndex][skill]) then
+            numPoints = cp[disciplineIndex][skill]
+        else
+            numPoints = currentCP[disciplineIndex][skill]
         end
+
+        -- Unslot slottables that are no longer slottable because of not enough points
+        if (currentHotbar[id] and not WouldChampionSkillNodeBeUnlocked(id, numPoints)) then
+            AddHotbarSlotToChampionPurchaseRequest(currentHotbar[id], nil)
+        end
+
+        AddSkillToChampionPurchaseRequest(id, numPoints)
+        d(string.format("setting %s to %d points", GetChampionSkillName(id), numPoints))
     end
 
-    ShowMessage(tree, GenerateDiff(GetCurrentCP(true), cp) .. "\n\n|c00FF00Preset loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
+    ShowMessage(tree, GenerateDiff(GetCurrentCP(), cp) .. "\n\n|c00FF00Preset loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
+    DynamicCPContainerConfirmButton:SetHidden(false)
 end
+
+
+---------------------------------------------------------------------
+-- When confirm button is clicked
+function DynamicCP:OnConfirmClicked(button)
+    -- TODO: dialog
+    CHAMPION_PERKS:SpendPointsConfirmed(true)
+    isRespeccing = false
+    DynamicCPContainerConfirmButton:SetHidden(true)
+end
+
 
 ---------------------------------------------------------------------
 -- Perform saving of CP preset
@@ -204,11 +232,10 @@ function DynamicCP:OnSaveClicked(button, tree)
     -- Do a deep copy
     local currentCP = GetCurrentCP()
     local newCP = {}
-    for _, discipline in pairs(TREE_TO_DISCIPLINES[tree]) do
-        newCP[discipline] = {}
-        for k, v in pairs(currentCP[discipline]) do
-            newCP[discipline][k] = v
-        end
+    local disciplineIndex = TREE_TO_DISCIPLINE[tree]
+    newCP[disciplineIndex] = {}
+    for k, v in pairs(currentCP[disciplineIndex]) do
+        newCP[disciplineIndex][k] = v
     end
 
     -- Don't want to deal with formatting, colors are stripped when parsing name from dropdown
@@ -312,8 +339,8 @@ local function AdjustDividers()
     local g = not DynamicCPContainer:GetNamedChild("GreenOptions"):IsHidden()
     local b = not DynamicCPContainer:GetNamedChild("BlueOptions"):IsHidden()
 
-    DynamicCPContainerRedGreenDivider:SetHeight((r or g) and 230 or 60)
     DynamicCPContainerGreenBlueDivider:SetHeight((g or b) and 230 or 60)
+    DynamicCPContainerBlueRedDivider:SetHeight((r or g) and 230 or 60)
 
     DynamicCPContainerInstructions:SetHidden(r or g or b)
 end

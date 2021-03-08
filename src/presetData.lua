@@ -1,3778 +1,1833 @@
 DynamicCP = DynamicCP or {}
 
 --[[
-/script for line=1,9 do d(GetChampionDisciplineName(line)) for skill=1,4 do d("    "..GetAbilityName(GetChampionAbilityId(line,skill))) end end
-1 - The Tower - Green left
-    1 - Bashing Focus
-    2 - Sprinter
-    3 - Siphoner
-    4 - Warlord
-2 - The Lord - Red right
-    1 - Heavy Armor Focus
-    2 - Bastion
-    3 - Expert Defender
-    4 - Quick Recovery
-3 - The Lady - Red mid
-    1 - Light Armor Focus
-    2 - Thick Skinned
-    3 - Hardy
-    4 - Elemental Defender
-4 - The Steed - Red left
-    1 - Medium Armor Focus
-    2 - Ironclad
-    3 - Spell Shield
-    4 - Resistant
-5 - The Ritual - Blue right
-    1 - Thaumaturge
-    2 - Precise Strikes
-    3 - Piercing
-    4 - Mighty
-6 - The Atronach - Blue mid
-    1 - Physical Weapon Expert
-    2 - Shattering Blows
-    3 - Master-at-Arms Staff
-    4 - Expert
-7 - The Apprentice - Blue left
-    1 - Elemental Expert
-    2 - Spell Erosion
-    3 - Elfborn
-    4 - Blessed
-8 - The Shadow - Green right
-    1 - Befoul
-    2 - Shade
-    3 - Shadow Ward
-    4 - Tumbling
-9 - The Lover - Green mid
-    1 - Mooncalf
-    2 - Arcanist
-    3 - Healthy
-    4 - Tenacity 
+Craft(28)
+* Out of Sight - 68
+* Fleet Phantom - 67
+* Friends in Low Places - 76
+* Infamous - 77
+* Shadowstrike - 80
+* Cutpurse's Art - 90
+* Fade Away - 84
+* Master Gatherer - 78
+* Treasure Hunter - 79
+* Steadfast Enchantment - 75
+* Rationer - 85
+* Liquid Efficiency - 86
+* Angler's Instincts - 89
+* Reel Technique - 88
+* Homemaker - 91
+* Wanderer - 70
+* Plentiful Harvest - 81
+* War Mount - 82
+* Gifted Rider - 92
+* Meticulous Disassembly - 83
+* Inspiration Boost - 72
+* Fortune's Favor - 71
+* Gilded Fingers - 74
+* Breakfall - 69
+* Soul Reservoir - 87
+* Steed's Blessing - 66
+* Sustaining Shadows - 65
+* Professional Upkeep - 1
+
+Warfare(39)
+* Precision - 11
+* Fighting Finesse - 12
+* Blessed - 108
+* Soothing Tide - 24
+* Rejuvenator - 9
+* Foresight - 163
+* Cleansing Revival - 29
+* Focused Mending - 26
+* Swift Renewal - 28
+* Piercing - 10
+* Flawless Ritual - 17
+* War Mage - 21
+* Battle Mastery - 18
+* Mighty - 22
+* Deadly Aim - 25
+* Biting Aura - 23
+* Thaumaturge - 27
+* Reaving Blows - 30
+* Wrathful Strikes - 8
+* Occult Overload - 32
+* Backstabber - 31
+* Tireless Discipline - 6
+* Quick Recovery - 20
+* Resilience - 13
+* Preparation - 14
+* Elemental Aegis - 15
+* Hardy - 16
+* Enduring Resolve - 136
+* Reinforced - 160
+* Riposte - 162
+* Bulwark - 159
+* Last Stand - 161
+* Cutting Defense - 33
+* Duelist's Rebuff - 134
+* Unassailable - 133
+* Eldritch Insight - 99
+* Endless Endurance - 5
+* Untamed Aggression - 4
+* Arcane Supremacy - 3
+
+Fitness(32)
+* Sprinter - 38
+* Rousing Speed - 62
+* Hasty - 42
+* Hero's Vigor - 113
+* Piercing Gaze - 45
+* Tempered Soul - 58
+* Survival Instincts - 57
+* Bastion - 46
+* Arcane Alacrity - 61
+* Spirit Mastery - 56
+* Strategic Reserve - 49
+* Mystic Tenacity - 53
+* Shield Master - 63
+* Bloody Renewal - 48
+* Siphoning Spells - 47
+* Tireless Guardian - 39
+* Savage Defense - 40
+* Bashing Brutality - 50
+* On Guard - 60
+* Nimble Protector - 44
+* Fortification - 43
+* Tumbling - 37
+* Expert Evasion - 51
+* Defiance - 128
+* Slippery - 52
+* Unchained - 64
+* Juggernaut - 59
+* Peace of Mind - 54
+* Hardened - 55
+* Rejuvenation - 35
+* Ironclad - 34
+* Boundless Vitality - 2
 ]]
 
-DynamicCP.kyzerPresets = {
-    ["Green"] = 
-    {
-        ["PvP Stamblade Generic"] = 
-        {
-            [8] = 
-            {
-                [4] = 66,
-                [1] = 0,
-                [2] = 2,
-                [3] = 13,
-            },
-            [1] = 
-            {
-                [4] = 66,
-                [1] = 0,
-                [2] = 9,
-                [3] = 1,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = true,
-                ["Sorcerer"] = false,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [9] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 49,
-                [3] = 0,
-            },
-        },
-        ["Stamdps Generic"] = 
-        {
-            [8] = 
-            {
-                [4] = 51,
-                [1] = 0,
-                [2] = 0,
-                [3] = 44,
-            },
-            [1] = 
-            {
-                [4] = 48,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [9] = 
-            {
-                [4] = 27,
-                [1] = 100,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["Tank Generic"] = 
-        {
-            [8] = 
-            {
-                [4] = 44,
-                [1] = 0,
-                [2] = 0,
-                [3] = 66,
-            },
-            [1] = 
-            {
-                [4] = 40,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [9] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 64,
-                [3] = 0,
-            },
-        },
-        ["vKA MT"] = 
-        {
-            [8] = 
-            {
-                [4] = 72,
-                [1] = 0,
-                [2] = 0,
-                [3] = 81,
-            },
-            [1] = 
-            {
-                [4] = 34,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [9] = 
-            {
-                [4] = 19,
-                [1] = 0,
-                [2] = 64,
-                [3] = 0,
-            },
-        },
-        ["PvP Bombblade"] = 
-        {
-            [8] = 
-            {
-                [4] = 66,
-                [1] = 0,
-                [2] = 21,
-                [3] = 0,
-            },
-            [1] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = true,
-                ["Sorcerer"] = false,
-            },
-            [9] = 
-            {
-                [4] = 0,
-                [1] = 27,
-                [2] = 100,
-                [3] = 0,
-            },
-        },
-        ["Magdps/Heal Generic"] = 
-        {
-            [8] = 
-            {
-                [4] = 44,
-                [1] = 0,
-                [2] = 0,
-                [3] = 51,
-            },
-            [1] = 
-            {
-                [4] = 48,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [9] = 
-            {
-                [4] = 27,
-                [1] = 0,
-                [2] = 100,
-                [3] = 0,
-            },
-        },
-        ["vAS TH"] = 
-        {
-            [8] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 0,
-                [3] = 56,
-            },
-            [1] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 21,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = false,
-            },
-            [9] = 
-            {
-                [4] = 37,
-                [1] = 0,
-                [2] = 100,
-                [3] = 0,
-            },
-        },
-    },
-    ["Red"] = 
-    {
-        ["vSO Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 16,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 43,
-                [1] = 0,
-                [2] = 66,
-                [3] = 64,
-            },
-        },
-        ["vDSA Magdps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 49,
-                [1] = 30,
-                [2] = 61,
-                [3] = 49,
-            },
-        },
-        ["vHoF Magdps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 49,
-                [1] = 10,
-                [2] = 81,
-                [3] = 49,
-            },
-        },
-        ["vCR Mini Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 43,
-                [1] = 16,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 66,
-                [3] = 0,
-            },
-        },
-        ["vDSA Stamdps"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 30,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 49,
-                [1] = 0,
-                [2] = 61,
-                [3] = 49,
-            },
-        },
-        ["vMA/vVH"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 26,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 51,
-                [3] = 56,
-            },
-        },
-        ["vHoF Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 11,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 66,
-                [3] = 56,
-            },
-        },
-        ["vCR Portal Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 1,
-            },
-            [2] = 
-            {
-                [4] = 43,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-        },
-        ["vSS Dps"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 66,
-                [3] = 40,
-            },
-            [2] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 44,
-                [3] = 0,
-            },
-        },
-        ["vHRC Dps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 16,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 61,
-                [3] = 56,
-            },
-        },
-        ["vSS Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 16,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 49,
-                [1] = 0,
-                [2] = 81,
-                [3] = 43,
-            },
-        },
-        ["vAA Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 11,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 66,
-                [3] = 56,
-            },
-        },
-        ["PvP Dps Generic"] = 
-        {
-            [4] = 
-            {
-                [4] = 36,
-                [1] = 0,
-                [2] = 72,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 32,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 37,
-                [1] = 0,
-                [2] = 56,
-                [3] = 37,
-            },
-        },
-        ["vAS OT"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 43,
-                [1] = 1,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 44,
-                [3] = 37,
-            },
-        },
-        ["vAA Dps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 61,
-            },
-            [2] = 
-            {
-                [4] = 11,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 61,
-                [3] = 0,
-            },
-        },
-        ["vAS Dps"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 87,
-            },
-            [2] = 
-            {
-                [4] = 11,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 0,
-                [3] = 27,
-            },
-        },
-        ["vHoF Stamdps"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 10,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 49,
-                [1] = 0,
-                [2] = 81,
-                [3] = 49,
-            },
-        },
-        ["vSO Magdps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 73,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 43,
-                [1] = 24,
-                [2] = 66,
-                [3] = 64,
-            },
-        },
-        ["vAS MT"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 18,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 51,
-                [3] = 64,
-            },
-        },
-        ["vSS Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 34,
-            },
-            [2] = 
-            {
-                [4] = 19,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 72,
-                [3] = 0,
-            },
-        },
-        ["vKA Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 19,
-                [1] = 3,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 37,
-                [1] = 0,
-                [2] = 66,
-                [3] = 64,
-            },
-        },
-        ["vHRC Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 16,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 43,
-                [1] = 0,
-                [2] = 66,
-                [3] = 64,
-            },
-        },
-        ["vAS Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 27,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 61,
-                [3] = 37,
-            },
-        },
-        ["vDSA Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 19,
-                [1] = 6,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 49,
-                [1] = 0,
-                [2] = 66,
-                [3] = 49,
-            },
-        },
-        ["vSO Stamdps"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 24,
-                [2] = 73,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 43,
-                [1] = 0,
-                [2] = 66,
-                [3] = 64,
-            },
-        },
-        ["vMoL Dps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 73,
-                [3] = 48,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 66,
-                [3] = 19,
-            },
-        },
-        ["vCR/vKA Dps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 66,
-                [3] = 55,
-            },
-            [2] = 
-            {
-                [4] = 19,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 66,
-                [3] = 0,
-            },
-        },
-        ["vBRP Dps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 42,
-            },
-            [2] = 
-            {
-                [4] = 11,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 48,
-                [3] = 32,
-            },
-        },
-        ["vMoL Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 3,
-            },
-            [2] = 
-            {
-                [4] = 19,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 66,
-                [3] = 37,
-            },
-        },
-        ["vBRP Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 11,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 66,
-                [3] = 56,
-            },
-        },
-    },
-    ["Blue"] = 
-    {
-        ["clive vMA"] = 
-        {
-            [6] = 
-            {
-                [4] = 25,
-                [1] = 0,
-                [2] = 0,
-                [3] = 66,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 26,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 23,
-                [3] = 66,
-            },
-        },
-        ["PvP Bowgank"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Dragonknight"] = false,
-                ["Warden"] = false,
-                ["Necromancer"] = false,
-                ["Nightblade"] = true,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 66,
-                [3] = 67,
-            },
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 73,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["Magplar Dummy"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = true,
-                ["Necromancer"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 81,
-                [2] = 0,
-                [3] = 0,
-            },
-            [6] = 
-            {
-                [4] = 13,
-                [1] = 0,
-                [2] = 0,
-                [3] = 56,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 0,
-                [3] = 56,
-            },
-        },
-        ["PvP Stamblade Generic"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = true,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 56,
-                [3] = 47,
-            },
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 19,
-                [2] = 0,
-                [3] = 81,
-            },
-            [7] = 
-            {
-                [4] = 11,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["Magcro Dummy"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = true,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 72,
-                [2] = 0,
-                [3] = 3,
-            },
-            [6] = 
-            {
-                [4] = 9,
-                [1] = 0,
-                [2] = 0,
-                [3] = 66,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 0,
-                [3] = 56,
-            },
-        },
-        ["StamDK Dummy"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = true,
-                ["Nightblade"] = false,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 49,
-                [1] = 66,
-                [2] = 56,
-                [3] = 38,
-            },
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 61,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["Tank Alkosh nonSharp"] = 
-        {
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 52,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 0,
-                [3] = 59,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [7] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 0,
-                [3] = 31,
-            },
-        },
-        ["Stamcro Dummy"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = true,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 56,
-                [2] = 66,
-                [3] = 18,
-            },
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 66,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["PvP Caluurion"] = 
-        {
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 81,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 64,
-                [3] = 61,
-            },
-        },
-        ["Healer Generic"] = 
-        {
-            [6] = 
-            {
-                [4] = 6,
-                [1] = 0,
-                [2] = 0,
-                [3] = 28,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 40,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = true,
-                ["Tank"] = false,
-                ["Dps"] = false,
-            },
-            [7] = 
-            {
-                [4] = 64,
-                [1] = 49,
-                [2] = 11,
-                [3] = 72,
-            },
-        },
-        ["Magblade Dummy"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = true,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 72,
-                [2] = 0,
-                [3] = 3,
-            },
-            [6] = 
-            {
-                [4] = 6,
-                [1] = 0,
-                [2] = 0,
-                [3] = 72,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 56,
-                [2] = 0,
-                [3] = 61,
-            },
-        },
-        ["Stamsorc Dummy"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-                ["Sorcerer"] = true,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 37,
-                [2] = 56,
-                [3] = 38,
-            },
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 3,
-                [2] = 0,
-                [3] = 72,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["Magden Dummy"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = false,
-                ["Warden"] = true,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 72,
-                [2] = 0,
-                [3] = 3,
-            },
-            [6] = 
-            {
-                [4] = 14,
-                [1] = 0,
-                [2] = 0,
-                [3] = 61,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 0,
-                [3] = 56,
-            },
-        },
-        ["Magsorc Dummy"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-                ["Sorcerer"] = true,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 72,
-                [2] = 0,
-                [3] = 3,
-            },
-            [6] = 
-            {
-                [4] = 14,
-                [1] = 0,
-                [2] = 0,
-                [3] = 61,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 0,
-                [3] = 56,
-            },
-        },
-        ["PvP Bombblade"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = true,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 100,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 55,
-                [3] = 51,
-            },
-        },
-        ["MagDK Dummy"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = true,
-                ["Nightblade"] = false,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 81,
-                [2] = 0,
-                [3] = 0,
-            },
-            [6] = 
-            {
-                [4] = 16,
-                [1] = 0,
-                [2] = 0,
-                [3] = 61,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 56,
-                [2] = 0,
-                [3] = 56,
-            },
-        },
-        ["vVH Magblade"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Dragonknight"] = false,
-                ["Warden"] = false,
-                ["Necromancer"] = false,
-                ["Nightblade"] = true,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 40,
-                [2] = 0,
-                [3] = 0,
-            },
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 61,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 39,
-                [3] = 66,
-            },
-        },
-        ["vVH Magsorc"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Dragonknight"] = false,
-                ["Warden"] = false,
-                ["Necromancer"] = false,
-                ["Nightblade"] = false,
-                ["Sorcerer"] = true,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 26,
-                [2] = 0,
-                [3] = 0,
-            },
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 66,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 48,
-                [3] = 66,
-            },
-        },
-        ["Tank Alkosh Sharp"] = 
-        {
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 44,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 0,
-                [3] = 58,
-            },
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = true,
-                ["Dps"] = false,
-            },
-            [7] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 0,
-                [3] = 40,
-            },
-        },
-        ["Stamplar Dummy"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = true,
-                ["Necromancer"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 18,
-                [2] = 72,
-                [3] = 38,
-            },
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 6,
-                [2] = 0,
-                [3] = 72,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["Stamden Dummy"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = false,
-                ["Warden"] = true,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 75,
-                [1] = 16,
-                [2] = 66,
-                [3] = 38,
-            },
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 3,
-                [2] = 0,
-                [3] = 72,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["Stamblade Skinny"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Dragonknight"] = false,
-                ["Warden"] = false,
-                ["Necromancer"] = false,
-                ["Nightblade"] = true,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 13,
-                [2] = 72,
-                [3] = 55,
-            },
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 66,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["Stamblade Dummy"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Necromancer"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = true,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 40,
-                [2] = 72,
-                [3] = 3,
-            },
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 19,
-                [2] = 0,
-                [3] = 72,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["vSS Magblade"] = 
-        {
-            ["roles"] = 
-            {
-                ["Healer"] = false,
-                ["Tank"] = false,
-                ["Dps"] = true,
-            },
-            ["classes"] = 
-            {
-                ["Templar"] = false,
-                ["Dragonknight"] = false,
-                ["Warden"] = false,
-                ["Necromancer"] = false,
-                ["Nightblade"] = true,
-                ["Sorcerer"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 31,
-                [2] = 0,
-                [3] = 0,
-            },
-            [6] = 
-            {
-                [4] = 27,
-                [1] = 0,
-                [2] = 0,
-                [3] = 72,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 10,
-                [3] = 66,
-            },
-        },
-    },
-}
-
 DynamicCP.defaultPresets = {
-        ["Green"] = 
-    {
-        ["PvP Stamblade Generic"] = 
-        {
-            [8] = 
-            {
-                [4] = 66,
+    ["Green"] = {
+        ["Harvester (1095)"] = {
+            [1] = {
                 [1] = 0,
-                [2] = 2,
-                [3] = 13,
-            },
-            [1] = 
-            {
-                [4] = 66,
-                [1] = 0,
-                [2] = 9,
-                [3] = 1,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = false,
-                ["Sorcerer"] = false,
-                ["Templar"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = true,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [9] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 49,
+                [2] = 0,
                 [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 75,
+                [9] = 50,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 25,
+                [16] = 0,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 50,
+                [21] = 15,
+                [22] = 50,
+                [23] = 50,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
             },
         },
-        ["Tank Generic"] = 
-        {
-            [1] = 
-            {
+        ["PVE (840)"] = {
+            [1] = {
+                [1] = 0,
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 50,
+                [10] = 10,
+                [11] = 30,
+                [12] = 75,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 15,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 50,
+                [23] = 50,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+            },
+        },
+        ["Thief (960)"] = {
+            [1] = {
+                [1] = 30,
+                [2] = 40,
+                [3] = 25,
+                [4] = 25,
+                [5] = 75,
+                [6] = 75,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 50,
+                [27] = 0,
+                [28] = 0,
+            },
+        },
+        ["Fisher (675)"] = {
+            [1] = {
+                [1] = 0,
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 10,
+                [11] = 30,
+                [12] = 75,
+                [13] = 25,
+                [14] = 50,
+                [15] = 0,
+                [16] = 15,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 10,
+                [23] = 10,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+            },
+        },
+    },
+    ["Blue"] = {
+        ["StamDPS (1320)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 0,
+                [12] = 0,
+                [13] = 40,
+                [14] = 30,
+                [15] = 50,
+                [16] = 50,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 40,
+                [23] = 10,
+                [24] = 0,
+                [25] = 40,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 0,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["MagDPS (1170)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 40,
+                [12] = 30,
+                [13] = 0,
+                [14] = 0,
+                [15] = 50,
+                [16] = 50,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 40,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["Healer (540)"] = {
+            [2] = {
+                [1] = 0,
+                [2] = 0,
+                [3] = 40,
+                [4] = 50,
+                [5] = 50,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 40,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = true,
+                ["Dps"] = false,
+                ["Tank"] = false,
+            },
+        },
+        ["StamDPS (840)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 50,
+                [16] = 50,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 0,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["MagDPS (1320)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 40,
+                [12] = 30,
+                [13] = 0,
+                [14] = 0,
+                [15] = 50,
+                [16] = 50,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 10,
+                [24] = 0,
+                [25] = 40,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 40,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["MagDPS (840)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 50,
+                [16] = 50,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 0,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["Tank (570)"] = {
+            [2] = {
+                [1] = 0,
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 10,
+                [23] = 10,
+                [24] = 0,
+                [25] = 40,
+                [26] = 40,
+                [27] = 40,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 50,
+                [35] = 0,
+                [36] = 0,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = false,
+                ["Tank"] = true,
+            },
+        },
+        ["StamDPS (1770)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 40,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 0,
+                [12] = 0,
+                [13] = 40,
+                [14] = 30,
+                [15] = 50,
+                [16] = 50,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 40,
+                [23] = 40,
+                [24] = 0,
+                [25] = 40,
+                [26] = 40,
+                [27] = 40,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 0,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["Tank (1200)"] = {
+            [2] = {
+                [1] = 0,
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 40,
+                [23] = 10,
+                [24] = 0,
+                [25] = 40,
+                [26] = 40,
+                [27] = 40,
+                [28] = 50,
+                [29] = 0,
+                [30] = 0,
+                [31] = 50,
+                [32] = 0,
+                [33] = 0,
+                [34] = 50,
+                [35] = 50,
+                [36] = 30,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = false,
+                ["Tank"] = true,
+            },
+        },
+        ["Healer (960)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 40,
+                [4] = 50,
+                [5] = 50,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 50,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 40,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = true,
+                ["Dps"] = false,
+                ["Tank"] = false,
+            },
+        },
+        ["MagDPS (1770)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 40,
+                [12] = 30,
+                [13] = 0,
+                [14] = 0,
+                [15] = 50,
+                [16] = 50,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 40,
+                [23] = 40,
+                [24] = 0,
+                [25] = 40,
+                [26] = 40,
+                [27] = 40,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 40,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["Healer (1770)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 40,
+                [4] = 50,
+                [5] = 50,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 50,
+                [10] = 40,
+                [11] = 40,
+                [12] = 30,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 40,
+                [24] = 0,
+                [25] = 40,
+                [26] = 40,
+                [27] = 40,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 40,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = true,
+                ["Dps"] = false,
+                ["Tank"] = false,
+            },
+        },
+        ["MagDPS (1560)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 40,
+                [12] = 30,
+                [13] = 0,
+                [14] = 0,
+                [15] = 50,
+                [16] = 50,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 10,
+                [24] = 0,
+                [25] = 40,
+                [26] = 40,
+                [27] = 40,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 40,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["StamDPS (1560)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 0,
+                [12] = 0,
+                [13] = 40,
+                [14] = 30,
+                [15] = 50,
+                [16] = 50,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 40,
+                [23] = 10,
+                [24] = 0,
+                [25] = 40,
+                [26] = 40,
+                [27] = 40,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 0,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["StamDPS (540)"] = {
+            [2] = {
+                [1] = 0,
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 0,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["StamDPS (1170)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 0,
+                [12] = 0,
+                [13] = 40,
+                [14] = 30,
+                [15] = 50,
+                [16] = 50,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 40,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 0,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["MagDPS (540)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 50,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 0,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["Tank (870)"] = {
+            [2] = {
+                [1] = 0,
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 10,
+                [23] = 10,
+                [24] = 0,
+                [25] = 40,
+                [26] = 40,
+                [27] = 40,
+                [28] = 50,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 50,
+                [35] = 50,
+                [36] = 0,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = false,
+                ["Tank"] = true,
+            },
+        },
+        ["Tank (1710)"] = {
+            [2] = {
+                [1] = 0,
+                [2] = 0,
+                [3] = 40,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 10,
+                [11] = 40,
+                [12] = 0,
+                [13] = 40,
+                [14] = 0,
+                [15] = 0,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 40,
+                [23] = 40,
+                [24] = 0,
+                [25] = 40,
+                [26] = 40,
+                [27] = 40,
+                [28] = 50,
+                [29] = 0,
+                [30] = 0,
+                [31] = 50,
+                [32] = 0,
+                [33] = 0,
+                [34] = 50,
+                [35] = 50,
+                [36] = 40,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = false,
+                ["Tank"] = true,
+            },
+        },
+        ["MagDPS (2100)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 40,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 40,
+                [12] = 30,
+                [13] = 40,
+                [14] = 30,
+                [15] = 50,
+                [16] = 50,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 40,
+                [23] = 40,
+                [24] = 0,
+                [25] = 40,
+                [26] = 40,
+                [27] = 40,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 40,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["StamDPS (2100)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 40,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 40,
+                [11] = 40,
+                [12] = 30,
+                [13] = 40,
+                [14] = 30,
+                [15] = 50,
+                [16] = 50,
+                [17] = 50,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 40,
+                [23] = 40,
+                [24] = 0,
+                [25] = 40,
+                [26] = 40,
+                [27] = 40,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 40,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+        },
+        ["Healer (1260)"] = {
+            [2] = {
+                [1] = 40,
+                [2] = 50,
+                [3] = 40,
+                [4] = 50,
+                [5] = 50,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 50,
+                [10] = 10,
+                [11] = 40,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 10,
+                [24] = 0,
+                [25] = 40,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 0,
+                [31] = 0,
+                [32] = 0,
+                [33] = 0,
+                [34] = 0,
+                [35] = 0,
+                [36] = 40,
+                [37] = 0,
+                [38] = 0,
+                [39] = 0,
+            },
+            ["roles"] = {
+                ["Healer"] = true,
+                ["Dps"] = false,
+                ["Tank"] = false,
+            },
+        },
+    },
+    ["Red"] = {
+        ["Healer (1626)"] = {
+            ["roles"] = {
+                ["Healer"] = true,
+                ["Dps"] = false,
+                ["Tank"] = false,
+            },
+            [3] = {
+                [32] = 50,
+                [1] = 40,
+                [2] = 0,
+                [3] = 32,
+                [4] = 40,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 40,
+                [17] = 45,
+                [18] = 0,
+                [19] = 0,
+                [20] = 15,
+                [21] = 45,
+                [22] = 45,
+                [23] = 0,
+                [24] = 40,
+                [25] = 50,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 50,
+            },
+        },
+        ["StamDPS (1446)"] = {
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+            [3] = {
+                [32] = 50,
+                [1] = 40,
+                [2] = 0,
+                [3] = 32,
+                [4] = 40,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 50,
+                [15] = 0,
+                [16] = 40,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 45,
+                [22] = 45,
+                [23] = 0,
+                [24] = 40,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 50,
+            },
+        },
+        ["MagDPS (774)"] = {
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+            [3] = {
+                [32] = 50,
+                [1] = 10,
+                [2] = 0,
+                [3] = 8,
+                [4] = 40,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 50,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 50,
+            },
+        },
+        ["Tank (615)"] = {
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = false,
+                ["Tank"] = true,
+            },
+            [3] = {
+                [32] = 50,
+                [1] = 0,
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 10,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 45,
+                [22] = 0,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 50,
+            },
+        },
+        ["Tank (960)"] = {
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = false,
+                ["Tank"] = true,
+            },
+            [3] = {
+                [32] = 50,
                 [1] = 0,
                 [2] = 0,
                 [3] = 0,
                 [4] = 40,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 10,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 10,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 45,
+                [22] = 15,
+                [23] = 50,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 50,
             },
-            [8] = 
-            {
-                [1] = 0,
-                [2] = 0,
-                [3] = 66,
-                [4] = 44,
-            },
-            [9] = 
-            {
-                [1] = 0,
-                [2] = 64,
-                [3] = 0,
-                [4] = 56,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
+        },
+        ["MagDPS (1446)"] = {
+            ["roles"] = {
                 ["Healer"] = false,
-            },
-        },
-        ["vAS TH"] = 
-        {
-            [8] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 0,
-                [3] = 56,
-            },
-            [1] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 21,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = false,
-                ["Healer"] = true,
-            },
-            [9] = 
-            {
-                [4] = 37,
-                [1] = 0,
-                [2] = 100,
-                [3] = 0,
-            },
-        },
-        ["Stamdps Generic"] = 
-        {
-            [8] = 
-            {
-                [4] = 51,
-                [1] = 0,
-                [2] = 0,
-                [3] = 44,
-            },
-            [1] = 
-            {
-                [4] = 48,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
                 ["Dps"] = true,
                 ["Tank"] = false,
-                ["Healer"] = false,
             },
-            [9] = 
-            {
-                [4] = 27,
-                [1] = 100,
+            [3] = {
+                [32] = 50,
+                [1] = 40,
                 [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["vKA MT"] = 
-        {
-            [8] = 
-            {
-                [4] = 72,
-                [1] = 0,
-                [2] = 0,
-                [3] = 81,
-            },
-            [1] = 
-            {
-                [4] = 34,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [9] = 
-            {
-                [4] = 19,
-                [1] = 0,
-                [2] = 64,
-                [3] = 0,
-            },
-        },
-        ["Magdps/Heal Generic"] = 
-        {
-            [8] = 
-            {
-                [4] = 44,
-                [1] = 0,
-                [2] = 0,
-                [3] = 51,
-            },
-            [1] = 
-            {
-                [4] = 48,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = true,
-            },
-            [9] = 
-            {
-                [4] = 27,
-                [1] = 0,
-                [2] = 100,
-                [3] = 0,
-            },
-        },
-    },
-    ["Red"] = 
-    {
-        ["vAA Dps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 61,
-            },
-            [2] = 
-            {
-                [4] = 11,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = true,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 61,
-                [3] = 0,
-            },
-        },
-        ["vDSA Magdps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = true,
-            },
-            [3] = 
-            {
-                [4] = 49,
-                [1] = 30,
-                [2] = 61,
-                [3] = 49,
-            },
-        },
-        ["vCR Portal Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 1,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 43,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-        },
-        ["vAS MT"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 18,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 51,
-                [3] = 64,
-            },
-        },
-        ["vSO Magdps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 73,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = true,
-            },
-            [3] = 
-            {
-                [4] = 43,
-                [1] = 24,
-                [2] = 66,
-                [3] = 64,
-            },
-        },
-        ["vHRC Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 16,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 43,
-                [1] = 0,
-                [2] = 66,
-                [3] = 64,
-            },
-        },
-        ["vAS Dps"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 87,
-            },
-            [2] = 
-            {
-                [4] = 11,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = false,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 0,
-                [3] = 27,
-            },
-        },
-        ["vHoF Magdps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = true,
-            },
-            [3] = 
-            {
-                [4] = 49,
-                [1] = 10,
-                [2] = 81,
-                [3] = 49,
-            },
-        },
-        ["vDSA Stamdps"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 30,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = false,
-            },
-            [3] = 
-            {
-                [4] = 49,
-                [1] = 0,
-                [2] = 61,
-                [3] = 49,
-            },
-        },
-        ["PvP Dps Generic"] = 
-        {
-            [4] = 
-            {
-                [4] = 36,
-                [1] = 0,
-                [2] = 72,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 32,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 37,
-                [1] = 0,
-                [2] = 56,
-                [3] = 37,
-            },
-        },
-        ["vDSA Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 19,
-                [1] = 6,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 49,
-                [1] = 0,
-                [2] = 66,
-                [3] = 49,
-            },
-        },
-        ["vAS Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 27,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = false,
-                ["Healer"] = true,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 61,
-                [3] = 37,
-            },
-        },
-        ["vHoF Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 11,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 66,
-                [3] = 56,
-            },
-        },
-        ["vBRP Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 11,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 66,
-                [3] = 56,
-            },
-        },
-        ["vKA Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 19,
-                [1] = 3,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 37,
-                [1] = 0,
-                [2] = 66,
-                [3] = 64,
-            },
-        },
-        ["vCR Mini Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 43,
-                [1] = 16,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 66,
-                [3] = 0,
-            },
-        },
-        ["vBRP Dps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 42,
-            },
-            [2] = 
-            {
-                [4] = 11,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = true,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 48,
                 [3] = 32,
+                [4] = 40,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 50,
+                [16] = 40,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 45,
+                [22] = 45,
+                [23] = 0,
+                [24] = 40,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 50,
             },
         },
-        ["vHoF Stamdps"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
+        ["Tank (1305)"] = {
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = false,
+                ["Tank"] = true,
+            },
+            [3] = {
+                [32] = 50,
+                [1] = 0,
+                [2] = 0,
+                [3] = 0,
+                [4] = 40,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 10,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 40,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 15,
+                [21] = 45,
+                [22] = 45,
+                [23] = 50,
+                [24] = 40,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 50,
+            },
+        },
+        ["StamDPS (1194)"] = {
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
+                ["Tank"] = false,
+            },
+            [3] = {
+                [32] = 50,
                 [1] = 10,
-                [2] = 81,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
                 [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = false,
-            },
-            [3] = 
-            {
-                [4] = 49,
-                [1] = 0,
-                [2] = 81,
-                [3] = 49,
+                [3] = 8,
+                [4] = 40,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 50,
+                [15] = 0,
+                [16] = 10,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 45,
+                [22] = 45,
+                [23] = 0,
+                [24] = 40,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 50,
             },
         },
-        ["vSS Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 34,
-            },
-            [2] = 
-            {
-                [4] = 19,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
+        ["Healer (999)"] = {
+            ["roles"] = {
+                ["Healer"] = true,
                 ["Dps"] = false,
                 ["Tank"] = false,
-                ["Healer"] = true,
             },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 72,
-                [3] = 0,
-            },
-        },
-        ["vMA/vVH"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 26,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
+            [3] = {
+                [32] = 50,
+                [1] = 10,
                 [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = false,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 51,
-                [3] = 56,
+                [3] = 8,
+                [4] = 40,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 40,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 45,
+                [23] = 0,
+                [24] = 40,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 50,
             },
         },
-        ["vSO Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
+        ["Tank (1521)"] = {
+            ["roles"] = {
+                ["Healer"] = false,
                 ["Dps"] = false,
                 ["Tank"] = true,
-                ["Healer"] = false,
             },
-            [2] = 
-            {
-                [4] = 16,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 43,
-                [1] = 0,
-                [2] = 66,
-                [3] = 64,
-            },
-        },
-        ["vHRC Dps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 16,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = true,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 61,
-                [3] = 56,
-            },
-        },
-        ["vAA Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 11,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 66,
-                [3] = 56,
-            },
-        },
-        ["vSO Stamdps"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 24,
-                [2] = 73,
-                [3] = 0,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = false,
-            },
-            [3] = 
-            {
-                [4] = 43,
-                [1] = 0,
-                [2] = 66,
-                [3] = 64,
-            },
-        },
-        ["vMoL Dps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 73,
-                [3] = 48,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = true,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 66,
-                [3] = 19,
-            },
-        },
-        ["vCR/vKA Dps/Heal"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 66,
-                [3] = 55,
-            },
-            [2] = 
-            {
-                [4] = 19,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = true,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 66,
-                [3] = 0,
-            },
-        },
-        ["vSS Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 0,
-                [1] = 16,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 49,
-                [1] = 0,
-                [2] = 81,
-                [3] = 43,
-            },
-        },
-        ["vSS Dps"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 66,
-                [3] = 40,
-            },
-            [2] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = true,
-                ["Tank"] = false,
-                ["Healer"] = false,
-            },
-            [3] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 44,
-                [3] = 0,
-            },
-        },
-        ["vMoL Tank"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 3,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 19,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 66,
-                [3] = 37,
-            },
-        },
-        ["vAS OT"] = 
-        {
-            [4] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 81,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = true,
-                ["Healer"] = false,
-            },
-            [2] = 
-            {
-                [4] = 43,
-                [1] = 1,
-                [2] = 0,
-                [3] = 0,
-            },
-            [3] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 44,
-                [3] = 37,
-            },
-        },
-    },
-    ["Blue"] = 
-    {
-        ["Magplar Dummy"] = 
-        {
-            [6] = 
-            {
-                [4] = 13,
-                [1] = 0,
-                [2] = 0,
-                [3] = 56,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = false,
-                ["Sorcerer"] = false,
-                ["Templar"] = true,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 81,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 0,
-                [3] = 56,
-            },
-        },
-        ["Stamcro Dummy"] = 
-        {
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 66,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = true,
-                ["Sorcerer"] = false,
-                ["Templar"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 56,
-                [2] = 66,
-                [3] = 18,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["MagDK Dummy"] = 
-        {
-            [6] = 
-            {
-                [4] = 16,
-                [1] = 0,
-                [2] = 0,
-                [3] = 61,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = false,
-                ["Sorcerer"] = false,
-                ["Templar"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = true,
-                ["Nightblade"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 81,
-                [2] = 0,
-                [3] = 0,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 56,
-                [2] = 0,
-                [3] = 56,
-            },
-        },
-        ["StamDK Dummy"] = 
-        {
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 61,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = false,
-                ["Sorcerer"] = false,
-                ["Templar"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = true,
-                ["Nightblade"] = false,
-            },
-            [5] = 
-            {
-                [4] = 49,
-                [1] = 66,
-                [2] = 56,
-                [3] = 38,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["Stamsorc Dummy"] = 
-        {
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 3,
-                [2] = 0,
-                [3] = 72,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = false,
-                ["Sorcerer"] = true,
-                ["Templar"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 37,
-                [2] = 56,
-                [3] = 38,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["PvP Stamblade Generic"] = 
-        {
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 19,
-                [2] = 0,
-                [3] = 81,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = false,
-                ["Sorcerer"] = false,
-                ["Templar"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = true,
-            },
-            [5] = 
-            {
-                [4] = 56,
-                [1] = 0,
-                [2] = 56,
-                [3] = 47,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 11,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["Stamblade Dummy"] = 
-        {
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 19,
-                [2] = 0,
-                [3] = 72,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = false,
-                ["Sorcerer"] = false,
-                ["Templar"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = true,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 40,
-                [2] = 72,
-                [3] = 3,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["Stamplar Dummy"] = 
-        {
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 6,
-                [2] = 0,
-                [3] = 72,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = false,
-                ["Sorcerer"] = false,
-                ["Templar"] = true,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 18,
-                [2] = 72,
-                [3] = 38,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-            },
-        },
-        ["Healer Generic"] = 
-        {
-            ["roles"] = 
-            {
-                ["Dps"] = false,
-                ["Tank"] = false,
-                ["Healer"] = true,
-            },
-            [5] = 
-            {
+            [3] = {
+                [32] = 50,
                 [1] = 40,
                 [2] = 0,
-                [3] = 0,
-                [4] = 0,
-            },
-            [6] = 
-            {
-                [1] = 0,
-                [2] = 0,
-                [3] = 28,
-                [4] = 6,
-            },
-            [7] = 
-            {
-                [1] = 49,
-                [2] = 11,
-                [3] = 72,
-                [4] = 64,
+                [3] = 32,
+                [4] = 40,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 10,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 40,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 15,
+                [21] = 45,
+                [22] = 45,
+                [23] = 50,
+                [24] = 40,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 50,
             },
         },
-        ["Magden Dummy"] = 
-        {
-            [6] = 
-            {
-                [4] = 14,
-                [1] = 0,
-                [2] = 0,
-                [3] = 61,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = false,
-                ["Sorcerer"] = false,
-                ["Templar"] = false,
-                ["Warden"] = true,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 72,
-                [2] = 0,
-                [3] = 3,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = false,
+        ["DPS/Healer (474)"] = {
+            ["roles"] = {
+                ["Healer"] = true,
                 ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
-                [2] = 0,
-                [3] = 56,
-            },
-        },
-        ["Tank Alkosh Sharp"] = 
-        {
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 44,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 0,
-                [3] = 58,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = true,
-                ["Dps"] = false,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 0,
-                [3] = 40,
-            },
-        },
-        ["Magcro Dummy"] = 
-        {
-            [6] = 
-            {
-                [4] = 9,
-                [1] = 0,
-                [2] = 0,
-                [3] = 66,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = true,
-                ["Sorcerer"] = false,
-                ["Templar"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 72,
-                [2] = 0,
-                [3] = 3,
-            },
-            ["roles"] = 
-            {
                 ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
             },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
+            [3] = {
+                [32] = 50,
+                [1] = 10,
                 [2] = 0,
-                [3] = 56,
+                [3] = 8,
+                [4] = 40,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 0,
             },
         },
-        ["Magblade Dummy"] = 
-        {
-            [6] = 
-            {
-                [4] = 6,
-                [1] = 0,
-                [2] = 0,
-                [3] = 72,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = false,
-                ["Sorcerer"] = false,
-                ["Templar"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = true,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 72,
-                [2] = 0,
-                [3] = 3,
-            },
-            ["roles"] = 
-            {
+        ["StamDPS (774)"] = {
+            ["roles"] = {
+                ["Healer"] = false,
+                ["Dps"] = true,
                 ["Tank"] = false,
+            },
+            [3] = {
+                [32] = 50,
+                [1] = 10,
+                [2] = 0,
+                [3] = 8,
+                [4] = 40,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 0,
+                [16] = 0,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 0,
+                [22] = 0,
+                [23] = 0,
+                [24] = 0,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 0,
+            },
+        },
+        ["MagDPS (1194)"] = {
+            ["roles"] = {
+                ["Healer"] = false,
                 ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 56,
-                [2] = 0,
-                [3] = 61,
-            },
-        },
-        ["Tank Alkosh nonSharp"] = 
-        {
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 52,
-            },
-            [5] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 0,
-                [3] = 59,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = true,
-                ["Dps"] = false,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 64,
-                [1] = 0,
-                [2] = 0,
-                [3] = 31,
-            },
-        },
-        ["Magsorc Dummy"] = 
-        {
-            [6] = 
-            {
-                [4] = 14,
-                [1] = 0,
-                [2] = 0,
-                [3] = 61,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = false,
-                ["Sorcerer"] = true,
-                ["Templar"] = false,
-                ["Warden"] = false,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-            },
-            [5] = 
-            {
-                [4] = 0,
-                [1] = 72,
-                [2] = 0,
-                [3] = 3,
-            },
-            ["roles"] = 
-            {
                 ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
             },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 64,
+            [3] = {
+                [32] = 50,
+                [1] = 10,
                 [2] = 0,
-                [3] = 56,
-            },
-        },
-        ["Stamden Dummy"] = 
-        {
-            [6] = 
-            {
-                [4] = 0,
-                [1] = 3,
-                [2] = 0,
-                [3] = 72,
-            },
-            ["classes"] = 
-            {
-                ["Necromancer"] = false,
-                ["Sorcerer"] = false,
-                ["Templar"] = false,
-                ["Warden"] = true,
-                ["Dragonknight"] = false,
-                ["Nightblade"] = false,
-            },
-            [5] = 
-            {
-                [4] = 75,
-                [1] = 16,
-                [2] = 66,
-                [3] = 38,
-            },
-            ["roles"] = 
-            {
-                ["Tank"] = false,
-                ["Dps"] = true,
-                ["Healer"] = false,
-            },
-            [7] = 
-            {
-                [4] = 0,
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
+                [3] = 8,
+                [4] = 40,
+                [5] = 0,
+                [6] = 0,
+                [7] = 0,
+                [8] = 0,
+                [9] = 0,
+                [10] = 0,
+                [11] = 0,
+                [12] = 0,
+                [13] = 0,
+                [14] = 0,
+                [15] = 50,
+                [16] = 10,
+                [17] = 0,
+                [18] = 0,
+                [19] = 0,
+                [20] = 0,
+                [21] = 45,
+                [22] = 45,
+                [23] = 0,
+                [24] = 40,
+                [25] = 0,
+                [26] = 0,
+                [27] = 0,
+                [28] = 0,
+                [29] = 0,
+                [30] = 50,
+                [31] = 50,
             },
         },
     },
