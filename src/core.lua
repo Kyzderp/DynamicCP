@@ -519,7 +519,11 @@ end
 ---------------------------------------------------------------------
 -- Entry point
 function DynamicCP:InitializeDropdowns()
+    if (isRespeccing) then return end -- Skip doing this so we don't overwrite
     DynamicCP:InitializeDropdown("Red")
     DynamicCP:InitializeDropdown("Green")
     DynamicCP:InitializeDropdown("Blue")
+    HideMessage("Red")
+    HideMessage("Green")
+    HideMessage("Blue")
 end
