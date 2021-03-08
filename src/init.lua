@@ -11,6 +11,7 @@ local defaultOptions = {
     },
     hideBackground = false,
     showLabels = true,
+    debug = false,
 }
 
 local labelsInitialized = false
@@ -20,6 +21,7 @@ local labelsInitialized = false
 DynamicCP.messages = {}
 function DynamicCP.dbg(msg)
     if (not msg) then return end
+    if (not DynamicCP.savedOptions.debug) then return end
     if (CHAT_SYSTEM.primaryContainer) then
         d("|c6666FF[DCP]|r " .. tostring(msg))
     else
@@ -48,7 +50,6 @@ function DynamicCP.ShowLabels()
             end
         elseif (child.star and child.star.championClusterData) then
             -- TODOFLAMES: add labels for inside. how to register callback?
-            d("cluster")
             local text = ""
             for _, clusterChild in ipairs(child.star.championClusterData.clusterChildren) do
                 text = text .. clusterChild:GetFormattedName() .. "\n"
@@ -68,7 +69,9 @@ end
 local function OnPlayerActivated(_, initial)
     -- Soft dependency on pChat because its chat restore will overwrite
     for i = 1, #DynamicCP.messages do
-        d("|c6666FF[DCPdelay]|r " .. DynamicCP.messages[i])
+        if (DynamicCP.savedOptions.debug) then
+            d("|c6666FF[DCPdelay]|r " .. DynamicCP.messages[i])
+        end
     end
     DynamicCP.messages = {}
 
@@ -86,8 +89,8 @@ end
 ---------------------------------------------------------------------
 -- Initialize
 local function Initialize()
-    DynamicCP.dbg("Initializing...")
     DynamicCP.savedOptions = ZO_SavedVars:NewAccountWide("DynamicCPSavedVariables", 1, "Options", defaultOptions)
+    DynamicCP.dbg("Initializing...")
     -- TODO: create settings menu
 
     -- Populate defaults only on first time, otherwise the keys will be remade even if user deletes
@@ -107,6 +110,26 @@ local function Initialize()
                 end
             end
         end)
+
+    SLASH_COMMANDS["/dcp"] = function(arg)
+        if (arg == "hidebackground") then
+            DynamicCP.savedOptions.hideBackground = not DynamicCP.savedOptions.hideBackground
+            CHAT_SYSTEM:AddMessage("The Champion Points background images will now be "
+                .. (DynamicCP.savedOptions.hideBackground and "hidden" or "shown")
+                .. ". Reload UI for this to take effect.")
+        elseif (arg == "showlabels") then
+            DynamicCP.savedOptions.showLabels = not DynamicCP.savedOptions.showLabels
+            CHAT_SYSTEM:AddMessage("The Champion Points star labels will now be "
+                .. (DynamicCP.savedOptions.showLabels and "shown" or "hidden")
+                .. ". Reload UI for this to take effect.")
+            -- TODO: don't actually need to reload
+        elseif (arg == "debug") then
+            DynamicCP.savedOptions.debug = not DynamicCP.savedOptions.debug
+            CHAT_SYSTEM:AddMessage("Debug messages are now " .. (DynamicCP.savedOptions.debug and "on" or "off"))
+        else
+            CHAT_SYSTEM:AddMessage("Usage: /dcp <hidebackground || showlabels || debug>")
+        end
+    end
 end
 
 ---------------------------------------------------------------------

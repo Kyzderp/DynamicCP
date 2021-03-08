@@ -184,7 +184,7 @@ function DynamicCP:OnApplyClicked(button)
         end
 
         AddSkillToChampionPurchaseRequest(id, numPoints)
-        d(string.format("setting %s to %d points", GetChampionSkillName(id), numPoints))
+        DynamicCP.dbg(string.format("setting %s to %d points", GetChampionSkillName(id), numPoints))
     end
 
     ShowMessage(tree, GenerateDiff(GetCurrentCP(), cp) .. "\n\n|c00FF00Preset loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
