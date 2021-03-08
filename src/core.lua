@@ -96,7 +96,7 @@ local function GenerateDiff(before, after)
                 local first = before[disciplineIndex][skill] or 0
                 local second = after[disciplineIndex][skill] or 0
                 if (first ~= second and (first ~= 0 or second ~= 0)) then
-                    local line = string.format("\n|cBBBBBB%s:  %d → %d",
+                    local line = zo_strformat("\n|cBBBBBB<<C:1>>:  <<2>> → <<3>>",
                         GetChampionSkillName(GetChampionSkillId(disciplineIndex, skill)),
                         first,
                         second)
@@ -195,10 +195,22 @@ end
 ---------------------------------------------------------------------
 -- When confirm button is clicked
 function DynamicCP:OnConfirmClicked(button)
-    -- TODO: dialog
-    CHAMPION_PERKS:SpendPointsConfirmed(true)
-    isRespeccing = false
-    DynamicCPContainerConfirmButton:SetHidden(true)
+    local function CommitPoints()
+        CHAMPION_PERKS:SpendPointsConfirmed(true)
+        isRespeccing = false
+        DynamicCPContainerConfirmButton:SetHidden(true)
+    end
+
+    libDialog:RegisterDialog(
+            DynamicCP.name,
+            "ConfirmConfirmation",
+            "Confirm Changes",
+            "Are you sure you want to commit your points?\nRedistribution cost: "  .. GetChampionRespecCost() .. " |t18:18:esoui/art/currency/currency_gold.dds|t",
+            CommitPoints,
+            nil,
+            nil,
+            true)
+    libDialog:ShowDialog(DynamicCP.name, "ConfirmConfirmation")
 end
 
 

@@ -149,6 +149,7 @@
             <Anchor point="TOPRIGHT" relativeTo="ZO_ChampionPerksCanvas" relativePoint="TOPRIGHT" offsetX="-20" offsetY="20"/>
             <OnInitialized>
                 CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
+                GAMEPAD_CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
                 self:SetHidden(true)
             </OnInitialized>
             <Controls>

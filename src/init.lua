@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "0.1.0"
+DynamicCP.version = "0.1.1"
 
 local defaultOptions = {
     firstTime = true,
@@ -39,7 +39,7 @@ function DynamicCP.ShowLabels()
             local n = WINDOW_MANAGER:CreateControl("$(parent)Name", child, CT_LABEL)
             n:SetInheritScale(false)
             n:SetAnchor(CENTER, child, CENTER, 0, -40)
-            n:SetText(GetChampionSkillName(id))
+            n:SetText(zo_strformat("<<C:1>>", GetChampionSkillName(id)))
             local slottable = CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))
             if (slottable) then
                 n:SetFont("ZoFontWinH4")
@@ -82,8 +82,6 @@ local function OnPlayerActivated(_, initial)
         GetChampionDisciplineBackgroundSelectedTexture = backgroundOverride
         GetChampionClusterBackgroundTexture = backgroundOverride
     end
-
-    PrepareChampionPurchaseRequest(true)
 end
 
 ---------------------------------------------------------------------
@@ -102,6 +100,7 @@ local function Initialize()
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name, EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
 
     CHAMPION_PERKS_CONSTELLATIONS_FRAGMENT:RegisterCallback("StateChange", function(oldState, newState)
+            if (newState ~= SCENE_SHOWN) then return end
             DynamicCP:InitializeDropdowns() -- Call it every time in case LFG role is changed
             if (not labelsInitialized) then
                 labelsInitialized = true
