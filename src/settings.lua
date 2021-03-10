@@ -64,7 +64,7 @@ function DynamicCP:CreateSettingsMenu()
                 {
                     type = "checkbox",
                     name = "Dock window",
-                    tooltip = "Display the window in different positions on each constellation to avoid overlapping with stars",
+                    tooltip = "Display the window in different positions on each constellation to avoid overlapping with stars. Recommend adjusting the scale so it fits in the Fitness tree, between Arcane Alacrity and Bashing Brutality",
                     default = true,
                     getFunc = function() return DynamicCP.savedOptions.dockWithSpace end,
                     setFunc = function(value)
@@ -75,10 +75,10 @@ function DynamicCP:CreateSettingsMenu()
                 {
                     type = "slider",
                     name = "Window scale %",
-                    tooltip = "Scale of the window to display. Some spacing may look weird especially at extreme values",
+                    tooltip = "Scale of the window to display. Some spacing will look weird especially at more extreme values",
                     default = 100,
-                    min = 20,
-                    max = 200,
+                    min = 50,
+                    max = 150,
                     step = 5,
                     getFunc = function() return DynamicCP.savedOptions.scale * 100 end,
                     setFunc = function(value)

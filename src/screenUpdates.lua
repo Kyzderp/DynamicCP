@@ -49,6 +49,8 @@ function DynamicCP.RefreshLabels(show)
 end
 
 
+-- We want a window width of about GuiRoot:GetWidth()*.27, at least on my resolution... /script d("actual") d(DynamicCPContainer:GetWidth()) d("desired") d(GuiRoot:GetWidth()*.28)
+-- Unsure what happens on wider screens
 ---------------------------------------------------------------------
 -- Dock the window
 local function DockWindow(activeConstellation)
@@ -58,15 +60,12 @@ local function DockWindow(activeConstellation)
     if (activeConstellation == "All" or activeConstellation == "Green" or activeConstellation == "Cluster") then
         tx = GuiRoot:GetWidth() - DynamicCPContainer:GetWidth() / 2 - 10
         ty = DynamicCPContainer:GetHeight() / 2 + 10
-        -- DynamicCPContainer:SetAnchor(TOPRIGHT, ZO_ChampionPerksCanvas, TOPRIGHT, -10, 10)
     elseif (activeConstellation == "Blue") then
         tx = GuiRoot:GetWidth() - DynamicCPContainer:GetWidth() / 2 - 10
         ty = GuiRoot:GetHeight() * 0.35
-        -- DynamicCPContainer:SetAnchor(RIGHT, ZO_ChampionPerksCanvas, RIGHT, -10, -GuiRoot:GetHeight() * 0.15)
     elseif (activeConstellation == "Red") then
         tx = GuiRoot:GetWidth() * 0.6875
         ty = GuiRoot:GetHeight() * 0.27
-        -- DynamicCPContainer:SetAnchor(CENTER, ZO_ChampionPerksCanvas, CENTER, GuiRoot:GetWidth() * 0.1875, -GuiRoot:GetHeight() * 0.23)
     end
 
     -- Play animation
