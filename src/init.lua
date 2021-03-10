@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "0.1.2"
+DynamicCP.version = "0.2.0"
 
 local defaultOptions = {
     firstTime = true,
@@ -96,6 +96,8 @@ local function Initialize()
         DynamicCP.savedOptions.cp = DynamicCP.defaultPresets
         DynamicCP.savedOptions.firstTime = false
     end
+
+    DynamicCP:CreateSettingsMenu()
 
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name, EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
 
