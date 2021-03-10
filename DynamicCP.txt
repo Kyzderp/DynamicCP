@@ -11,5 +11,6 @@
 src/init.lua
 src/presetData.lua
 src/core.lua
+src/labels.lua
 src/settings.lua
 ui.xml
