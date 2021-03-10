@@ -69,13 +69,14 @@ local function Initialize()
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name, EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
 
     CHAMPION_PERKS_CONSTELLATIONS_FRAGMENT:RegisterCallback("StateChange", function(oldState, newState)
-            DynamicCP.dbg("StateChange " .. tostring(oldState) .. " " .. tostring(newState))
+            -- DynamicCP.dbg("StateChange " .. tostring(oldState) .. " " .. tostring(newState))
             if (newState ~= SCENE_SHOWN) then return end
             DynamicCP:InitializeDropdowns() -- Call it every time in case LFG role is changed
             if (not initialOpened) then
                 initialOpened = true
+                DynamicCP.InitLabels()
                 if (DynamicCP.savedOptions.showLabels) then
-                    DynamicCP.ShowLabels()
+                    DynamicCP.RefreshLabels(true)
                 end
             end
         end)
