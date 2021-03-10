@@ -97,7 +97,7 @@ local function Initialize()
             DynamicCP.savedOptions.debug = not DynamicCP.savedOptions.debug
             CHAT_SYSTEM:AddMessage("Debug messages are now " .. (DynamicCP.savedOptions.debug and "on" or "off"))
         else
-            CHAT_SYSTEM:AddMessage("Usage: /dcp <hidebackground || showlabels || debug>")
+            DynamicCPContainer:SetHidden(not DynamicCPContainer:IsHidden())
         end
     end
 end

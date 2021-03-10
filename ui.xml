@@ -145,7 +145,7 @@
 
 <!-- ======================================================================================================================= -->
         <TopLevelControl name="DynamicCPContainer" clampedToScreen="true" mouseEnabled="true" movable="true" hidden="false">
-            <Dimensions x="680" y="314"/>
+            <Dimensions x="680" y="334"/>
             <Anchor point="TOPRIGHT" relativeTo="ZO_ChampionPerksCanvas" relativePoint="TOPRIGHT" offsetX="-10" offsetY="10"/>
             <OnInitialized>
                 CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
@@ -154,9 +154,24 @@
             </OnInitialized>
             <Controls>
                 <Backdrop name="$(parent)Backdrop" alpha="0.5" inherits="ZO_DefaultBackdrop" centerColor="666666"><AnchorFill/></Backdrop>
+                <Label name="$(parent)Title" font="ZoFontWinH4" color="CCCCCC" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="false" text="Dynamic CP">
+                    <Dimensions x="190" y="20"/>
+                    <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="4"/>
+                    <OnInitialized>
+                        self:SetText("Dynamic CP " .. DynamicCP.version)
+                    </OnInitialized>
+                </Label>
+                <Button name="$(parent)Close" alpha="1" topmost="true">
+                    <Textures normal="/esoui/art/hud/radialicon_cancel_up.dds" mouseOver="/esoui/art/hud/radialicon_cancel_over.dds" />
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-2" offsetY="2" />
+                    <Dimensions x="36" y="36" />
+                    <OnClicked>
+                        DynamicCPContainer:SetHidden(true)
+                    </OnClicked>
+                </Button>
                 <Control name="$(parent)Inner" hidden="false">
                     <Dimensions x="660" y="280"/>
-                    <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="20"/>
+                    <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="40"/>
                     <Controls>
                         <!-- <Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop> -->
                         <!-- RED TREE -->
@@ -250,7 +265,7 @@
                         </Button>
 
                         <Label name="$(parent)Instructions" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="HIGH" hidden="false"
-                            text="Select a preset from a dropdown above and click &quot;Apply&quot; to apply the preset to your Champion Points. To create a new preset, commit your current points, select &quot;Create New&quot; from the dropdown, and click &quot;Save&quot; once you have renamed it.">
+                            text="Select a preset from a dropdown above and click &quot;Apply&quot; to apply the preset to your Champion Points, then click &quot;Confirm&quot; to commit your points. To create a new preset, commit your current points, select &quot;Create New&quot; from the dropdown, and click &quot;Save&quot; once you have renamed it.">
                             <Dimensions x="540" y="200"/>
                             <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="100"/>
                         </Label>
