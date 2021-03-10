@@ -24,14 +24,14 @@ function DynamicCP:CreateSettingsMenu()
             width = "full",
         },
 ---------------------------------------------------------------------
--- general
+-- constellation
         {
             type = "submenu",
             name = "Constellation Settings",
             controls = {
                 {
                     type = "checkbox",
-                    name = "Show Labels on Stars",
+                    name = "Show labels on stars",
                     tooltip = "Show the names of champion point stars above the stars",
                     default = true,
                     getFunc = function() return DynamicCP.savedOptions.showLabels end,
@@ -43,7 +43,7 @@ function DynamicCP:CreateSettingsMenu()
                 },
                 {
                     type = "checkbox",
-                    name = "Hide Background",
+                    name = "Hide background",
                     tooltip = "Hide the constellation background texture, useful if you have difficulty seeing the stars or don't like the extra clutter",
                     default = false,
                     getFunc = function() return DynamicCP.savedOptions.hideBackground end,
@@ -55,8 +55,31 @@ function DynamicCP:CreateSettingsMenu()
                 },
             }
         }
+---------------------------------------------------------------------
+-- window
+        {
+            type = "submenu",
+            name = "Preset Window Settings",
+            controls = {
+                {
+                    type = "checkbox",
+                    name = "Dock window",
+                    tooltip = "Display the window in different positions on each constellation to avoid overlapping with stars",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.dockWithSpace end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.dockWithSpace = value
+                    end,
+                    width = "full",
+                },
+            }
+        }
     }
 
     DynamicCP.addonPanel = LAM:RegisterAddonPanel("DynamicCPOptions", panelData)
     LAM:RegisterOptionControls("DynamicCPOptions", optionsData)
+end
+
+function DynamicCP:OpenSettingsMenu()
+    LibAddonMenu2:OpenToPanel(DynamicCP.addonPanel)
 end

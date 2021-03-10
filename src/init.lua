@@ -11,6 +11,7 @@ local defaultOptions = {
     },
     hideBackground = false,
     showLabels = true,
+    dockWithSpace = true,
     debug = false,
 }
 
