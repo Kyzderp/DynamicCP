@@ -67,6 +67,7 @@ local function Initialize()
     end
 
     DynamicCP:CreateSettingsMenu()
+    ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_MENU", "Toggle CP Preset Window")
 
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name, EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
 

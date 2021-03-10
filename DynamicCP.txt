@@ -14,3 +14,4 @@ src/core.lua
 src/screenUpdates.lua
 src/settings.lua
 ui.xml
+bindings.xml
