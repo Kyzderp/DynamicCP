@@ -53,8 +53,8 @@ function DynamicCP:CreateSettingsMenu()
                     width = "full",
                     requiresReload = true,
                 },
-            }
-        }
+            },
+        },
 ---------------------------------------------------------------------
 -- window
         {
@@ -72,8 +72,23 @@ function DynamicCP:CreateSettingsMenu()
                     end,
                     width = "full",
                 },
-            }
-        }
+                {
+                    type = "slider",
+                    name = "Window scale %",
+                    tooltip = "Scale of the window to display. Some spacing may look weird especially at extreme values",
+                    default = 100,
+                    min = 20,
+                    max = 200,
+                    step = 5,
+                    getFunc = function() return DynamicCP.savedOptions.scale * 100 end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.scale = value / 100
+                        DynamicCPContainer:SetScale(value / 100)
+                    end,
+                    width = "full",
+                },
+            },
+        },
     }
 
     DynamicCP.addonPanel = LAM:RegisterAddonPanel("DynamicCPOptions", panelData)

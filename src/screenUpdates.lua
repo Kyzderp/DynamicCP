@@ -50,6 +50,20 @@ end
 
 
 ---------------------------------------------------------------------
+-- Dock the window
+local function DockWindow(activeConstellation)
+    DynamicCPContainer:ClearAnchors()
+    if (activeConstellation == "All" or activeConstellation == "Green" or activeConstellation == "Cluster") then
+        DynamicCPContainer:SetAnchor(TOPRIGHT, ZO_ChampionPerksCanvas, TOPRIGHT, -10, 10)
+    elseif (activeConstellation == "Blue") then
+        DynamicCPContainer:SetAnchor(RIGHT, ZO_ChampionPerksCanvas, RIGHT, -10, -GuiRoot:GetHeight() * 0.15)
+    elseif (activeConstellation == "Red") then
+        DynamicCPContainer:SetAnchor(CENTER, ZO_ChampionPerksCanvas, CENTER, GuiRoot:GetWidth() * 0.1875, -GuiRoot:GetHeight() * 0.23)
+    end
+end
+
+
+---------------------------------------------------------------------
 -- utils
 local function IsInBounds(control)
     local x, y = control:GetCenter()
@@ -82,11 +96,14 @@ local function OnCanvasAnimationStopped()
         activeConstellation = "Red"
     else
         -- TODO: clusters
-        activeConstellation = "CLUSTER"
+        activeConstellation = "Cluster"
         DynamicCP.RefreshLabels(DynamicCP.savedOptions.showLabels)
     end
 
     DynamicCP.dbg(activeConstellation)
+    if (DynamicCP.savedOptions.dockWithSpace) then
+        DockWindow(activeConstellation)
+    end
 end
 
 ---------------------------------------------------------------------

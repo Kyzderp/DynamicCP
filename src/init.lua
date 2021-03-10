@@ -12,6 +12,7 @@ local defaultOptions = {
     hideBackground = false,
     showLabels = true,
     dockWithSpace = true,
+    scale = 1.0,
     debug = false,
 }
 
@@ -76,6 +77,7 @@ local function Initialize()
             if (not initialOpened) then
                 initialOpened = true
                 DynamicCP.InitLabels()
+                DynamicCPContainer:SetScale(DynamicCP.savedOptions.scale)
                 if (DynamicCP.savedOptions.showLabels) then
                     DynamicCP.RefreshLabels(true)
                 end
