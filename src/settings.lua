@@ -89,6 +89,36 @@ function DynamicCP:CreateSettingsMenu()
                 },
             },
         },
+---------------------------------------------------------------------
+-- other
+        {
+            type = "submenu",
+            name = "Other Settings",
+            controls = {
+                {
+                    type = "checkbox",
+                    name = "Prompt unsaved changes",
+                    tooltip = "Show a warning and option to commit changes if you leave the CP screen without saving changes",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.showLeaveWarning end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.showLeaveWarning = value
+                    end,
+                    width = "full",
+                },
+                {
+                    type = "checkbox",
+                    name = "Show cooldown warning",
+                    tooltip = "Show a warning if you are unable to commit changes due to ZOS's 30-second cooldown on changing slottables",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.showCooldownWarning end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.showCooldownWarning = value
+                    end,
+                    width = "full",
+                },
+            },
+        },
     }
 
     DynamicCP.addonPanel = LAM:RegisterAddonPanel("DynamicCPOptions", panelData)

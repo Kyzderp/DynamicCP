@@ -144,8 +144,8 @@ local function HideWarning()
 end
 
 function DynamicCP.OnExitedCPScreen()
-    if (CHAMPION_PERKS:HasUnsavedChanges()) then
-        local text = "Warning: You have left the Champion Points screen with unsaved"
+    if (DynamicCP.savedOptions.showLeaveWarning and CHAMPION_PERKS:HasUnsavedChanges()) then
+        local text = "Warning: You have left the Champion Points screen without saving"
         if (CHAMPION_DATA_MANAGER:HasUnsavedChanges()) then
             text = text .. " points"
                     .. (CHAMPION_PERKS.championBar:HasUnsavedChanges() and " and slottables." or ".")
@@ -154,6 +154,10 @@ function DynamicCP.OnExitedCPScreen()
         end
         CHAMPION_PERKS:SpendPendingPoints()
         DisplayWarning(text)
+        EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "Warning", 10000, function()
+            EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "Warning")
+            HideWarning()
+        end)
     end
 end
 
@@ -188,6 +192,7 @@ function DynamicCP.OnPurchased(_, result)
         HideWarning()
         lastSlottableChange = GetGameTimeMilliseconds()
     elseif (result == CHAMPION_PURCHASE_CHAMPION_BAR_ILLEGAL_SLOT) then
+        if (not DynamicCP.savedOptions.showCooldownWarning) then return end
         -- This is apparently the result that's given when we're on slottable cooldown
         local secondsRemaining = (SLOTTABLE_COOLDOWN - GetGameTimeMilliseconds() + lastSlottableChange) / 1000
         DisplayWarning(string.format(SLOTTABLE_COOLDOWN_STRING, secondsRemaining))
@@ -221,10 +226,8 @@ function DynamicCP.InitLabels()
     ZO_ChampionPerksCanvasConstellation1:SetHandler("OnRectChanged", function(control, newLeft, newTop, newRight, newBottom, oldLeft, oldTop, oldRight, oldBottom)
         local currTime = GetGameTimeMilliseconds()
         if (not rectThrottling) then
-            -- DynamicCP.dbg("start")
             rectThrottling = true
         elseif (currTime - lastThrottle > 150) then
-            -- DynamicCP.dbg("reregister")
             lastThrottle = currTime
         else
             return
@@ -243,5 +246,4 @@ function DynamicCP.InitLabels()
     -- Create sliding animation
     DynamicCPContainer.slideAnimation = GetAnimationManager():CreateTimelineFromVirtual("ZO_LootSlideInAnimation", DynamicCPContainer)
     DynamicCPContainer.slide = DynamicCPContainer.slideAnimation:GetFirstAnimation()
-    -- TODO: do i need an OnStop?
 end

@@ -14,6 +14,8 @@ local defaultOptions = {
     dockWithSpace = true,
     scale = 1.0,
     debug = false,
+    showLeaveWarning = true,
+    showCooldownWarning = true,
 }
 
 local initialOpened = false
