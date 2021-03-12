@@ -90,6 +90,37 @@ function DynamicCP:CreateSettingsMenu()
             },
         },
 ---------------------------------------------------------------------
+-- preset application
+        {
+            type = "submenu",
+            name = "Preset Settings",
+            controls = {
+                {
+                    type = "checkbox",
+                    name = "Automatically slot stars",
+                    tooltip = "After confirming a preset, automatically slot slottable stars if there are 4 or fewer unlocked slottables",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.slotStars end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.slotStars = value
+                    end,
+                    width = "full",
+                },
+                -- {
+                --     type = "checkbox",
+                --     name = "Automatically slot higher stars",
+                --     tooltip = "After confirming a preset, if there are 5 or more unlocked slottables, slot the 4 that are closest to max. If there are more than 4, the order is determined by the star's index",
+                --     default = true,
+                --     getFunc = function() return DynamicCP.savedOptions.slotHigherStars end,
+                --     setFunc = function(value)
+                --         DynamicCP.savedOptions.slotHigherStars = value
+                --     end,
+                --     width = "full",
+                --     disabled = function() return not DynamicCP.savedOptions.slotStars end
+                -- },
+            },
+        },
+---------------------------------------------------------------------
 -- other
         {
             type = "submenu",

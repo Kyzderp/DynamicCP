@@ -207,11 +207,16 @@ function DynamicCP:OnApplyClicked(button)
     end
 
     -- Apply slottables if applicable
-    if (numSlottables <= 4) then
-        local offset = HOTBAR_OFFSET[tree]
-        for index, id in pairs(toSlot) do
-            AddHotbarSlotToChampionPurchaseRequest(index + offset, id)
-            DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(id), index + offset))
+    if (DynamicCP.savedOptions.slotStars) then
+        if (numSlottables <= 4) then
+            local offset = HOTBAR_OFFSET[tree]
+            for index, id in pairs(toSlot) do
+                AddHotbarSlotToChampionPurchaseRequest(index + offset, id)
+                DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(id), index + offset))
+            end
+        else
+            -- Find the 4 with highest values
+            -- TODO: do this after refactoring to keep separate track of the data, otherwise don't know pending points. Could add to it within the loop but gonna need to rewrite this anyway
         end
     end
 

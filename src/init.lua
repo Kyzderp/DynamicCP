@@ -16,6 +16,8 @@ local defaultOptions = {
     debug = false,
     showLeaveWarning = true,
     showCooldownWarning = true,
+    slotStars = true,
+    slotHigherStars = true,
 }
 
 local initialOpened = false
