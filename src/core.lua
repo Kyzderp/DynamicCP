@@ -30,6 +30,12 @@ local TREE_TO_DISCIPLINE = {
     Red = 3,
 }
 
+local HOTBAR_OFFSET = {
+    Green = 0,
+    Blue = 4,
+    Red = 8,
+}
+
 local isRespeccing = false
 
 ---------------------------------------------------------------------
@@ -161,6 +167,8 @@ function DynamicCP:OnApplyClicked(button)
         currentHotbar[skillId] = slotIndex
     end
 
+    -- TODO: instead of respeccing as we go, we should keep track separately and prepare
+    -- the purchase request when user presses confirm
     if (not isRespeccing) then
         PrepareChampionPurchaseRequest(true)
         isRespeccing = true
@@ -169,6 +177,9 @@ function DynamicCP:OnApplyClicked(button)
     -- Apply all stars within the tree
     local cp = DynamicCP.savedOptions.cp[tree][presetName]
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
+    local unslotted = 0
+    local numSlottables = 0
+    local toSlot = {}
     for skill = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
         local id = GetChampionSkillId(disciplineIndex, skill)
         local numPoints = 0
@@ -181,10 +192,27 @@ function DynamicCP:OnApplyClicked(button)
         -- Unslot slottables that are no longer slottable because of not enough points
         if (currentHotbar[id] and not WouldChampionSkillNodeBeUnlocked(id, numPoints)) then
             AddHotbarSlotToChampionPurchaseRequest(currentHotbar[id], nil)
+            unslotted = unslotted + 1
+        end
+
+        -- Collect slottables
+        local isSlottable = CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))
+        if (isSlottable and WouldChampionSkillNodeBeUnlocked(id, numPoints)) then
+            numSlottables = numSlottables + 1
+            toSlot[numSlottables] = id
         end
 
         AddSkillToChampionPurchaseRequest(id, numPoints)
         DynamicCP.dbg(zo_strformat("setting <<C:1>> to <<2>> points", GetChampionSkillName(id), numPoints))
+    end
+
+    -- Apply slottables if applicable
+    if (numSlottables <= 4) then
+        local offset = HOTBAR_OFFSET[tree]
+        for index, id in pairs(toSlot) do
+            AddHotbarSlotToChampionPurchaseRequest(index + offset, id)
+            DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(id), index + offset))
+        end
     end
 
     ShowMessage(tree, GenerateDiff(GetCurrentCP(), cp) .. "\n\n|c00FF00Preset " .. presetName .. " loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
