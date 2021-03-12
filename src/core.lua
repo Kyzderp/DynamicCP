@@ -187,7 +187,7 @@ function DynamicCP:OnApplyClicked(button)
         DynamicCP.dbg(zo_strformat("setting <<C:1>> to <<2>> points", GetChampionSkillName(id), numPoints))
     end
 
-    ShowMessage(tree, GenerateDiff(GetCurrentCP(), cp) .. "\n\n|c00FF00Preset loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
+    ShowMessage(tree, GenerateDiff(GetCurrentCP(), cp) .. "\n\n|c00FF00Preset " .. presetName .. " loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
     DynamicCPContainerInnerConfirmButton:SetHidden(false)
 end
 

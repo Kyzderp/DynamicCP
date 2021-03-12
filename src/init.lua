@@ -70,9 +70,14 @@ local function Initialize()
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_MENU", "Toggle CP Preset Window")
 
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name, EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
+    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Purchase", EVENT_CHAMPION_PURCHASE_RESULT, DynamicCP.OnPurchased)
 
     CHAMPION_PERKS_CONSTELLATIONS_FRAGMENT:RegisterCallback("StateChange", function(oldState, newState)
-            -- DynamicCP.dbg("StateChange " .. tostring(oldState) .. " " .. tostring(newState))
+            if (newState == SCENE_HIDDEN) then
+                DynamicCP.OnExitedCPScreen()
+                return
+            end
+
             if (newState ~= SCENE_SHOWN) then return end
             DynamicCP:InitializeDropdowns() -- Call it every time in case LFG role is changed
             if (not initialOpened) then

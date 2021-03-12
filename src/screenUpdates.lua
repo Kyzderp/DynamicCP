@@ -1,7 +1,13 @@
 DynamicCP = DynamicCP or {}
 
+-- Throttle for animation listening
 local rectThrottling = false
 local lastThrottle = 0
+
+-- ZOS has currently implemented a cooldown on how often you can change slottables
+local SLOTTABLE_COOLDOWN_STRING = "ERROR: Unable to commit changes. This is probably due to ZOS's 30-second cooldown on changing slottables. Try again in %.0f seconds."
+local SLOTTABLE_COOLDOWN = 30000
+local lastSlottableChange = 0
 
 ---------------------------------------------------------------------
 -- Refresh/reset star labels to the default
@@ -90,8 +96,7 @@ end
 -- When the animations have settled, check positions of the canvases to see which is active
 local function OnCanvasAnimationStopped()
     if (ZO_ChampionPerksCanvas:IsHidden()) then
-        -- TODO: need to do anything?
-        DynamicCP.dbg("EXIT")
+        -- This is not consistent, do not use this to trigger exit events
         return
     end
 
@@ -119,6 +124,95 @@ local function OnCanvasAnimationStopped()
         DockWindow(activeConstellation)
     end
 end
+
+
+---------------------------------------------------------------------
+-- Check for unsaved changes when exiting screen
+local function DisplayWarning(text)
+    DynamicCPWarningLabel:SetText(text)
+    DynamicCPWarning:SetHidden(false)
+    DynamicCPWarning:ClearAnchors()
+    DynamicCPWarning:SetAnchor(BOTTOM, ZO_Dialog1, TOP, 0, -10)
+end
+
+local function SetWarning(text)
+    DynamicCPWarningLabel:SetText(text)
+end
+
+local function HideWarning()
+    DynamicCPWarning:SetHidden(true)
+end
+
+function DynamicCP.OnExitedCPScreen()
+    if (CHAMPION_PERKS:HasUnsavedChanges()) then
+        local text = "Warning: You have left the Champion Points screen with unsaved"
+        if (CHAMPION_DATA_MANAGER:HasUnsavedChanges()) then
+            text = text .. " points"
+                    .. (CHAMPION_PERKS.championBar:HasUnsavedChanges() and " and slottables." or ".")
+        elseif (CHAMPION_PERKS.championBar:HasUnsavedChanges()) then
+            text = text .. " slottables."
+        end
+        CHAMPION_PERKS:SpendPendingPoints()
+        DisplayWarning(text)
+    end
+end
+
+function DynamicCP.OnPurchased(_, result)
+    local resultToString = {
+        [CHAMPION_PURCHASE_ABILITY_CAP_EXCEEDED] = "ABILITY_CAP_EXCEEDED",
+        [CHAMPION_PURCHASE_ABILITY_LINE_LEVEL_NOT_MET] = "ABILITY_LINE_LEVEL_NOT_MET",
+        [CHAMPION_PURCHASE_ATTRIBUTE_CAP_EXCEEDED] = "ATTRIBUTE_CAP_EXCEEDED",
+        [CHAMPION_PURCHASE_CARRYING_DAEDRIC_ARTIFACT] = "CARRYING_DAEDRIC_ARTIFACT",
+        [CHAMPION_PURCHASE_CHAMPION_BAR_ILLEGAL_SLOT] = "CHAMPION_BAR_ILLEGAL_SLOT",
+        [CHAMPION_PURCHASE_CHAMPION_BAR_NOT_CHAMPION_SKILL] = "CHAMPION_BAR_NOT_CHAMPION_SKILL",
+        [CHAMPION_PURCHASE_CHAMPION_BAR_SKILL_NOT_PURCHASED] = "CHAMPION_BAR_SKILL_NOT_PURCHASED",
+        [CHAMPION_PURCHASE_CHAMPION_BAR_SKILL_NOT_SLOTTABLE] = "CHAMPION_BAR_SKILL_NOT_SLOTTABLE",
+        [CHAMPION_PURCHASE_CHAMPION_BAR_WRONG_DISCIPLINE] = "CHAMPION_BAR_WRONG_DISCIPLINE",
+        [CHAMPION_PURCHASE_CHAMPION_NOT_UNLOCKED] = "CHAMPION_NOT_UNLOCKED",
+        [CHAMPION_PURCHASE_CP_DISABLED] = "CP_DISABLED",
+        [CHAMPION_PURCHASE_INTERNAL_ERROR] = "INTERNAL_ERROR",
+        [CHAMPION_PURCHASE_INVALID_ABILITY] = "INVALID_ABILITY",
+        [CHAMPION_PURCHASE_INVALID_ATTRIBUTE] = "INVALID_ATTRIBUTE",
+        [CHAMPION_PURCHASE_IN_COMBAT] = "IN_COMBAT",
+        [CHAMPION_PURCHASE_IN_NOCP_BATTLEGROUND] = "IN_NOCP_BATTLEGROUND",
+        [CHAMPION_PURCHASE_IN_NOCP_CAMPAIGN] = "IN_NOCP_CAMPAIGN",
+        [CHAMPION_PURCHASE_NOT_ENOUGH_POINTS] = "NOT_ENOUGH_POINTS",
+        [CHAMPION_PURCHASE_RESPEC_FAILED] = "RESPEC_FAILED",
+        [CHAMPION_PURCHASE_SKILL_NEEDS_REFUND] = "SKILL_NEEDS_REFUND",
+        [CHAMPION_PURCHASE_SKILL_NOT_CONNECTED] = "SKILL_NOT_CONNECTED",
+        [CHAMPION_PURCHASE_SUCCESS] = "SUCCESS",
+    }
+    DynamicCP.dbg("Purchased " .. resultToString[result])
+
+    if (result == CHAMPION_PURCHASE_SUCCESS) then
+        HideWarning()
+        lastSlottableChange = GetGameTimeMilliseconds()
+    elseif (result == CHAMPION_PURCHASE_CHAMPION_BAR_ILLEGAL_SLOT) then
+        -- This is apparently the result that's given when we're on slottable cooldown
+        local secondsRemaining = (SLOTTABLE_COOLDOWN - GetGameTimeMilliseconds() + lastSlottableChange) / 1000
+        DisplayWarning(string.format(SLOTTABLE_COOLDOWN_STRING, secondsRemaining))
+
+        -- Update the error message
+        EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "Warning", 1000, function()
+            local secondsRemaining = (SLOTTABLE_COOLDOWN - GetGameTimeMilliseconds() + lastSlottableChange) / 1000
+            if (secondsRemaining <= 0) then
+                EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "Warning")
+                HideWarning()
+                -- TODO: Need to actually keep track of what the changes were, otherwise all the changes are lost when purchase request is sent...
+                -- CHAMPION_PERKS:SpendPendingPoints()
+            else
+                SetWarning(string.format(SLOTTABLE_COOLDOWN_STRING, secondsRemaining))
+            end
+        end)
+    else
+        DisplayWarning("ERROR: Unable to commit changes. Reason: " .. resultToString[result]) -- Too lazy to find the appropriate localization strings
+        EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "Warning", 5000, function()
+            EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "Warning")
+            HideWarning()
+        end)
+    end
+end
+
 
 ---------------------------------------------------------------------
 -- Some first-time actions
