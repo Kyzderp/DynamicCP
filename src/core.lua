@@ -201,7 +201,7 @@ function DynamicCP:OnApplyClicked(button)
         end
 
         AddSkillToChampionPurchaseRequest(id, numPoints)
-        DynamicCP.dbg(zo_strformat("setting <<C:1>> to <<2>> points", GetChampionSkillName(id), numPoints))
+        -- DynamicCP.dbg(zo_strformat("setting <<C:1>> to <<2>> points", GetChampionSkillName(id), numPoints))
     end
 
     -- Apply slottables if applicable

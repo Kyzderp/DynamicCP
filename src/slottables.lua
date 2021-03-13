@@ -1,5 +1,7 @@
 DynamicCP = DynamicCP or {}
 
+local currentSlottables = {}
+
 ---------------------------------------------------------------------
 -- When the star in the constellation is double clicked
 local function ToggleSlotStar(championSkillData)
@@ -44,7 +46,7 @@ local function AddMouseDoubleClickStars()
             local id = child.star.championSkillData.championSkillId
             if (CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))) then
                 if (child:GetHandler("OnMouseDoubleClick") == nil) then
-                    DynamicCP.dbg(zo_strformat("Adding doubleclick handler for <<C:1>>", GetChampionSkillName(id)))
+                    -- DynamicCP.dbg(zo_strformat("Adding doubleclick handler for <<C:1>>", GetChampionSkillName(id)))
                     child:SetHandler("OnMouseDoubleClick", function()
                         ToggleSlotStar(child.star.championSkillData)
                     end)
@@ -73,9 +75,45 @@ local function AddMouseDoubleClick()
 end
 
 ---------------------------------------------------------------------
+-- Register callbacks for slot changing
+local function CollectCurrentSlottables()
+    currentSlottables = {}
+    for i = 1, 12 do
+        currentSlottables[i] = CHAMPION_PERKS.championBar:GetSlot(i)
+    end
+end
+
+local function OnSlotsChanged()
+    CollectCurrentSlottables()
+
+    -- TODO: display in pulldown
+    -- TODO: display on hud?
+end
+DynamicCP.OnSlotsChanged = OnSlotsChanged
+
+local function AddSlotChange()
+    DynamicCP.dbg("Adding slot change callbacks")
+
+    -- Slot changes from the UI
+    CHAMPION_PERKS.championBar:RegisterCallback("SlotChanged", function()
+        DynamicCP.dbg("slot changed")
+        OnSlotsChanged()
+    end)
+
+    -- This is called when starting or stopping respec
+    CHAMPION_DATA_MANAGER:RegisterCallback("AllPointsChanged", function()
+        DynamicCP.dbg("all points changed")
+        OnSlotsChanged()
+    end)
+end
+
+---------------------------------------------------------------------
 -- Modifications to slottables UI
 function DynamicCP.InitSlottables()
     if (DynamicCP.savedOptions.doubleClick) then
         AddMouseDoubleClick()
     end
+
+    AddSlotChange()
+    CollectCurrentSlottables()
 end

@@ -75,7 +75,10 @@ local function Initialize()
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_MENU", "Toggle CP Preset Window")
 
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name, EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
-    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Purchase", EVENT_CHAMPION_PURCHASE_RESULT, DynamicCP.OnPurchased)
+    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Purchase", EVENT_CHAMPION_PURCHASE_RESULT, function(eventCode, result)
+        DynamicCP.OnPurchased(eventCode, result)
+        DynamicCP.OnSlotsChanged()
+    end)
 
     CHAMPION_PERKS_CONSTELLATIONS_FRAGMENT:RegisterCallback("StateChange", function(oldState, newState)
             if (newState == SCENE_HIDDEN) then

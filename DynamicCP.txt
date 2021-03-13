@@ -15,4 +15,5 @@ src/screenUpdates.lua
 src/slottables.lua
 src/settings.lua
 ui.xml
+pulldown.xml
 bindings.xml
