@@ -36,10 +36,8 @@ end
 
 ---------------------------------------------------------------------
 -- Register double click handlers
-local function AddMouseDoubleClick()
-    DynamicCP.dbg("Adding mouse actions")
+local function AddMouseDoubleClickStars()
     -- Slottable stars, at least on the main screen for now
-    -- TODO: inner screen
     for i = 1, ZO_ChampionPerksCanvas:GetNumChildren() do
         local child = ZO_ChampionPerksCanvas:GetChild(i)
         if (child.star and child.star.championSkillData) then
@@ -54,6 +52,13 @@ local function AddMouseDoubleClick()
             end
         end
     end
+end
+DynamicCP.AddMouseDoubleClickStars = AddMouseDoubleClickStars
+
+local function AddMouseDoubleClick()
+    DynamicCP.dbg("Adding mouse actions")
+
+    AddMouseDoubleClickStars()
 
     -- Do the hotbar slots too
     for i = 1, 12 do

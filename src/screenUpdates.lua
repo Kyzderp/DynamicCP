@@ -117,6 +117,7 @@ local function OnCanvasAnimationStopped()
         -- TODO: clusters
         activeConstellation = "Cluster"
         DynamicCP.RefreshLabels(DynamicCP.savedOptions.showLabels)
+        DynamicCP.AddMouseDoubleClickStars()
     end
 
     DynamicCP.dbg(activeConstellation)
