@@ -159,6 +159,8 @@ function DynamicCP.OnExitedCPScreen()
             EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "Warning")
             HideWarning()
         end)
+    elseif (not CHAMPION_PERKS:HasUnsavedChanges()) then
+        HideWarning()
     end
 end
 
