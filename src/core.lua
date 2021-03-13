@@ -177,7 +177,6 @@ function DynamicCP:OnApplyClicked(button)
     -- Apply all stars within the tree
     local cp = DynamicCP.savedOptions.cp[tree][presetName]
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
-    local unslotted = 0
     local numSlottables = 0
     local toSlot = {}
     for skill = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
@@ -192,7 +191,6 @@ function DynamicCP:OnApplyClicked(button)
         -- Unslot slottables that are no longer slottable because of not enough points
         if (currentHotbar[id] and not WouldChampionSkillNodeBeUnlocked(id, numPoints)) then
             AddHotbarSlotToChampionPurchaseRequest(currentHotbar[id], nil)
-            unslotted = unslotted + 1
         end
 
         -- Collect slottables
@@ -215,6 +213,7 @@ function DynamicCP:OnApplyClicked(button)
                 DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(id), index + offset))
             end
         else
+            DynamicCP.dbg("too many slottables to slot automatically")
             -- Find the 4 with highest values
             -- TODO: do this after refactoring to keep separate track of the data, otherwise don't know pending points. Could add to it within the loop but gonna need to rewrite this anyway
         end
