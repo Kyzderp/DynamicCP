@@ -53,6 +53,18 @@ function DynamicCP:CreateSettingsMenu()
                     width = "full",
                     requiresReload = true,
                 },
+                {
+                    type = "checkbox",
+                    name = "Double click to slot or unslot stars",
+                    tooltip = "Double click the slottable stars to add or remove them to the hotbar, or double click the hotbar stars to unslot them",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.doubleClick end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.doubleClick = value
+                    end,
+                    width = "full",
+                    requiresReload = true,
+                },
             },
         },
 ---------------------------------------------------------------------

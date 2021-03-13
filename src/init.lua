@@ -18,6 +18,7 @@ local defaultOptions = {
     showCooldownWarning = true,
     slotStars = true,
     slotHigherStars = true,
+    doubleClick = true,
 }
 
 local initialOpened = false
@@ -87,6 +88,7 @@ local function Initialize()
             if (not initialOpened) then
                 initialOpened = true
                 DynamicCP.InitLabels()
+                DynamicCP.InitSlottables()
                 DynamicCPContainer:SetScale(DynamicCP.savedOptions.scale)
                 if (DynamicCP.savedOptions.showLabels) then
                     DynamicCP.RefreshLabels(true)
