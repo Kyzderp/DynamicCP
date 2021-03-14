@@ -79,7 +79,7 @@ end
 local function CollectCurrentSlottables()
     currentSlottables = {}
     for i = 1, 12 do
-        currentSlottables[i] = CHAMPION_PERKS.championBar:GetSlot(i)
+        currentSlottables[i] = CHAMPION_PERKS.championBar:GetSlot(i).championSkillData
     end
 end
 
@@ -87,6 +87,7 @@ local function OnSlotsChanged()
     CollectCurrentSlottables()
 
     -- TODO: display in pulldown
+    DynamicCP.ApplyCurrentSlottables(currentSlottables)
     -- TODO: display on hud?
 end
 DynamicCP.OnSlotsChanged = OnSlotsChanged
@@ -115,5 +116,5 @@ function DynamicCP.InitSlottables()
     end
 
     AddSlotChange()
-    CollectCurrentSlottables()
+    OnSlotsChanged()
 end
