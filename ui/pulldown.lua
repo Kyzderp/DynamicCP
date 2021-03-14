@@ -47,7 +47,7 @@ local function ApplyCurrentSlottables(currentSlottables)
 
         -- Set labels
         local id = slottableSkillData.championSkillId
-        star:GetNamedChild("Name"):SetText(GetChampionSkillName(id))
+        star:GetNamedChild("Name"):SetText(zo_strformat("<<C:1>>", GetChampionSkillName(id)))
 
         -- TODO: show pending points after refactor
         star:GetNamedChild("Points"):SetText(GetNumPointsSpentOnChampionSkill(id))
