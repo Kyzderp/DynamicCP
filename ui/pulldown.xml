@@ -1,25 +1,109 @@
 <GuiXml>
     <Controls>
 <!-- ======================================================================================================================= -->
-        <TopLevelControl name="DynamicCPPulldown" mouseEnabled="false" movable="false" hidden="false">
-            <Dimensions x="740" y="80"/>
-            <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM" offsetY="0"/>
+        <Control name="DynamicCPPulldownStar" virtual="true" tier="HIGH">
             <OnInitialized>
-                self:SetWidth(ZO_ChampionPerksActionBar:GetWidth()*0.9)
+                self:SetHeight(24)
+                self:SetWidth(ZO_ChampionPerksActionBarSlot4:GetRight() - ZO_ChampionPerksActionBarSlot1:GetLeft())
+                self.SetColors = function(color)
+                    self:GetNamedChild("Name"):SetColor(unpack(color))
+                    self:GetNamedChild("Points"):SetColor(unpack(color))
+                end
             </OnInitialized>
             <Controls>
-                <Backdrop name="$(parent)Backdrop" centerColor="BB000000" edgeColor="c4c19e"><Edge edgeSize="2"/><AnchorFill/></Backdrop>
-                <Button name="$(parent)Close" alpha="1" topmost="true">
-                    <Textures normal="/esoui/art/hud/radialicon_cancel_up.dds" mouseOver="/esoui/art/hud/radialicon_cancel_over.dds" />
-                    <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-2" offsetY="2" />
-                    <Dimensions x="32" y="32" />
-                    <OnClicked>
-                    </OnClicked>
-                </Button>
-                <Label name="$(parent)Label" font="ZoFontGame" color="c4c19e" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="false" text="Warning: You have left the Champion Points screen with unsaved points and slottables.">
-                    <Dimensions x="680" y="60"/>
-                    <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
+                <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_star_pulse.dds" tier="HIGH">
+                    <Dimensions x="40" y="40"/>
+                    <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT"/>
+                    <TextureCoords left="0.75" right="1" top="0.5" bottom="0.75"/>
+                </Texture>
+                <Label name="$(parent)Name" font="ZoFontGame" verticalAlignment="CENTER" horizontalAlignment="LEFT" text="Star">
+                    <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT"/>
                 </Label>
+                <Label name="$(parent)Points" font="ZoFontGame" verticalAlignment="CENTER" horizontalAlignment="RIGHT" text="420">
+                    <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-16"/>
+                </Label>
+            </Controls>
+        </Control>
+<!-- ======================================================================================================================= -->
+        <TopLevelControl name="DynamicCPPulldown" mouseEnabled="false" movable="false" hidden="true" allowBringToTop="false">
+            <Dimensions x="740" y="108"/>
+            <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
+            <!-- ZO_ChampionPerksActionBar layer 1 tier 2 level 0 -->
+            <OnInitialized>
+                self:SetWidth(ZO_ChampionPerksActionBar:GetWidth()*0.92)
+                CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
+                GAMEPAD_CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
+            </OnInitialized>
+            <Controls>
+                <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                <Control name="$(parent)Tab" mouseEnabled="true">
+                    <Anchor point="TOP" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="0" />
+                    <Dimensions x="48" y="20" />
+                    <OnMouseUp>
+                        d("clicked")
+                    </OnMouseUp>
+                    <Controls>
+                        <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                        <Label name="$(parent)Arrow" font="ZoFontGame" color="a3a183" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="false" text="^">
+                            <AnchorFill/>
+                        </Label>
+                    </Controls>
+                </Control>
+                <Control name="$(parent)Green">
+                    <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
+                    <OnInitialized>
+                        self:SetHeight(96)
+                        self:SetWidth(ZO_ChampionPerksActionBarSlot4:GetRight() - ZO_ChampionPerksActionBarSlot1:GetLeft())
+                        self:SetAnchor(TOP, GuiRoot, TOPLEFT, (ZO_ChampionPerksActionBarSlot2:GetCenter() + ZO_ChampionPerksActionBarSlot3:GetCenter()) / 2, ZO_ChampionPerksActionBar:GetBottom())
+
+                        local star1 = CreateControlFromVirtual("$(parent)Star1", self, "DynamicCPPulldownStar", "")
+                        star1:SetAnchor(TOPLEFT, self, TOPLEFT)
+                        star1.SetColors({0.55, 0.78, 0.22})
+                        local star2 = CreateControlFromVirtual("$(parent)Star2", self, "DynamicCPPulldownStar", "")
+                        star2:SetAnchor(TOPLEFT, star1, BOTTOMLEFT)
+                        local star3 = CreateControlFromVirtual("$(parent)Star3", self, "DynamicCPPulldownStar", "")
+                        star3:SetAnchor(TOPLEFT, star2, BOTTOMLEFT)
+                        local star4 = CreateControlFromVirtual("$(parent)Star4", self, "DynamicCPPulldownStar", "")
+                        star4:SetAnchor(TOPLEFT, star3, BOTTOMLEFT)
+                    </OnInitialized>
+                    <Controls>
+                        <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                    </Controls>
+                </Control>
+                <Control name="$(parent)Blue">
+                    <OnInitialized>
+                        self:SetWidth(ZO_ChampionPerksActionBarSlot4:GetRight() - ZO_ChampionPerksActionBarSlot1:GetLeft())
+                        self:SetAnchor(TOP, GuiRoot, TOPLEFT, (ZO_ChampionPerksActionBarSlot6:GetCenter() + ZO_ChampionPerksActionBarSlot7:GetCenter()) / 2, ZO_ChampionPerksActionBar:GetBottom())
+
+                        local star1 = CreateControlFromVirtual("$(parent)Star1", self, "DynamicCPPulldownStar", "")
+                        star1:SetAnchor(TOPLEFT, self, TOPLEFT)
+                        star1.SetColors({0.88, 0.4, 0.19})
+                        local star2 = CreateControlFromVirtual("$(parent)Star2", self, "DynamicCPPulldownStar", "")
+                        star2:SetAnchor(TOPLEFT, star1, BOTTOMLEFT)
+                        local star3 = CreateControlFromVirtual("$(parent)Star3", self, "DynamicCPPulldownStar", "")
+                        star3:SetAnchor(TOPLEFT, star2, BOTTOMLEFT)
+                        local star4 = CreateControlFromVirtual("$(parent)Star4", self, "DynamicCPPulldownStar", "")
+                        star4:SetAnchor(TOPLEFT, star3, BOTTOMLEFT)
+                    </OnInitialized>
+                    <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
+                </Control>
+                <Control name="$(parent)Red">
+                    <OnInitialized>
+                        self:SetWidth(ZO_ChampionPerksActionBarSlot4:GetRight() - ZO_ChampionPerksActionBarSlot1:GetLeft())
+                        self:SetAnchor(TOP, GuiRoot, TOPLEFT, (ZO_ChampionPerksActionBarSlot10:GetCenter() + ZO_ChampionPerksActionBarSlot11:GetCenter()) / 2, ZO_ChampionPerksActionBar:GetBottom())
+
+                        local star1 = CreateControlFromVirtual("$(parent)Star1", self, "DynamicCPPulldownStar", "")
+                        star1:SetAnchor(TOPLEFT, self, TOPLEFT)
+                        star1.SetColors({0.35, 0.73, 0.9})
+                        local star2 = CreateControlFromVirtual("$(parent)Star2", self, "DynamicCPPulldownStar", "")
+                        star2:SetAnchor(TOPLEFT, star1, BOTTOMLEFT)
+                        local star3 = CreateControlFromVirtual("$(parent)Star3", self, "DynamicCPPulldownStar", "")
+                        star3:SetAnchor(TOPLEFT, star2, BOTTOMLEFT)
+                        local star4 = CreateControlFromVirtual("$(parent)Star4", self, "DynamicCPPulldownStar", "")
+                        star4:SetAnchor(TOPLEFT, star3, BOTTOMLEFT)
+                    </OnInitialized>
+                    <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
+                </Control>
             </Controls>
         </TopLevelControl>
 <!-- ======================================================================================================================= -->
