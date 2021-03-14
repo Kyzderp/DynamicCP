@@ -35,19 +35,6 @@
             </OnInitialized>
             <Controls>
                 <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
-                <Control name="$(parent)Tab" mouseEnabled="true">
-                    <Anchor point="TOP" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="0" />
-                    <Dimensions x="48" y="20" />
-                    <OnMouseUp>
-                        d("clicked")
-                    </OnMouseUp>
-                    <Controls>
-                        <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
-                        <Label name="$(parent)Arrow" font="ZoFontGame" color="a3a183" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="false" text="^">
-                            <AnchorFill/>
-                        </Label>
-                    </Controls>
-                </Control>
                 <Control name="$(parent)Green">
                     <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
                     <OnInitialized>
@@ -75,6 +62,32 @@
                         <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
                     </Controls>
                 </Control>
+            </Controls>
+        </TopLevelControl>
+<!-- ======================================================================================================================= -->
+        <TopLevelControl name="DynamicCPPulldownTab" mouseEnabled="true">
+            <Anchor point="TOP" relativeTo="DynamicCPPulldown" relativePoint="BOTTOM" offsetY="0" />
+            <Dimensions x="48" y="20" />
+            <OnInitialized>
+                CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
+                GAMEPAD_CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
+            </OnInitialized>
+            <OnMouseUp>
+                DynamicCP.TogglePulldown()
+            </OnMouseUp>
+            <Controls>
+                <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                <!-- <Label name="$(parent)Arrow" font="ZoFontGame" color="a3a183" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="false" text="^">
+                    <AnchorFill/>
+                </Label> -->
+                <Texture name="$(parent)ArrowExpanded" textureFile="esoui/art/buttons/large_uparrow_up.dds">
+                    <Dimensions x="20" y="20"/>
+                    <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
+                </Texture>
+                <Texture name="$(parent)ArrowHidden" textureFile="esoui/art/buttons/large_downarrow_up.dds" hidden="true">
+                    <Dimensions x="20" y="20"/>
+                    <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
+                </Texture>
             </Controls>
         </TopLevelControl>
 <!-- ======================================================================================================================= -->

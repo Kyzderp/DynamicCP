@@ -57,6 +57,26 @@ DynamicCP.ApplyCurrentSlottables = ApplyCurrentSlottables
 
 
 ---------------------------------------------------------------------
+-- Expand / hide the pulldown
+local function TogglePulldown()
+    if (DynamicCPPulldown:IsHidden()) then
+        -- Expand it
+        DynamicCPPulldownTabArrowExpanded:SetHidden(false)
+        DynamicCPPulldownTabArrowHidden:SetHidden(true)
+        DynamicCPPulldown:SetHidden(false)
+        DynamicCPPulldownTab:SetAnchor(TOP, DynamicCPPulldown, BOTTOM)
+    else
+        -- Hide it
+        DynamicCPPulldownTabArrowExpanded:SetHidden(true)
+        DynamicCPPulldownTabArrowHidden:SetHidden(false)
+        DynamicCPPulldown:SetHidden(true)
+        DynamicCPPulldownTab:SetAnchor(TOP, ZO_ChampionPerksActionBar, BOTTOM)
+    end
+end
+DynamicCP.TogglePulldown = TogglePulldown
+
+
+---------------------------------------------------------------------
 -- tree = "Green" "Blue" "Red"
 local function InitTree(control, tree)
     -- Size and position
