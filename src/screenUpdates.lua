@@ -55,19 +55,19 @@ function DynamicCP.RefreshLabels(show)
 end
 
 
--- We want a window width of about GuiRoot:GetWidth()*.27, at least on my resolution... /script d("actual") d(DynamicCPContainer:GetWidth()) d("desired") d(GuiRoot:GetWidth()*.28)
+-- We want a window width of about GuiRoot:GetWidth()*.27, at least on my resolution... /script d("actual") d(DynamicCPPresets:GetWidth()) d("desired") d(GuiRoot:GetWidth()*.28)
 -- Unsure what happens on wider screens
 ---------------------------------------------------------------------
 -- Dock the window
 local function DockWindow(activeConstellation)
-    local ox, oy = DynamicCPContainer:GetCenter()
-    local tx, ty = DynamicCPContainer:GetCenter()
+    local ox, oy = DynamicCPPresets:GetCenter()
+    local tx, ty = DynamicCPPresets:GetCenter()
     
     if (activeConstellation == "All" or activeConstellation == "Green" or activeConstellation == "Cluster") then
-        tx = GuiRoot:GetWidth() - DynamicCPContainer:GetWidth() / 2 - 10
-        ty = DynamicCPContainer:GetHeight() / 2 + 10
+        tx = GuiRoot:GetWidth() - DynamicCPPresets:GetWidth() / 2 - 10
+        ty = DynamicCPPresets:GetHeight() / 2 + 10
     elseif (activeConstellation == "Blue") then
-        tx = GuiRoot:GetWidth() - DynamicCPContainer:GetWidth() / 2 - 10
+        tx = GuiRoot:GetWidth() - DynamicCPPresets:GetWidth() / 2 - 10
         ty = GuiRoot:GetHeight() * 0.35
     elseif (activeConstellation == "Red") then
         tx = GuiRoot:GetWidth() * 0.6875
@@ -77,9 +77,9 @@ local function DockWindow(activeConstellation)
     -- Play animation
     local dx = tx - ox
     local dy = ty - oy
-    DynamicCPContainer.slide:SetDeltaOffsetX(dx)
-    DynamicCPContainer.slide:SetDeltaOffsetY(dy)
-    DynamicCPContainer.slideAnimation:PlayFromStart()
+    DynamicCPPresets.slide:SetDeltaOffsetX(dx)
+    DynamicCPPresets.slide:SetDeltaOffsetY(dy)
+    DynamicCPPresets.slideAnimation:PlayFromStart()
 end
 
 
@@ -247,6 +247,6 @@ function DynamicCP.InitLabels()
     end)
 
     -- Create sliding animation
-    DynamicCPContainer.slideAnimation = GetAnimationManager():CreateTimelineFromVirtual("ZO_LootSlideInAnimation", DynamicCPContainer)
-    DynamicCPContainer.slide = DynamicCPContainer.slideAnimation:GetFirstAnimation()
+    DynamicCPPresets.slideAnimation = GetAnimationManager():CreateTimelineFromVirtual("ZO_LootSlideInAnimation", DynamicCPPresets)
+    DynamicCPPresets.slide = DynamicCPPresets.slideAnimation:GetFirstAnimation()
 end

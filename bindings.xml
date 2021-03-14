@@ -2,7 +2,7 @@
     <Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
         <Category name="Dynamic CP">
             <Action name="DCP_TOGGLE_MENU">
-                <Down>DynamicCPContainer:SetHidden(not DynamicCPContainer:IsHidden())</Down>
+                <Down>DynamicCPPresets:SetHidden(not DynamicCPPresets:IsHidden())</Down>
             </Action>
         </Category>
     </Layer>

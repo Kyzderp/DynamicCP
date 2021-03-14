@@ -95,7 +95,7 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return DynamicCP.savedOptions.scale * 100 end,
                     setFunc = function(value)
                         DynamicCP.savedOptions.scale = value / 100
-                        DynamicCPContainer:SetScale(value / 100)
+                        DynamicCPPresets:SetScale(value / 100)
                     end,
                     width = "full",
                 },

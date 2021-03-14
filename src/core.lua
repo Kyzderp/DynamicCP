@@ -73,20 +73,20 @@ end
 ---------------------------------------------------------------------
 -- Show a message in the area under the options
 local function ShowMessage(tree, text)
-    local label = DynamicCPContainerInner:GetNamedChild(tree .. "Messages")
+    local label = DynamicCPPresetsInner:GetNamedChild(tree .. "Messages")
     label:SetHidden(false)
     label:SetText(text)
 
     -- Need to move it upwards if it's a "delete" which means nothing is selected and it looks empty
-    if (DynamicCPContainerInner:GetNamedChild(tree .. "Options"):IsHidden()) then
-        label:SetAnchor(TOP, DynamicCPContainerInner:GetNamedChild(tree), TOP, 0, 80)
+    if (DynamicCPPresetsInner:GetNamedChild(tree .. "Options"):IsHidden()) then
+        label:SetAnchor(TOP, DynamicCPPresetsInner:GetNamedChild(tree), TOP, 0, 80)
     else
-        label:SetAnchor(TOP, DynamicCPContainerInner:GetNamedChild(tree), TOP, 0, 300)
+        label:SetAnchor(TOP, DynamicCPPresetsInner:GetNamedChild(tree), TOP, 0, 300)
     end
 end
 
 local function HideMessage(tree)
-    local label = DynamicCPContainerInner:GetNamedChild(tree .. "Messages")
+    local label = DynamicCPPresetsInner:GetNamedChild(tree .. "Messages")
     label:SetHidden(true)
 end
 
@@ -148,7 +148,7 @@ end
 ---------------------------------------------------------------------
 -- When apply button is clicked
 function DynamicCP:OnApplyClicked(button)
-    local tree = GetTreeName(button:GetName(), "DynamicCPContainerInner", "OptionsApplyButton")
+    local tree = GetTreeName(button:GetName(), "DynamicCPPresetsInner", "OptionsApplyButton")
     local presetName = selected[tree]
 
     if (not presetName) then
@@ -220,7 +220,7 @@ function DynamicCP:OnApplyClicked(button)
     end
 
     ShowMessage(tree, GenerateDiff(GetCurrentCP(), cp) .. "\n\n|c00FF00Preset " .. presetName .. " loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
-    DynamicCPContainerInnerConfirmButton:SetHidden(false)
+    DynamicCPPresetsInnerConfirmButton:SetHidden(false)
 end
 
 
@@ -230,7 +230,7 @@ function DynamicCP:OnConfirmClicked(button)
     local function CommitPoints()
         CHAMPION_PERKS:SpendPointsConfirmed(true)
         isRespeccing = false
-        DynamicCPContainerInnerConfirmButton:SetHidden(true)
+        DynamicCPPresetsInnerConfirmButton:SetHidden(true)
     end
 
     libDialog:RegisterDialog(
@@ -266,7 +266,7 @@ end
 ---------------------------------------------------------------------
 -- When save button is clicked
 function DynamicCP:OnSaveClicked(button, tree)
-    tree = tree or GetTreeName(button:GetName(), "DynamicCPContainerInner", "OptionsSaveButton")
+    tree = tree or GetTreeName(button:GetName(), "DynamicCPPresetsInner", "OptionsSaveButton")
     local presetName = selected[tree]
     if (presetName == nil) then
         d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnSaveClicked")
@@ -283,7 +283,7 @@ function DynamicCP:OnSaveClicked(button, tree)
     end
 
     -- Don't want to deal with formatting, colors are stripped when parsing name from dropdown
-    local newName = DynamicCPContainerInner:GetNamedChild(tree .. "OptionsTextField"):GetText()
+    local newName = DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsTextField"):GetText()
     if (newName:find("|")) then
         ShowMessage(tree, "|cFF0000\"||\" is not allowed in preset names.|r")
         return
@@ -323,7 +323,7 @@ end
 -- When focus is lost on the text field
 function DynamicCP:OnTextFocusLost(textfield)
     DynamicCP.dbg("focus lost")
-    local tree = GetTreeName(textfield:GetName(), "DynamicCPContainerInner", "OptionsTextField")
+    local tree = GetTreeName(textfield:GetName(), "DynamicCPPresetsInner", "OptionsTextField")
     local presetName = selected[tree]
     if (presetName == nil) then
         d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnTextFocusLost")
@@ -334,7 +334,7 @@ function DynamicCP:OnTextFocusLost(textfield)
         return
     end
 
-    local newName = DynamicCPContainerInner:GetNamedChild(tree .. "OptionsTextField"):GetText()
+    local newName = DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsTextField"):GetText()
 
     if (presetName == newName) then
         return
@@ -349,7 +349,7 @@ end
 ---------------------------------------------------------------------
 -- When delete button is clicked
 function DynamicCP:OnDeleteClicked(button)
-    local tree = GetTreeName(button:GetName(), "DynamicCPContainerInner", "OptionsDeleteButton")
+    local tree = GetTreeName(button:GetName(), "DynamicCPPresetsInner", "OptionsDeleteButton")
     local presetName = selected[tree]
     if (presetName == nil or presetName == CREATE_NEW_STRING) then
         d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnDeleteClicked")
@@ -379,23 +379,23 @@ end
 ---------------------------------------------------------------------
 -- Hide/unhide the options
 local function AdjustDividers()
-    local r = not DynamicCPContainerInner:GetNamedChild("RedOptions"):IsHidden()
-    local g = not DynamicCPContainerInner:GetNamedChild("GreenOptions"):IsHidden()
-    local b = not DynamicCPContainerInner:GetNamedChild("BlueOptions"):IsHidden()
+    local r = not DynamicCPPresetsInner:GetNamedChild("RedOptions"):IsHidden()
+    local g = not DynamicCPPresetsInner:GetNamedChild("GreenOptions"):IsHidden()
+    local b = not DynamicCPPresetsInner:GetNamedChild("BlueOptions"):IsHidden()
 
-    DynamicCPContainerInnerGreenBlueDivider:SetHeight((g or b) and 230 or 60)
-    DynamicCPContainerInnerBlueRedDivider:SetHeight((r or g) and 230 or 60)
+    DynamicCPPresetsInnerGreenBlueDivider:SetHeight((g or b) and 230 or 60)
+    DynamicCPPresetsInnerBlueRedDivider:SetHeight((r or g) and 230 or 60)
 
-    DynamicCPContainerInnerInstructions:SetHidden(r or g or b)
+    DynamicCPPresetsInnerInstructions:SetHidden(r or g or b)
 end
 
 local function UnhideOptions(tree)
-    DynamicCPContainerInner:GetNamedChild(tree .. "Options"):SetHidden(false)
+    DynamicCPPresetsInner:GetNamedChild(tree .. "Options"):SetHidden(false)
     AdjustDividers()
 end
 
 local function HideOptions(tree)
-    DynamicCPContainerInner:GetNamedChild(tree .. "Options"):SetHidden(true)
+    DynamicCPPresetsInner:GetNamedChild(tree .. "Options"):SetHidden(true)
     AdjustDividers()
 end
 
@@ -426,7 +426,7 @@ local function SetTextureButtonEnabled(textureButton, enabled)
 end
 
 function DynamicCP:ToggleOptionButton(textureButton)
-    local tree = GetTreeName(textureButton:GetName(), "DynamicCPContainerInner", "OptionsButtons" .. (textureButton.class or textureButton.role))
+    local tree = GetTreeName(textureButton:GetName(), "DynamicCPPresetsInner", "OptionsButtons" .. (textureButton.class or textureButton.role))
 
     if (selected[tree] == CREATE_NEW_STRING) then
         d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. ToggleOptionButton")
@@ -461,13 +461,13 @@ function DynamicCP:ToggleOptionButton(textureButton)
     end
 
     -- Update the dropdown to reflect matching or not matching
-    local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPContainerInner:GetNamedChild(tree .. "Dropdown"))
+    local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPPresetsInner:GetNamedChild(tree .. "Dropdown"))
     local itemData = dropdown:GetSelectedItemData()
     itemData.name = DecoratePresetName(presetName, DynamicCP.savedOptions.cp[tree][presetName])
     dropdown:UpdateItems()
     dropdown:SelectItem(itemData)
 
-    ZO_ComboBox_ObjectFromContainer(DynamicCPContainerInnerRedDropdown)
+    ZO_ComboBox_ObjectFromContainer(DynamicCPPresetsInnerRedDropdown)
 end
 
 ---------------------------------------------------------------------
@@ -489,23 +489,23 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
             while (DynamicCP.savedOptions.cp[tree]["Preset " .. newIndex] ~= nil) do
                 newIndex = newIndex + 1
             end
-            DynamicCPContainerInner:GetNamedChild(tree .. "OptionsTextField"):SetText("Preset " .. newIndex)
-            DynamicCPContainerInner:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(true)
-            DynamicCPContainerInner:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(true)
-            DynamicCPContainerInner:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(190)
-            DynamicCPContainerInner:GetNamedChild(tree .. "OptionsButtons"):SetHidden(true)
+            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsTextField"):SetText("Preset " .. newIndex)
+            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(true)
+            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(true)
+            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(190)
+            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsButtons"):SetHidden(true)
         else
-            DynamicCPContainerInner:GetNamedChild(tree .. "OptionsTextField"):SetText(presetName)
-            DynamicCPContainerInner:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(false)
-            DynamicCPContainerInner:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(false)
-            DynamicCPContainerInner:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(95)
-            DynamicCPContainerInner:GetNamedChild(tree .. "OptionsButtons"):SetHidden(false)
+            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsTextField"):SetText(presetName)
+            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(false)
+            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(false)
+            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(95)
+            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsButtons"):SetHidden(false)
         end
 
 
         local data = DynamicCP.savedOptions.cp[tree][presetName] or {}
 
-        local buttons = DynamicCPContainerInner:GetNamedChild(tree .. "OptionsButtons")
+        local buttons = DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsButtons")
         for class, _ in pairs(CLASSES) do
             SetTextureButtonEnabled(buttons:GetNamedChild(class), data.classes == nil or data.classes[class] == nil or data.classes[class]) -- Both nil or true
         end
@@ -522,7 +522,7 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
 
     -- Add entries to dropdown
     local data = DynamicCP.savedOptions.cp[tree]
-    local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPContainerInner:GetNamedChild(tree .. "Dropdown"))
+    local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPPresetsInner:GetNamedChild(tree .. "Dropdown"))
     local desiredEntry = nil
     dropdown:ClearItems()
     for presetName, cp in pairs(data) do

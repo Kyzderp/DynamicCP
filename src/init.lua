@@ -102,7 +102,7 @@ local function Initialize()
             initialOpened = true
             DynamicCP.InitLabels()
             DynamicCP.InitSlottables()
-            DynamicCPContainer:SetScale(DynamicCP.savedOptions.scale)
+            DynamicCPPresets:SetScale(DynamicCP.savedOptions.scale)
             if (DynamicCP.savedOptions.showLabels) then
                 DynamicCP.RefreshLabels(true)
             end
@@ -125,7 +125,7 @@ local function Initialize()
             DynamicCP.savedOptions.debug = not DynamicCP.savedOptions.debug
             CHAT_SYSTEM:AddMessage("Debug messages are now " .. (DynamicCP.savedOptions.debug and "on" or "off"))
         else
-            DynamicCPContainer:SetHidden(not DynamicCPContainer:IsHidden())
+            DynamicCPPresets:SetHidden(not DynamicCPPresets:IsHidden())
         end
     end
 end
