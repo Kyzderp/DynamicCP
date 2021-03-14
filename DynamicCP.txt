@@ -14,7 +14,7 @@ src/core.lua
 src/screenUpdates.lua
 src/slottables.lua
 src/settings.lua
-ui/presets.xml
-ui/warning.xml
-ui/pulldown.xml
+xml/presets.xml
+xml/warning.xml
+xml/pulldown.xml
 bindings.xml
