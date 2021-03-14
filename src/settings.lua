@@ -75,6 +75,17 @@ function DynamicCP:CreateSettingsMenu()
             controls = {
                 {
                     type = "checkbox",
+                    name = "Show window with CP",
+                    tooltip = "Display the window automatically when opening the Champion Points menu. You can turn this off if you do not wish to use presets",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.showPresetsWithCP end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.showPresetsWithCP = value
+                    end,
+                    width = "full",
+                },
+                {
+                    type = "checkbox",
                     name = "Dock window",
                     tooltip = "Display the window in different positions on each constellation to avoid overlapping with stars. Recommend adjusting the scale so it fits in the Fitness tree, between Arcane Alacrity and Bashing Brutality",
                     default = true,
