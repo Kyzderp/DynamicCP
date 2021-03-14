@@ -9,6 +9,9 @@ local defaultOptions = {
         Green = {},
         Blue = {},
     },
+    pulldownExpanded = true,
+
+-- user options
     hideBackground = false,
     showLabels = true,
     dockWithSpace = true,
@@ -19,7 +22,7 @@ local defaultOptions = {
     slotStars = true,
     slotHigherStars = true,
     doubleClick = true,
-    pulldownExpanded = true,
+    showPresetsWithCP = true,
 }
 
 local initialOpened = false
@@ -68,6 +71,16 @@ local function OnPlayerActivated(_, initial)
     EVENT_MANAGER:UnregisterForEvent(DynamicCP.name .. "Activated", EVENT_PLAYER_ACTIVATED)
 end
 
+local function TogglePresetsWindow()
+    local isHidden = DynamicCPPresets:IsHidden()
+    DynamicCPPresets:SetHidden(not isHidden)
+    if (isHidden) then
+        DynamicCP:InitializeDropdowns()
+        DynamicCPPresetsContainer:SetHidden(false)
+    end
+end
+DynamicCP.TogglePresetsWindow = TogglePresetsWindow
+
 
 ---------------------------------------------------------------------
 -- Initialize
@@ -97,6 +110,7 @@ local function Initialize()
         end
 
         if (newState ~= SCENE_SHOWN) then return end
+        DynamicCPPresets:SetHidden(not DynamicCP.savedOptions.showPresetsWithCP)
         DynamicCP:InitializeDropdowns() -- Call it every time in case LFG role is changed
         if (not initialOpened) then
             initialOpened = true
@@ -125,7 +139,7 @@ local function Initialize()
             DynamicCP.savedOptions.debug = not DynamicCP.savedOptions.debug
             CHAT_SYSTEM:AddMessage("Debug messages are now " .. (DynamicCP.savedOptions.debug and "on" or "off"))
         else
-            DynamicCPPresets:SetHidden(not DynamicCPPresets:IsHidden())
+            TogglePresetsWindow()
         end
     end
 end

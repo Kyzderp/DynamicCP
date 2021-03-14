@@ -1,8 +1,10 @@
 <Bindings>
-    <Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
+    <Layer name="SI_KEYBINDINGS_CATEGORY_GENERAL">
         <Category name="Dynamic CP">
             <Action name="DCP_TOGGLE_MENU">
-                <Down>DynamicCPPresets:SetHidden(not DynamicCPPresets:IsHidden())</Down>
+                <Down>
+                    DynamicCP.TogglePresetsWindow()
+                </Down>
             </Action>
         </Category>
     </Layer>

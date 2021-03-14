@@ -85,8 +85,6 @@ end
 
 local function OnSlotsChanged()
     CollectCurrentSlottables()
-
-    -- TODO: display in pulldown
     DynamicCP.ApplyCurrentSlottables(currentSlottables)
     -- TODO: display on hud?
 end
@@ -97,13 +95,13 @@ local function AddSlotChange()
 
     -- Slot changes from the UI
     CHAMPION_PERKS.championBar:RegisterCallback("SlotChanged", function()
-        DynamicCP.dbg("slot changed")
+        -- DynamicCP.dbg("slot changed")
         OnSlotsChanged()
     end)
 
     -- This is called when starting or stopping respec
     CHAMPION_DATA_MANAGER:RegisterCallback("AllPointsChanged", function()
-        DynamicCP.dbg("all points changed")
+        -- DynamicCP.dbg("all points changed")
         OnSlotsChanged()
     end)
 end
