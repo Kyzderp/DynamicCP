@@ -65,12 +65,14 @@ local function TogglePulldown()
         DynamicCPPulldownTabArrowHidden:SetHidden(true)
         DynamicCPPulldown:SetHidden(false)
         DynamicCPPulldownTab:SetAnchor(TOP, DynamicCPPulldown, BOTTOM)
+        DynamicCP.savedOptions.pulldownExpanded = true
     else
         -- Hide it
         DynamicCPPulldownTabArrowExpanded:SetHidden(true)
         DynamicCPPulldownTabArrowHidden:SetHidden(false)
         DynamicCPPulldown:SetHidden(true)
         DynamicCPPulldownTab:SetAnchor(TOP, ZO_ChampionPerksActionBar, BOTTOM)
+        DynamicCP.savedOptions.pulldownExpanded = false
     end
 end
 DynamicCP.TogglePulldown = TogglePulldown

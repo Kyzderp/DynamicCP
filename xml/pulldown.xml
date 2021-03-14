@@ -25,69 +25,67 @@
             </Controls>
         </Control>
 <!-- ======================================================================================================================= -->
-        <TopLevelControl name="DynamicCPPulldown" mouseEnabled="false" movable="false" hidden="true" allowBringToTop="false">
-            <Dimensions x="740" y="92"/>
-            <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
-            <OnInitialized>
-                self:SetWidth(ZO_ChampionPerksActionBar:GetWidth()*0.92)
-                CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
-                GAMEPAD_CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
-            </OnInitialized>
-            <Controls>
-                <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
-                <Control name="$(parent)Green">
-                    <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
-                    <OnInitialized>
-                        DynamicCP.InitTree(self, "Green")
-                    </OnInitialized>
-                    <Controls>
-                        <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
-                    </Controls>
-                </Control>
-                <Control name="$(parent)Blue">
-                    <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
-                    <OnInitialized>
-                        DynamicCP.InitTree(self, "Blue")
-                    </OnInitialized>
-                    <Controls>
-                        <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
-                    </Controls>
-                </Control>
-                <Control name="$(parent)Red">
-                    <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
-                    <OnInitialized>
-                        DynamicCP.InitTree(self, "Red")
-                    </OnInitialized>
-                    <Controls>
-                        <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
-                    </Controls>
-                </Control>
-            </Controls>
-        </TopLevelControl>
-<!-- ======================================================================================================================= -->
-        <TopLevelControl name="DynamicCPPulldownTab" mouseEnabled="true">
-            <Anchor point="TOP" relativeTo="DynamicCPPulldown" relativePoint="BOTTOM" offsetY="0" />
-            <Dimensions x="48" y="20" />
+        <TopLevelControl name="DynamicCPPulldownContainer" mouseEnabled="false" movable="false" hidden="true">
             <OnInitialized>
                 CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
                 GAMEPAD_CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
             </OnInitialized>
-            <OnMouseUp>
-                DynamicCP.TogglePulldown()
-            </OnMouseUp>
             <Controls>
-                <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
-                <!-- <Label name="$(parent)Arrow" font="ZoFontGame" color="a3a183" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="false" text="^">
-                    <AnchorFill/>
-                </Label> -->
-                <Texture name="$(parent)ArrowExpanded" textureFile="esoui/art/buttons/large_uparrow_up.dds">
-                    <Dimensions x="20" y="20"/>
-                    <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
-                </Texture>
-                <Texture name="$(parent)ArrowHidden" textureFile="esoui/art/buttons/large_downarrow_up.dds" hidden="true">
-                    <Dimensions x="20" y="20"/>
-                    <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
-                </Texture>
+                <Control name="DynamicCPPulldown" mouseEnabled="false" movable="false" hidden="false" allowBringToTop="false">
+                    <Dimensions x="740" y="92"/>
+                    <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
+                    <OnInitialized>
+                        self:SetWidth(ZO_ChampionPerksActionBar:GetWidth()*0.92)
+                    </OnInitialized>
+                    <Controls>
+                        <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                        <Control name="$(parent)Green">
+                            <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
+                            <OnInitialized>
+                                DynamicCP.InitTree(self, "Green")
+                            </OnInitialized>
+                            <Controls>
+                                <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                            </Controls>
+                        </Control>
+                        <Control name="$(parent)Blue">
+                            <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
+                            <OnInitialized>
+                                DynamicCP.InitTree(self, "Blue")
+                            </OnInitialized>
+                            <Controls>
+                                <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                            </Controls>
+                        </Control>
+                        <Control name="$(parent)Red">
+                            <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
+                            <OnInitialized>
+                                DynamicCP.InitTree(self, "Red")
+                            </OnInitialized>
+                            <Controls>
+                                <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                            </Controls>
+                        </Control>
+                    </Controls>
+                </Control>
+                <Control name="DynamicCPPulldownTab" mouseEnabled="true" hidden="false">
+                    <Anchor point="TOP" relativeTo="DynamicCPPulldown" relativePoint="BOTTOM" offsetY="0" />
+                    <Dimensions x="48" y="20" />
+                    <OnMouseUp>
+                        DynamicCP.TogglePulldown()
+                    </OnMouseUp>
+                    <Controls>
+                        <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                        <Texture name="$(parent)ArrowExpanded" textureFile="esoui/art/buttons/large_uparrow_up.dds">
+                            <Dimensions x="20" y="20"/>
+                            <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
+                        </Texture>
+                        <Texture name="$(parent)ArrowHidden" textureFile="esoui/art/buttons/large_downarrow_up.dds" hidden="true">
+                            <Dimensions x="20" y="20"/>
+                            <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
+                        </Texture>
+                    </Controls>
+                </Control>
             </Controls>
         </TopLevelControl>
 <!-- ======================================================================================================================= -->

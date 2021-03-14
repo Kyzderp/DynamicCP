@@ -19,6 +19,7 @@ local defaultOptions = {
     slotStars = true,
     slotHigherStars = true,
     doubleClick = true,
+    pulldownExpanded = true,
 }
 
 local initialOpened = false
@@ -55,6 +56,16 @@ local function OnPlayerActivated(_, initial)
         GetChampionDisciplineBackgroundSelectedTexture = backgroundOverride
         GetChampionClusterBackgroundTexture = backgroundOverride
     end
+
+    -- Hide the pulldown because it's expanded by default
+    if (not DynamicCP.savedOptions.pulldownExpanded) then
+        DynamicCPPulldownTabArrowExpanded:SetHidden(true)
+        DynamicCPPulldownTabArrowHidden:SetHidden(false)
+        DynamicCPPulldown:SetHidden(true)
+        DynamicCPPulldownTab:SetAnchor(TOP, ZO_ChampionPerksActionBar, BOTTOM)
+    end
+
+    EVENT_MANAGER:UnregisterForEvent(DynamicCP.name .. "Activated", EVENT_PLAYER_ACTIVATED)
 end
 
 
@@ -63,7 +74,6 @@ end
 local function Initialize()
     DynamicCP.savedOptions = ZO_SavedVars:NewAccountWide("DynamicCPSavedVariables", 1, "Options", defaultOptions)
     DynamicCP.dbg("Initializing...")
-    -- TODO: create settings menu
 
     -- Populate defaults only on first time, otherwise the keys will be remade even if user deletes
     if (DynamicCP.savedOptions.firstTime) then
@@ -74,30 +84,30 @@ local function Initialize()
     DynamicCP:CreateSettingsMenu()
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_MENU", "Toggle CP Preset Window")
 
-    EVENT_MANAGER:RegisterForEvent(DynamicCP.name, EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
+    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Activated", EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Purchase", EVENT_CHAMPION_PURCHASE_RESULT, function(eventCode, result)
         DynamicCP.OnPurchased(eventCode, result)
         DynamicCP.OnSlotsChanged()
     end)
 
     CHAMPION_PERKS_CONSTELLATIONS_FRAGMENT:RegisterCallback("StateChange", function(oldState, newState)
-            if (newState == SCENE_HIDDEN) then
-                DynamicCP.OnExitedCPScreen()
-                return
-            end
+        if (newState == SCENE_HIDDEN) then
+            DynamicCP.OnExitedCPScreen()
+            return
+        end
 
-            if (newState ~= SCENE_SHOWN) then return end
-            DynamicCP:InitializeDropdowns() -- Call it every time in case LFG role is changed
-            if (not initialOpened) then
-                initialOpened = true
-                DynamicCP.InitLabels()
-                DynamicCP.InitSlottables()
-                DynamicCPContainer:SetScale(DynamicCP.savedOptions.scale)
-                if (DynamicCP.savedOptions.showLabels) then
-                    DynamicCP.RefreshLabels(true)
-                end
+        if (newState ~= SCENE_SHOWN) then return end
+        DynamicCP:InitializeDropdowns() -- Call it every time in case LFG role is changed
+        if (not initialOpened) then
+            initialOpened = true
+            DynamicCP.InitLabels()
+            DynamicCP.InitSlottables()
+            DynamicCPContainer:SetScale(DynamicCP.savedOptions.scale)
+            if (DynamicCP.savedOptions.showLabels) then
+                DynamicCP.RefreshLabels(true)
             end
-        end)
+        end
+    end)
 
     SLASH_COMMANDS["/dcp"] = function(arg)
         if (arg == "hidebackground") then
