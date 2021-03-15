@@ -84,6 +84,7 @@ local function CollectCurrentSlottables()
 end
 
 local function OnSlotsChanged()
+    DynamicCP.dbg("OnSlotsChanged")
     CollectCurrentSlottables()
     DynamicCP.ApplyCurrentSlottables(currentSlottables)
     -- TODO: display on hud?

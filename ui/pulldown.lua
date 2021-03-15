@@ -42,15 +42,14 @@ local function ApplyCurrentSlottables(currentSlottables)
         if (not slottableSkillData) then
             star:GetNamedChild("Name"):SetText("")
             star:GetNamedChild("Points"):SetText("")
-            return
+        else
+            -- Set labels
+            local id = slottableSkillData.championSkillId
+            star:GetNamedChild("Name"):SetText(zo_strformat("<<C:1>>", GetChampionSkillName(id)))
+
+            -- TODO: show pending points after refactor
+            star:GetNamedChild("Points"):SetText(GetNumPointsSpentOnChampionSkill(id))
         end
-
-        -- Set labels
-        local id = slottableSkillData.championSkillId
-        star:GetNamedChild("Name"):SetText(zo_strformat("<<C:1>>", GetChampionSkillName(id)))
-
-        -- TODO: show pending points after refactor
-        star:GetNamedChild("Points"):SetText(GetNumPointsSpentOnChampionSkill(id))
     end
 end
 DynamicCP.ApplyCurrentSlottables = ApplyCurrentSlottables
