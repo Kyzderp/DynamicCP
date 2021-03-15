@@ -171,6 +171,18 @@ function DynamicCP:CreateSettingsMenu()
                     end,
                     width = "full",
                 },
+                {
+                    type = "checkbox",
+                    name = "Show points on slottables pulldown",
+                    tooltip = "Show the number of committed points in the pulldown beneath the slottables hotbar",
+                    default = false,
+                    getFunc = function() return DynamicCP.savedOptions.showPulldownPoints end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.showPulldownPoints = value
+                        DynamicCP.OnSlotsChanged()
+                    end,
+                    width = "full",
+                },
             },
         },
     }

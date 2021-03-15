@@ -48,7 +48,11 @@ local function ApplyCurrentSlottables(currentSlottables)
             star:GetNamedChild("Name"):SetText(zo_strformat("<<C:1>>", GetChampionSkillName(id)))
 
             -- TODO: show pending points after refactor
-            star:GetNamedChild("Points"):SetText(GetNumPointsSpentOnChampionSkill(id))
+            if (DynamicCP.savedOptions.showPulldownPoints) then
+                star:GetNamedChild("Points"):SetText(GetNumPointsSpentOnChampionSkill(id))
+            else
+                star:GetNamedChild("Points"):SetText("")
+            end
         end
     end
 end

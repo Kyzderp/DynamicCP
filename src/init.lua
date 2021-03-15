@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "0.4.0"
+DynamicCP.version = "0.4.1"
 
 local defaultOptions = {
     firstTime = true,
@@ -23,6 +23,7 @@ local defaultOptions = {
     slotHigherStars = true,
     doubleClick = true,
     showPresetsWithCP = true,
+    showPulldownPoints = false,
 }
 
 local initialOpened = false
