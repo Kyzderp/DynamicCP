@@ -11,10 +11,10 @@
 
 src/init.lua
 src/presetData.lua
-src/core.lua
 src/screenUpdates.lua
 src/slottables.lua
 src/settings.lua
+ui/presets.lua
 ui/pulldown.lua
 xml/presets.xml
 xml/warning.xml
