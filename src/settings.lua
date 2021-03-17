@@ -183,6 +183,18 @@ function DynamicCP:CreateSettingsMenu()
                     end,
                     width = "full",
                 },
+                {
+                    type = "checkbox",
+                    name = "Show CP gained in chat",
+                    tooltip = "Show a chatbox message when you gain champion points",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.showPointGainedMessage end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.showPointGainedMessage = value
+                        DynamicCP.RegisterPointGainedMessage()
+                    end,
+                    width = "full",
+                },
             },
         },
     }

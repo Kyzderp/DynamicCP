@@ -24,6 +24,7 @@ local defaultOptions = {
     doubleClick = true,
     showPresetsWithCP = true,
     showPulldownPoints = false,
+    showPointGainedMessage = true,
 }
 
 local initialOpened = false
@@ -84,6 +85,31 @@ DynamicCP.TogglePresetsWindow = TogglePresetsWindow
 
 
 ---------------------------------------------------------------------
+-- Register events
+local function RegisterPointGainedMessage()
+    if (DynamicCP.savedOptions.showPointGainedMessage) then
+        EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Gained", EVENT_CHAMPION_POINT_GAINED,
+            function(_, championPointsDelta)
+                CHAT_SYSTEM:AddMessage("|cAAAAAAGained " .. ZO_CenterScreenAnnounce_GetEventHandler(EVENT_CHAMPION_POINT_GAINED)(1).secondaryText .. "|r")
+            end)
+    else
+        EVENT_MANAGER:UnregisterForEvent(DynamicCP.name .. "Gained", EVENT_CHAMPION_POINT_GAINED)
+    end
+end
+DynamicCP.RegisterPointGainedMessage = RegisterPointGainedMessage
+
+local function RegisterEvents()
+    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Activated", EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
+    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Purchase", EVENT_CHAMPION_PURCHASE_RESULT,
+        function(eventCode, result)
+            DynamicCP.OnPurchased(eventCode, result)
+            DynamicCP.OnSlotsChanged()
+        end)
+    RegisterPointGainedMessage()
+end
+
+
+---------------------------------------------------------------------
 -- Initialize
 local function Initialize()
     DynamicCP.savedOptions = ZO_SavedVars:NewAccountWide("DynamicCPSavedVariables", 1, "Options", defaultOptions)
@@ -98,11 +124,7 @@ local function Initialize()
     DynamicCP:CreateSettingsMenu()
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_MENU", "Toggle CP Preset Window")
 
-    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Activated", EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
-    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Purchase", EVENT_CHAMPION_PURCHASE_RESULT, function(eventCode, result)
-        DynamicCP.OnPurchased(eventCode, result)
-        DynamicCP.OnSlotsChanged()
-    end)
+    RegisterEvents()
 
     CHAMPION_PERKS_CONSTELLATIONS_FRAGMENT:RegisterCallback("StateChange", function(oldState, newState)
         if (newState == SCENE_HIDDEN) then
