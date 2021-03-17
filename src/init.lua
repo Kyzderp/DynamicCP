@@ -54,6 +54,9 @@ local function OnPlayerActivated(_, initial)
     end
     DynamicCP.messages = {}
 
+    -- Post load init
+    DynamicCP.InitPoints()
+
     if (DynamicCP.savedOptions.hideBackground) then
         local backgroundOverride = function(line) return "/esoui/art/scrying/backdrop_stars.dds" end 
         GetChampionDisciplineBackgroundTexture = backgroundOverride
@@ -72,16 +75,6 @@ local function OnPlayerActivated(_, initial)
 
     EVENT_MANAGER:UnregisterForEvent(DynamicCP.name .. "Activated", EVENT_PLAYER_ACTIVATED)
 end
-
-local function TogglePresetsWindow()
-    local isHidden = DynamicCPPresets:IsHidden()
-    DynamicCPPresets:SetHidden(not isHidden)
-    if (isHidden) then
-        DynamicCP:InitializeDropdowns()
-        DynamicCPPresetsContainer:SetHidden(false)
-    end
-end
-DynamicCP.TogglePresetsWindow = TogglePresetsWindow
 
 
 ---------------------------------------------------------------------
@@ -103,6 +96,7 @@ local function RegisterEvents()
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Purchase", EVENT_CHAMPION_PURCHASE_RESULT,
         function(eventCode, result)
             DynamicCP.OnPurchased(eventCode, result)
+            DynamicCP.ClearCurrentCP() -- Invalidate the cache
             DynamicCP.OnSlotsChanged()
         end)
     RegisterPointGainedMessage()
@@ -135,6 +129,8 @@ local function Initialize()
         if (newState ~= SCENE_SHOWN) then return end
         DynamicCPPresets:SetHidden(not DynamicCP.savedOptions.showPresetsWithCP)
         DynamicCP:InitializeDropdowns() -- Call it every time in case LFG role is changed
+
+        -- First time opened calls
         if (not initialOpened) then
             initialOpened = true
             DynamicCP.InitLabels()
@@ -162,7 +158,7 @@ local function Initialize()
             DynamicCP.savedOptions.debug = not DynamicCP.savedOptions.debug
             CHAT_SYSTEM:AddMessage("Debug messages are now " .. (DynamicCP.savedOptions.debug and "on" or "off"))
         else
-            TogglePresetsWindow()
+            DynamicCP.TogglePresetsWindow()
         end
     end
 end

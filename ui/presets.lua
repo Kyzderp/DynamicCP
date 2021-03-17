@@ -55,20 +55,6 @@ local function GetTreeName(name, prefix, suffix)
 end
 
 
----------------------------------------------------------------------
--- Get current CP
-local function GetCurrentCP(ignorePending)
-    local current = {}
-    for disciplineIndex = 1, GetNumChampionDisciplines() do
-        current[disciplineIndex] = {}
-        for skill = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
-            local id = GetChampionSkillId(disciplineIndex, skill)
-            current[disciplineIndex][skill] = GetNumPointsSpentOnChampionSkill(id)
-        end
-    end
-    return current
-end
-
 -- TODO: non-capped CP
 ---------------------------------------------------------------------
 -- Show a message in the area under the options
@@ -93,6 +79,7 @@ end
 
 ---------------------------------------------------------------------
 -- Find and build string of the diff between two cp sets
+-- TODO: pull the logic portion out into points.lua
 local function GenerateDiff(before, after)
     local result = "Changes:"
 
@@ -158,7 +145,7 @@ function DynamicCP:OnApplyClicked(button)
 
     DynamicCP.dbg("Attempting to apply \"" .. presetName .. "\" to the " .. tree .. " tree.")
 
-    local currentCP = GetCurrentCP()
+    local currentCP = DynamicCP.GetCurrentCP()
 
     -- First find all of the slottable skillIds to check them later
     local currentHotbar = {}
@@ -219,7 +206,7 @@ function DynamicCP:OnApplyClicked(button)
         end
     end
 
-    ShowMessage(tree, GenerateDiff(GetCurrentCP(), cp) .. "\n\n|c00FF00Preset " .. presetName .. " loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
+    ShowMessage(tree, GenerateDiff(DynamicCP.GetCurrentCP(), cp) .. "\n\n|c00FF00Preset " .. presetName .. " loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
     DynamicCPPresetsInnerConfirmButton:SetHidden(false)
 end
 
@@ -274,7 +261,7 @@ function DynamicCP:OnSaveClicked(button, tree)
     end
 
     -- Do a deep copy
-    local currentCP = GetCurrentCP()
+    local currentCP = DynamicCP.GetCurrentCP()
     local newCP = {}
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
     newCP[disciplineIndex] = {}
@@ -470,6 +457,20 @@ function DynamicCP:ToggleOptionButton(textureButton)
     ZO_ComboBox_ObjectFromContainer(DynamicCPPresetsInnerRedDropdown)
 end
 
+
+---------------------------------------------------------------------
+-- Open/close this window
+local function TogglePresetsWindow()
+    local isHidden = DynamicCPPresets:IsHidden()
+    DynamicCPPresets:SetHidden(not isHidden)
+    if (isHidden) then
+        DynamicCP:InitializeDropdowns()
+        DynamicCPPresetsContainer:SetHidden(false)
+    end
+end
+DynamicCP.TogglePresetsWindow = TogglePresetsWindow
+
+
 ---------------------------------------------------------------------
 -- Populate the dropdown with presets
 function DynamicCP:InitializeDropdown(tree, desiredEntryName)
@@ -514,9 +515,9 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
         end
 
         if (presetName == CREATE_NEW_STRING) then
-            ShowMessage(tree, "|cBBBBBBRename and click \"Save\" to create a new preset.|r\n\nCurrent points:" .. GenerateTree(GetCurrentCP(), tree))
+            ShowMessage(tree, "|cBBBBBBRename and click \"Save\" to create a new preset.|r\n\nCurrent points:" .. GenerateTree(DynamicCP.GetCurrentCP(), tree))
         else
-            ShowMessage(tree, GenerateDiff(GetCurrentCP(true), data) .. "\n\n|cBBBBBBClick \"Apply\" to load this preset.|r")
+            ShowMessage(tree, GenerateDiff(DynamicCP.GetCurrentCP(), data) .. "\n\n|cBBBBBBClick \"Apply\" to load this preset.|r")
         end
     end
 
