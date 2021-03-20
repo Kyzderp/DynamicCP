@@ -32,6 +32,7 @@ local defaultOptions = {
     slottableLabelSize = 18,
     clusterLabelColor = {1, 0.7, 1},
     clusterLabelSize = 13,
+    showTotalsLabel = true,
 }
 
 local initialOpened = false
@@ -80,26 +81,17 @@ local function OnPlayerActivated(_, initial)
         DynamicCPPulldownTab:SetAnchor(TOP, ZO_ChampionPerksActionBar, BOTTOM)
     end
 
+    DynamicCPInfoLabel:SetHidden(not DynamicCP.savedOptions.showTotalsLabel)
+
     EVENT_MANAGER:UnregisterForEvent(DynamicCP.name .. "Activated", EVENT_PLAYER_ACTIVATED)
 end
 
 
 ---------------------------------------------------------------------
 -- Register events
-local function RegisterPointGainedMessage()
-    if (DynamicCP.savedOptions.showPointGainedMessage) then
-        EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Gained", EVENT_CHAMPION_POINT_GAINED,
-            function(_, championPointsDelta)
-                CHAT_SYSTEM:AddMessage("|cAAAAAAGained " .. ZO_CenterScreenAnnounce_GetEventHandler(EVENT_CHAMPION_POINT_GAINED)(1).secondaryText .. "|r")
-            end)
-    else
-        EVENT_MANAGER:UnregisterForEvent(DynamicCP.name .. "Gained", EVENT_CHAMPION_POINT_GAINED)
-    end
-end
-DynamicCP.RegisterPointGainedMessage = RegisterPointGainedMessage
-
 local function RegisterEvents()
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Activated", EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
+
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Purchase", EVENT_CHAMPION_PURCHASE_RESULT,
         function(eventCode, result)
             DynamicCP.OnPurchased(eventCode, result)
@@ -107,7 +99,26 @@ local function RegisterEvents()
             DynamicCP.ClearCommittedSlottables() -- Invalidate the cache
             DynamicCP.OnSlotsChanged()
         end)
-    RegisterPointGainedMessage()
+
+    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Gained", EVENT_CHAMPION_POINT_GAINED,
+        function(_, championPointsDelta)
+            -- Show CP gained message
+            if (DynamicCP.savedOptions.showPointGainedMessage) then
+                CHAT_SYSTEM:AddMessage("|cAAAAAAGained "
+                    .. ZO_CenterScreenAnnounce_GetEventHandler(EVENT_CHAMPION_POINT_GAINED)(1).secondaryText .. "|r")
+            end
+
+            -- Update totals label
+            DynamicCPInfoLabel:SetText(string.format(
+                "|cc4c19eTotal:|r |t32:32:esoui/art/champion/champion_icon_32.dds|t %d"
+                .. " |t32:32:esoui/art/champion/champion_points_stamina_icon-hud-32.dds|t %d"
+                .. " |t32:32:esoui/art/champion/champion_points_magicka_icon-hud-32.dds|t %d"
+                .. " |t32:32:esoui/art/champion/champion_points_health_icon-hud-32.dds|t %d",
+                GetPlayerChampionPointsEarned(),
+                GetNumSpentChampionPoints(3) + GetNumUnspentChampionPoints(3),
+                GetNumSpentChampionPoints(1) + GetNumUnspentChampionPoints(1),
+                GetNumSpentChampionPoints(2) + GetNumUnspentChampionPoints(2)))
+        end)
 end
 
 

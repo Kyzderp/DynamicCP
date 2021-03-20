@@ -162,6 +162,18 @@ function DynamicCP:CreateSettingsMenu()
                     width = "full",
                     requiresReload = true,
                 },
+                {
+                    type = "checkbox",
+                    name = "Show total points",
+                    tooltip = "Show your total champion points and for each tree on the top left of the CP screen",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.showTotalsLabel end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.showTotalsLabel = value
+                        DynamicCPInfoLabel:SetHidden(not value)
+                    end,
+                    width = "full",
+                },
             },
         },
 ---------------------------------------------------------------------
@@ -303,7 +315,6 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return DynamicCP.savedOptions.showPointGainedMessage end,
                     setFunc = function(value)
                         DynamicCP.savedOptions.showPointGainedMessage = value
-                        DynamicCP.RegisterPointGainedMessage()
                     end,
                     width = "full",
                 },

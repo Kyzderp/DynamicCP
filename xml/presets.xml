@@ -150,6 +150,20 @@
                 GAMEPAD_CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
             </OnInitialized>
             <Controls>
+                <Label name="DynamicCPInfoLabel" font="ZoFontWinH4" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="HIGH">
+                    <Anchor point="TOPLEFT" relativeTo="ZO_ChampionPerksKeyboardStatusPointHeader" relativePoint="BOTTOMLEFT" offsetY="4"/>
+                    <OnInitialized>
+                        self:SetText(string.format(
+                            "|cc4c19eTotal:|r |t32:32:esoui/art/champion/champion_icon_32.dds|t %d"
+                            .. " |t32:32:esoui/art/champion/champion_points_stamina_icon-hud-32.dds|t %d"
+                            .. " |t32:32:esoui/art/champion/champion_points_magicka_icon-hud-32.dds|t %d"
+                            .. " |t32:32:esoui/art/champion/champion_points_health_icon-hud-32.dds|t %d",
+                            GetPlayerChampionPointsEarned(),
+                            GetNumSpentChampionPoints(3) + GetNumUnspentChampionPoints(3),
+                            GetNumSpentChampionPoints(1) + GetNumUnspentChampionPoints(1),
+                            GetNumSpentChampionPoints(2) + GetNumUnspentChampionPoints(2)))
+                    </OnInitialized>
+                </Label>
                 <Control name="DynamicCPPresets" clampedToScreen="true" mouseEnabled="true" movable="true" hidden="false">
                     <Dimensions x="680" y="334"/>
                     <Anchor point="TOPRIGHT" relativeTo="ZO_ChampionPerksCanvas" relativePoint="TOPRIGHT" offsetX="-10" offsetY="10"/>
