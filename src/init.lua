@@ -97,6 +97,7 @@ local function RegisterEvents()
         function(eventCode, result)
             DynamicCP.OnPurchased(eventCode, result)
             DynamicCP.ClearCurrentCP() -- Invalidate the cache
+            DynamicCP.ClearCommittedSlottables() -- Invalidate the cache
             DynamicCP.OnSlotsChanged()
         end)
     RegisterPointGainedMessage()

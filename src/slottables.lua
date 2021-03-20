@@ -1,6 +1,10 @@
 DynamicCP = DynamicCP or {}
 
+-- Current POSSIBLY PENDING slottables, updates with the UI, [index] = championSkillData
+-- ONLY for use with the pulldown, because this is UI-only
 local currentSlottables = {}
+-- Slottables that are already committed, [index] = skillId
+local committedSlottables = nil
 
 ---------------------------------------------------------------------
 -- When the star in the constellation is double clicked
@@ -106,6 +110,30 @@ local function AddSlotChange()
         OnSlotsChanged()
     end)
 end
+
+---------------------------------------------------------------------
+-- Committed slottables
+---------------------------------------------------------------------
+local function GetCommittedSlottables()
+    -- Cached to avoid more calls
+    if (committedSlottables ~= nil) then
+        return committedSlottables
+    end
+
+    committedSlottables = {}
+    for i = 1, 12 do
+        local skillId = GetSlotBoundId(i, HOTBAR_CATEGORY_CHAMPION)
+        committedSlottables[i] = skillId
+        DynamicCP.dbg(zo_strformat("<<1>> <<C:2>>", i, GetChampionSkillName(skillId)))
+    end
+    return committedSlottables
+end
+DynamicCP.GetCommittedSlottables = GetCommittedSlottables
+
+local function ClearCommittedSlottables()
+    committedSlottables = nil
+end
+DynamicCP.ClearCommittedSlottables = ClearCommittedSlottables
 
 ---------------------------------------------------------------------
 -- Modifications to slottables UI

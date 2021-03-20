@@ -1,13 +1,27 @@
 DynamicCP = DynamicCP or {}
 
-local nonPendingCP = nil
+---------------------------------------------------------------------
+--[[ Both of these should be of the format:
+{
+    [disciplineIndex] = {
+        [skillIndex] = points,
+    },
+    [3] = {
+        [28] = 50,
+    },
+}
+]]
+local committedCP = nil
+local pendingCP = nil
 
 ---------------------------------------------------------------------
--- Get current CP
+-- Keep track of committed CP
+---------------------------------------------------------------------
+-- Get current non-pending CP
 local function GetCurrentCP()
     -- Cached to avoid more calls
-    if (nonPendingCP ~= nil) then
-        return nonPendingCP
+    if (committedCP ~= nil) then
+        return committedCP
     end
 
     local current = {}
@@ -18,19 +32,40 @@ local function GetCurrentCP()
             current[disciplineIndex][skill] = GetNumPointsSpentOnChampionSkill(id)
         end
     end
-    nonPendingCP = current
+    committedCP = current
     return current
 end
 DynamicCP.GetCurrentCP = GetCurrentCP
 
-
 ---------------------------------------------------------------------
 -- Invalidate cache
 local function ClearCurrentCP()
-    nonPendingCP = nil
+    committedCP = nil
 end
 DynamicCP.ClearCurrentCP = ClearCurrentCP
 
+
+---------------------------------------------------------------------
+-- Keep track of pending CP
+---------------------------------------------------------------------
+-- Remove any pending points that are the same as the committed
+local function CleanUpPending()
+    -- TODO
+end
+
+local function SetStarPoints(disciplineIndex, skillIndex, points)
+    if (not pendingCP) then
+        pendingCP = {}
+    end
+    if (not pendingCP[disciplineIndex]) then
+        pendingCP[disciplineIndex] = {}
+    end
+    pendingCP[disciplineIndex][skillIndex] = points
+end
+
+local function ClearPendingCP()
+    pendingCP = nil
+end
 
 ---------------------------------------------------------------------
 -- Init
