@@ -206,7 +206,13 @@ function DynamicCP:OnApplyClicked(button)
     end
 
     ShowMessage(tree, GenerateDiff(DynamicCP.GetCommittedCP(), cp) .. "\n\n|c00FF00Preset " .. presetName .. " loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
+    -- Unhide confirm button and also update the cost
     DynamicCPPresetsInnerConfirmButton:SetHidden(false)
+    if (DynamicCP.NeedsRespec()) then
+        DynamicCPPresetsInnerConfirmButton:SetText("Confirm (" .. tostring(GetChampionRespecCost()) .. " |t18:18:esoui/art/currency/currency_gold.dds|t)")
+    else
+        DynamicCPPresetsInnerConfirmButton:SetText("Confirm")
+    end
 end
 
 
@@ -226,11 +232,13 @@ function DynamicCP:OnConfirmClicked(button)
         DynamicCPPresetsInnerConfirmButton:SetHidden(true)
     end
 
+    local respecCost = "\nRedistribution cost: "  .. GetChampionRespecCost() .. " |t18:18:esoui/art/currency/currency_gold.dds|t"
+
     libDialog:RegisterDialog(
             DynamicCP.name,
             "ConfirmConfirmation",
             "Confirm Changes",
-            "Are you sure you want to commit your points?\nRedistribution cost: "  .. GetChampionRespecCost() .. " |t18:18:esoui/art/currency/currency_gold.dds|t",
+            "Are you sure you want to commit your points?" .. (needsRespec and respecCost or ""),
             CommitPoints,
             nil,
             nil,

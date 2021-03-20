@@ -264,7 +264,7 @@
                                     <OnInitialized>self:SetText("Confirm (" .. tostring(GetChampionRespecCost()) .. " |t18:18:esoui/art/currency/currency_gold.dds|t)")</OnInitialized>
                                     <OnClicked>DynamicCP:OnConfirmClicked(self)</OnClicked>
                                     <OnMouseEnter>
-                                        ZO_Tooltips_ShowTextTooltip(self, BOTTOM, "Spend " .. GetChampionRespecCost() .. " |t18:18:esoui/art/currency/currency_gold.dds|t to confirm your champion points")
+                                        ZO_Tooltips_ShowTextTooltip(self, BOTTOM, "Confirm your champion points")
                                     </OnMouseEnter>
                                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                                 </Button>
