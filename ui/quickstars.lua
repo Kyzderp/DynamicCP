@@ -2,6 +2,12 @@ DynamicCP = DynamicCP or {}
 
 local selectedTree = "Green"
 
+-- Keep track of our own pending slottables, even though slottables.lua also has it
+-- because slottables.lua is for presets and it's possible the user still has pending
+-- changes in a preset
+-- For now, only allow pending for one tree, [slotIndex] = skillId
+local pendingSlottables = nil
+
 ---------------------------------------------------------------------
 -- Utility
 ---------------------------------------------------------------------
@@ -42,9 +48,95 @@ end
 
 
 ---------------------------------------------------------------------
+-- Pending functions
+---------------------------------------------------------------------
+local function NeedsSlottableRespec()
+    if (not pendingSlottables) then
+        return false
+    end
+
+    local committed = GetFlippedSlottables()
+    for slotIndex, skillId in pairs(pendingSlottables) do
+        -- If star is not already slotted in the same slot, then we're done
+
+        local committedId = committed[slotIndex]
+        if (committedId == 0) then committedId = -1 end
+        if (committedId ~= skillId) then
+            return true
+        end
+    end
+
+    -- If nothing changed, then we can just clear everything
+    pendingSlottables = nil
+    return false
+end
+
+local function SetSlottableSlot(slotIndex, skillId)
+    if (not pendingSlottables) then
+        pendingSlottables = {}
+    end
+    pendingSlottables[slotIndex] = skillId
+end
+
+---------------------------------------------------------------------
+-- Button click handlers
+---------------------------------------------------------------------
+function DynamicCP.OnQuickstarConfirm()
+    PrepareChampionPurchaseRequest(false)
+
+    -- Convert pending points to purchase request
+    for slotIndex, skillId in pairs(pendingSlottables) do
+        local id = skillId
+        if (id == -1) then
+            id = nil
+        end
+        AddHotbarSlotToChampionPurchaseRequest(slotIndex, id)
+    end
+
+    -- Should be able to just use this because points aren't being changed
+    -- TODO: if we want to do point respecs too eventually, will probably
+    -- need to use the button spend points again, with confirmation dialog
+    SendChampionPurchaseRequest()
+
+    -- TODO: add message maybe
+end
+
+function DynamicCP.OnQuickstarCancel()
+    DynamicCP.SelectQuickstarTab("REFRESH")
+end
+
+
+---------------------------------------------------------------------
 -- Slot selected handler
 ---------------------------------------------------------------------
-local function OnStarSelected(tree, dropdownIndex, skillId)
+local function OnStarSelected(tree, dropdownIndex, skillId, origSkillId)
+    local offsets = {
+        Green = 0,
+        Blue = 4,
+        Red = 8,
+    }
+
+    local dropdownControl = DynamicCPQuickstarsList:GetNamedChild("Star" .. tostring(dropdownIndex))
+    local slotIndex = offsets[tree] + dropdownIndex
+
+    -- Show the unsaved changes icon if it is changed
+    if (skillId == origSkillId) then
+        dropdownControl:GetNamedChild("Unsaved"):SetHidden(true)
+    else
+        dropdownControl:GetNamedChild("Unsaved"):SetHidden(false)
+    end
+
+    SetSlottableSlot(slotIndex, skillId)
+
+    -- Show/hide confirm/cancel buttons
+    local needsRespec = NeedsSlottableRespec()
+    if (needsRespec) then
+        DynamicCPQuickstarsListConfirm:SetHidden(false)
+        DynamicCPQuickstarsListCancel:SetHidden(false)
+    else
+        DynamicCPQuickstarsListConfirm:SetHidden(true)
+        DynamicCPQuickstarsListCancel:SetHidden(true)
+    end
 end
 
 
@@ -77,8 +169,11 @@ local function UpdateDropdowns(tree)
         local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPQuickstarsList:GetNamedChild("Star" .. tostring(i)))
         dropdown:ClearItems()
         dropdown:SetSortsItems(false)
-        local selectedSkillId = flipped[offset + i]
         local entryToSelect = nil
+        local selectedSkillId = flipped[offset + i]
+        if (not selectedSkillId or selectedSkillId == 0) then
+            selectedSkillId = -1
+        end
 
         -- Iterate through all available slottable stars and add sort keys and format name
         local sortedSlottables = {}
@@ -87,7 +182,7 @@ local function UpdateDropdowns(tree)
             local name = zo_strformat("<<C:1>>", GetChampionSkillName(skillId))
 
             -- Adjust the color of the item according to whether it's slotted (mastermind, anyone?)
-            local sortKey = 999
+            local sortKey = 99
             if (skillId == selectedSkillId) then
                 -- For the currently slotted in the same slot
                 name = "|c" .. selectedColor[tree] .. name .. "|r"
@@ -101,16 +196,23 @@ local function UpdateDropdowns(tree)
             index = index + 1
         end
 
+        -- Add an empty item
+        local emptyName = "---"
+        if (selectedSkillId == -1) then
+            emptyName = "|c" .. selectedColor[tree] .. emptyName .. "|r"
+        end
+        sortedSlottables[index] = {skillId = -1, name = emptyName, sortKey = 100}
+
         -- Sort the table according to sort keys
         table.sort(sortedSlottables, function(item1, item2)
             return item1.sortKey < item2.sortKey
         end)
 
         -- Add sorted items to dropdown
-        for i, data in ipairs(sortedSlottables) do
+        for _, data in ipairs(sortedSlottables) do
             local function OnItemSelected(_, _, entry)
-                DynamicCP.dbg("Selected " .. tostring(entry) .. " " .. tostring(data.skillId))
-                OnStarSelected(tree, i, data.skillId)
+                DynamicCP.dbg("Selected " .. data.name .. " " .. tostring(data.skillId))
+                OnStarSelected(tree, i, data.skillId, selectedSkillId)
             end
 
             local entry = ZO_ComboBox:CreateItemEntry(data.name, OnItemSelected)
@@ -151,11 +253,14 @@ end
 -- Called when user clicks tab button
 ---------------------------------------------------------------------
 function DynamicCP.SelectQuickstarTab(tree)
-    -- Will be nil if we are just refreshing the dropdowns
-    if (tree == nil) then
+    -- TODO: clicking on the same tab should hide the menu instead
+    -- TODO: show warning if navigating off of the tab with unsaved changes
+    -- Keep same if we are just refreshing the dropdowns
+    if (tree == "REFRESH") then
         tree = selectedTree
     end
     selectedTree = tree
+    pendingSlottables = nil
 
     -- Set backdrops to appropriate color
     SetBackdrops(tree)
