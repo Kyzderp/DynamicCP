@@ -55,7 +55,6 @@ local function GetTreeName(name, prefix, suffix)
 end
 
 
--- TODO: non-capped CP
 ---------------------------------------------------------------------
 -- Show a message in the area under the options
 local function ShowMessage(tree, text)
@@ -154,8 +153,6 @@ function DynamicCP:OnApplyClicked(button)
         currentHotbar[skillId] = slotIndex
     end
 
-    -- TODO: instead of respeccing as we go, we should keep track separately and prepare
-    -- the purchase request when user presses confirm
     if (not isRespeccing) then
         DynamicCP.ClearPendingCP()
         isRespeccing = true

@@ -1,8 +1,8 @@
 ## Title: Dynamic CP
 ## Champion Point presets per tree, with role and class filters!
 ## Author: Kyzeragon
-## Contributors: Raijindono (hotbar UX)
-## Version: 0.4.1
+## Contributors: Raijindono (UX)
+## Version: 0.5.0
 ## APIVersion: 100034
 
 ## DependsOn: LibAddonMenu-2.0>=31 LibDialog>=126
