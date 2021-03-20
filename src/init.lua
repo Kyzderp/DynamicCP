@@ -25,6 +25,7 @@ local defaultOptions = {
     showPresetsWithCP = true,
     showPulldownPoints = false,
     showPointGainedMessage = true,
+    presetsBackdropAlpha = 0.5,
 }
 
 local initialOpened = false

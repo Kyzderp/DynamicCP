@@ -37,9 +37,9 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return DynamicCP.savedOptions.showLabels end,
                     setFunc = function(value)
                         DynamicCP.savedOptions.showLabels = value
+                        DynamicCP.RefreshLabels(value)
                     end,
                     width = "full",
-                    requiresReload = true,
                 },
                 {
                     type = "checkbox",
@@ -68,7 +68,7 @@ function DynamicCP:CreateSettingsMenu()
             },
         },
 ---------------------------------------------------------------------
--- window
+-- presets window
         {
             type = "submenu",
             name = "Preset Window Settings",
@@ -107,6 +107,21 @@ function DynamicCP:CreateSettingsMenu()
                     setFunc = function(value)
                         DynamicCP.savedOptions.scale = value / 100
                         DynamicCPPresets:SetScale(value / 100)
+                    end,
+                    width = "full",
+                },
+                {
+                    type = "slider",
+                    name = "Window opacity %",
+                    tooltip = "Opacity of the window background",
+                    default = 50,
+                    min = 0,
+                    max = 100,
+                    step = 5,
+                    getFunc = function() return DynamicCP.savedOptions.presetsBackdropAlpha * 100 end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.presetsBackdropAlpha = value / 100
+                        DynamicCPPresetsBackdrop:SetAlpha(value / 100)
                     end,
                     width = "full",
                 },

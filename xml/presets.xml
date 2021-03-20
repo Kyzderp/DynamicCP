@@ -154,7 +154,7 @@
                     <Dimensions x="680" y="334"/>
                     <Anchor point="TOPRIGHT" relativeTo="ZO_ChampionPerksCanvas" relativePoint="TOPRIGHT" offsetX="-10" offsetY="10"/>
                     <Controls>
-                        <Backdrop name="$(parent)Backdrop" alpha="0.5" inherits="ZO_DefaultBackdrop" centerColor="666666"><AnchorFill/></Backdrop>
+                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000"><AnchorFill/></Backdrop>
                         <Label name="$(parent)Title" font="ZoFontWinH4" color="CCCCCC" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="false" text="Dynamic CP">
                             <Dimensions x="190" y="20"/>
                             <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="4"/>
