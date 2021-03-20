@@ -101,6 +101,7 @@ local function RegisterEvents()
             DynamicCP.ClearCommittedCP() -- Invalidate the cache
             DynamicCP.ClearCommittedSlottables() -- Invalidate the cache
             DynamicCP.OnSlotsChanged()
+            DynamicCP.SelectQuickstarTab() -- Refresh quickstar dropdowns
         end)
 
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Gained", EVENT_CHAMPION_POINT_GAINED,
