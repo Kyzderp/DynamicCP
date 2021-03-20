@@ -230,10 +230,12 @@ function DynamicCP:OnConfirmClicked(button)
 
         isRespeccing = false
         DynamicCPPresetsInnerConfirmButton:SetHidden(true)
+        HideMessage("Green")
+        HideMessage("Blue")
+        HideMessage("Red")
     end
 
     local respecCost = "\nRedistribution cost: "  .. GetChampionRespecCost() .. " |t18:18:esoui/art/currency/currency_gold.dds|t"
-
     libDialog:RegisterDialog(
             DynamicCP.name,
             "ConfirmConfirmation",
