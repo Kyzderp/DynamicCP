@@ -96,7 +96,7 @@ local function RegisterEvents()
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Purchase", EVENT_CHAMPION_PURCHASE_RESULT,
         function(eventCode, result)
             DynamicCP.OnPurchased(eventCode, result)
-            DynamicCP.ClearCurrentCP() -- Invalidate the cache
+            DynamicCP.ClearCommittedCP() -- Invalidate the cache
             DynamicCP.ClearCommittedSlottables() -- Invalidate the cache
             DynamicCP.OnSlotsChanged()
         end)

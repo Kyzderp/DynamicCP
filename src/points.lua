@@ -18,7 +18,7 @@ local pendingCP = nil
 -- Keep track of committed CP
 ---------------------------------------------------------------------
 -- Get current non-pending CP
-local function GetCurrentCP()
+local function GetCommittedCP()
     -- Cached to avoid more calls
     if (committedCP ~= nil) then
         return committedCP
@@ -35,14 +35,14 @@ local function GetCurrentCP()
     committedCP = current
     return current
 end
-DynamicCP.GetCurrentCP = GetCurrentCP
+DynamicCP.GetCommittedCP = GetCommittedCP
 
 ---------------------------------------------------------------------
 -- Invalidate cache
-local function ClearCurrentCP()
+local function ClearCommittedCP()
     committedCP = nil
 end
-DynamicCP.ClearCurrentCP = ClearCurrentCP
+DynamicCP.ClearCommittedCP = ClearCommittedCP
 
 
 ---------------------------------------------------------------------

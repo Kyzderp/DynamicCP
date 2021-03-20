@@ -145,7 +145,7 @@ function DynamicCP:OnApplyClicked(button)
 
     DynamicCP.dbg("Attempting to apply \"" .. presetName .. "\" to the " .. tree .. " tree.")
 
-    local currentCP = DynamicCP.GetCurrentCP()
+    local currentCP = DynamicCP.GetCommittedCP()
 
     -- First find all of the slottable skillIds to check them later
     local currentHotbar = {}
@@ -206,7 +206,7 @@ function DynamicCP:OnApplyClicked(button)
         end
     end
 
-    ShowMessage(tree, GenerateDiff(DynamicCP.GetCurrentCP(), cp) .. "\n\n|c00FF00Preset " .. presetName .. " loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
+    ShowMessage(tree, GenerateDiff(DynamicCP.GetCommittedCP(), cp) .. "\n\n|c00FF00Preset " .. presetName .. " loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
     DynamicCPPresetsInnerConfirmButton:SetHidden(false)
 end
 
@@ -261,7 +261,7 @@ function DynamicCP:OnSaveClicked(button, tree)
     end
 
     -- Do a deep copy
-    local currentCP = DynamicCP.GetCurrentCP()
+    local currentCP = DynamicCP.GetCommittedCP()
     local newCP = {}
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
     newCP[disciplineIndex] = {}
@@ -515,9 +515,9 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
         end
 
         if (presetName == CREATE_NEW_STRING) then
-            ShowMessage(tree, "|cBBBBBBRename and click \"Save\" to create a new preset.|r\n\nCurrent points:" .. GenerateTree(DynamicCP.GetCurrentCP(), tree))
+            ShowMessage(tree, "|cBBBBBBRename and click \"Save\" to create a new preset.|r\n\nCurrent points:" .. GenerateTree(DynamicCP.GetCommittedCP(), tree))
         else
-            ShowMessage(tree, GenerateDiff(DynamicCP.GetCurrentCP(), data) .. "\n\n|cBBBBBBClick \"Apply\" to load this preset.|r")
+            ShowMessage(tree, GenerateDiff(DynamicCP.GetCommittedCP(), data) .. "\n\n|cBBBBBBClick \"Apply\" to load this preset.|r")
         end
     end
 
