@@ -208,6 +208,7 @@ function DynamicCP:OnApplyClicked(button)
     ShowMessage(tree, GenerateDiff(DynamicCP.GetCommittedCP(), cp) .. "\n\n|c00FF00Preset " .. presetName .. " loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
     -- Unhide confirm button and also update the cost
     DynamicCPPresetsInnerConfirmButton:SetHidden(false)
+    DynamicCPPresetsInnerCancelButton:SetHidden(false)
     if (DynamicCP.NeedsRespec()) then
         DynamicCPPresetsInnerConfirmButton:SetText("Confirm (" .. tostring(GetChampionRespecCost()) .. " |t18:18:esoui/art/currency/currency_gold.dds|t)")
     else
@@ -229,7 +230,9 @@ function DynamicCP:OnConfirmClicked(button)
         CHAMPION_PERKS:SpendPointsConfirmed(needsRespec)
 
         isRespeccing = false
+        DynamicCP.ClearPendingCP()
         DynamicCPPresetsInnerConfirmButton:SetHidden(true)
+        DynamicCPPresetsInnerCancelButton:SetHidden(true)
         HideMessage("Green")
         HideMessage("Blue")
         HideMessage("Red")
@@ -246,6 +249,19 @@ function DynamicCP:OnConfirmClicked(button)
             nil,
             true)
     libDialog:ShowDialog(DynamicCP.name, "ConfirmConfirmation")
+end
+
+
+---------------------------------------------------------------------
+-- When cancel button is clicked
+function DynamicCP:OnCancelClicked(button)
+    isRespeccing = false
+    DynamicCP.ClearPendingCP()
+    DynamicCPPresetsInnerConfirmButton:SetHidden(true)
+    DynamicCPPresetsInnerCancelButton:SetHidden(true)
+    HideMessage("Green")
+    HideMessage("Blue")
+    HideMessage("Red")
 end
 
 

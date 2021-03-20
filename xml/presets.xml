@@ -259,12 +259,21 @@
                                 </Control>
 
                                 <Button name="$(parent)ConfirmButton" inherits="ZO_DefaultButton" tier="HIGH" text="Confirm" hidden="true">
-                                    <Dimensions x="600"/>
-                                    <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="260"/>
+                                    <Dimensions x="300"/>
+                                    <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOP" offsetY="260"/>
                                     <OnInitialized>self:SetText("Confirm (" .. tostring(GetChampionRespecCost()) .. " |t18:18:esoui/art/currency/currency_gold.dds|t)")</OnInitialized>
                                     <OnClicked>DynamicCP:OnConfirmClicked(self)</OnClicked>
                                     <OnMouseEnter>
                                         ZO_Tooltips_ShowTextTooltip(self, BOTTOM, "Confirm your champion points")
+                                    </OnMouseEnter>
+                                    <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
+                                </Button>
+                                <Button name="$(parent)CancelButton" inherits="ZO_DefaultButton" tier="HIGH" text="Cancel" hidden="true">
+                                    <Dimensions x="300"/>
+                                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOP" offsetY="260"/>
+                                    <OnClicked>DynamicCP:OnCancelClicked(self)</OnClicked>
+                                    <OnMouseEnter>
+                                        ZO_Tooltips_ShowTextTooltip(self, BOTTOM, "Cancel applying the presets")
                                     </OnMouseEnter>
                                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                                 </Button>
