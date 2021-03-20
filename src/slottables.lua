@@ -3,9 +3,9 @@ DynamicCP = DynamicCP or {}
 -- Current POSSIBLY PENDING slottables, updates with the UI, [index] = championSkillData
 -- ONLY for use with the pulldown, because this is UI-only
 local currentSlottables = {}
--- Slottables that are already committed, [index] = skillId
+-- Slottables that are already committed, [skillId] = index
 local committedSlottables = nil
--- Slottables that need to be added to purchase request, used from preset
+-- Slottables that need to be added to purchase request, used from preset, [index] = skillId
 local pendingSlottables = nil
 
 ---------------------------------------------------------------------
@@ -127,8 +127,8 @@ local function GetCommittedSlottables()
     committedSlottables = {}
     for i = 1, 12 do
         local skillId = GetSlotBoundId(i, HOTBAR_CATEGORY_CHAMPION)
-        committedSlottables[i] = skillId
-        DynamicCP.dbg(zo_strformat("<<1>> <<C:2>>", i, GetChampionSkillName(skillId)))
+        committedSlottables[skillId] = i
+        -- DynamicCP.dbg(zo_strformat("<<1>> <<C:2>>", i, GetChampionSkillName(skillId)))
     end
     return committedSlottables
 end
@@ -152,12 +152,34 @@ local function SetSlottablePoints(slotIndex, skillId)
 end
 DynamicCP.SetSlottablePoints = SetSlottablePoints
 
+-- If all the slottables are the same, we should not change them, even if different index
+-- All or nothing cleaning
+local function CleanPendingSlottables()
+    local committed = GetCommittedSlottables()
+    for slotIndex, skillId in pairs(pendingSlottables) do
+        -- If star must be removed, or star is not already slotted, then we're done
+        if (skillId == -1 or committed[skillId] == nil) then
+            return
+        end
+    end
+
+    -- If nothing changed, then we can just clear everything
+    DynamicCP.dbg("Cleaned ALL slottables")
+    pendingSlottables = {}
+end
+
 -- Iterate through the pending slottables and add to purchase request
 local function ConvertPendingSlottablesToPurchase()
     if (not pendingSlottables) then return end
+    CleanPendingSlottables()
 
     for slotIndex, skillId in pairs(pendingSlottables) do
-        AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
+        local id = skillId
+        if (id == -1) then
+            id = nil
+        end
+        DynamicCP.dbg(zo_strformat("purchasing <<C:1>> <<2>>", GetChampionSkillName(id), slotIndex))
+        AddHotbarSlotToChampionPurchaseRequest(slotIndex, id)
     end
 end
 DynamicCP.ConvertPendingSlottablesToPurchase = ConvertPendingSlottablesToPurchase

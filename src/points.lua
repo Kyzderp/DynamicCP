@@ -71,8 +71,7 @@ local function NeedsRespec()
                     needsRespec = true
                 end
             else
-                DynamicCP.dbg(zo_strformat("cleaning <<C:1>>",
-                    GetChampionSkillName(GetChampionSkillId(disciplineIndex, skillIndex))))
+                -- DynamicCP.dbg(zo_strformat("cleaning <<C:1>>", GetChampionSkillName(GetChampionSkillId(disciplineIndex, skillIndex))))
             end
         end
     end

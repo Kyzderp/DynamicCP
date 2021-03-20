@@ -158,7 +158,6 @@ function DynamicCP:OnApplyClicked(button)
     -- the purchase request when user presses confirm
     if (not isRespeccing) then
         DynamicCP.ClearPendingCP()
-        PrepareChampionPurchaseRequest(true)
         isRespeccing = true
     end
 
@@ -178,7 +177,7 @@ function DynamicCP:OnApplyClicked(button)
 
         -- Unslot slottables that are no longer slottable because of not enough points
         if (currentHotbar[id] and not WouldChampionSkillNodeBeUnlocked(id, numPoints)) then
-            AddHotbarSlotToChampionPurchaseRequest(currentHotbar[id], nil)
+            DynamicCP.SetSlottablePoints(currentHotbar[id], -1)
         end
 
         -- Collect slottables
@@ -188,9 +187,7 @@ function DynamicCP:OnApplyClicked(button)
             toSlot[numSlottables] = id
         end
 
-        AddSkillToChampionPurchaseRequest(id, numPoints)
         DynamicCP.SetStarPoints(disciplineIndex, skill, numPoints)
-        -- DynamicCP.dbg(zo_strformat("setting <<C:1>> to <<2>> points", GetChampionSkillName(id), numPoints))
     end
 
     -- Apply slottables if applicable
@@ -198,8 +195,8 @@ function DynamicCP:OnApplyClicked(button)
         if (numSlottables <= 4) then
             local offset = HOTBAR_OFFSET[tree]
             for index, id in pairs(toSlot) do
-                AddHotbarSlotToChampionPurchaseRequest(index + offset, id)
-                DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(id), index + offset))
+                DynamicCP.SetSlottablePoints(index + offset, id)
+                -- DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(id), index + offset))
             end
         else
             DynamicCP.dbg("too many slottables to slot automatically")
@@ -220,7 +217,11 @@ function DynamicCP:OnConfirmClicked(button)
     DynamicCP.dbg("needs respec? " .. (needsRespec and "yes" or "no"))
 
     local function CommitPoints()
-        CHAMPION_PERKS:SpendPointsConfirmed(true)
+        PrepareChampionPurchaseRequest(needsRespec)
+        DynamicCP.ConvertPendingPointsToPurchase()
+        DynamicCP.ConvertPendingSlottablesToPurchase()
+        CHAMPION_PERKS:SpendPointsConfirmed(needsRespec)
+
         isRespeccing = false
         DynamicCPPresetsInnerConfirmButton:SetHidden(true)
     end
