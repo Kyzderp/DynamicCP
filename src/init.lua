@@ -33,6 +33,8 @@ local defaultOptions = {
     clusterLabelColor = {1, 0.7, 1},
     clusterLabelSize = 13,
     showTotalsLabel = true,
+    quickstarsX = GuiRoot:GetWidth() / 4,
+    quickstarsY = GuiRoot:GetHeight() / 4,
 }
 
 local initialOpened = false
@@ -64,6 +66,7 @@ local function OnPlayerActivated(_, initial)
 
     -- Post load init
     DynamicCP.InitPoints()
+    DynamicCP.InitQuickstars()
 
     if (DynamicCP.savedOptions.hideBackground) then
         local backgroundOverride = function(line) return "/esoui/art/scrying/backdrop_stars.dds" end 

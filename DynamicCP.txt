@@ -17,7 +17,9 @@ src/slottables.lua
 src/settings.lua
 ui/presets.lua
 ui/pulldown.lua
+ui/quickstars.lua
 xml/presets.xml
 xml/warning.xml
 xml/pulldown.xml
+xml/quickstars.xml
 bindings.xml
