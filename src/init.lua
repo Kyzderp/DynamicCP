@@ -26,6 +26,12 @@ local defaultOptions = {
     showPulldownPoints = false,
     showPointGainedMessage = true,
     presetsBackdropAlpha = 0.5,
+    passiveLabelColor = {1, 1, 0.5},
+    passiveLabelSize = 24,
+    slottableLabelColor = {1, 1, 1},
+    slottableLabelSize = 18,
+    clusterLabelColor = {1, 0.7, 1},
+    clusterLabelSize = 13,
 }
 
 local initialOpened = false

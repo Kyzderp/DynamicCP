@@ -30,6 +30,11 @@ function DynamicCP:CreateSettingsMenu()
             name = "Constellation Settings",
             controls = {
                 {
+                    type = "header",
+                    name = "Labels",
+                    width = "half",
+                },
+                {
                     type = "checkbox",
                     name = "Show labels on stars",
                     tooltip = "Show the names of champion point stars above the stars",
@@ -40,6 +45,98 @@ function DynamicCP:CreateSettingsMenu()
                         DynamicCP.RefreshLabels(value)
                     end,
                     width = "full",
+                },
+                {
+                    type = "colorpicker",
+                    name = "Passive star labels color",
+                    tooltip = "Color of the labels for unslottable stars",
+                    default = ZO_ColorDef:New(1, 1, 0.5),
+                    getFunc = function() return unpack(DynamicCP.savedOptions.passiveLabelColor) end,
+                    setFunc = function(r, g, b)
+                        DynamicCP.savedOptions.passiveLabelColor = {r, g, b}
+                        DynamicCP.RefreshLabels(DynamicCP.savedOptions.showLabels)
+                    end,
+                    width = "half",
+                    disabled = function() return not DynamicCP.savedOptions.showLabels end
+                },
+                {
+                    type = "slider",
+                    name = "Passive star labels size",
+                    tooltip = "Font size of the labels for unslottable stars",
+                    getFunc = function() return DynamicCP.savedOptions.passiveLabelSize end,
+                    default = 24,
+                    min = 8,
+                    max = 54,
+                    step = 1,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.passiveLabelSize = value
+                        DynamicCP.RefreshLabels(DynamicCP.savedOptions.showLabels)
+                    end,
+                    width = "half",
+                    disabled = function() return not DynamicCP.savedOptions.showLabels end
+                },
+                {
+                    type = "colorpicker",
+                    name = "Slottable star labels color",
+                    tooltip = "Color of the labels for slottable stars",
+                    default = ZO_ColorDef:New(1, 1, 1),
+                    getFunc = function() return unpack(DynamicCP.savedOptions.slottableLabelColor) end,
+                    setFunc = function(r, g, b)
+                        DynamicCP.savedOptions.slottableLabelColor = {r, g, b}
+                        DynamicCP.RefreshLabels(DynamicCP.savedOptions.showLabels)
+                    end,
+                    width = "half",
+                    disabled = function() return not DynamicCP.savedOptions.showLabels end
+                },
+                {
+                    type = "slider",
+                    name = "Slottable star labels size",
+                    tooltip = "Font size of the labels for slottable stars",
+                    getFunc = function() return DynamicCP.savedOptions.slottableLabelSize end,
+                    default = 18,
+                    min = 8,
+                    max = 54,
+                    step = 1,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.slottableLabelSize = value
+                        DynamicCP.RefreshLabels(DynamicCP.savedOptions.showLabels)
+                    end,
+                    width = "half",
+                    disabled = function() return not DynamicCP.savedOptions.showLabels end
+                },
+                {
+                    type = "colorpicker",
+                    name = "Cluster labels color",
+                    tooltip = "Color of the labels for star clusters",
+                    default = ZO_ColorDef:New(1, 0.7, 1),
+                    getFunc = function() return unpack(DynamicCP.savedOptions.clusterLabelColor) end,
+                    setFunc = function(r, g, b)
+                        DynamicCP.savedOptions.clusterLabelColor = {r, g, b}
+                        DynamicCP.RefreshLabels(DynamicCP.savedOptions.showLabels)
+                    end,
+                    width = "half",
+                    disabled = function() return not DynamicCP.savedOptions.showLabels end
+                },
+                {
+                    type = "slider",
+                    name = "Cluster labels size",
+                    tooltip = "Font size of the labels for star clusters",
+                    getFunc = function() return DynamicCP.savedOptions.clusterLabelSize end,
+                    default = 13,
+                    min = 8,
+                    max = 54,
+                    step = 1,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.clusterLabelSize = value
+                        DynamicCP.RefreshLabels(DynamicCP.savedOptions.showLabels)
+                    end,
+                    width = "half",
+                    disabled = function() return not DynamicCP.savedOptions.showLabels end
+                },
+                {
+                    type = "header",
+                    name = "Other",
+                    width = "half",
                 },
                 {
                     type = "checkbox",

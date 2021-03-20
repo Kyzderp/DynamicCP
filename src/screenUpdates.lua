@@ -26,11 +26,11 @@ function DynamicCP.RefreshLabels(show)
 
             local slottable = CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))
             if (slottable) then
-                n:SetFont("ZoFontWinH4")
-                n:SetColor(1, 1, 1)
+                n:SetFont(string.format("$(BOLD_FONT)|%d|soft-shadow-thick", DynamicCP.savedOptions.slottableLabelSize))
+                n:SetColor(unpack(DynamicCP.savedOptions.slottableLabelColor))
             else
-                n:SetFont("ZoFontWinH2")
-                n:SetColor(1, 1, 0.5)
+                n:SetFont(string.format("$(BOLD_FONT)|%d|soft-shadow-thick", DynamicCP.savedOptions.passiveLabelSize))
+                n:SetColor(unpack(DynamicCP.savedOptions.passiveLabelColor))
             end
             n:SetText(zo_strformat("<<C:1>>", GetChampionSkillName(id)))
 
@@ -45,9 +45,9 @@ function DynamicCP.RefreshLabels(show)
                 n = WINDOW_MANAGER:CreateControl("$(parent)Name", child, CT_LABEL)
                 n:SetInheritScale(false)
                 n:SetAnchor(CENTER, child, CENTER, 0, -40)
-                n:SetFont("ZoFontGameSmall")
             end
-            n:SetColor(1, 0.7, 1)
+            n:SetFont(string.format("$(BOLD_FONT)|%d|soft-shadow-thin", DynamicCP.savedOptions.clusterLabelSize))
+            n:SetColor(unpack(DynamicCP.savedOptions.clusterLabelColor))
             n:SetText(text)
             n:SetHidden(not show)
         end
