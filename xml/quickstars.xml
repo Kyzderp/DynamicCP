@@ -7,9 +7,10 @@
                     <Dimensions x="300" y="300"/>
                     <OnMoveStop>DynamicCP.SaveQuickstarsPosition()</OnMoveStop>
                     <Controls>
-                        <Control name="$(parent)GreenButton">
+                        <Control name="$(parent)GreenButton" mouseEnabled="true">
                             <Dimensions x="32" y="32"/>
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT"/>
+                            <OnMouseUp>DynamicCP.SelectTab("Green")</OnMouseUp>
                             <Controls>
                                 <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000"><AnchorFill/></Backdrop>
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_stamina_icon-hud-32.dds" tier="HIGH">
@@ -18,9 +19,10 @@
                                 </Texture>
                             </Controls>
                         </Control>
-                        <Control name="$(parent)BlueButton">
+                        <Control name="$(parent)BlueButton" mouseEnabled="true">
                             <Dimensions x="32" y="32"/>
                             <Anchor point="TOPLEFT" relativeTo="$(parent)GreenButton" relativePoint="BOTTOMLEFT"/>
+                            <OnMouseUp>DynamicCP.SelectTab("Blue")</OnMouseUp>
                             <Controls>
                                 <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000"><AnchorFill/></Backdrop>
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_magicka_icon-hud-32.dds" tier="HIGH">
@@ -29,9 +31,10 @@
                                 </Texture>
                             </Controls>
                         </Control>
-                        <Control name="$(parent)RedButton">
+                        <Control name="$(parent)RedButton" mouseEnabled="true">
                             <Dimensions x="32" y="32"/>
                             <Anchor point="TOPLEFT" relativeTo="$(parent)BlueButton" relativePoint="BOTTOMLEFT"/>
+                            <OnMouseUp>DynamicCP.SelectTab("Red")</OnMouseUp>
                             <Controls>
                                 <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000"><AnchorFill/></Backdrop>
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_health_icon-hud-32.dds" tier="HIGH">
