@@ -157,6 +157,7 @@ function DynamicCP:OnApplyClicked(button)
     -- TODO: instead of respeccing as we go, we should keep track separately and prepare
     -- the purchase request when user presses confirm
     if (not isRespeccing) then
+        DynamicCP.ClearPendingCP()
         PrepareChampionPurchaseRequest(true)
         isRespeccing = true
     end
@@ -188,6 +189,7 @@ function DynamicCP:OnApplyClicked(button)
         end
 
         AddSkillToChampionPurchaseRequest(id, numPoints)
+        DynamicCP.SetStarPoints(disciplineIndex, skill, numPoints)
         -- DynamicCP.dbg(zo_strformat("setting <<C:1>> to <<2>> points", GetChampionSkillName(id), numPoints))
     end
 
@@ -214,6 +216,9 @@ end
 ---------------------------------------------------------------------
 -- When confirm button is clicked
 function DynamicCP:OnConfirmClicked(button)
+    local needsRespec = DynamicCP.NeedsRespec()
+    DynamicCP.dbg("needs respec? " .. (needsRespec and "yes" or "no"))
+
     local function CommitPoints()
         CHAMPION_PERKS:SpendPointsConfirmed(true)
         isRespeccing = false

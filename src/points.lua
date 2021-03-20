@@ -48,11 +48,42 @@ DynamicCP.ClearCommittedCP = ClearCommittedCP
 ---------------------------------------------------------------------
 -- Keep track of pending CP
 ---------------------------------------------------------------------
--- Remove any pending points that are the same as the committed
-local function CleanUpPending()
-    -- TODO
-end
+-- Returns true if any pending points are BELOW committed points
+-- Also removes any pending points that are the same as the committed
+local function NeedsRespec()
+    if (not pendingCP) then
+        d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. NeedsRespec")
+        return true -- Assume respec needed
+    end
 
+    local cleaned = {}
+    local committed = GetCommittedCP()
+    local needsRespec = false
+    for disciplineIndex, disciplineData in pairs(pendingCP) do
+        for skillIndex, points in pairs(disciplineData) do
+            local committedPoints = committed[disciplineIndex][skillIndex]
+            if (points ~= committedPoints) then
+                if (not cleaned[disciplineIndex]) then
+                    cleaned[disciplineIndex] = {}
+                end
+                cleaned[disciplineIndex][skillIndex] = points
+                if (points < committedPoints) then
+                    needsRespec = true
+                end
+            else
+                DynamicCP.dbg(zo_strformat("cleaning <<C:1>>",
+                    GetChampionSkillName(GetChampionSkillId(disciplineIndex, skillIndex))))
+            end
+        end
+    end
+
+    pendingCP = cleaned
+    return needsRespec
+end
+DynamicCP.NeedsRespec = NeedsRespec
+
+
+-- Should be called whenever preset wants to apply points
 local function SetStarPoints(disciplineIndex, skillIndex, points)
     if (not pendingCP) then
         pendingCP = {}
@@ -62,10 +93,24 @@ local function SetStarPoints(disciplineIndex, skillIndex, points)
     end
     pendingCP[disciplineIndex][skillIndex] = points
 end
+DynamicCP.SetStarPoints = SetStarPoints
 
+-- Clear cache
 local function ClearPendingCP()
     pendingCP = nil
 end
+DynamicCP.ClearPendingCP = ClearPendingCP
+
+-- Iterate through the pending points and add to purchase request
+local function ConvertPendingPointsToPurchase()
+    for disciplineIndex, disciplineData in pairs(pendingCP) do
+        for skillIndex, points in pairs(disciplineData) do
+            local skillId = GetChampionSkillId(disciplineIndex, skillIndex)
+            AddSkillToChampionPurchaseRequest(skillId, points)
+        end
+    end
+end
+DynamicCP.ConvertPendingPointsToPurchase = ConvertPendingPointsToPurchase
 
 ---------------------------------------------------------------------
 -- Init

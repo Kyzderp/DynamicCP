@@ -5,6 +5,8 @@ DynamicCP = DynamicCP or {}
 local currentSlottables = {}
 -- Slottables that are already committed, [index] = skillId
 local committedSlottables = nil
+-- Slottables that need to be added to purchase request, used from preset
+local pendingSlottables = nil
 
 ---------------------------------------------------------------------
 -- When the star in the constellation is double clicked
@@ -111,9 +113,11 @@ local function AddSlotChange()
     end)
 end
 
+
 ---------------------------------------------------------------------
 -- Committed slottables
 ---------------------------------------------------------------------
+-- Get cached
 local function GetCommittedSlottables()
     -- Cached to avoid more calls
     if (committedSlottables ~= nil) then
@@ -130,10 +134,33 @@ local function GetCommittedSlottables()
 end
 DynamicCP.GetCommittedSlottables = GetCommittedSlottables
 
+-- Clear cache
 local function ClearCommittedSlottables()
     committedSlottables = nil
 end
 DynamicCP.ClearCommittedSlottables = ClearCommittedSlottables
+
+
+---------------------------------------------------------------------
+-- Pending slottables
+---------------------------------------------------------------------
+local function SetSlottablePoints(slotIndex, skillId)
+    if (not pendingSlottables) then
+        pendingSlottables = {}
+    end
+    pendingSlottables[slotIndex] = skillId
+end
+DynamicCP.SetSlottablePoints = SetSlottablePoints
+
+-- Iterate through the pending slottables and add to purchase request
+local function ConvertPendingSlottablesToPurchase()
+    if (not pendingSlottables) then return end
+
+    for slotIndex, skillId in pairs(pendingSlottables) do
+        AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
+    end
+end
+DynamicCP.ConvertPendingSlottablesToPurchase = ConvertPendingSlottablesToPurchase
 
 ---------------------------------------------------------------------
 -- Modifications to slottables UI
