@@ -215,6 +215,8 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return DynamicCP.savedOptions.scale * 100 end,
                     setFunc = function(value)
                         DynamicCP.savedOptions.scale = value / 100
+                        DynamicCPPresetsContainer:SetHidden(false)
+                        DynamicCPPresets:SetHidden(false)
                         DynamicCPPresets:SetScale(value / 100)
                     end,
                     width = "full",
@@ -230,6 +232,8 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return DynamicCP.savedOptions.presetsBackdropAlpha * 100 end,
                     setFunc = function(value)
                         DynamicCP.savedOptions.presetsBackdropAlpha = value / 100
+                        DynamicCPPresetsContainer:SetHidden(false)
+                        DynamicCPPresets:SetHidden(false)
                         DynamicCPPresetsBackdrop:SetAlpha(value / 100)
                     end,
                     width = "full",
@@ -301,6 +305,23 @@ function DynamicCP:CreateSettingsMenu()
                     end,
                     width = "full",
                     disabled = function() return not DynamicCP.savedOptions.showQuickstars end,
+                },
+                {
+                    type = "slider",
+                    name = "Panel scale %",
+                    tooltip = "Scale of the panel to display. Some spacing may look weird especially at more extreme values",
+                    default = 100,
+                    min = 50,
+                    max = 150,
+                    step = 5,
+                    getFunc = function() return DynamicCP.savedOptions.quickstarsScale * 100 end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.quickstarsScale = value / 100
+                        DynamicCPQuickstarsContainer:SetHidden(false)
+                        DynamicCPQuickstars:SetHidden(false)
+                        DynamicCPQuickstars:SetScale(value / 100)
+                    end,
+                    width = "full",
                 },
                 {
                     type = "slider",

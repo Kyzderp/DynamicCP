@@ -339,4 +339,6 @@ function DynamicCP.InitQuickstars()
     DynamicCPQuickstarsListBackdrop:SetAlpha(alpha)
     DynamicCPQuickstarsListCancelBackdrop:SetAlpha(alpha)
     DynamicCPQuickstarsListConfirmBackdrop:SetAlpha(alpha)
+
+    DynamicCPQuickstars:SetScale(DynamicCP.savedOptions.quickstarsScale)
 end
