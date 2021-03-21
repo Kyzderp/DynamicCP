@@ -42,6 +42,7 @@ local defaultOptions = {
     quickstarsAlpha = 0.5,
     quickstarsScale = 1.0,
     quickstarsVertical = true,
+    quickstarsMirrored = false,
 }
 
 local initialOpened = false

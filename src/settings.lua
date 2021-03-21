@@ -322,6 +322,21 @@ function DynamicCP:CreateSettingsMenu()
                     disabled = function() return not DynamicCP.savedOptions.showQuickstars end,
                 },
                 {
+                    type = "checkbox",
+                    name = "Use mirrored menu side",
+                    tooltip = "For vertical buttons: Set to ON to open to the left, OFF to open to the right\nFor horizontal buttons: Set to ON to open above, OFF to open below",
+                    default = false,
+                    getFunc = function() return DynamicCP.savedOptions.quickstarsMirrored end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.quickstarsMirrored = value
+                        DynamicCPQuickstarsContainer:SetHidden(false)
+                        DynamicCPQuickstars:SetHidden(false)
+                        DynamicCP.ResizeQuickstars()
+                    end,
+                    width = "full",
+                    disabled = function() return not DynamicCP.savedOptions.showQuickstars end,
+                },
+                {
                     type = "slider",
                     name = "Panel scale %",
                     tooltip = "Scale of the panel to display. Some spacing may look weird especially at more extreme values",

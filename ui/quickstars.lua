@@ -331,16 +331,48 @@ function DynamicCP.ResizeQuickstars()
         DynamicCPQuickstars:SetDimensions(240, 172)
         DynamicCPQuickstarsBlueButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, BOTTOMLEFT)
         DynamicCPQuickstarsRedButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsBlueButton, BOTTOMLEFT)
-        DynamicCPQuickstarsList:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, TOPRIGHT)
+        if (DynamicCP.savedOptions.quickstarsMirrored) then
+            -- Opening to the left
+            DynamicCPQuickstarsList:SetAnchor(TOPRIGHT, DynamicCPQuickstarsGreenButton, TOPLEFT)
+        else
+            -- Opening to the right
+            DynamicCPQuickstarsList:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, TOPRIGHT)
+        end
         DynamicCPQuickstarsListCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsList, BOTTOMRIGHT)
         DynamicCPQuickstarsListConfirm:SetAnchor(TOPRIGHT, DynamicCPQuickstarsListCancel, TOPLEFT)
     else
         DynamicCPQuickstars:SetDimensions(208, 204)
         DynamicCPQuickstarsBlueButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, TOPRIGHT)
         DynamicCPQuickstarsRedButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsBlueButton, TOPRIGHT)
-        DynamicCPQuickstarsList:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, BOTTOMLEFT)
-        DynamicCPQuickstarsListCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsList, BOTTOMRIGHT)
-        DynamicCPQuickstarsListConfirm:SetAnchor(TOPRIGHT, DynamicCPQuickstarsListCancel, TOPLEFT)
+        if (DynamicCP.savedOptions.quickstarsMirrored) then
+            -- Opening above, also move the confirm buttons above
+            DynamicCPQuickstarsList:SetAnchor(BOTTOMLEFT, DynamicCPQuickstarsGreenButton, TOPLEFT)
+            DynamicCPQuickstarsListCancel:SetAnchor(BOTTOMRIGHT, DynamicCPQuickstarsList, TOPRIGHT)
+            DynamicCPQuickstarsListConfirm:SetAnchor(BOTTOMRIGHT, DynamicCPQuickstarsListCancel, BOTTOMLEFT)
+        else
+            -- Opening below
+            DynamicCPQuickstarsList:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, BOTTOMLEFT)
+            DynamicCPQuickstarsListCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsList, BOTTOMRIGHT)
+            DynamicCPQuickstarsListConfirm:SetAnchor(TOPRIGHT, DynamicCPQuickstarsListCancel, TOPLEFT)
+        end
+    end
+
+    DynamicCPQuickstarsListStar1Unsaved:ClearAnchors()
+    DynamicCPQuickstarsListStar2Unsaved:ClearAnchors()
+    DynamicCPQuickstarsListStar3Unsaved:ClearAnchors()
+    DynamicCPQuickstarsListStar4Unsaved:ClearAnchors()
+    if (DynamicCP.savedOptions.quickstarsVertical and DynamicCP.savedOptions.quickstarsMirrored) then
+        -- If it's vertical and opening to the left, the unsaved icons also need to be on the left side
+        DynamicCPQuickstarsListStar1Unsaved:SetAnchor(RIGHT, DynamicCPQuickstarsListStar1, LEFT, -8, 0)
+        DynamicCPQuickstarsListStar2Unsaved:SetAnchor(RIGHT, DynamicCPQuickstarsListStar2, LEFT, -8, 0)
+        DynamicCPQuickstarsListStar3Unsaved:SetAnchor(RIGHT, DynamicCPQuickstarsListStar3, LEFT, -8, 0)
+        DynamicCPQuickstarsListStar4Unsaved:SetAnchor(RIGHT, DynamicCPQuickstarsListStar4, LEFT, -8, 0)
+    else
+        -- Regular unsaved icons on the right
+        DynamicCPQuickstarsListStar1Unsaved:SetAnchor(LEFT, DynamicCPQuickstarsListStar1, RIGHT, 8, 0)
+        DynamicCPQuickstarsListStar2Unsaved:SetAnchor(LEFT, DynamicCPQuickstarsListStar2, RIGHT, 8, 0)
+        DynamicCPQuickstarsListStar3Unsaved:SetAnchor(LEFT, DynamicCPQuickstarsListStar3, RIGHT, 8, 0)
+        DynamicCPQuickstarsListStar4Unsaved:SetAnchor(LEFT, DynamicCPQuickstarsListStar4, RIGHT, 8, 0)
     end
 end
 
