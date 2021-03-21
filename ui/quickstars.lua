@@ -8,6 +8,15 @@ local selectedTree = "Green"
 -- For now, only allow pending for one tree, [slotIndex] = skillId
 local pendingSlottables = nil
 
+-- [1] = emptyEntry,
+local emptyEntries = {}
+
+local offsets = {
+    Green = 0,
+    Blue = 4,
+    Red = 8,
+}
+
 ---------------------------------------------------------------------
 -- Utility
 ---------------------------------------------------------------------
@@ -76,6 +85,27 @@ local function SetSlottableSlot(slotIndex, skillId)
         pendingSlottables = {}
     end
     pendingSlottables[slotIndex] = skillId
+
+
+    -- Check the other slots
+    local committed = GetFlippedSlottables()
+    if (skillId == -1) then return end
+    for dropdownIndex = 1, 4 do
+        local offset = math.floor((slotIndex - 1) / 4) * 4
+        local i = offset + dropdownIndex
+        if (slotIndex ~= i) then
+            local currentId = pendingSlottables[i]
+            if (not currentId) then
+                currentId = committed[i]
+            end
+
+            -- If it's currently slotted in a different dropdown, it needs to be removed
+            if (currentId == skillId) then
+                local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPQuickstarsList:GetNamedChild("Star" .. tostring(dropdownIndex)))
+                dropdown:SelectItem(emptyEntries[dropdownIndex])
+            end
+        end
+    end
 end
 
 ---------------------------------------------------------------------
@@ -94,7 +124,7 @@ function DynamicCP.OnQuickstarConfirm()
     end
 
     -- Should be able to just use this because points aren't being changed
-    -- TODO: if we want to do point respecs too eventually, will probably
+    -- If we want to do point respecs too eventually, will probably
     -- need to use the button spend points again, with confirmation dialog
     SendChampionPurchaseRequest()
 
@@ -110,12 +140,6 @@ end
 -- Slot selected handler
 ---------------------------------------------------------------------
 local function OnStarSelected(tree, dropdownIndex, skillId, origSkillId)
-    local offsets = {
-        Green = 0,
-        Blue = 4,
-        Red = 8,
-    }
-
     local dropdownControl = DynamicCPQuickstarsList:GetNamedChild("Star" .. tostring(dropdownIndex))
     local slotIndex = offsets[tree] + dropdownIndex
 
@@ -144,11 +168,6 @@ end
 -- Reinitialize dropdowns for the particular tree
 ---------------------------------------------------------------------
 local function UpdateDropdowns(tree)
-    local offsets = {
-        Green = 0,
-        Blue = 4,
-        Red = 8,
-    }
     local selectedColor = {
         Green = "a5d752",
         Blue = "59bae7",
@@ -219,6 +238,9 @@ local function UpdateDropdowns(tree)
             dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
             if (data.skillId == selectedSkillId) then
                 entryToSelect = entry
+            end
+            if (data.skillId == -1) then
+                emptyEntries[i] = entry
             end
         end
 
