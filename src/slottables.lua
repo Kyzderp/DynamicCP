@@ -1,5 +1,9 @@
 DynamicCP = DynamicCP or {}
 
+-- Throttle for slot updates
+local slotUpdateThrottling = false
+local lastThrottle = 0
+
 -- Current POSSIBLY PENDING slottables, updates with the UI, [index] = championSkillData
 -- ONLY for use with the pulldown, because this is UI-only
 local currentSlottables = {}
@@ -91,9 +95,26 @@ end
 
 local function OnSlotsChanged()
     DynamicCP.dbg("OnSlotsChanged")
-    CollectCurrentSlottables()
-    DynamicCP.ApplyCurrentSlottables(currentSlottables)
-    -- TODO: display on hud?
+    local currTime = GetGameTimeMilliseconds()
+    if (not slotUpdateThrottling) then
+        slotUpdateThrottling = true
+    elseif (currTime - lastThrottle > 50) then
+        lastThrottle = currTime
+    else
+        return
+    end
+
+    EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "SlotsChangedThrottle")
+    EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "SlotsChangedThrottle", 100, function()
+        slotUpdateThrottling = false
+        EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "SlotsChangedThrottle")
+
+        -- Slots have finished updating
+        DynamicCP.dbg("OnSlotsChanged PASSED")
+        CollectCurrentSlottables()
+        DynamicCP.ApplyCurrentSlottables(currentSlottables)
+    end)
+
 end
 DynamicCP.OnSlotsChanged = OnSlotsChanged
 
