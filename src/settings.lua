@@ -298,6 +298,7 @@ function DynamicCP:CreateSettingsMenu()
                     setFunc = function(value)
                         DynamicCP.savedOptions.lockQuickstars = value
                         DynamicCPQuickstars:SetMovable(not value)
+                        DynamicCPQuickstarsBackdrop:SetHidden(value)
                         if (not value) then
                             DynamicCPQuickstarsContainer:SetHidden(false)
                             DynamicCPQuickstars:SetHidden(false)

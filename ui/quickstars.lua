@@ -321,6 +321,7 @@ function DynamicCP.ResizeQuickstars()
     DynamicCPQuickstarsListStar4:SetWidth(dropdownWidth)
 
     -- Orientation
+    DynamicCPQuickstarsGreenButton:ClearAnchors()
     DynamicCPQuickstarsBlueButton:ClearAnchors()
     DynamicCPQuickstarsRedButton:ClearAnchors()
     DynamicCPQuickstarsList:ClearAnchors()
@@ -328,29 +329,33 @@ function DynamicCP.ResizeQuickstars()
     DynamicCPQuickstarsListConfirm:ClearAnchors()
 
     if (DynamicCP.savedOptions.quickstarsVertical) then
-        DynamicCPQuickstars:SetDimensions(240, 172)
+        DynamicCPQuickstars:SetDimensions(dropdownWidth + 8 + 32 + 24, 172)
         DynamicCPQuickstarsBlueButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, BOTTOMLEFT)
         DynamicCPQuickstarsRedButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsBlueButton, BOTTOMLEFT)
         if (DynamicCP.savedOptions.quickstarsMirrored) then
             -- Opening to the left
+            DynamicCPQuickstarsGreenButton:SetAnchor(TOPRIGHT, DynamicCPQuickstars, TOPRIGHT)
             DynamicCPQuickstarsList:SetAnchor(TOPRIGHT, DynamicCPQuickstarsGreenButton, TOPLEFT)
         else
             -- Opening to the right
+            DynamicCPQuickstarsGreenButton:SetAnchor(TOPLEFT, DynamicCPQuickstars, TOPLEFT)
             DynamicCPQuickstarsList:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, TOPRIGHT)
         end
         DynamicCPQuickstarsListCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsList, BOTTOMRIGHT)
         DynamicCPQuickstarsListConfirm:SetAnchor(TOPRIGHT, DynamicCPQuickstarsListCancel, TOPLEFT)
     else
-        DynamicCPQuickstars:SetDimensions(208, 204)
+        DynamicCPQuickstars:SetDimensions(dropdownWidth + 8 + 24, 204)
         DynamicCPQuickstarsBlueButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, TOPRIGHT)
         DynamicCPQuickstarsRedButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsBlueButton, TOPRIGHT)
         if (DynamicCP.savedOptions.quickstarsMirrored) then
             -- Opening above, also move the confirm buttons above
+            DynamicCPQuickstarsGreenButton:SetAnchor(BOTTOMLEFT, DynamicCPQuickstars, BOTTOMLEFT)
             DynamicCPQuickstarsList:SetAnchor(BOTTOMLEFT, DynamicCPQuickstarsGreenButton, TOPLEFT)
             DynamicCPQuickstarsListCancel:SetAnchor(BOTTOMRIGHT, DynamicCPQuickstarsList, TOPRIGHT)
             DynamicCPQuickstarsListConfirm:SetAnchor(BOTTOMRIGHT, DynamicCPQuickstarsListCancel, BOTTOMLEFT)
         else
             -- Opening below
+            DynamicCPQuickstarsGreenButton:SetAnchor(TOPLEFT, DynamicCPQuickstars, TOPLEFT)
             DynamicCPQuickstarsList:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, BOTTOMLEFT)
             DynamicCPQuickstarsListCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsList, BOTTOMRIGHT)
             DynamicCPQuickstarsListConfirm:SetAnchor(TOPRIGHT, DynamicCPQuickstarsListCancel, TOPLEFT)
@@ -383,6 +388,7 @@ function DynamicCP.InitQuickstars()
     DynamicCPQuickstars:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, DynamicCP.savedOptions.quickstarsX, DynamicCP.savedOptions.quickstarsY)
     DynamicCPQuickstars:SetHidden(not DynamicCP.savedOptions.showQuickstars)
     DynamicCPQuickstars:SetMovable(not DynamicCP.savedOptions.lockQuickstars)
+    DynamicCPQuickstarsBackdrop:SetHidden(DynamicCP.savedOptions.lockQuickstars)
 
     DynamicCP.ResizeQuickstars()
     DynamicCP.SelectQuickstarTab("REFRESH")
