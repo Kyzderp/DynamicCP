@@ -1,7 +1,5 @@
 DynamicCP = DynamicCP or {}
 
-local selectedTree = "Green"
-
 -- Keep track of our own pending slottables, even though slottables.lua also has it
 -- because slottables.lua is for presets and it's possible the user still has pending
 -- changes in a preset
@@ -168,6 +166,7 @@ end
 -- Reinitialize dropdowns for the particular tree
 ---------------------------------------------------------------------
 local function UpdateDropdowns(tree)
+    if (tree == "NONE") then return end
     local selectedColor = {
         Green = "a5d752",
         Blue = "59bae7",
@@ -254,6 +253,11 @@ end
 -- Set backdrops to reflect which tab is selected
 ---------------------------------------------------------------------
 local function SetBackdrops(tree)
+    DynamicCPQuickstarsGreenButtonBackdrop:SetCenterColor(0, 0, 0, 1)
+    DynamicCPQuickstarsBlueButtonBackdrop:SetCenterColor(0, 0, 0, 1)
+    DynamicCPQuickstarsRedButtonBackdrop:SetCenterColor(0, 0, 0, 1)
+
+    if (tree == "NONE") then return end
     local colors = {
         Green = {0.55, 0.78, 0.22, 1},
         Blue = {0.35, 0.73, 0.9, 1},
@@ -264,9 +268,6 @@ local function SetBackdrops(tree)
     DynamicCPQuickstarsListConfirmBackdrop:SetCenterColor(unpack(color))
     DynamicCPQuickstarsListCancelBackdrop:SetCenterColor(unpack(color))
 
-    DynamicCPQuickstarsGreenButtonBackdrop:SetCenterColor(0, 0, 0, 1)
-    DynamicCPQuickstarsBlueButtonBackdrop:SetCenterColor(0, 0, 0, 1)
-    DynamicCPQuickstarsRedButtonBackdrop:SetCenterColor(0, 0, 0, 1)
     DynamicCPQuickstars:GetNamedChild(tree .. "Button"):GetNamedChild("Backdrop"):SetCenterColor(unpack(color))
 end
 
@@ -275,14 +276,19 @@ end
 -- Called when user clicks tab button
 ---------------------------------------------------------------------
 function DynamicCP.SelectQuickstarTab(tree)
+    DynamicCP.dbg("selecting " .. tostring(tree))
     -- TODO: clicking on the same tab should hide the menu instead
     -- TODO: show warning if navigating off of the tab with unsaved changes
     -- Keep same if we are just refreshing the dropdowns
     if (tree == "REFRESH") then
-        tree = selectedTree
+        tree = DynamicCP.savedOptions.selectedQuickstarTab
+    elseif (tree == DynamicCP.savedOptions.selectedQuickstarTab) then
+        -- Same tab = close it instead
+        tree = "NONE"
     end
-    selectedTree = tree
+    DynamicCP.savedOptions.selectedQuickstarTab = tree
     pendingSlottables = nil
+    DynamicCPQuickstarsList:SetHidden(tree == "NONE")
 
     -- Set backdrops to appropriate color
     SetBackdrops(tree)
@@ -311,5 +317,5 @@ function DynamicCP.InitQuickstars()
     DynamicCPQuickstars:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, DynamicCP.savedOptions.quickstarsX, DynamicCP.savedOptions.quickstarsY)
     -- TODO: show setting
 
-    DynamicCP.SelectQuickstarTab("Green")
+    DynamicCP.SelectQuickstarTab("REFRESH")
 end

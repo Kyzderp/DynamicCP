@@ -35,6 +35,7 @@ local defaultOptions = {
     showTotalsLabel = true,
     quickstarsX = GuiRoot:GetWidth() / 4,
     quickstarsY = GuiRoot:GetHeight() / 4,
+    selectedQuickstarTab = "Green",
 }
 
 local initialOpened = false
