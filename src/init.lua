@@ -39,6 +39,7 @@ local defaultOptions = {
     showQuickstars = true,
     lockQuickstars = false,
     quickstarsWidth = 200,
+    quickstarsAlpha = 0.5,
 }
 
 local initialOpened = false

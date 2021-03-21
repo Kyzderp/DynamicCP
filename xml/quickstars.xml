@@ -11,7 +11,6 @@
                     <Dimensions x="240" y="172"/>
                     <OnMoveStop>DynamicCP.SaveQuickstarsPosition()</OnMoveStop>
                     <Controls>
-                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" hidden="true"><AnchorFill/></Backdrop>
                         <Control name="$(parent)GreenButton">
                             <Dimensions x="32" y="32"/>
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT"/>

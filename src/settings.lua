@@ -320,6 +320,29 @@ function DynamicCP:CreateSettingsMenu()
                     width = "full",
                     disabled = function() return not DynamicCP.savedOptions.showQuickstars end,
                 },
+                {
+                    type = "slider",
+                    name = "Panel opacity %",
+                    tooltip = "Opacity of the panel background",
+                    default = 50,
+                    min = 0,
+                    max = 100,
+                    step = 5,
+                    getFunc = function() return DynamicCP.savedOptions.quickstarsAlpha * 100 end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.quickstarsAlpha = value / 100
+                        DynamicCPQuickstarsContainer:SetHidden(false)
+                        DynamicCPQuickstars:SetHidden(false)
+
+                        DynamicCPQuickstarsGreenButtonBackdrop:SetAlpha(value / 100)
+                        DynamicCPQuickstarsBlueButtonBackdrop:SetAlpha(value / 100)
+                        DynamicCPQuickstarsRedButtonBackdrop:SetAlpha(value / 100)
+                        DynamicCPQuickstarsListBackdrop:SetAlpha(value / 100)
+                        DynamicCPQuickstarsListCancelBackdrop:SetAlpha(value / 100)
+                        DynamicCPQuickstarsListConfirmBackdrop:SetAlpha(value / 100)
+                    end,
+                    width = "full",
+                },
             },
         },
 ---------------------------------------------------------------------

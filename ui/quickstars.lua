@@ -331,4 +331,12 @@ function DynamicCP.InitQuickstars()
 
     DynamicCP.ResizeQuickstars()
     DynamicCP.SelectQuickstarTab("REFRESH")
+
+    local alpha = DynamicCP.savedOptions.quickstarsAlpha
+    DynamicCPQuickstarsGreenButtonBackdrop:SetAlpha(alpha)
+    DynamicCPQuickstarsBlueButtonBackdrop:SetAlpha(alpha)
+    DynamicCPQuickstarsRedButtonBackdrop:SetAlpha(alpha)
+    DynamicCPQuickstarsListBackdrop:SetAlpha(alpha)
+    DynamicCPQuickstarsListCancelBackdrop:SetAlpha(alpha)
+    DynamicCPQuickstarsListConfirmBackdrop:SetAlpha(alpha)
 end
