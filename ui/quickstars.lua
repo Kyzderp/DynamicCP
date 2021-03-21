@@ -383,6 +383,14 @@ end
 
 
 ---------------------------------------------------------------------
+-- Toggle showing quickstars, persist it
+function DynamicCP.ToggleQuickstars()
+    DynamicCP.savedOptions.showQuickstars = not DynamicCP.savedOptions.showQuickstars
+    DynamicCPQuickstars:SetHidden(not DynamicCP.savedOptions.showQuickstars)
+end
+
+
+---------------------------------------------------------------------
 -- Init
 function DynamicCP.InitQuickstars()
     DynamicCPQuickstars:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, DynamicCP.savedOptions.quickstarsX, DynamicCP.savedOptions.quickstarsY)

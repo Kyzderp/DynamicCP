@@ -148,6 +148,7 @@ local function Initialize()
 
     DynamicCP:CreateSettingsMenu()
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_MENU", "Toggle CP Preset Window")
+    ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_QUICKSTARS", "Toggle Quickstars Panel")
 
     RegisterEvents()
 
@@ -174,20 +175,8 @@ local function Initialize()
     end)
 
     SLASH_COMMANDS["/dcp"] = function(arg)
-        if (arg == "hidebackground") then
-            DynamicCP.savedOptions.hideBackground = not DynamicCP.savedOptions.hideBackground
-            CHAT_SYSTEM:AddMessage("The Champion Points background images will now be "
-                .. (DynamicCP.savedOptions.hideBackground and "hidden" or "shown")
-                .. ". Reload UI for this to take effect.")
-        elseif (arg == "showlabels") then
-            DynamicCP.savedOptions.showLabels = not DynamicCP.savedOptions.showLabels
-            CHAT_SYSTEM:AddMessage("The Champion Points star labels will now be "
-                .. (DynamicCP.savedOptions.showLabels and "shown" or "hidden")
-                .. ". Reload UI for this to take effect.")
-            -- TODO: don't actually need to reload
-        elseif (arg == "debug") then
-            DynamicCP.savedOptions.debug = not DynamicCP.savedOptions.debug
-            CHAT_SYSTEM:AddMessage("Debug messages are now " .. (DynamicCP.savedOptions.debug and "on" or "off"))
+        if (arg == "quickstar" or arg == "quickstars" or arg == "q" or arg == "qs") then
+            DynamicCP.ToggleQuickstars()
         else
             DynamicCP.TogglePresetsWindow()
         end

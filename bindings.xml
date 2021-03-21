@@ -6,6 +6,11 @@
                     DynamicCP.TogglePresetsWindow()
                 </Down>
             </Action>
+            <Action name="DCP_TOGGLE_QUICKSTARS">
+                <Down>
+                    DynamicCP.ToggleQuickstars()
+                </Down>
+            </Action>
         </Category>
     </Layer>
 </Bindings>
