@@ -302,11 +302,23 @@ end
 
 
 ---------------------------------------------------------------------
--- On move stop
+-- Window
 ---------------------------------------------------------------------
+-- On move stop
 function DynamicCP.SaveQuickstarsPosition()
     DynamicCP.savedOptions.quickstarsX = DynamicCPQuickstars:GetLeft()
     DynamicCP.savedOptions.quickstarsY = DynamicCPQuickstars:GetTop()
+end
+
+---------------------------------------------------------------------
+-- Should be called on init and also when user changes window width
+function DynamicCP.ResizeQuickstars()
+    local dropdownWidth = DynamicCP.savedOptions.quickstarsWidth
+    DynamicCPQuickstarsList:SetWidth(dropdownWidth + 8)
+    DynamicCPQuickstarsListStar1:SetWidth(dropdownWidth)
+    DynamicCPQuickstarsListStar2:SetWidth(dropdownWidth)
+    DynamicCPQuickstarsListStar3:SetWidth(dropdownWidth)
+    DynamicCPQuickstarsListStar4:SetWidth(dropdownWidth)
 end
 
 
@@ -317,5 +329,6 @@ function DynamicCP.InitQuickstars()
     DynamicCPQuickstars:SetHidden(not DynamicCP.savedOptions.showQuickstars)
     DynamicCPQuickstars:SetMovable(not DynamicCP.savedOptions.lockQuickstars)
 
+    DynamicCP.ResizeQuickstars()
     DynamicCP.SelectQuickstarTab("REFRESH")
 end

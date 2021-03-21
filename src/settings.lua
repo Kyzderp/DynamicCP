@@ -294,6 +294,28 @@ function DynamicCP:CreateSettingsMenu()
                     setFunc = function(value)
                         DynamicCP.savedOptions.lockQuickstars = value
                         DynamicCPQuickstars:SetMovable(not value)
+                        if (not value) then
+                            DynamicCPQuickstarsContainer:SetHidden(false)
+                            DynamicCPQuickstars:SetHidden(false)
+                        end
+                    end,
+                    width = "full",
+                    disabled = function() return not DynamicCP.savedOptions.showQuickstars end,
+                },
+                {
+                    type = "slider",
+                    name = "Panel width",
+                    tooltip = "Width of the panel. Note that some star names may get cut off depending on the length",
+                    default = 200,
+                    min = 100,
+                    max = 400,
+                    step = 5,
+                    getFunc = function() return DynamicCP.savedOptions.quickstarsWidth end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.quickstarsWidth = value
+                        DynamicCP.ResizeQuickstars()
+                        DynamicCPQuickstarsContainer:SetHidden(false)
+                        DynamicCPQuickstars:SetHidden(false)
                     end,
                     width = "full",
                     disabled = function() return not DynamicCP.savedOptions.showQuickstars end,

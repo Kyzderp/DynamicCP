@@ -2,8 +2,8 @@
     <Controls>
         <TopLevelControl name="DynamicCPQuickstarsContainer" mouseEnabled="false" movable="false" hidden="false">
             <OnInitialized>
-                HUD_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
-                HUD_UI_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
+                HUD_SCENE:AddFragment(ZO_SimpleSceneFragment:New(self))
+                HUD_UI_SCENE:AddFragment(ZO_SimpleSceneFragment:New(self))
             </OnInitialized>
             <Controls>
 <!-- ======================================================================================================================= -->

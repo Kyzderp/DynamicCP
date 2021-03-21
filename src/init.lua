@@ -38,6 +38,7 @@ local defaultOptions = {
     selectedQuickstarTab = "Green",
     showQuickstars = true,
     lockQuickstars = false,
+    quickstarsWidth = 200,
 }
 
 local initialOpened = false
