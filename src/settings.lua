@@ -275,7 +275,7 @@ function DynamicCP:CreateSettingsMenu()
 -- quickstars
         {
             type = "submenu",
-            name = "Quickstar Panel",
+            name = "Quickstar Panel Settings",
             controls = {
                 {
                     type = "checkbox",
@@ -302,6 +302,21 @@ function DynamicCP:CreateSettingsMenu()
                             DynamicCPQuickstarsContainer:SetHidden(false)
                             DynamicCPQuickstars:SetHidden(false)
                         end
+                    end,
+                    width = "full",
+                    disabled = function() return not DynamicCP.savedOptions.showQuickstars end,
+                },
+                {
+                    type = "checkbox",
+                    name = "Use vertical buttons",
+                    tooltip = "Set to ON for vertical buttons, OFF for horizontal",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.quickstarsVertical end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.quickstarsVertical = value
+                        DynamicCPQuickstarsContainer:SetHidden(false)
+                        DynamicCPQuickstars:SetHidden(false)
+                        DynamicCP.ResizeQuickstars()
                     end,
                     width = "full",
                     disabled = function() return not DynamicCP.savedOptions.showQuickstars end,

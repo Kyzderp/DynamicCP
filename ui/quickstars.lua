@@ -319,6 +319,29 @@ function DynamicCP.ResizeQuickstars()
     DynamicCPQuickstarsListStar2:SetWidth(dropdownWidth)
     DynamicCPQuickstarsListStar3:SetWidth(dropdownWidth)
     DynamicCPQuickstarsListStar4:SetWidth(dropdownWidth)
+
+    -- Orientation
+    DynamicCPQuickstarsBlueButton:ClearAnchors()
+    DynamicCPQuickstarsRedButton:ClearAnchors()
+    DynamicCPQuickstarsList:ClearAnchors()
+    DynamicCPQuickstarsListCancel:ClearAnchors()
+    DynamicCPQuickstarsListConfirm:ClearAnchors()
+
+    if (DynamicCP.savedOptions.quickstarsVertical) then
+        DynamicCPQuickstars:SetDimensions(240, 172)
+        DynamicCPQuickstarsBlueButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, BOTTOMLEFT)
+        DynamicCPQuickstarsRedButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsBlueButton, BOTTOMLEFT)
+        DynamicCPQuickstarsList:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, TOPRIGHT)
+        DynamicCPQuickstarsListCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsList, BOTTOMRIGHT)
+        DynamicCPQuickstarsListConfirm:SetAnchor(TOPRIGHT, DynamicCPQuickstarsListCancel, TOPLEFT)
+    else
+        DynamicCPQuickstars:SetDimensions(208, 204)
+        DynamicCPQuickstarsBlueButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, TOPRIGHT)
+        DynamicCPQuickstarsRedButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsBlueButton, TOPRIGHT)
+        DynamicCPQuickstarsList:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, BOTTOMLEFT)
+        DynamicCPQuickstarsListCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsList, BOTTOMRIGHT)
+        DynamicCPQuickstarsListConfirm:SetAnchor(TOPRIGHT, DynamicCPQuickstarsListCancel, TOPLEFT)
+    end
 end
 
 
