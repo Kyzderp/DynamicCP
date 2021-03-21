@@ -277,8 +277,7 @@ end
 ---------------------------------------------------------------------
 function DynamicCP.SelectQuickstarTab(tree)
     DynamicCP.dbg("selecting " .. tostring(tree))
-    -- TODO: clicking on the same tab should hide the menu instead
-    -- TODO: show warning if navigating off of the tab with unsaved changes
+    -- TODO: show warning if navigating off of the tab with unsaved changes?
     -- Keep same if we are just refreshing the dropdowns
     if (tree == "REFRESH") then
         tree = DynamicCP.savedOptions.selectedQuickstarTab
@@ -315,7 +314,8 @@ end
 -- Init
 function DynamicCP.InitQuickstars()
     DynamicCPQuickstars:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, DynamicCP.savedOptions.quickstarsX, DynamicCP.savedOptions.quickstarsY)
-    -- TODO: show setting
+    DynamicCPQuickstars:SetHidden(not DynamicCP.savedOptions.showQuickstars)
+    DynamicCPQuickstars:SetMovable(not DynamicCP.savedOptions.lockQuickstars)
 
     DynamicCP.SelectQuickstarTab("REFRESH")
 end

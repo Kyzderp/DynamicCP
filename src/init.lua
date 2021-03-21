@@ -36,6 +36,8 @@ local defaultOptions = {
     quickstarsX = GuiRoot:GetWidth() / 4,
     quickstarsY = GuiRoot:GetHeight() / 4,
     selectedQuickstarTab = "Green",
+    showQuickstars = true,
+    lockQuickstars = false,
 }
 
 local initialOpened = false

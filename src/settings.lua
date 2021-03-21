@@ -268,6 +268,39 @@ function DynamicCP:CreateSettingsMenu()
             },
         },
 ---------------------------------------------------------------------
+-- quickstars
+        {
+            type = "submenu",
+            name = "Quickstar Panel",
+            controls = {
+                {
+                    type = "checkbox",
+                    name = "Show panel",
+                    tooltip = "Show a panel on your HUD that displays currently slotted stars and also allows changing the stars",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.showQuickstars end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.showQuickstars = value
+                        DynamicCPQuickstars:SetHidden(not value)
+                    end,
+                    width = "full",
+                },
+                {
+                    type = "checkbox",
+                    name = "Lock panel",
+                    tooltip = "Lock the panel so it can't be moved",
+                    default = false,
+                    getFunc = function() return DynamicCP.savedOptions.lockQuickstars end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.lockQuickstars = value
+                        DynamicCPQuickstars:SetMovable(not value)
+                    end,
+                    width = "full",
+                    disabled = function() return not DynamicCP.savedOptions.showQuickstars end,
+                },
+            },
+        },
+---------------------------------------------------------------------
 -- other
         {
             type = "submenu",
