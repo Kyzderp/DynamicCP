@@ -11,6 +11,11 @@
                     DynamicCP.ToggleQuickstars()
                 </Down>
             </Action>
+            <Action name="DCP_CYCLE_QUICKSTARS">
+                <Down>
+                    DynamicCP.CycleQuickstars()
+                </Down>
+            </Action>
         </Category>
     </Layer>
 </Bindings>

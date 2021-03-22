@@ -308,6 +308,17 @@ function DynamicCP.SelectQuickstarsTab(tree)
     DynamicCPQuickstarsListCancel:SetHidden(true)
 end
 
+-- Keybind to cycle through tabs
+function DynamicCP.CycleQuickstars()
+    local nextTab = {
+        NONE = "Green",
+        Green = "Blue",
+        Blue = "Red",
+        Red = "NONE",
+    }
+    DynamicCP.SelectQuickstarsTab(nextTab[DynamicCP.savedOptions.selectedQuickstarTab])
+end
+
 
 ---------------------------------------------------------------------
 -- Window
