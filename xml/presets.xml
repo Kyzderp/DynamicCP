@@ -293,7 +293,7 @@
                                 </Button>
 
                                 <Label name="$(parent)Instructions" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="HIGH" hidden="false"
-                                    text="Select a preset from a dropdown above and click &quot;Apply&quot; to apply the preset to your Champion Points, then click &quot;Confirm&quot; to commit your points. To create a new preset, commit your current points, select &quot;Create New&quot; from the dropdown, and click &quot;Save&quot; once you have renamed it.">
+                                    text="Select a preset from a dropdown above and click &quot;Apply&quot; to apply the preset to your Champion Points, then click &quot;Confirm&quot; to commit your points. To create a new preset, commit your current points, select &quot;Create New&quot; from the dropdown, and click &quot;Save&quot; once you have renamed it. Note: presets only save your allocated points, not which stars you have slotted!">
                                     <Dimensions x="540" y="200"/>
                                     <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="100"/>
                                 </Label>
