@@ -16,6 +16,8 @@ local offsets = {
 }
 
 local quickstarsFragment = nil
+local SLOTTABLE_COOLDOWN = 30000
+local lastChange = 0
 
 ---------------------------------------------------------------------
 -- Utility
@@ -387,6 +389,28 @@ function DynamicCP.ResizeQuickstars()
     end
 end
 
+
+---------------------------------------------------------------------
+-- On purchase, set the cooldown
+function DynamicCP.QuickstarsOnPurchased(result)
+    if (result ~= CHAMPION_PURCHASE_SUCCESS) then return end
+    lastChange = GetGameTimeMilliseconds()
+
+    local secondsRemaining = (SLOTTABLE_COOLDOWN - GetGameTimeMilliseconds() + lastChange) / 1000
+    DynamicCPQuickstarsListCooldown:SetText(string.format("Cooldown %ds", secondsRemaining))
+    DynamicCPQuickstarsListCooldown:SetHidden(false)
+
+    -- Update the error message
+    EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "QuickstarsCooldown", 1000, function()
+        local secondsRemaining = (SLOTTABLE_COOLDOWN - GetGameTimeMilliseconds() + lastChange) / 1000
+        if (secondsRemaining <= 0) then
+            EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "QuickstarsCooldown")
+            DynamicCPQuickstarsListCooldown:SetHidden(true)
+        else
+            DynamicCPQuickstarsListCooldown:SetText(string.format("Cooldown %ds", secondsRemaining))
+        end
+    end)
+end
 
 ---------------------------------------------------------------------
 -- Toggle showing quickstars, persist it

@@ -1,9 +1,6 @@
 <GuiXml>
     <Controls>
         <TopLevelControl name="DynamicCPQuickstarsContainer" mouseEnabled="false" movable="false" hidden="false">
-            <!-- <OnInitialized>
-                DynamicCP.InitQuickstarsScenes()
-            </OnInitialized> -->
             <Controls>
 <!-- ======================================================================================================================= -->
                 <Control name="DynamicCPQuickstars" mouseEnabled="true" movable="true" clampedToScreen="true" hidden="false">
@@ -138,6 +135,10 @@
                                         </Texture>
                                     </Controls>
                                 </Control>
+                                <Label name="$(parent)Cooldown" font="ZoFontGameSmall" color="AAAAAA" verticalAlignment="CENTER" horizontalAlignment="RIGHT" text="Cooldown 30s" hidden="true">
+                                    <Dimensions x="100" y="16"/>
+                                    <Anchor point="RIGHT" relativeTo="$(parent)Confirm" relativePoint="LEFT" offsetX="-4"/>
+                                </Label>
                             </Controls>
                         </Control>
                     </Controls>
