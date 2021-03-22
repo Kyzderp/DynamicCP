@@ -405,7 +405,7 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return DynamicCP.savedOptions.quickstarsDropdownHideSlotted end,
                     setFunc = function(value)
                         DynamicCP.savedOptions.quickstarsDropdownHideSlotted = value
-                        DynamicCP.SelectQuickstarTab("REFRESH")
+                        DynamicCP.SelectQuickstarsTab("REFRESH")
                     end,
                     width = "full",
                 },

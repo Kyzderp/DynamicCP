@@ -134,7 +134,7 @@ function DynamicCP.OnQuickstarConfirm()
 end
 
 function DynamicCP.OnQuickstarCancel()
-    DynamicCP.SelectQuickstarTab("REFRESH")
+    DynamicCP.SelectQuickstarsTab("REFRESH")
 end
 
 
@@ -283,7 +283,7 @@ end
 ---------------------------------------------------------------------
 -- Called when user clicks tab button
 ---------------------------------------------------------------------
-function DynamicCP.SelectQuickstarTab(tree)
+function DynamicCP.SelectQuickstarsTab(tree)
     DynamicCP.dbg("selecting " .. tostring(tree))
     -- TODO: show warning if navigating off of the tab with unsaved changes?
     -- Keep same if we are just refreshing the dropdowns
@@ -462,7 +462,7 @@ function DynamicCP.InitQuickstars()
     DynamicCPQuickstarsBackdrop:SetHidden(DynamicCP.savedOptions.lockQuickstars)
 
     DynamicCP.ResizeQuickstars()
-    DynamicCP.SelectQuickstarTab("REFRESH")
+    DynamicCP.SelectQuickstarsTab("REFRESH")
 
     local alpha = DynamicCP.savedOptions.quickstarsAlpha
     DynamicCPQuickstarsGreenButtonBackdrop:SetAlpha(alpha)

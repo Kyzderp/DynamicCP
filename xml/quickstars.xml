@@ -16,7 +16,7 @@
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_stamina_icon-hud-32.dds" tier="HIGH" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
-                                    <OnMouseUp>DynamicCP.SelectQuickstarTab("Green")</OnMouseUp>
+                                    <OnMouseUp>DynamicCP.SelectQuickstarsTab("Green")</OnMouseUp>
                                 </Texture>
                             </Controls>
                         </Control>
@@ -28,7 +28,7 @@
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_magicka_icon-hud-32.dds" tier="HIGH" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
-                                    <OnMouseUp>DynamicCP.SelectQuickstarTab("Blue")</OnMouseUp>
+                                    <OnMouseUp>DynamicCP.SelectQuickstarsTab("Blue")</OnMouseUp>
                                 </Texture>
                             </Controls>
                         </Control>
@@ -40,7 +40,7 @@
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_health_icon-hud-32.dds" tier="HIGH" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
-                                    <OnMouseUp>DynamicCP.SelectQuickstarTab("Red")</OnMouseUp>
+                                    <OnMouseUp>DynamicCP.SelectQuickstarsTab("Red")</OnMouseUp>
                                 </Texture>
                             </Controls>
                         </Control>
