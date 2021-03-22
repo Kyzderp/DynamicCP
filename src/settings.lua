@@ -279,13 +279,25 @@ function DynamicCP:CreateSettingsMenu()
             controls = {
                 {
                     type = "checkbox",
-                    name = "Show panel",
+                    name = "Show panel on HUD",
                     tooltip = "Show a panel on your HUD that displays currently slotted stars and also allows changing the stars",
                     default = true,
-                    getFunc = function() return DynamicCP.savedOptions.showQuickstars end,
+                    getFunc = function() return DynamicCP.savedOptions.quickstarsShowOnHud end,
                     setFunc = function(value)
-                        DynamicCP.savedOptions.showQuickstars = value
-                        DynamicCPQuickstars:SetHidden(not value)
+                        DynamicCP.savedOptions.quickstarsShowOnHud = value
+                        DynamicCP.InitQuickstarsScenes()
+                    end,
+                    width = "full",
+                },
+                {
+                    type = "checkbox",
+                    name = "Show panel on CP screen",
+                    tooltip = "Show a panel on the CP screen that displays currently slotted stars and also allows changing the stars",
+                    default = false,
+                    getFunc = function() return DynamicCP.savedOptions.quickstarsShowOnCpScreen end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.quickstarsShowOnCpScreen = value
+                        DynamicCP.InitQuickstarsScenes()
                     end,
                     width = "full",
                 },
@@ -300,8 +312,7 @@ function DynamicCP:CreateSettingsMenu()
                         DynamicCPQuickstars:SetMovable(not value)
                         DynamicCPQuickstarsBackdrop:SetHidden(value)
                         if (not value) then
-                            DynamicCPQuickstarsContainer:SetHidden(false)
-                            DynamicCPQuickstars:SetHidden(false)
+                            DynamicCP.ShowQuickstars()
                         end
                     end,
                     width = "full",
@@ -314,8 +325,7 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return DynamicCP.savedOptions.quickstarsVertical end,
                     setFunc = function(value)
                         DynamicCP.savedOptions.quickstarsVertical = value
-                        DynamicCPQuickstarsContainer:SetHidden(false)
-                        DynamicCPQuickstars:SetHidden(false)
+                        DynamicCP.ShowQuickstars()
                         DynamicCP.ResizeQuickstars()
                     end,
                     width = "full",
@@ -328,8 +338,7 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return DynamicCP.savedOptions.quickstarsMirrored end,
                     setFunc = function(value)
                         DynamicCP.savedOptions.quickstarsMirrored = value
-                        DynamicCPQuickstarsContainer:SetHidden(false)
-                        DynamicCPQuickstars:SetHidden(false)
+                        DynamicCP.ShowQuickstars()
                         DynamicCP.ResizeQuickstars()
                     end,
                     width = "full",
@@ -345,8 +354,7 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return DynamicCP.savedOptions.quickstarsScale * 100 end,
                     setFunc = function(value)
                         DynamicCP.savedOptions.quickstarsScale = value / 100
-                        DynamicCPQuickstarsContainer:SetHidden(false)
-                        DynamicCPQuickstars:SetHidden(false)
+                        DynamicCP.ShowQuickstars()
                         DynamicCPQuickstars:SetScale(value / 100)
                     end,
                     width = "full",
@@ -362,9 +370,8 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return DynamicCP.savedOptions.quickstarsWidth end,
                     setFunc = function(value)
                         DynamicCP.savedOptions.quickstarsWidth = value
+                        DynamicCP.ShowQuickstars()
                         DynamicCP.ResizeQuickstars()
-                        DynamicCPQuickstarsContainer:SetHidden(false)
-                        DynamicCPQuickstars:SetHidden(false)
                     end,
                     width = "full",
                 },
@@ -379,8 +386,7 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return DynamicCP.savedOptions.quickstarsAlpha * 100 end,
                     setFunc = function(value)
                         DynamicCP.savedOptions.quickstarsAlpha = value / 100
-                        DynamicCPQuickstarsContainer:SetHidden(false)
-                        DynamicCPQuickstars:SetHidden(false)
+                        DynamicCP.ShowQuickstars()
 
                         DynamicCPQuickstarsGreenButtonBackdrop:SetAlpha(value / 100)
                         DynamicCPQuickstarsBlueButtonBackdrop:SetAlpha(value / 100)

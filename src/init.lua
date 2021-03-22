@@ -44,6 +44,8 @@ local defaultOptions = {
     quickstarsVertical = true,
     quickstarsMirrored = false,
     quickstarsDropdownHideSlotted = false,
+    quickstarsShowOnHud = true,
+    quickstarsShowOnCpScreen = false,
 }
 
 local initialOpened = false

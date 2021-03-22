@@ -15,6 +15,8 @@ local offsets = {
     Red = 8,
 }
 
+local quickstarsFragment = nil
+
 ---------------------------------------------------------------------
 -- Utility
 ---------------------------------------------------------------------
@@ -393,6 +395,37 @@ function DynamicCP.ToggleQuickstars()
     DynamicCPQuickstars:SetHidden(not DynamicCP.savedOptions.showQuickstars)
 end
 
+-- Called from settings to show quickstars when adjusting the settings
+function DynamicCP.ShowQuickstars()
+    DynamicCP.savedOptions.showQuickstars = true
+    DynamicCPQuickstarsContainer:SetHidden(false)
+    DynamicCPQuickstars:SetHidden(false)
+end
+
+
+---------------------------------------------------------------------
+-- UI fragment init
+function DynamicCP.InitQuickstarsScenes()
+    if (not quickstarsFragment) then
+        quickstarsFragment = ZO_SimpleSceneFragment:New(DynamicCPQuickstarsContainer)
+    end
+
+    if (DynamicCP.savedOptions.quickstarsShowOnHud) then
+        HUD_SCENE:AddFragment(quickstarsFragment)
+        HUD_UI_SCENE:AddFragment(quickstarsFragment)
+    else
+        HUD_SCENE:RemoveFragment(quickstarsFragment)
+        HUD_UI_SCENE:RemoveFragment(quickstarsFragment)
+    end
+
+    if (DynamicCP.savedOptions.quickstarsShowOnCpScreen) then
+        CHAMPION_PERKS_SCENE:AddFragment(quickstarsFragment)
+        GAMEPAD_CHAMPION_PERKS_SCENE:AddFragment(quickstarsFragment)
+    else
+        CHAMPION_PERKS_SCENE:RemoveFragment(quickstarsFragment)
+        GAMEPAD_CHAMPION_PERKS_SCENE:RemoveFragment(quickstarsFragment)
+    end
+end
 
 ---------------------------------------------------------------------
 -- Init
@@ -414,4 +447,6 @@ function DynamicCP.InitQuickstars()
     DynamicCPQuickstarsListConfirmBackdrop:SetAlpha(alpha)
 
     DynamicCPQuickstars:SetScale(DynamicCP.savedOptions.quickstarsScale)
+
+    DynamicCP.InitQuickstarsScenes()
 end
