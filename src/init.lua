@@ -46,6 +46,7 @@ local defaultOptions = {
     quickstarsDropdownHideSlotted = false,
     quickstarsShowOnHud = true,
     quickstarsShowOnCpScreen = false,
+    quickstarsShowCooldown = true,
 }
 
 local initialOpened = false

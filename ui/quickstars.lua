@@ -396,11 +396,13 @@ function DynamicCP.QuickstarsOnPurchased(result)
     if (result ~= CHAMPION_PURCHASE_SUCCESS) then return end
     lastChange = GetGameTimeMilliseconds()
 
+    if (not DynamicCP.savedOptions.quickstarsShowCooldown) then return end
+
     local secondsRemaining = (SLOTTABLE_COOLDOWN - GetGameTimeMilliseconds() + lastChange) / 1000
     DynamicCPQuickstarsListCooldown:SetText(string.format("Cooldown %ds", secondsRemaining))
     DynamicCPQuickstarsListCooldown:SetHidden(false)
 
-    -- Update the error message
+    -- Update the cooldown label
     EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "QuickstarsCooldown", 1000, function()
         local secondsRemaining = (SLOTTABLE_COOLDOWN - GetGameTimeMilliseconds() + lastChange) / 1000
         if (secondsRemaining <= 0) then

@@ -409,6 +409,17 @@ function DynamicCP:CreateSettingsMenu()
                     end,
                     width = "full",
                 },
+                {
+                    type = "checkbox",
+                    name = "Show cooldown",
+                    tooltip = "Show a small label with a countdown indicating the 30-second cooldown on changing slottables",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.quickstarsShowCooldown end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.quickstarsShowCooldown = value
+                    end,
+                    width = "full",
+                },
             },
         },
 ---------------------------------------------------------------------
