@@ -234,7 +234,11 @@ local function UpdateDropdowns(tree)
             end
 
             local entry = ZO_ComboBox:CreateItemEntry(data.name, OnItemSelected)
-            dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
+            -- Don't add slotted stars if the setting is enabled
+            if (not DynamicCP.savedOptions.quickstarsDropdownHideSlotted or data.sortKey >= 99) then
+                dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
+            end
+
             if (data.skillId == selectedSkillId) then
                 entryToSelect = entry
             end

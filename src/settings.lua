@@ -305,7 +305,6 @@ function DynamicCP:CreateSettingsMenu()
                         end
                     end,
                     width = "full",
-                    disabled = function() return not DynamicCP.savedOptions.showQuickstars end,
                 },
                 {
                     type = "checkbox",
@@ -320,7 +319,6 @@ function DynamicCP:CreateSettingsMenu()
                         DynamicCP.ResizeQuickstars()
                     end,
                     width = "full",
-                    disabled = function() return not DynamicCP.savedOptions.showQuickstars end,
                 },
                 {
                     type = "checkbox",
@@ -335,7 +333,6 @@ function DynamicCP:CreateSettingsMenu()
                         DynamicCP.ResizeQuickstars()
                     end,
                     width = "full",
-                    disabled = function() return not DynamicCP.savedOptions.showQuickstars end,
                 },
                 {
                     type = "slider",
@@ -370,7 +367,6 @@ function DynamicCP:CreateSettingsMenu()
                         DynamicCPQuickstars:SetHidden(false)
                     end,
                     width = "full",
-                    disabled = function() return not DynamicCP.savedOptions.showQuickstars end,
                 },
                 {
                     type = "slider",
@@ -392,6 +388,18 @@ function DynamicCP:CreateSettingsMenu()
                         DynamicCPQuickstarsListBackdrop:SetAlpha(value / 100)
                         DynamicCPQuickstarsListCancelBackdrop:SetAlpha(value / 100)
                         DynamicCPQuickstarsListConfirmBackdrop:SetAlpha(value / 100)
+                    end,
+                    width = "full",
+                },
+                {
+                    type = "checkbox",
+                    name = "Hide slotted stars from dropdown",
+                    tooltip = "Set to ON if you don't want the dropdowns to show stars that are already slotted in the current or other slots",
+                    default = false,
+                    getFunc = function() return DynamicCP.savedOptions.quickstarsDropdownHideSlotted end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.quickstarsDropdownHideSlotted = value
+                        DynamicCP.SelectQuickstarTab("REFRESH")
                     end,
                     width = "full",
                 },
