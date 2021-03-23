@@ -486,6 +486,7 @@ function DynamicCP.InitQuickstars()
     DynamicCPQuickstarsListConfirmBackdrop:SetAlpha(alpha)
 
     DynamicCPQuickstars:SetScale(DynamicCP.savedOptions.quickstarsScale)
+    DynamicCPQuickstarsListCooldown:SetColor(unpack(DynamicCP.savedOptions.quickstarsCooldownColor))
 
     DynamicCP.InitQuickstarsScenes()
 end

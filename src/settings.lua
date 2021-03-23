@@ -418,7 +418,20 @@ function DynamicCP:CreateSettingsMenu()
                     setFunc = function(value)
                         DynamicCP.savedOptions.quickstarsShowCooldown = value
                     end,
-                    width = "full",
+                    width = "half",
+                },
+                {
+                    type = "colorpicker",
+                    name = "Cooldown label color",
+                    tooltip = "Color of the label for 30-second cooldown on Quickstars panel",
+                    default = ZO_ColorDef:New(0.7, 0.7, 0.7),
+                    getFunc = function() return unpack(DynamicCP.savedOptions.quickstarsCooldownColor) end,
+                    setFunc = function(r, g, b)
+                        DynamicCP.savedOptions.quickstarsCooldownColor = {r, g, b}
+                        DynamicCPQuickstarsListCooldown:SetColor(unpack(DynamicCP.savedOptions.quickstarsCooldownColor))
+                    end,
+                    width = "half",
+                    disabled = function() return not DynamicCP.savedOptions.quickstarsShowCooldown end
                 },
             },
         },

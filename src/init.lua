@@ -47,6 +47,7 @@ local defaultOptions = {
     quickstarsShowOnHud = true,
     quickstarsShowOnCpScreen = false,
     quickstarsShowCooldown = true,
+    quickstarsCooldownColor = {0.7, 0.7, 0.7},
 }
 
 local initialOpened = false
