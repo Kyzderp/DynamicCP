@@ -136,6 +136,12 @@ local function RegisterEvents()
                 GetNumSpentChampionPoints(1) + GetNumUnspentChampionPoints(1),
                 GetNumSpentChampionPoints(2) + GetNumUnspentChampionPoints(2)))
         end)
+
+    -- I guess I have to fix it myself. This prevents the bug with star animation not being initialized
+    ZO_PreHook(CHAMPION_PERKS, "OnUpdate", function()
+        CHAMPION_PERKS.firstStarConfirm = false
+        return false
+    end)
 end
 
 
