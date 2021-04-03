@@ -233,7 +233,7 @@ local function UpdateDropdowns(tree)
         -- Add sorted items to dropdown
         for _, data in ipairs(sortedSlottables) do
             local function OnItemSelected(_, _, entry)
-                DynamicCP.dbg("Selected " .. data.name .. " " .. tostring(data.skillId))
+                -- DynamicCP.dbg("Selected " .. data.name .. " " .. tostring(data.skillId))
                 OnStarSelected(tree, i, data.skillId, selectedSkillId)
             end
 
@@ -404,6 +404,12 @@ end
 ---------------------------------------------------------------------
 -- On purchase, set the cooldown
 function DynamicCP.QuickstarsOnPurchased(result)
+    -- Refresh quickstars dropdowns with a slight delay, to hopefully avoid the not updated thing
+    EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "QuickstarsRefresh", 50, function()
+        EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "QuickstarsRefresh")
+        DynamicCP.SelectQuickstarsTab("REFRESH")
+    end)
+
     if (result ~= CHAMPION_PURCHASE_SUCCESS) then return end
     lastChange = GetGameTimeMilliseconds()
 

@@ -114,7 +114,6 @@ local function RegisterEvents()
             DynamicCP.ClearCommittedCP() -- Invalidate the cache
             DynamicCP.ClearCommittedSlottables() -- Invalidate the cache
             DynamicCP.OnSlotsChanged()
-            DynamicCP.SelectQuickstarsTab("REFRESH") -- Refresh quickstar dropdowns
             DynamicCP.QuickstarsOnPurchased(result)
         end)
 

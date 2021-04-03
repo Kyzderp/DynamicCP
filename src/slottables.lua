@@ -142,6 +142,7 @@ end
 local function GetCommittedSlottables()
     -- Cached to avoid more calls
     if (committedSlottables ~= nil) then
+        -- DynamicCP.dbg("cached")
         return committedSlottables
     end
 
@@ -158,6 +159,7 @@ DynamicCP.GetCommittedSlottables = GetCommittedSlottables
 -- Clear cache
 local function ClearCommittedSlottables()
     committedSlottables = nil
+    -- DynamicCP.dbg("clearing committed cache")
 end
 DynamicCP.ClearCommittedSlottables = ClearCommittedSlottables
 
