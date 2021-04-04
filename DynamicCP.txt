@@ -14,7 +14,7 @@ src/points.lua
 src/presetData.lua
 src/screenUpdates.lua
 src/slottables.lua
-src/settings.lua
+settings/main.lua
 ui/presets.lua
 ui/pulldown.lua
 ui/quickstars.lua
