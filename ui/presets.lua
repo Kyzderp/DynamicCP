@@ -161,8 +161,7 @@ function DynamicCP:OnApplyClicked(button)
     -- Apply all stars within the tree
     local cp = DynamicCP.savedOptions.cp[tree][presetName]
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
-    local numSlottables = 0
-    local toSlot = {}
+    local slottablesData = {}
     for skill = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
         local id = GetChampionSkillId(disciplineIndex, skill)
         local numPoints = 0
@@ -173,15 +172,15 @@ function DynamicCP:OnApplyClicked(button)
         end
 
         -- Unslot slottables that are no longer slottable because of not enough points
+        -- We still do this even though slottables are replaced later because user could have slotStars setting off
         if (currentHotbar[id] and not WouldChampionSkillNodeBeUnlocked(id, numPoints)) then
-            DynamicCP.SetSlottablePoints(currentHotbar[id], -1)
+            DynamicCP.SetSlottableInIndex(currentHotbar[id], -1)
         end
 
         -- Collect slottables
         local isSlottable = CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))
         if (isSlottable and WouldChampionSkillNodeBeUnlocked(id, numPoints)) then
-            numSlottables = numSlottables + 1
-            toSlot[numSlottables] = id
+            table.insert(slottablesData, {skillIndex = skill, points = numPoints, maxPoints = GetChampionSkillMaxPoints(id)})
         end
 
         DynamicCP.SetStarPoints(disciplineIndex, skill, numPoints)
@@ -189,16 +188,29 @@ function DynamicCP:OnApplyClicked(button)
 
     -- Apply slottables if applicable
     if (DynamicCP.savedOptions.slotStars) then
-        if (numSlottables <= 4) then
-            local offset = HOTBAR_OFFSET[tree]
-            for index, id in pairs(toSlot) do
-                DynamicCP.SetSlottablePoints(index + offset, id)
-                -- DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(id), index + offset))
+        -- Sort by most maxed
+        table.sort(slottablesData, function(item1, item2)
+            local prop1 = item1.points / item1.maxPoints
+            local prop2 = item2.points / item2.maxPoints
+            if (prop1 == prop2) then
+                if (item1.maxPoints == item2.maxPoints) then
+                    -- Last resort, sort by skill index
+                    return item1.skillIndex < item2.skillIndex
+                end
+                -- If proportions are equal, prioritize ones with higher max because idk
+                return item1.maxPoints > item2.maxPoints
             end
-        else
-            DynamicCP.dbg("too many slottables to slot automatically")
-            -- Find the 4 with highest values
-            -- TODO: do this after refactoring to keep separate track of the data, otherwise don't know pending points. Could add to it within the loop but gonna need to rewrite this anyway
+            return prop1 > prop2
+        end)
+
+        -- Assign the first 4
+        local offset = HOTBAR_OFFSET[tree]
+        for i = 1, 4 do
+            if (slottablesData[i]) then
+                local id = GetChampionSkillId(disciplineIndex, slottablesData[i].skillIndex)
+                DynamicCP.SetSlottableInIndex(i + offset, id)
+                DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(id), i + offset))
+            end
         end
     end
 

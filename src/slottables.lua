@@ -167,13 +167,13 @@ DynamicCP.ClearCommittedSlottables = ClearCommittedSlottables
 ---------------------------------------------------------------------
 -- Pending slottables
 ---------------------------------------------------------------------
-local function SetSlottablePoints(slotIndex, skillId)
+local function SetSlottableInIndex(slotIndex, skillId)
     if (not pendingSlottables) then
         pendingSlottables = {}
     end
     pendingSlottables[slotIndex] = skillId
 end
-DynamicCP.SetSlottablePoints = SetSlottablePoints
+DynamicCP.SetSlottableInIndex = SetSlottableInIndex
 
 -- If all the slottables are the same, we should not change them, even if different index
 -- All or nothing cleaning
