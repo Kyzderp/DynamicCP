@@ -45,9 +45,13 @@ local defaultOptions = {
     quickstarsMirrored = false,
     quickstarsDropdownHideSlotted = false,
     quickstarsShowOnHud = true,
+    quickstarsShowOnHudUi = true,
     quickstarsShowOnCpScreen = false,
     quickstarsShowCooldown = true,
     quickstarsCooldownColor = {0.7, 0.7, 0.7},
+
+    -- 1: added quickstarsShowOnHudUi, which should inherit quickstarsShowOnHud
+    -- settingsVersion = 1,
 }
 
 local initialOpened = false
@@ -157,6 +161,18 @@ local function Initialize()
         DynamicCP.savedOptions.firstTime = false
     end
 
+    -- Migrate settings versions if applicable
+    if (not DynamicCP.savedOptions.settingsVersion) then
+        DynamicCP.savedOptions.settingsVersion = 0
+    end
+    if (DynamicCP.savedOptions.settingsVersion < 1) then
+        -- Inherit HUD setting for HUD_UI
+        DynamicCP.dbg("Inheriting HUD option " .. tostring(DynamicCP.savedOptions.quickstarsShowOnHud))
+        DynamicCP.savedOptions.quickstarsShowOnHudUi = DynamicCP.savedOptions.quickstarsShowOnHud
+    end
+    DynamicCP.savedOptions.settingsVersion = 1
+
+    -- Settings menu
     DynamicCP:CreateSettingsMenu()
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_MENU", "Toggle CP Preset Window")
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_QUICKSTARS", "Toggle Quickstars Panel")

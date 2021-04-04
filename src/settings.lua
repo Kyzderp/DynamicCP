@@ -279,8 +279,20 @@ function DynamicCP:CreateSettingsMenu()
                 },
                 {
                     type = "checkbox",
+                    name = "Show panel on HUD UI",
+                    tooltip = "Also show the panel on the HUD UI scene, which means when your cursor is active, e.g. when typing in chatbox",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.quickstarsShowOnHudUi end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.quickstarsShowOnHudUi = value
+                        DynamicCP.InitQuickstarsScenes()
+                    end,
+                    width = "full",
+                },
+                {
+                    type = "checkbox",
                     name = "Show panel on CP screen",
-                    tooltip = "Show a panel on the CP screen that displays currently slotted stars and also allows changing the stars",
+                    tooltip = "Also show the panel on the CP screen",
                     default = false,
                     getFunc = function() return DynamicCP.savedOptions.quickstarsShowOnCpScreen end,
                     setFunc = function(value)
