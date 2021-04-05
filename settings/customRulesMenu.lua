@@ -111,7 +111,7 @@ function DynamicCP.CreateCustomRulesMenu()
         {
             type = "dropdown",
             name = "Trigger",
-            tooltip = "When to apply rule",
+            tooltip = "When to apply the rule",
             choices = {"Entering Any Trial"},
             choicesValues = {"Entering Any Trial"}, -- TODO
             getFunc = function() return "Entering Any Trial" end,
