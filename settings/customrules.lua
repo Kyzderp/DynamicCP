@@ -138,8 +138,8 @@ function DynamicCP.CreateCustomRulesMenu()
             name = "Difficulty",
             tooltip = "What difficulty this rule applies to",
             choices = {"Normal & Veteran"},
-            choicesValues = {3}, -- TODO
-            getFunc = function() return 3 end,
+            choicesValues = {DynamicCP.DIFFICULTY_BOTH}, -- TODO
+            getFunc = function() return DynamicCP.DIFFICULTY_BOTH end,
             setFunc = function(difficulty)
                 DynamicCP.dbg("selected " .. tostring(difficulty))
                 -- TODO: select and update
