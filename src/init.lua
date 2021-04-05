@@ -50,6 +50,13 @@ local defaultOptions = {
     quickstarsShowCooldown = true,
     quickstarsCooldownColor = {0.7, 0.7, 0.7},
 
+    customRules = {
+        playSound = true, -- CHAMPION_POINTS_COMMITTED
+        showInChat = true,
+        firstTime = true,
+        rules = {},
+    },
+
     -- 1: added quickstarsShowOnHudUi, which should inherit quickstarsShowOnHud
     -- settingsVersion = 1,
 }
@@ -161,6 +168,21 @@ local function Initialize()
         DynamicCP.savedOptions.firstTime = false
     end
 
+    -- TODO: populate with example custom rule
+    if (DynamicCP.savedOptions.customRules.firstTime) then
+        DynamicCP.savedOptions.customRules.rules = {
+            ["Example Trial Rule"] = {
+                type = 1, -- TODO: make enum
+                order = 100,
+                difficulty = 3, -- TODO: Make enum
+                stars = {
+                },
+                overrideOrder = false,
+                semiAuto = false,
+            },
+        }
+    end
+
     -- Migrate settings versions if applicable
     if (not DynamicCP.savedOptions.settingsVersion) then
         DynamicCP.savedOptions.settingsVersion = 0
@@ -174,6 +196,7 @@ local function Initialize()
 
     -- Settings menu
     DynamicCP:CreateSettingsMenu()
+    DynamicCP.CreateCustomRulesMenu()
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_MENU", "Toggle CP Preset Window")
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_QUICKSTARS", "Toggle Quickstars Panel")
     ZO_CreateStringId("SI_BINDING_NAME_DCP_CYCLE_QUICKSTARS", "Cycle Quickstars Tab")

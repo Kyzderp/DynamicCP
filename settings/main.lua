@@ -4,7 +4,8 @@ function DynamicCP:CreateSettingsMenu()
     local LAM = LibAddonMenu2
     local panelData = {
         type = "panel",
-        name = "|c08BD1DDynamic CP|r",
+        name = "Dynamic CP",
+        displayName = "|c08BD1DDynamic CP|r",
         author = "Kyzeragon",
         version = DynamicCP.version,
         registerForRefresh = true,
