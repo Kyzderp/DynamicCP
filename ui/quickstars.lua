@@ -463,10 +463,8 @@ function DynamicCP.InitQuickstarsScenes()
 
     if (DynamicCP.savedOptions.quickstarsShowOnHudUi) then
         HUD_UI_SCENE:AddFragment(quickstarsFragment)
-        DynamicCPQuickstarsContainer:SetHidden(true)
     else
         HUD_UI_SCENE:RemoveFragment(quickstarsFragment)
-        DynamicCPQuickstarsContainer:SetHidden(true)
     end
 
     if (DynamicCP.savedOptions.quickstarsShowOnCpScreen) then

@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "0.6.5"
+DynamicCP.version = "0.6.6"
 
 DynamicCP.experimental = false -- Flip to true when developing
 
