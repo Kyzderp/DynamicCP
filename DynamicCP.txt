@@ -15,8 +15,8 @@ src/presetData.lua
 src/screenUpdates.lua
 src/slottables.lua
 src/customRules.lua
-settings/main.lua
-settings/customrules.lua
+settings/mainMenu.lua
+settings/customRulesMenu.lua
 ui/presets.lua
 ui/pulldown.lua
 ui/quickstars.lua
