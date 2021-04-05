@@ -2,6 +2,8 @@ DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
 DynamicCP.version = "0.6.5"
 
+DynamicCP.experimental = false -- Flip to true when developing
+
 local defaultOptions = {
     firstTime = true,
     cp = {
@@ -168,19 +170,21 @@ local function Initialize()
         DynamicCP.savedOptions.firstTime = false
     end
 
-    -- TODO: populate with example custom rule
-    if (DynamicCP.savedOptions.customRules.firstTime) then
-        DynamicCP.savedOptions.customRules.rules = {
-            ["Example Trial Rule"] = {
-                trigger = DynamicCP.TRIGGER_TRIAL, -- TODO: make enum
-                order = 100,
-                difficulty = DynamicCP.DIFFICULTY_BOTH, -- TODO: Make enum
-                stars = {
+    if (DynamicCP.experimental) then
+        -- TODO: populate with example custom rule
+        if (DynamicCP.savedOptions.customRules.firstTime) then
+            DynamicCP.savedOptions.customRules.rules = {
+                ["Example Trial Rule"] = {
+                    trigger = DynamicCP.TRIGGER_TRIAL, -- TODO: make enum
+                    order = 100,
+                    difficulty = DynamicCP.DIFFICULTY_BOTH, -- TODO: Make enum
+                    stars = {
+                    },
+                    overrideOrder = false,
+                    semiAuto = false,
                 },
-                overrideOrder = false,
-                semiAuto = false,
-            },
-        }
+            }
+        end
     end
 
     -- Migrate settings versions if applicable
@@ -196,7 +200,9 @@ local function Initialize()
 
     -- Settings menu
     DynamicCP:CreateSettingsMenu()
-    DynamicCP.CreateCustomRulesMenu()
+    if (DynamicCP.experimental) then
+        DynamicCP.CreateCustomRulesMenu()
+    end
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_MENU", "Toggle CP Preset Window")
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_QUICKSTARS", "Toggle Quickstars Panel")
     ZO_CreateStringId("SI_BINDING_NAME_DCP_CYCLE_QUICKSTARS", "Cycle Quickstars Tab")
