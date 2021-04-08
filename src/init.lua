@@ -175,9 +175,9 @@ local function Initialize()
         if (DynamicCP.savedOptions.customRules.firstTime) then
             DynamicCP.savedOptions.customRules.rules = {
                 ["Example Trial Rule"] = {
-                    trigger = DynamicCP.TRIGGER_TRIAL, -- TODO: make enum
+                    trigger = DynamicCP.TRIGGER_TRIAL,
                     order = 100,
-                    difficulty = DynamicCP.DIFFICULTY_BOTH, -- TODO: Make enum
+                    difficulty = DynamicCP.DIFFICULTY_BOTH,
                     stars = {
                     },
                     overrideOrder = false,

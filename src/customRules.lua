@@ -12,6 +12,7 @@ DynamicCP.TRIGGER_OVERLAND = 3
 DynamicCP.TRIGGER_PVP = 4
 DynamicCP.TRIGGER_ZONEID = 5
 DynamicCP.TRIGGER_BOSS = 6
+DynamicCP.TRIGGER_BOSSNAME = 7
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
