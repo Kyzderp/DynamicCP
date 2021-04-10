@@ -67,12 +67,22 @@ local initialOpened = false
 
 ---------------------------------------------------------------------
 -- Collect messages for displaying later when addon is not fully loaded
-DynamicCP.messages = {}
+DynamicCP.dbgMessages = {}
 function DynamicCP.dbg(msg)
     if (not msg) then return end
     if (not DynamicCP.savedOptions.debug) then return end
     if (CHAT_SYSTEM.primaryContainer) then
         d("|c6666FF[DCP]|r " .. tostring(msg))
+    else
+        DynamicCP.dbgMessages[#DynamicCP.dbgMessages + 1] = msg
+    end
+end
+
+DynamicCP.messages = {}
+function DynamicCP.msg(msg)
+    if (not msg) then return end
+    if (CHAT_SYSTEM.primaryContainer) then
+        d("|c3bdb5e[DynamicCP]|cAAAAAA " .. tostring(msg) .. "|r")
     else
         DynamicCP.messages[#DynamicCP.messages + 1] = msg
     end
@@ -82,20 +92,20 @@ end
 ---------------------------------------------------------------------
 -- Post Load (player loaded)
 local function OnPlayerActivated(_, initial)
-    -- Soft dependency on pChat because its chat restore will overwrite
+    -- Display all the delayed chat
+    for i = 1, #DynamicCP.dbgMessages do
+        d("|c6666FF[DCPdelay]|r " .. tostring(DynamicCP.dbgMessages[i]))
+    end
+    DynamicCP.dbgMessages = {}
+
     for i = 1, #DynamicCP.messages do
-        if (DynamicCP.savedOptions.debug) then
-            d("|c6666FF[DCPdelay]|r " .. DynamicCP.messages[i])
-        end
+        d("|c3bdb5e[DynamicCP]|cAAAAAA " .. tostring(DynamicCP.messages[i]) .. "|r")
     end
     DynamicCP.messages = {}
 
     -- Post load init
     DynamicCP.InitPoints()
     DynamicCP.InitQuickstars()
-    if (DynamicCP.experimental) then
-        DynamicCP.InitCustomRules()
-    end
 
     if (DynamicCP.savedOptions.hideBackground) then
         local backgroundOverride = function(line) return "/esoui/art/scrying/backdrop_stars.dds" end 
@@ -235,6 +245,12 @@ local function Initialize()
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_QUICKSTARS", "Toggle Quickstars Panel")
     ZO_CreateStringId("SI_BINDING_NAME_DCP_CYCLE_QUICKSTARS", "Cycle Quickstars Tab")
 
+    -- Initialize
+    if (DynamicCP.experimental) then
+        DynamicCP.InitCustomRules()
+    end
+
+    -- Register events
     RegisterEvents()
 
     CHAMPION_PERKS_CONSTELLATIONS_FRAGMENT:RegisterCallback("StateChange", function(oldState, newState)

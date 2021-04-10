@@ -94,7 +94,7 @@ local function CollectCurrentSlottables()
 end
 
 local function OnSlotsChanged()
-    DynamicCP.dbg("OnSlotsChanged")
+    -- DynamicCP.dbg("OnSlotsChanged")
     local currTime = GetGameTimeMilliseconds()
     if (not slotUpdateThrottling) then
         slotUpdateThrottling = true
@@ -110,7 +110,7 @@ local function OnSlotsChanged()
         EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "SlotsChangedThrottle")
 
         -- Slots have finished updating
-        DynamicCP.dbg("OnSlotsChanged PASSED")
+        -- DynamicCP.dbg("OnSlotsChanged PASSED")
         CollectCurrentSlottables()
         DynamicCP.ApplyCurrentSlottables(currentSlottables)
     end)

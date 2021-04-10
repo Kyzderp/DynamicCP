@@ -27,6 +27,8 @@ local difficulties = {
     [DUNGEON_DIFFICULTY_VETERAN] = "VETERAN",
 }
 
+local lastZoneId = 0
+
 
 ---------------------------------------------------------------------
 -- Data
@@ -96,15 +98,16 @@ local function ApplyRule(rule)
     -- TODO: keep track of what is being applied and cancel if same
     -- TODO: handle overrideOrder
 
-    CHAT_SYSTEM:AddMessage(message .. "|r")
+    DynamicCP.msg(message)
 end
 
 -- TODO: make a first-time dialog box
 
 ---------------------------------------------------------------------
 -- Events
+-- Params: initial - true if first time entering, false if going through door etc.
 ---------------------------------------------------------------------
-local function OnEnteredTrial()
+local function OnEnteredTrial(initial)
     DynamicCP.dbg("|cFF4444Entered a TRIAL difficulty "
         .. difficulties[GetCurrentZoneDungeonDifficulty()] .. "|r")
 
@@ -112,7 +115,12 @@ local function OnEnteredTrial()
     if (not ruleName) then return end
     local rule = DynamicCP.savedOptions.customRules.rules[ruleName]
 
-    ApplyRule(rule)
+    -- Artificial couple second wait to make it more noticeable for user
+    -- hopefully after they've exited loadscreen
+    EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "CustomApply", 3000, function()
+        EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "CustomApply")
+        ApplyRule(rule)
+    end)
 end
 
 
@@ -127,11 +135,13 @@ local function OnPlayerActivated()
     -- Trial: groupownable true indungeon true
     -- Solo arena: groupownable false indungeon true
     local zoneId = GetZoneId(GetUnitZoneIndex("player"))
+    local initial = zoneId == lastZoneId
+    lastZoneId = zoneId
 
     -- TODO: maybe priority order isn't needed because you would always want specifics to take priority over the generic ones
 
     if (DynamicCP.TRIAL_ZONEIDS[tostring(zoneId)]) then
-        OnEnteredTrial()
+        OnEnteredTrial(initial)
     end
 end
 

@@ -284,7 +284,7 @@ end
 -- Called when user clicks tab button
 ---------------------------------------------------------------------
 function DynamicCP.SelectQuickstarsTab(tree)
-    DynamicCP.dbg("selecting " .. tostring(tree))
+    -- DynamicCP.dbg("selecting " .. tostring(tree))
     -- TODO: show warning if navigating off of the tab with unsaved changes?
     -- Keep same if we are just refreshing the dropdowns
     if (tree == "REFRESH") then
