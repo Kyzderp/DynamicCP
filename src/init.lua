@@ -199,6 +199,33 @@ local function Initialize()
                 ["Example Trial"] = {
                     name = "Example Trial",
                     trigger = DynamicCP.TRIGGER_TRIAL,
+                    priority = 100,
+                    normal = true,
+                    veteran = true,
+                    stars = {
+                        [1] = 79, -- Treasure Hunter
+                        [2] = 66, -- Steed's Blessing
+                        [3] = 86, -- Liquid Efficiency
+                        [4] = -1, -- Flex for JoaT Homemaker / Rationer / Upkeep
+                        [5] = -1,
+                        [6] = -1,
+                        [7] = -1,
+                        [8] = -1,
+                        [9] = -1,
+                        [10] = -1,
+                        [11] = -1,
+                        [12] = -1,
+                    },
+                    overrideOrder = true,
+                    semiAuto = false,
+                    tank = true,
+                    healer = true,
+                    dps = false,
+                },
+                ["Example Trial Dps"] = {
+                    name = "Example Trial",
+                    trigger = DynamicCP.TRIGGER_TRIAL,
+                    priority = 101,
                     normal = true,
                     veteran = true,
                     stars = {

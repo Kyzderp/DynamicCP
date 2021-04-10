@@ -5,20 +5,6 @@ local selectedRuleName = nil
 -- /script d(DynamicCP.savedOptions.customRules.rules)
 
 ---------------------------------------------------------------------
--- Select which rule to edit dropdown
-local ruleDisplays = {}
-local ruleValues = {}
-
-local function RefreshCustomRules()
-    -- TODO: check for duplicate names
-    -- TODO: sort
-    for name, ruleData in pairs(DynamicCP.savedOptions.customRules.rules) do
-        table.insert(ruleDisplays, name)
-        table.insert(ruleValues, name)
-    end
-end
-
----------------------------------------------------------------------
 -- Trigger dropdown
 local triggerDisplays = {
     DynamicCP.TRIGGER_TRIAL,
@@ -102,6 +88,7 @@ DynamicCP.BuildStarsDropdowns = BuildStarsDropdowns
 
 ---------------------------------------------------------------------
 function DynamicCP.CreateCustomRulesMenu()
+    DynamicCP.SortRuleKeys()
     BuildStarsDropdowns()
 
     local LAM = LibAddonMenu2
@@ -151,17 +138,16 @@ function DynamicCP.CreateCustomRulesMenu()
         {
             type = "description",
             title = nil,
-            text = "Here, you can specify which CP stars to automatically slot in specific instances. Choose a rule below or press the \"New Rule\" button to get started.",
+            text = "Here, you can specify which CP stars to automatically slot in specific instances. ALL matching rules are applied, in the specified order, so the rule applied last can override the previous rules. Choose a rule below or press the \"New Rule\" button to get started.",
             width = "full",
         },
         {
             type = "dropdown",
             name = "Select rule to edit",
             tooltip = "Choose a rule to edit",
-            choices = ruleDisplays,
-            choicesValues = ruleValues,
+            choices = DynamicCP.GetSortedKeys(),
             getFunc = function()
-                return WINDOW_MANAGER:GetControlByName("DynamicCP#RuleDropdown").combobox.m_comboBox:GetSelectedItem()
+                return selectedRuleName
             end,
             setFunc = function(name)
                 DynamicCP.dbg("selected " .. tostring(name))
@@ -169,7 +155,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 -- TODO: select and update
             end,
             width = "full",
-            reference = "DynamicCP#RuleDropdown",
+            reference = "DynamicCP#RulesDropdown"
         },
         {
             type = "button",
@@ -204,15 +190,44 @@ function DynamicCP.CreateCustomRulesMenu()
             getFunc = function() return selectedRuleName end,
             setFunc = function(name)
                 if (not name) then return end
+                -- TODO: check for duplicate names
                 DynamicCP.dbg("Renaming to " .. name)
                 DynamicCP.savedOptions.customRules.rules[name] = DynamicCP.savedOptions.customRules.rules[selectedRuleName]
                 DynamicCP.savedOptions.customRules.rules[name].name = name
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName] = nil
+                DynamicCP.SortRuleKeys()
                 selectedRuleName = name
+
+                local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
             end,
             isMultiline = false,
             isExtraWide = false,
             maxChars = 30,
+            width = "full",
+            disabled = function() return selectedRuleName == nil end,
+        },
+        {
+            type = "slider",
+            name = "Priority Order",
+            tooltip = "The priority order at which this rule should be applied. Smaller numbers will be applied first, so larger numbers have the \"final say.\"",
+            default = 100,
+            min = 0,
+            max = 1000,
+            step = 10,
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].priority or 100
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].priority = value
+                DynamicCP.SortRuleKeys()
+
+                local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
+            end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
         },
@@ -568,7 +583,6 @@ function DynamicCP.CreateCustomRulesMenu()
         },
     }
 
-    RefreshCustomRules()
     DynamicCP.customRulesPanel = LAM:RegisterAddonPanel(DynamicCP.name .. "CustomRules", panelData)
     LAM:RegisterOptionControls(DynamicCP.name .. "CustomRules", optionsData)
 end

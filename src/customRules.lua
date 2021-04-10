@@ -28,14 +28,33 @@ local difficulties = {
 }
 
 local lastZoneId = 0
-
+local sortedKeys = {}
 
 ---------------------------------------------------------------------
 -- Data
 ---------------------------------------------------------------------
 local function SortRuleKeys()
     -- TODO: automatically sort them such that specific rule are at the top
+    local sortedRules = {}
+    for name, rule in pairs(DynamicCP.savedOptions.customRules.rules) do
+        table.insert(sortedRules, {name = name, priority = rule.priority})
+    end
+
+    table.sort(sortedRules, function(item1, item2)
+        return item1.priority < item2.priority
+    end)
+
+    sortedKeys = {}
+    for _, data in ipairs(sortedRules) do
+        table.insert(sortedKeys, data.name)
+    end
 end
+DynamicCP.SortRuleKeys = SortRuleKeys
+
+local function GetSortedKeys()
+    return sortedKeys
+end
+DynamicCP.GetSortedKeys = GetSortedKeys
 
 
 ---------------------------------------------------------------------
@@ -96,7 +115,7 @@ local function ApplyRule(rule)
 
             local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
             if (not unlocked) then
-                message = message .. " |cFF2222not unlocked"
+                message = message .. " |cFF2222- not unlocked"
             else
                 AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
             end
@@ -164,5 +183,6 @@ end
 ---------------------------------------------------------------------
 -- Init
 function DynamicCP.InitCustomRules()
+    SortRuleKeys()
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomActivated", EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
 end
