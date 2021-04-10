@@ -134,17 +134,20 @@ function DynamicCP.CreateCustomRulesMenu()
             width = "full",
         },
         {
-            type = "dropdown",
-            name = "Difficulty",
-            tooltip = "What difficulty this rule applies to",
-            choices = {"Normal & Veteran"},
-            choicesValues = {DynamicCP.DIFFICULTY_BOTH}, -- TODO
-            getFunc = function() return DynamicCP.DIFFICULTY_BOTH end,
-            setFunc = function(difficulty)
-                DynamicCP.dbg("selected " .. tostring(difficulty))
-                -- TODO: select and update
-            end,
-            width = "full",
+            type = "checkbox",
+            name = "Apply for normal",
+            tooltip = "Whether this rule should apply for normal difficulty",
+            getFunc = function() return true end,
+            setFunc = function(value) end,
+            width = "half",
+        },
+        {
+            type = "checkbox",
+            name = "Apply for veteran",
+            tooltip = "Whether this rule should apply for veteran difficulty",
+            getFunc = function() return true end,
+            setFunc = function(value) end,
+            width = "half",
         },
 ---------------------------------------------------------------------
 -- Stars

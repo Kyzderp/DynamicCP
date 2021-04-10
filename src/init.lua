@@ -2,7 +2,7 @@ DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
 DynamicCP.version = "0.6.6"
 
-DynamicCP.experimental = false -- Flip to true when developing
+DynamicCP.experimental = true -- Flip to true when developing
 
 local defaultOptions = {
     firstTime = true,
@@ -93,6 +93,9 @@ local function OnPlayerActivated(_, initial)
     -- Post load init
     DynamicCP.InitPoints()
     DynamicCP.InitQuickstars()
+    if (DynamicCP.experimental) then
+        DynamicCP.InitCustomRules()
+    end
 
     if (DynamicCP.savedOptions.hideBackground) then
         local backgroundOverride = function(line) return "/esoui/art/scrying/backdrop_stars.dds" end 
@@ -183,14 +186,30 @@ local function Initialize()
         -- TODO: populate with example custom rule
         if (DynamicCP.savedOptions.customRules.firstTime) then
             DynamicCP.savedOptions.customRules.rules = {
-                ["Example Trial Rule"] = {
+                ["Example Trial"] = {
                     trigger = DynamicCP.TRIGGER_TRIAL,
                     order = 100,
-                    difficulty = DynamicCP.DIFFICULTY_BOTH,
+                    normal = true,
+                    veteran = true,
                     stars = {
+                        [1] = 79, -- Treasure Hunter
+                        [2] = 66, -- Steed's Blessing
+                        [3] = 86, -- Liquid Efficiency
+                        [4] = nil, -- Flex for JoaT Homemaker / Rationer / Upkeep
+                        [5] = nil,
+                        [6] = nil,
+                        [7] = nil,
+                        [8] = nil,
+                        [9] = nil,
+                        [10] = nil,
+                        [11] = nil,
+                        [12] = nil,
                     },
-                    overrideOrder = false,
+                    overrideOrder = true,
                     semiAuto = false,
+                    tank = true,
+                    healer = true,
+                    dps = true,
                 },
             }
         end
