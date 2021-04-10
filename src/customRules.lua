@@ -54,46 +54,52 @@ local function GetPlayerRole()
     return role
 end
 
--- Iterate through all rules and find a matching one
-local function GetRuleForTrigger(trigger, isVet, param1, param2)
+-- Iterate through all rules and find any matching ones
+local function GetRulesForTrigger(trigger, isVet, param1, param2)
     local requiredParams = triggerParams[trigger]
     local role = GetPlayerRole()
     local difficulty = isVet and "veteran" or "normal"
+    local ruleNames = {}
+    local numRules = 0
 
-    -- TODO: iterate using sorted keys instead
+    -- TODO: iterate using sorted keys instead? nah prioritize them later?
     for name, rule in pairs(DynamicCP.savedOptions.customRules.rules) do
         if (rule.trigger == trigger
             and (param1 == nil or rule[requiredParams[1]] == param1)
             and (param2 == nil or rule[requiredParams[2]] == param2)
             ) then
             if (rule[role] and rule[difficulty]) then
-                return name
+                table.insert(ruleNames, name)
+                numRules = numRules + 1
             end
         end
     end
 
-    return nil
+    if (numRules == 0) then return nil end
+    return ruleNames
 end
 
 -- Apply the stars from this rule
 local function ApplyRule(rule)
     if (not rule) then return end
 
-    local message = "Applying:"
+    local message = "Applying custom rule " .. rule.name .. ":"
 
     PrepareChampionPurchaseRequest(false)
     for slotIndex, skillId in pairs(rule.stars) do
-        local color = "e46b2e" -- Red
-        if (slotIndex <= 8) then color = "59bae7" end -- Blue
-        if (slotIndex <= 4) then color = "a5d752" end -- Green
-        message = message .. zo_strformat("\n|c<<1>> <<2>> - <<C:3>>",
-                color, slotIndex, GetChampionSkillName(skillId))
+        if (skillId ~= -1) then
+            local color = "e46b2e" -- Red
+            if (slotIndex <= 8) then color = "59bae7" end -- Blue
+            if (slotIndex <= 4) then color = "a5d752" end -- Green
+            message = message .. zo_strformat("\n|c<<1>> <<2>> - <<C:3>>",
+                    color, slotIndex, GetChampionSkillName(skillId))
 
-        local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
-        if (not unlocked) then
-            message = message .. " |cFF2222not unlocked"
-        else
-            AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
+            local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
+            if (not unlocked) then
+                message = message .. " |cFF2222not unlocked"
+            else
+                AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
+            end
         end
     end
     SendChampionPurchaseRequest()
@@ -119,8 +125,9 @@ local function OnEnteredTrial(initial)
     DynamicCP.dbg("|cFF4444Entered a TRIAL difficulty "
         .. difficulties[GetCurrentZoneDungeonDifficulty()] .. "|r")
 
-    local ruleName = GetRuleForTrigger(DynamicCP.TRIGGER_TRIAL, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
-    if (not ruleName) then return end
+    local ruleNames = GetRulesForTrigger(DynamicCP.TRIGGER_TRIAL, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
+    if (not ruleNames) then return end
+    local ruleName = ruleNames[1] -- TODO: apply all rules
     local rule = DynamicCP.savedOptions.customRules.rules[ruleName]
 
     -- Artificial couple second wait to make it more noticeable for user
@@ -142,6 +149,7 @@ local function OnPlayerActivated()
     ))
     -- Trial: groupownable true indungeon true
     -- Solo arena: groupownable false indungeon true
+    -- Overland: false false
     local zoneId = GetZoneId(GetUnitZoneIndex("player"))
     local initial = zoneId == lastZoneId
     lastZoneId = zoneId

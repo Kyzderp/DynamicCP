@@ -26,11 +26,57 @@ local triggerDisplays = {
 
 ---------------------------------------------------------------------
 -- Get string for preview
+local triggerToPreview = {
+    [DynamicCP.TRIGGER_TRIAL]          = "any trial or arena",
+    [DynamicCP.TRIGGER_GROUP_DUNGEON]  = "any group dungeon",
+    [DynamicCP.TRIGGER_PUBLIC_DUNGEON] = "any public dungeon",
+    [DynamicCP.TRIGGER_DELVE]          = "any public delve",
+    [DynamicCP.TRIGGER_OVERLAND]       = "any overland zone",
+    [DynamicCP.TRIGGER_CYRO]           = "Cyrodiil",
+    [DynamicCP.TRIGGER_IC]             = "Imperial City or Sewers",
+    [DynamicCP.TRIGGER_ZONEID]         = "specific zone",
+    [DynamicCP.TRIGGER_BOSS]           = "any boss area",
+    [DynamicCP.TRIGGER_BOSSNAME]       = "specific boss",
+}
+
+local hasVet = {
+    [DynamicCP.TRIGGER_TRIAL]          = true,
+    [DynamicCP.TRIGGER_GROUP_DUNGEON]  = true,
+    [DynamicCP.TRIGGER_PUBLIC_DUNGEON] = false,
+    [DynamicCP.TRIGGER_DELVE]          = false,
+    [DynamicCP.TRIGGER_OVERLAND]       = false,
+    [DynamicCP.TRIGGER_CYRO]           = false,
+    [DynamicCP.TRIGGER_IC]             = false,
+    [DynamicCP.TRIGGER_ZONEID]         = true,
+    [DynamicCP.TRIGGER_BOSS]           = true,
+    [DynamicCP.TRIGGER_BOSSNAME]       = true,
+}
+
 local function GetCurrentPreview()
     if (not selectedRuleName) then
-        return "|cFF4444Select a rule to edit in the dropdown above first!|r"
+        return ""
     end
-    return ""
+
+    local rule = DynamicCP.savedOptions.customRules.rules[selectedRuleName]
+
+    local difficultyString = ""
+    if (hasVet[rule.trigger]) then
+        if (rule.normal and rule.veteran) then
+            difficultyString = " on both normal and vet"
+        elseif (rule.normal) then
+            difficultyString = " on normal"
+        elseif (rule.veteran) then
+            difficultyString = " on vet"
+        else
+            difficultyString = " |cFF4444on neither difficulty|r"
+        end
+    end
+
+    local preview = string.format("Upon entering %s%s,",
+        triggerToPreview[rule.trigger],
+        difficultyString
+        )
+    return preview
 end
 
 ---------------------------------------------------------------------
@@ -142,7 +188,13 @@ function DynamicCP.CreateCustomRulesMenu()
         {
             type = "description",
             title = nil,
-            text = "Customize the rule by first selecting when you want it to trigger. Different options are available for different triggers.",
+            text = function()
+                if (selectedRuleName) then
+                    return "Customize the rule by first selecting when you want it to trigger. Different options are available for different triggers."
+                else
+                    return "|cFF4444Select a rule to edit in the dropdown above first!|r"
+                end
+            end,
             width = "full",
         },
         {
@@ -154,6 +206,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 if (not name) then return end
                 DynamicCP.dbg("Renaming to " .. name)
                 DynamicCP.savedOptions.customRules.rules[name] = DynamicCP.savedOptions.customRules.rules[selectedRuleName]
+                DynamicCP.savedOptions.customRules.rules[name].name = name
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName] = nil
                 selectedRuleName = name
             end,
@@ -175,12 +228,10 @@ function DynamicCP.CreateCustomRulesMenu()
             name = "Trigger",
             tooltip = "When to apply the rule",
             choices = triggerDisplays,
-            getFunc = function() return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger or nil end,
+            getFunc = function() return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger or nil end,
             setFunc = function(name)
                 if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(name))
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger = name
-                -- TODO: select and update
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
@@ -189,25 +240,29 @@ function DynamicCP.CreateCustomRulesMenu()
             type = "checkbox",
             name = "Apply for normal",
             tooltip = "Whether this rule should apply for normal difficulty",
-            getFunc = function() return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].normal or true end,
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].normal or false
+            end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].normal = value
             end,
             width = "half",
-            disabled = function() return selectedRuleName == nil end,
+            disabled = function() return selectedRuleName == nil or not hasVet[DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger] end,
         },
         {
             type = "checkbox",
             name = "Apply for veteran",
             tooltip = "Whether this rule should apply for veteran difficulty",
-            getFunc = function() return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].veteran or true end,
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].veteran or false
+            end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].veteran = value
             end,
             width = "half",
-            disabled = function() return selectedRuleName == nil end,
+            disabled = function() return selectedRuleName == nil or not hasVet[DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger] end,
         },
 ---------------------------------------------------------------------
 -- Stars
@@ -223,7 +278,7 @@ function DynamicCP.CreateCustomRulesMenu()
             choices = starDisplays[1],
             choicesValues = starValues[1],
             getFunc = function()
-                return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[1] or -1
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[1] or -1
             end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
@@ -240,7 +295,7 @@ function DynamicCP.CreateCustomRulesMenu()
             choices = starDisplays[1],
             choicesValues = starValues[1],
             getFunc = function()
-                return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[2] or -1
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[2] or -1
             end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
@@ -257,7 +312,7 @@ function DynamicCP.CreateCustomRulesMenu()
             choices = starDisplays[1],
             choicesValues = starValues[1],
             getFunc = function()
-                return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[3] or -1
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[3] or -1
             end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
@@ -274,7 +329,7 @@ function DynamicCP.CreateCustomRulesMenu()
             choices = starDisplays[1],
             choicesValues = starValues[1],
             getFunc = function()
-                return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[4] or -1
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[4] or -1
             end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
@@ -297,7 +352,7 @@ function DynamicCP.CreateCustomRulesMenu()
             choices = starDisplays[2],
             choicesValues = starValues[2],
             getFunc = function()
-                return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[5] or -1
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[5] or -1
             end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
@@ -314,7 +369,7 @@ function DynamicCP.CreateCustomRulesMenu()
             choices = starDisplays[2],
             choicesValues = starValues[2],
             getFunc = function()
-                return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[6] or -1
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[6] or -1
             end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
@@ -331,7 +386,7 @@ function DynamicCP.CreateCustomRulesMenu()
             choices = starDisplays[2],
             choicesValues = starValues[2],
             getFunc = function()
-                return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[7] or -1
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[7] or -1
             end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
@@ -348,7 +403,7 @@ function DynamicCP.CreateCustomRulesMenu()
             choices = starDisplays[2],
             choicesValues = starValues[2],
             getFunc = function()
-                return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[8] or -1
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[8] or -1
             end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
@@ -371,7 +426,7 @@ function DynamicCP.CreateCustomRulesMenu()
             choices = starDisplays[3],
             choicesValues = starValues[3],
             getFunc = function()
-                return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[9] or -1
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[9] or -1
             end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
@@ -388,7 +443,7 @@ function DynamicCP.CreateCustomRulesMenu()
             choices = starDisplays[3],
             choicesValues = starValues[3],
             getFunc = function()
-                return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[10] or -1
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[10] or -1
             end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
@@ -405,7 +460,7 @@ function DynamicCP.CreateCustomRulesMenu()
             choices = starDisplays[3],
             choicesValues = starValues[3],
             getFunc = function()
-                return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[11] or -1
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[11] or -1
             end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
@@ -422,7 +477,7 @@ function DynamicCP.CreateCustomRulesMenu()
             choices = starDisplays[3],
             choicesValues = starValues[3],
             getFunc = function()
-                return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[12] or -1
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[12] or -1
             end,
             setFunc = function(value)
                 if (not selectedRuleName) then return end
@@ -445,7 +500,7 @@ function DynamicCP.CreateCustomRulesMenu()
                     tooltip = "Slot the stars anyway even if they are already slotted in a different order",
                     default = true,
                     getFunc = function()
-                        return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].overrideOrder or true
+                        return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].overrideOrder or false
                     end,
                     setFunc = function(value)
                         if (not selectedRuleName) then return end
@@ -459,7 +514,7 @@ function DynamicCP.CreateCustomRulesMenu()
                     tooltip = "Show a prompt asking if you want to slot the stars instead of slotting them automatically",
                     default = false,
                     getFunc = function()
-                        return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].semiAuto or false
+                        return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].semiAuto or false
                     end,
                     setFunc = function(value)
                         if (not selectedRuleName) then return end
@@ -473,7 +528,7 @@ function DynamicCP.CreateCustomRulesMenu()
                     tooltip = "Apply this rule if you are on a tank, as defined in settings",
                     default = true,
                     getFunc = function()
-                        return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].tank or true
+                        return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].tank or false
                     end,
                     setFunc = function(value)
                         if (not selectedRuleName) then return end
@@ -487,7 +542,7 @@ function DynamicCP.CreateCustomRulesMenu()
                     tooltip = "Apply this rule if you are on a healer, as defined in settings",
                     default = true,
                     getFunc = function()
-                        return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].healer or true
+                        return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].healer or false
                     end,
                     setFunc = function(value)
                         if (not selectedRuleName) then return end
@@ -501,7 +556,7 @@ function DynamicCP.CreateCustomRulesMenu()
                     tooltip = "Apply this rule if you are on a DPS, as defined in settings",
                     default = true,
                     getFunc = function()
-                        return selectedRuleName and DynamicCP.savedOptions.customRules.rules[selectedRuleName].dps or true
+                        return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].dps or false
                     end,
                     setFunc = function(value)
                         if (not selectedRuleName) then return end

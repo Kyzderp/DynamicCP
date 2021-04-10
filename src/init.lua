@@ -197,6 +197,7 @@ local function Initialize()
         if (DynamicCP.savedOptions.customRules.firstTime) then
             DynamicCP.savedOptions.customRules.rules = {
                 ["Example Trial"] = {
+                    name = "Example Trial",
                     trigger = DynamicCP.TRIGGER_TRIAL,
                     normal = true,
                     veteran = true,
@@ -205,19 +206,19 @@ local function Initialize()
                         [2] = 66, -- Steed's Blessing
                         [3] = 86, -- Liquid Efficiency
                         [4] = -1, -- Flex for JoaT Homemaker / Rationer / Upkeep
-                        [5] = -1,
-                        [6] = -1,
-                        [7] = -1,
-                        [8] = -1,
-                        [9] = -1,
-                        [10] = -1,
-                        [11] = -1,
-                        [12] = -1,
+                        [5] = 31, -- Backstabber
+                        [6] = 12, -- Fighting Finesse
+                        [7] = 25, -- Deadly Aim
+                        [8] = 27, -- Thaumaturge
+                        [9] =  2, -- Boundless Vitality
+                        [10] = 34, -- Ironclad
+                        [11] = 35, -- Rejuvenation
+                        [12] = 56, -- Spirit Mastery
                     },
                     overrideOrder = true,
                     semiAuto = false,
-                    tank = true,
-                    healer = true,
+                    tank = false,
+                    healer = false,
                     dps = true,
                 },
             }
