@@ -5,16 +5,16 @@ DynamicCP = DynamicCP or {}
 DynamicCP.DIFFICULTY_NORMAL = 1
 DynamicCP.DIFFICULTY_VETERAN = 2
 
-DynamicCP.TRIGGER_TRIAL             =  1 -- (DungeonDifficulty)
-DynamicCP.TRIGGER_GROUP_DUNGEON     =  2
-DynamicCP.TRIGGER_PUBLIC_DUNGEON    =  3
-DynamicCP.TRIGGER_DELVE             =  4
-DynamicCP.TRIGGER_OVERLAND          =  5
-DynamicCP.TRIGGER_CYRO              =  6
-DynamicCP.TRIGGER_IC                =  7
-DynamicCP.TRIGGER_ZONEID            =  8
-DynamicCP.TRIGGER_BOSS              =  9
-DynamicCP.TRIGGER_BOSSNAME          = 10
+DynamicCP.TRIGGER_TRIAL             = "Trial or Arena"
+DynamicCP.TRIGGER_GROUP_DUNGEON     = "Group Dungeon"
+DynamicCP.TRIGGER_PUBLIC_DUNGEON    = "Public Dungeon"
+DynamicCP.TRIGGER_DELVE             = "Delve"
+DynamicCP.TRIGGER_OVERLAND          = "Overland"
+DynamicCP.TRIGGER_CYRO              = "Cyrodiil"
+DynamicCP.TRIGGER_IC                = "Imperial City"
+DynamicCP.TRIGGER_ZONEID            = "Specific Zone"
+DynamicCP.TRIGGER_BOSS              = "Boss Area"
+DynamicCP.TRIGGER_BOSSNAME          = "Specific Boss Name"
 
 local triggerParams = {
     [DynamicCP.TRIGGER_TRIAL] = {
@@ -77,6 +77,8 @@ end
 
 -- Apply the stars from this rule
 local function ApplyRule(rule)
+    if (not rule) then return end
+
     local message = "Applying:"
 
     PrepareChampionPurchaseRequest(false)
@@ -98,7 +100,13 @@ local function ApplyRule(rule)
     -- TODO: keep track of what is being applied and cancel if same
     -- TODO: handle overrideOrder
 
-    DynamicCP.msg(message)
+    if (DynamicCP.savedOptions.customRules.showInChat) then
+        DynamicCP.msg(message)
+    end
+
+    if (DynamicCP.savedOptions.customRules.playSound) then
+        PlaySound(SOUNDS.CHAMPION_POINTS_COMMITTED)
+    end
 end
 
 -- TODO: make a first-time dialog box

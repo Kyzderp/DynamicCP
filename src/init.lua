@@ -82,7 +82,7 @@ DynamicCP.messages = {}
 function DynamicCP.msg(msg)
     if (not msg) then return end
     if (CHAT_SYSTEM.primaryContainer) then
-        d("|c3bdb5e[DynamicCP]|cAAAAAA " .. tostring(msg) .. "|r")
+        CHAT_SYSTEM:AddMessage("|c3bdb5e[DynamicCP]|cAAAAAA " .. tostring(msg) .. "|r")
     else
         DynamicCP.messages[#DynamicCP.messages + 1] = msg
     end
@@ -99,7 +99,7 @@ local function OnPlayerActivated(_, initial)
     DynamicCP.dbgMessages = {}
 
     for i = 1, #DynamicCP.messages do
-        d("|c3bdb5e[DynamicCP]|cAAAAAA " .. tostring(DynamicCP.messages[i]) .. "|r")
+        CHAT_SYSTEM:AddMessage("|c3bdb5e[DynamicCP]|cAAAAAA " .. tostring(DynamicCP.messages[i]) .. "|r")
     end
     DynamicCP.messages = {}
 
@@ -198,22 +198,21 @@ local function Initialize()
             DynamicCP.savedOptions.customRules.rules = {
                 ["Example Trial"] = {
                     trigger = DynamicCP.TRIGGER_TRIAL,
-                    order = 100,
                     normal = true,
                     veteran = true,
                     stars = {
                         [1] = 79, -- Treasure Hunter
                         [2] = 66, -- Steed's Blessing
                         [3] = 86, -- Liquid Efficiency
-                        [4] = nil, -- Flex for JoaT Homemaker / Rationer / Upkeep
-                        [5] = nil,
-                        [6] = nil,
-                        [7] = nil,
-                        [8] = nil,
-                        [9] = nil,
-                        [10] = nil,
-                        [11] = nil,
-                        [12] = nil,
+                        [4] = -1, -- Flex for JoaT Homemaker / Rationer / Upkeep
+                        [5] = -1,
+                        [6] = -1,
+                        [7] = -1,
+                        [8] = -1,
+                        [9] = -1,
+                        [10] = -1,
+                        [11] = -1,
+                        [12] = -1,
                     },
                     overrideOrder = true,
                     semiAuto = false,
@@ -222,6 +221,7 @@ local function Initialize()
                     dps = true,
                 },
             }
+            -- DynamicCP.savedOptions.customRules.rules = {}
         end
     end
 
