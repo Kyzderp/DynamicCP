@@ -220,7 +220,7 @@ local function Initialize()
                     semiAuto = false,
                     tank = true,
                     healer = true,
-                    dps = false,
+                    dps = true,
                 },
                 ["Example Trial Dps"] = {
                     name = "Example Trial Dps",
@@ -229,10 +229,10 @@ local function Initialize()
                     normal = true,
                     veteran = true,
                     stars = {
-                        [1] = 79, -- Treasure Hunter
-                        [2] = 66, -- Steed's Blessing
-                        [3] = 86, -- Liquid Efficiency
-                        [4] = -1, -- Flex for JoaT Homemaker / Rationer / Upkeep
+                        [1] = -1,
+                        [2] = -1,
+                        [3] = -1,
+                        [4] = -1,
                         [5] = 31, -- Backstabber
                         [6] = 12, -- Fighting Finesse
                         [7] = 25, -- Deadly Aim

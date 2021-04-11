@@ -76,15 +76,16 @@ local function GetPlayerRole()
 end
 
 -- Iterate through all rules and find any matching ones
-local function GetRulesForTrigger(trigger, isVet, param1, param2)
+local function GetSortedRulesForTrigger(trigger, isVet, param1, param2)
     local requiredParams = triggerParams[trigger]
     local role = GetPlayerRole()
     local difficulty = isVet and "veteran" or "normal"
     local ruleNames = {}
     local numRules = 0
 
-    -- TODO: iterate using sorted keys instead? nah prioritize them later?
-    for name, rule in pairs(DynamicCP.savedOptions.customRules.rules) do
+    -- Iterate using sorted keys so we get them in prioritized order
+    for _, name in ipairs(GetSortedKeys()) do
+        local rule = DynamicCP.savedOptions.customRules.rules[name]
         if (rule.trigger == trigger
             and (param1 == nil or rule[requiredParams[1]] == param1)
             and (param2 == nil or rule[requiredParams[2]] == param2)
@@ -101,34 +102,45 @@ local function GetRulesForTrigger(trigger, isVet, param1, param2)
 end
 
 -- Apply the stars from this rule
-local function ApplyRule(rule)
-    if (not rule) then return end
+local function ApplyRules(sortedRuleNames)
+    if (not sortedRuleNames) then return end
 
-    local message = "Applying custom rule " .. rule.name .. ":"
+    -- First pass collects them into pending, overwriting lower priority rules
+    local pendingMessages = {}
+    local pendingSlottables = {}
+    for _, ruleName in ipairs(sortedRuleNames) do
+        local rule = DynamicCP.savedOptions.customRules.rules[ruleName]
+        for slotIndex, skillId in pairs(rule.stars) do
+            if (skillId ~= -1) then
+                pendingSlottables[slotIndex] = skillId
 
-    PrepareChampionPurchaseRequest(false)
-    for slotIndex, skillId in pairs(rule.stars) do
-        if (skillId ~= -1) then
-            local color = "e46b2e" -- Red
-            if (slotIndex <= 8) then color = "59bae7" end -- Blue
-            if (slotIndex <= 4) then color = "a5d752" end -- Green
-            message = message .. zo_strformat("\n|c<<1>> <<2>> - <<C:3>>",
-                    color, slotIndex, GetChampionSkillName(skillId))
-
-            local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
-            if (not unlocked) then
-                message = message .. " |cFF2222- not unlocked"
-            else
-                AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
+                local color = "e46b2e" -- Red
+                if (slotIndex <= 8) then color = "59bae7" end -- Blue
+                if (slotIndex <= 4) then color = "a5d752" end -- Green
+                local pendingMessage = zo_strformat("|c<<1>> <<2>> - <<C:3>>",
+                        color, slotIndex, GetChampionSkillName(skillId))
+                local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
+                if (not unlocked) then
+                    pendingMessage = pendingMessage .. " |cFF2222- not unlocked"
+                end
+                pendingMessages[slotIndex] = pendingMessage
             end
         end
+    end
+
+    -- Second pass to convert into request
+    PrepareChampionPurchaseRequest(false)
+    for slotIndex, skillId in pairs(pendingSlottables) do
+        AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
     end
     SendChampionPurchaseRequest()
     -- TODO: keep track of what is being applied and cancel if same
     -- TODO: handle overrideOrder
 
     if (DynamicCP.savedOptions.customRules.showInChat) then
-        DynamicCP.msg(message)
+        DynamicCP.msg(string.format("Applying rules %s:\n%s",
+            table.concat(sortedRuleNames, " < "),
+            table.concat(pendingMessages, "\n")))
     end
 
     if (DynamicCP.savedOptions.customRules.playSound) then
@@ -147,12 +159,8 @@ local function OnEnteredTrial(initial)
     DynamicCP.dbg("|cFF4444Entered a TRIAL difficulty "
         .. difficulties[GetCurrentZoneDungeonDifficulty()] .. "|r")
 
-    local ruleNames = GetRulesForTrigger(DynamicCP.TRIGGER_TRIAL, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
-    if (not ruleNames) then return end
-    local ruleName = ruleNames[1] -- TODO: apply all rules
-    local rule = DynamicCP.savedOptions.customRules.rules[ruleName]
-
-    ApplyRule(rule)
+    local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_TRIAL, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
+    ApplyRules(sortedRuleNames)
 end
 
 
