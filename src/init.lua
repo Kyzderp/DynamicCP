@@ -223,7 +223,7 @@ local function Initialize()
                     dps = false,
                 },
                 ["Example Trial Dps"] = {
-                    name = "Example Trial",
+                    name = "Example Trial Dps",
                     trigger = DynamicCP.TRIGGER_TRIAL,
                     priority = 101,
                     normal = true,

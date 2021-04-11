@@ -5,7 +5,7 @@ function DynamicCP:CreateSettingsMenu()
     local panelData = {
         type = "panel",
         name = "Dynamic CP",
-        displayName = "|c08BD1DDynamic CP|r",
+        displayName = "|c3bdb5eDynamic CP|r",
         author = "Kyzeragon",
         version = DynamicCP.version,
         registerForRefresh = true,

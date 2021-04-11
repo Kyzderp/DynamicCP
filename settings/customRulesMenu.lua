@@ -132,7 +132,7 @@ function DynamicCP.CreateCustomRulesMenu()
     local panelData = {
         type = "panel",
         name = "Dynamic CP - Custom Rules",
-        displayName = "|c08BD1DDynamic CP - Custom Rules|r",
+        displayName = "|c3bdb5eDynamic CP - Custom Rules|r",
         author = "Kyzeragon",
         version = DynamicCP.version,
         registerForRefresh = true,
@@ -205,7 +205,9 @@ function DynamicCP.CreateCustomRulesMenu()
 -- EDIT RULE
         {
             type = "header",
-            name = "|c08BD1DEdit Rule|r", -- TODO: show color only when active?
+            name = function()
+                return selectedRuleName ~= nil and "|c3bdb5eEdit Rule|r" or "|cFF4444Edit Rule|r"
+            end,
             width = "full",
         },
         {
@@ -226,15 +228,19 @@ function DynamicCP.CreateCustomRulesMenu()
             tooltip = "The name of the rule",
             getFunc = function() return selectedRuleName end,
             setFunc = function(name)
-                if (not name) then return end
-                -- TODO: check for duplicate names
+                if (not name or name == selectedRuleName) then return end
+                if (DynamicCP.savedOptions.customRules.rules[name]) then
+                    WINDOW_MANAGER:GetControlByName("DynamicCP#NameEditBox").editbox:SetText(selectedRuleName)
+                    DynamicCP.msg("|cFF4444Error: There is already a rule named " .. name)
+                    return
+                end
                 DynamicCP.dbg("Renaming to " .. name)
                 DynamicCP.savedOptions.customRules.rules[name] = DynamicCP.savedOptions.customRules.rules[selectedRuleName]
                 DynamicCP.savedOptions.customRules.rules[name].name = name
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName] = nil
-                DynamicCP.SortRuleKeys()
                 selectedRuleName = name
 
+                DynamicCP.SortRuleKeys()
                 local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
                 rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
                 rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
@@ -244,12 +250,13 @@ function DynamicCP.CreateCustomRulesMenu()
             maxChars = 30,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#NameEditBox"
         },
         {
             type = "slider",
             name = "Priority Order",
             tooltip = "The priority order at which this rule should be applied. Smaller numbers will be applied first, so larger numbers have the \"final say.\"",
-            default = 100,
+            default = 500,
             min = 0,
             max = 1000,
             step = 10,
@@ -265,6 +272,24 @@ function DynamicCP.CreateCustomRulesMenu()
                 rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
                 rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
             end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil end,
+        },
+        {
+            type = "button",
+            name = "Delete Rule",
+            tooltip = "Delete this rule. This cannot be undone!",
+            func = function()
+                DynamicCP.dbg("Deleting " .. selectedRuleName)
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName] = nil
+                selectedRuleName = nil
+
+                DynamicCP.SortRuleKeys()
+                local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+            end,
+            warning = "Delete this rule. This cannot be undone!",
+            isDangerous = true,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
         },
@@ -302,7 +327,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 if (not selectedRuleName) then return end
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].normal = value
             end,
-            width = "half",
+            width = "full",
             disabled = function() return selectedRuleName == nil or not hasVet[DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger] end,
         },
         {
@@ -316,7 +341,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 if (not selectedRuleName) then return end
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].veteran = value
             end,
-            width = "half",
+            width = "full",
             disabled = function() return selectedRuleName == nil or not hasVet[DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger] end,
         },
 ---------------------------------------------------------------------
