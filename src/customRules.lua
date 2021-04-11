@@ -141,6 +141,7 @@ end
 -- Params: initial - true if first time entering, false if going through door etc.
 ---------------------------------------------------------------------
 local function OnEnteredTrial(initial)
+    if (not initial) then return end -- TODO: make this a setting
     DynamicCP.dbg("|cFF4444Entered a TRIAL difficulty "
         .. difficulties[GetCurrentZoneDungeonDifficulty()] .. "|r")
 
@@ -151,7 +152,7 @@ local function OnEnteredTrial(initial)
 
     -- Artificial couple second wait to make it more noticeable for user
     -- hopefully after they've exited loadscreen
-    EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "CustomApply", 3000, function()
+    EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "CustomApply", 2000, function()
         EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "CustomApply")
         ApplyRule(rule)
     end)
@@ -170,7 +171,7 @@ local function OnPlayerActivated()
     -- Solo arena: groupownable false indungeon true
     -- Overland: false false
     local zoneId = GetZoneId(GetUnitZoneIndex("player"))
-    local initial = zoneId == lastZoneId
+    local initial = zoneId ~= lastZoneId
     lastZoneId = zoneId
 
     -- TODO: maybe priority order isn't needed because you would always want specifics to take priority over the generic ones

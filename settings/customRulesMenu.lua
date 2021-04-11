@@ -45,23 +45,60 @@ local function GetCurrentPreview()
 
     local rule = DynamicCP.savedOptions.customRules.rules[selectedRuleName]
 
+    -- Add vet or not
+    -- TODO: some types don't have vet
     local difficultyString = ""
     if (hasVet[rule.trigger]) then
         if (rule.normal and rule.veteran) then
-            difficultyString = " on both normal and vet"
+            difficultyString = " |c88FF88on any difficulty|r"
         elseif (rule.normal) then
-            difficultyString = " on normal"
+            difficultyString = " |c88FF88on normal|r"
         elseif (rule.veteran) then
-            difficultyString = " on vet"
+            difficultyString = " |c88FF88on vet|r"
         else
             difficultyString = " |cFF4444on neither difficulty|r"
         end
     end
 
-    local preview = string.format("Upon entering %s%s,",
+    -- Add roles
+    local roleString = ""
+    if (rule.tank and rule.healer and rule.dps) then
+        roleString = "any role"
+    elseif (not rule.tank and not rule.healer and not rule.dps) then
+        roleString = "|cFF4444no roles|r"
+    else
+        local roles = {}
+        if (rule.tank) then
+            table.insert(roles, "tank")
+        end
+        if (rule.healer) then
+            table.insert(roles, "healer")
+        end
+        if (rule.dps) then
+            table.insert(roles, "dps")
+        end
+        roleString = table.concat(roles, "/")
+    end
+
+    -- Format everything so far
+    local preview = string.format("Upon entering |c88FF88%s|r%s as |c88FF88%s|r, %sautomatically slot the following stars %s:",
         triggerToPreview[rule.trigger],
-        difficultyString
+        difficultyString,
+        roleString,
+        rule.semiAuto and "semi-" or "",
+        rule.overrideOrder and "in this specific order" or ", ignoring it if it's already slotted"
         )
+
+    -- Add the stars
+    for slotIndex, skillId in ipairs(rule.stars) do
+        if (skillId ~= -1) then
+            local color = "e46b2e" -- Red
+            if (slotIndex <= 8) then color = "59bae7" end -- Blue
+            if (slotIndex <= 4) then color = "a5d752" end -- Green
+            preview = zo_strformat("<<1>>\n|c<<4>><<C:2>> in slot <<3>>|r", preview, GetChampionSkillName(skillId), slotIndex, color)
+        end
+    end
+
     return preview
 end
 
@@ -237,6 +274,9 @@ function DynamicCP.CreateCustomRulesMenu()
             text = GetCurrentPreview,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+        },
+        {
+            type = "divider",
         },
         {
             type = "dropdown",
