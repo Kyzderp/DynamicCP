@@ -13,7 +13,9 @@ local triggerDisplays = {
 ---------------------------------------------------------------------
 -- Get string for preview
 local triggerToPreview = {
-    [DynamicCP.TRIGGER_TRIAL]          = "any trial or arena",
+    [DynamicCP.TRIGGER_TRIAL]          = "any trial",
+    [DynamicCP.TRIGGER_GROUP_ARENA]    = "any group arena",
+    [DynamicCP.TRIGGER_SOLO_ARENA]     = "any solo arena",
     [DynamicCP.TRIGGER_GROUP_DUNGEON]  = "any group dungeon",
     [DynamicCP.TRIGGER_PUBLIC_DUNGEON] = "any public dungeon",
     [DynamicCP.TRIGGER_DELVE]          = "any public delve",
@@ -27,6 +29,8 @@ local triggerToPreview = {
 
 local hasVet = {
     [DynamicCP.TRIGGER_TRIAL]          = true,
+    [DynamicCP.TRIGGER_GROUP_ARENA]    = true,
+    [DynamicCP.TRIGGER_SOLO_ARENA]     = true,
     [DynamicCP.TRIGGER_GROUP_DUNGEON]  = true,
     [DynamicCP.TRIGGER_PUBLIC_DUNGEON] = false,
     [DynamicCP.TRIGGER_DELVE]          = false,

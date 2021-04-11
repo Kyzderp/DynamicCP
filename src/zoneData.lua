@@ -50,18 +50,26 @@ DynamicCP.DUNGEON_ZONEIDS = {
 
 -- Trial zoneIds
 DynamicCP.TRIAL_ZONEIDS = {
-    ["635" ] = true,  -- Dragonstar Arena
     ["636" ] = true,  -- Hel Ra Citadel
     ["638" ] = true,  -- Aetherian Archive
     ["639" ] = true,  -- Sanctum Ophidia
-    ["677" ] = true,  -- Maelstrom Arena
     ["725" ] = true,  -- Maw of Lorkhaj
     ["975" ] = true,  -- Halls of Fabrication
     ["1000"] = true,  -- Asylum Sanctorium
     ["1051"] = true,  -- Cloudrest
-    ["1082"] = true,  -- Blackrose Prison
     ["1121"] = true,  -- Sunspire
     ["1196"] = true,  -- Kyne's Aegis
+}
+
+-- Group arena zoneIds
+DynamicCP.GROUP_ARENA_ZONEIDS = {
+    ["635" ] = true,  -- Dragonstar Arena
+    ["1082"] = true,  -- Blackrose Prison
+}
+
+-- Solo arena zoneIds
+DynamicCP.SOLO_ARENA_ZONEIDS = {
+    ["677" ] = true,  -- Maelstrom Arena
     ["1227"] = true,  -- Vateshran Hollows
 }
 

@@ -5,7 +5,9 @@ DynamicCP = DynamicCP or {}
 DynamicCP.DIFFICULTY_NORMAL = 1
 DynamicCP.DIFFICULTY_VETERAN = 2
 
-DynamicCP.TRIGGER_TRIAL             = "Trial or Arena"
+DynamicCP.TRIGGER_TRIAL             = "Trial"
+DynamicCP.TRIGGER_GROUP_ARENA       = "Group Arena"
+DynamicCP.TRIGGER_SOLO_ARENA        = "Solo Arena"
 DynamicCP.TRIGGER_GROUP_DUNGEON     = "Group Dungeon"
 DynamicCP.TRIGGER_PUBLIC_DUNGEON    = "Public Dungeon"
 DynamicCP.TRIGGER_DELVE             = "Delve"
@@ -150,12 +152,7 @@ local function OnEnteredTrial(initial)
     local ruleName = ruleNames[1] -- TODO: apply all rules
     local rule = DynamicCP.savedOptions.customRules.rules[ruleName]
 
-    -- Artificial couple second wait to make it more noticeable for user
-    -- hopefully after they've exited loadscreen
-    EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "CustomApply", 2000, function()
-        EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "CustomApply")
-        ApplyRule(rule)
-    end)
+    ApplyRule(rule)
 end
 
 
