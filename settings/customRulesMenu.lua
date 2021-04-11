@@ -103,6 +103,51 @@ local function GetCurrentPreview()
 end
 
 ---------------------------------------------------------------------
+-- Add a new rule
+local function CreateNewRule()
+    local newIndex = 1
+    while (DynamicCP.savedOptions.customRules.rules["Rule " .. tostring(newIndex)] ~= nil) do
+        newIndex = newIndex + 1
+    end
+    local newName = "Rule " .. tostring(newIndex)
+
+    local newRule = {
+        name = newName,
+        trigger = DynamicCP.TRIGGER_TRIAL,
+        priority = 500,
+        normal = true,
+        veteran = true,
+        stars = {
+            [1] = -1,
+            [2] = -1,
+            [3] = -1,
+            [4] = -1,
+            [5] = -1,
+            [6] = -1,
+            [7] = -1,
+            [8] = -1,
+            [9] = -1,
+            [10] = -1,
+            [11] = -1,
+            [12] = -1,
+        },
+        overrideOrder = true,
+        semiAuto = false,
+        tank = true,
+        healer = true,
+        dps = true,
+    }
+
+    DynamicCP.savedOptions.customRules.rules[newName] = newRule
+    selectedRuleName = newName
+
+    DynamicCP.SortRuleKeys()
+    local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
+    rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+    rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
+end
+
+---------------------------------------------------------------------
 -- Build the stars dropdown choices
 local starDisplays = {}
 local starValues = {}
@@ -120,7 +165,6 @@ local function BuildStarsDropdowns()
         end
     end
 end
-
 DynamicCP.BuildStarsDropdowns = BuildStarsDropdowns
 
 ---------------------------------------------------------------------
@@ -198,7 +242,7 @@ function DynamicCP.CreateCustomRulesMenu()
             type = "button",
             name = "New Rule",
             tooltip = "Add a new rule and edit it",
-            func = function() end,
+            func = CreateNewRule,
             width = "full",
         },
 ---------------------------------------------------------------------
