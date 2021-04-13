@@ -33,7 +33,6 @@ local sortedKeys = {}
 -- Data
 ---------------------------------------------------------------------
 local function SortRuleKeys()
-    -- TODO: automatically sort them such that specific rule are at the top
     local sortedRules = {}
     for name, rule in pairs(DynamicCP.savedOptions.customRules.rules) do
         table.insert(sortedRules, {name = name, priority = rule.priority})
@@ -125,7 +124,32 @@ local function ApplyRules(sortedRuleNames)
         end
     end
 
-    -- Second pass to convert into request
+    -- Second pass checks if all of the stars are already slotted, or if they're all in the same slots
+    local committed = DynamicCP.GetCommittedSlottables() -- [skillId] = slotIndex
+    local hasUnslotted = false
+    local hasDifferentSlot = false
+    for slotIndex, skillId in pairs(pendingSlottables) do
+        if (not committed[skillId]) then
+            hasUnslotted = true
+            break
+        elseif (committed[skillId] ~= slotIndex) then
+            hasDifferentSlot = true
+        end
+    end
+    if (not hasUnslotted) then
+        if (hasDifferentSlot) then -- If there are stars in different slots, check override
+            DynamicCP.dbg("Stars are already slotted in different order")
+            if (not DynamicCP.savedOptions.customRules.overrideOrder) then
+                -- If not overriding, then we're done here
+                return
+            end
+        else
+            DynamicCP.msg("All stars are already slotted from rules " .. table.concat(sortedRuleNames, " < "))
+            return
+        end
+    end
+
+    -- Third pass to convert into request
     PrepareChampionPurchaseRequest(false)
     for slotIndex, skillId in pairs(pendingSlottables) do
         local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
@@ -134,8 +158,8 @@ local function ApplyRules(sortedRuleNames)
         end
     end
     SendChampionPurchaseRequest()
-    -- TODO: keep track of what is being applied and cancel if same
-    -- TODO: handle overrideOrder
+    -- TODO: handle promptSlotting
+    -- TODO: handle promptConflicts
 
     if (DynamicCP.savedOptions.customRules.showInChat) then
         DynamicCP.msg(string.format("Applying rules %s:\n%s",

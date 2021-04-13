@@ -217,7 +217,7 @@ function DynamicCP.CreateCustomRulesMenu()
         {
             type = "checkbox",
             name = "Override different order",
-            tooltip = "Slot the stars anyway even if they are already slotted in a different order",
+            tooltip = "Re-slot the stars in the specified order, even if they are already slotted in a different order",
             default = true,
             getFunc = function()
                 return DynamicCP.savedOptions.customRules.overrideOrder
