@@ -239,20 +239,20 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
         },
-        {
-            type = "checkbox",
-            name = "Prompt conflicts",
-            tooltip = "If you don't have the specified star unlocked, or if there is no specified star for that slot, Dynamic CP will automatically slot other stars in its place to avoid an empty slot.\n\nIf ON, this setting will override the automatic slotting and instead show a prompt. So if you want to have automatic slotting when there are no problems, but get a confirmation dialog when there are problems, then set \"Slot automatically\" ON and \"Prompt conflicts\" ON",
-            default = true,
-            getFunc = function()
-                return DynamicCP.savedOptions.customRules.promptConflicts
-            end,
-            setFunc = function(value)
-                DynamicCP.savedOptions.customRules.promptConflicts = value
-            end,
-            width = "full",
-            disabled = function() return not DynamicCP.savedOptions.customRules.autoSlot end
-        },
+        -- {
+        --     type = "checkbox",
+        --     name = "Prompt conflicts",
+        --     tooltip = "If you don't have the specified star unlocked, or if there is no specified star for that slot, Dynamic CP will automatically slot other stars in its place to avoid an empty slot.\n\nIf ON, this setting will override the automatic slotting and instead show a prompt. So if you want to have automatic slotting when there are no problems, but get a confirmation dialog when there are problems, then set \"Slot automatically\" ON and \"Prompt conflicts\" ON",
+        --     default = true,
+        --     getFunc = function()
+        --         return DynamicCP.savedOptions.customRules.promptConflicts
+        --     end,
+        --     setFunc = function(value)
+        --         DynamicCP.savedOptions.customRules.promptConflicts = value
+        --     end,
+        --     width = "full",
+        --     disabled = function() return not DynamicCP.savedOptions.customRules.autoSlot end
+        -- },
         {
             type = "header",
             name = "Custom Rules",
@@ -275,7 +275,6 @@ function DynamicCP.CreateCustomRulesMenu()
             setFunc = function(name)
                 DynamicCP.dbg("selected " .. tostring(name))
                 selectedRuleName = name
-                -- TODO: select and update
             end,
             width = "full",
             reference = "DynamicCP#RulesDropdown"

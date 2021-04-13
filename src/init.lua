@@ -35,7 +35,7 @@ local defaultOptions = {
     clusterLabelColor = {1, 0.7, 1},
     clusterLabelSize = 13,
     showTotalsLabel = true,
-    quickstarsX = GuiRoot:GetWidth() / 4,
+    quickstarsX = GuiRoot:GetWidth() / 4, -- Anchor TOPLEFT
     quickstarsY = GuiRoot:GetHeight() / 4,
     selectedQuickstarTab = "Green",
     showQuickstars = true,
@@ -61,6 +61,9 @@ local defaultOptions = {
         promptConflicts = true,
         rules = {},
     },
+
+    modelessX = GuiRoot:GetWidth() / 4, -- Anchor center
+    modelessY = 0,
 
     -- 1: added quickstarsShowOnHudUi, which should inherit quickstarsShowOnHud
     -- settingsVersion = 1,
@@ -274,6 +277,7 @@ local function Initialize()
 
     -- Initialize
     if (DynamicCP.experimental) then
+        DynamicCP.InitModelessDialog()
         DynamicCP.InitCustomRules()
     end
 

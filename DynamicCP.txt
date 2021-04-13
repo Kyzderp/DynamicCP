@@ -21,9 +21,11 @@ settings/customRulesMenu.lua
 ui/presets.lua
 ui/pulldown.lua
 ui/quickstars.lua
+ui/modelessDialog.lua
 xml/presets.xml
 xml/infolabel.xml
 xml/warning.xml
 xml/pulldown.xml
 xml/quickstars.xml
+xml/modelessDialog.xml
 bindings.xml
