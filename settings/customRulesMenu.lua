@@ -89,8 +89,8 @@ local function GetCurrentPreview()
         triggerToPreview[rule.trigger],
         difficultyString,
         roleString,
-        rule.semiAuto and "semi-" or "",
-        rule.overrideOrder and "in this specific order" or ", ignoring it if it's already slotted"
+        DynamicCP.savedOptions.customRules.promptSlotting and "semi-" or "",
+        DynamicCP.savedOptions.customRules.overrideOrder and "in this specific order" or ", ignoring them if they are already slotted"
         )
 
     -- Add the stars
@@ -135,7 +135,6 @@ local function CreateNewRule()
             [11] = -1,
             [12] = -1,
         },
-        overrideOrder = true,
         semiAuto = false,
         tank = true,
         healer = true,
@@ -214,6 +213,46 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.showInChat = value
             end,
             width = "full",
+        },
+        {
+            type = "checkbox",
+            name = "Override different order",
+            tooltip = "Slot the stars anyway even if they are already slotted in a different order",
+            default = true,
+            getFunc = function()
+                return DynamicCP.savedOptions.customRules.overrideOrder
+            end,
+            setFunc = function(value)
+                DynamicCP.savedOptions.customRules.overrideOrder = value
+            end,
+            width = "full",
+        },
+        {
+            type = "checkbox",
+            name = "Prompt all slotting",
+            tooltip = "Show a confirmation dialog asking if you want to slot the stars instead of slotting them automatically",
+            default = true,
+            getFunc = function()
+                return DynamicCP.savedOptions.customRules.promptSlotting
+            end,
+            setFunc = function(value)
+                DynamicCP.savedOptions.customRules.promptSlotting = value
+            end,
+            width = "full",
+        },
+        {
+            type = "checkbox",
+            name = "Prompt conflicts",
+            tooltip = "If you don't have the specified star unlocked, or if there is no specified star for that slot, Dynamic CP will automatically slot other stars in its place to avoid an empty slot.\n\nIf ON, this setting will override the automatic slotting and instead show a prompt, like the \"Prompt all slotting\" option above. So if you want to have automatic slotting when there are no problems, but get a confirmation dialog when there are problems, then set \"Prompt all slotting\" OFF and \"Prompt conflicts\" ON",
+            default = true,
+            getFunc = function()
+                return DynamicCP.savedOptions.customRules.promptConflicts
+            end,
+            setFunc = function(value)
+                DynamicCP.savedOptions.customRules.promptConflicts = value
+            end,
+            width = "full",
+            disabled = function() return DynamicCP.savedOptions.customRules.promptSlotting end
         },
         {
             type = "header",
@@ -619,37 +658,9 @@ function DynamicCP.CreateCustomRulesMenu()
 -- Advanced options
         {
             type = "submenu",
-            name = "Advanced Settings",
+            name = "Advanced Conditions",
             disabled = function() return selectedRuleName == nil end,
             controls = {
-                {
-                    type = "checkbox",
-                    name = "Override different order",
-                    tooltip = "Slot the stars anyway even if they are already slotted in a different order",
-                    default = true,
-                    getFunc = function()
-                        return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].overrideOrder or false
-                    end,
-                    setFunc = function(value)
-                        if (not selectedRuleName) then return end
-                        DynamicCP.savedOptions.customRules.rules[selectedRuleName].overrideOrder = value
-                    end,
-                    width = "full",
-                },
-                {
-                    type = "checkbox",
-                    name = "Semi-automatic slotting",
-                    tooltip = "Show a prompt asking if you want to slot the stars instead of slotting them automatically",
-                    default = false,
-                    getFunc = function()
-                        return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].semiAuto or false
-                    end,
-                    setFunc = function(value)
-                        if (not selectedRuleName) then return end
-                        DynamicCP.savedOptions.customRules.rules[selectedRuleName].semiAuto = value
-                    end,
-                    width = "full",
-                },
                 {
                     type = "checkbox",
                     name = "Apply for tanks",

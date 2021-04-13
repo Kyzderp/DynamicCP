@@ -2,9 +2,6 @@ DynamicCP = DynamicCP or {}
 
 ---------------------------------------------------------------------
 -- Constants
-DynamicCP.DIFFICULTY_NORMAL = 1
-DynamicCP.DIFFICULTY_VETERAN = 2
-
 DynamicCP.TRIGGER_TRIAL             = "Trial"
 DynamicCP.TRIGGER_GROUP_ARENA       = "Group Arena"
 DynamicCP.TRIGGER_SOLO_ARENA        = "Solo Arena"
@@ -131,7 +128,10 @@ local function ApplyRules(sortedRuleNames)
     -- Second pass to convert into request
     PrepareChampionPurchaseRequest(false)
     for slotIndex, skillId in pairs(pendingSlottables) do
-        AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
+        local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
+        if (unlocked) then
+            AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
+        end
     end
     SendChampionPurchaseRequest()
     -- TODO: keep track of what is being applied and cancel if same
@@ -173,13 +173,12 @@ local function OnPlayerActivated()
         tostring(IsUnitInDungeon("player"))
     ))
     -- Trial: groupownable true indungeon true
+    -- Group dungeon: groupownable true indungeon true
     -- Solo arena: groupownable false indungeon true
     -- Overland: false false
     local zoneId = GetZoneId(GetUnitZoneIndex("player"))
     local initial = zoneId ~= lastZoneId
     lastZoneId = zoneId
-
-    -- TODO: maybe priority order isn't needed because you would always want specifics to take priority over the generic ones
 
     if (DynamicCP.TRIAL_ZONEIDS[tostring(zoneId)]) then
         OnEnteredTrial(initial)

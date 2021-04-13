@@ -56,6 +56,9 @@ local defaultOptions = {
         playSound = true, -- CHAMPION_POINTS_COMMITTED
         showInChat = true,
         firstTime = true,
+        overrideOrder = true,
+        promptSlotting = true,
+        promptConflicts = true,
         rules = {},
     },
 
@@ -216,8 +219,6 @@ local function Initialize()
                         [11] = -1,
                         [12] = -1,
                     },
-                    overrideOrder = true,
-                    semiAuto = false,
                     tank = true,
                     healer = true,
                     dps = true,
@@ -242,14 +243,12 @@ local function Initialize()
                         [11] = 35, -- Rejuvenation
                         [12] = 56, -- Spirit Mastery
                     },
-                    overrideOrder = true,
-                    semiAuto = false,
                     tank = false,
                     healer = false,
                     dps = true,
                 },
             }
-            -- DynamicCP.savedOptions.customRules.rules = {}
+            -- TODO: unset first time
         end
     end
 
