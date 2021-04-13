@@ -135,7 +135,6 @@ local function CreateNewRule()
             [11] = -1,
             [12] = -1,
         },
-        semiAuto = false,
         tank = true,
         healer = true,
         dps = true,
