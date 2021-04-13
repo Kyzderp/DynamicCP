@@ -229,21 +229,21 @@ function DynamicCP.CreateCustomRulesMenu()
         },
         {
             type = "checkbox",
-            name = "Prompt all slotting",
-            tooltip = "Show a confirmation dialog asking if you want to slot the stars instead of slotting them automatically",
-            default = true,
+            name = "Slot automatically",
+            tooltip = "Automatically commit the stars instead of asking if you want to slot them",
+            default = false,
             getFunc = function()
-                return DynamicCP.savedOptions.customRules.promptSlotting
+                return DynamicCP.savedOptions.customRules.autoSlot
             end,
             setFunc = function(value)
-                DynamicCP.savedOptions.customRules.promptSlotting = value
+                DynamicCP.savedOptions.customRules.autoSlot = value
             end,
             width = "full",
         },
         {
             type = "checkbox",
             name = "Prompt conflicts",
-            tooltip = "If you don't have the specified star unlocked, or if there is no specified star for that slot, Dynamic CP will automatically slot other stars in its place to avoid an empty slot.\n\nIf ON, this setting will override the automatic slotting and instead show a prompt, like the \"Prompt all slotting\" option above. So if you want to have automatic slotting when there are no problems, but get a confirmation dialog when there are problems, then set \"Prompt all slotting\" OFF and \"Prompt conflicts\" ON",
+            tooltip = "If you don't have the specified star unlocked, or if there is no specified star for that slot, Dynamic CP will automatically slot other stars in its place to avoid an empty slot.\n\nIf ON, this setting will override the automatic slotting and instead show a prompt. So if you want to have automatic slotting when there are no problems, but get a confirmation dialog when there are problems, then set \"Slot automatically\" ON and \"Prompt conflicts\" ON",
             default = true,
             getFunc = function()
                 return DynamicCP.savedOptions.customRules.promptConflicts
@@ -252,7 +252,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.promptConflicts = value
             end,
             width = "full",
-            disabled = function() return DynamicCP.savedOptions.customRules.promptSlotting end
+            disabled = function() return not DynamicCP.savedOptions.customRules.autoSlot end
         },
         {
             type = "header",

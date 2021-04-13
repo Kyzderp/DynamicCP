@@ -57,7 +57,7 @@ local defaultOptions = {
         showInChat = true,
         firstTime = true,
         overrideOrder = true,
-        promptSlotting = true,
+        autoSlot = false,
         promptConflicts = true,
         rules = {},
     },
