@@ -32,7 +32,12 @@ end
 ---------------------------------------------------------------------
 -- API
 function DynamicCP.ShowModelessPrompt(text, callback)
+    DynamicCPModelessDialogLabel:SetHeight(800)
     DynamicCPModelessDialogLabel:SetText(text)
+    local labelHeight = DynamicCPModelessDialogLabel:GetTextHeight()
+    DynamicCPModelessDialogLabel:SetHeight(labelHeight)
+    DynamicCPModelessDialog:SetHeight(labelHeight + 70)
+    DynamicCPModelessDialog:SetHidden(false)
     currentCallback = callback
 end
 

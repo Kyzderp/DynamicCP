@@ -80,6 +80,45 @@ local function GetPlayerRole()
     return role
 end
 
+-- Convert the pending slottables into the request
+local function ProcessAndCommitRules(sortedRuleNames, pendingSlottables)
+    local flipped = GetFlippedSlottables()
+    local diffMessages = {}
+    PrepareChampionPurchaseRequest(false)
+    for slotIndex, skillId in pairs(pendingSlottables) do
+        local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
+        if (unlocked) then
+            if (flipped[slotIndex] == skillId) then
+                -- If it's the same skill in the same slot, we can skip it
+                -- DynamicCP.dbg("skipping " .. tostring(slotIndex))
+            else
+                -- Not the same
+                AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
+                local color = "e46b2e" -- Red
+                if (slotIndex <= 8) then color = "59bae7" end -- Blue
+                if (slotIndex <= 4) then color = "a5d752" end -- Green
+                local diffMessage = zo_strformat("|c<<1>><<2>> - <<C:3>> → <<C:4>>",
+                        color, slotIndex, GetChampionSkillName(flipped[slotIndex]), GetChampionSkillName(skillId))
+                table.insert(diffMessages, diffMessage)
+            end
+        end
+    end
+    SendChampionPurchaseRequest()
+    -- TODO: handle promptSlotting
+    -- TODO: handle promptConflicts
+    -- TODO: automatic filling. maybe also automatic filling even if no other slots are changed?
+
+    if (DynamicCP.savedOptions.customRules.showInChat) then
+        DynamicCP.msg(string.format("Applying rules %s:\n%s",
+            table.concat(sortedRuleNames, " < "),
+            table.concat(diffMessages, "\n")))
+    end
+
+    if (DynamicCP.savedOptions.customRules.playSound) then
+        PlaySound(SOUNDS.CHAMPION_POINTS_COMMITTED)
+    end
+end
+
 -- Iterate through all rules and find any matching ones
 local function GetSortedRulesForTrigger(trigger, isVet, param1, param2)
     local requiredParams = triggerParams[trigger]
@@ -158,19 +197,18 @@ local function ApplyRules(sortedRuleNames)
         end
     end
 
-    -- Third pass to convert into request
-    local flipped = GetFlippedSlottables()
-    local diffMessages = {}
-    PrepareChampionPurchaseRequest(false)
-    for slotIndex, skillId in pairs(pendingSlottables) do
-        local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
-        if (unlocked) then
-            if (flipped[slotIndex] == skillId) then
-                -- If it's the same skill in the same slot, we can skip it
-                -- DynamicCP.dbg("skipping " .. tostring(slotIndex))
-            else
+    -- If autoslotting then we can just do it immediately, no need for dialog
+    if (DynamicCP.savedOptions.customRules.autoSlot) then
+        ProcessAndCommitRules(sortedRuleNames, pendingSlottables)
+    else
+        -- Third pass to generate text for the dialog. Not the most efficient probably...
+        local flipped = GetFlippedSlottables()
+        local diffMessages = {}
+        for slotIndex, skillId in pairs(pendingSlottables) do
+            local unlocked = WouldChampionSkillNodeBeUnlocked(skillId,
+                GetNumPointsSpentOnChampionSkill(skillId))
+            if (unlocked and flipped[slotIndex] ~= skillId) then
                 -- Not the same
-                AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
                 local color = "e46b2e" -- Red
                 if (slotIndex <= 8) then color = "59bae7" end -- Blue
                 if (slotIndex <= 4) then color = "a5d752" end -- Green
@@ -179,20 +217,14 @@ local function ApplyRules(sortedRuleNames)
                 table.insert(diffMessages, diffMessage)
             end
         end
-    end
-    SendChampionPurchaseRequest()
-    -- TODO: handle promptSlotting
-    -- TODO: handle promptConflicts
-    -- TODO: automatic filling. maybe also automatic filling even if no other slots are changed?
 
-    if (DynamicCP.savedOptions.customRules.showInChat) then
-        DynamicCP.msg(string.format("Applying rules %s:\n%s",
+        local text = string.format("Slot these stars according to the custom rules: %s?\n\n%s",
             table.concat(sortedRuleNames, " < "),
-            table.concat(diffMessages, "\n")))
-    end
+            table.concat(diffMessages, "\n"))
 
-    if (DynamicCP.savedOptions.customRules.playSound) then
-        PlaySound(SOUNDS.CHAMPION_POINTS_COMMITTED)
+        DynamicCP.ShowModelessPrompt(text, function()
+            ProcessAndCommitRules(sortedRuleNames, pendingSlottables)
+        end)
     end
 end
 
@@ -210,6 +242,7 @@ local function OnEnteredTrial(initial)
     local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_TRIAL, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
     ApplyRules(sortedRuleNames)
 end
+DynamicCP.OnEnteredTrial = OnEnteredTrial -- For testing /script DynamicCP.OnEnteredTrial(true)
 
 
 ---------------------------------------------------------------------
