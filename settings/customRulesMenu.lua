@@ -708,3 +708,7 @@ function DynamicCP.CreateCustomRulesMenu()
     DynamicCP.customRulesPanel = LAM:RegisterAddonPanel(DynamicCP.name .. "CustomRules", panelData)
     LAM:RegisterOptionControls(DynamicCP.name .. "CustomRules", optionsData)
 end
+
+function DynamicCP.OpenCustomRulesMenu()
+    LibAddonMenu2:OpenToPanel(DynamicCP.customRulesPanel)
+end

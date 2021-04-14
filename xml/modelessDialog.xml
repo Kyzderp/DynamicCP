@@ -19,6 +19,11 @@
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOM" offsetX="8" offsetY="-12"/>
                     <OnMouseUp>DynamicCP.OnModelessCancel()</OnMouseUp>
                 </Texture>
+                <Texture name="$(parent)Options" textureFile="esoui/art/chatwindow/chat_options_up.dds" tier="HIGH" color="FF3bdb5e" mouseEnabled="true">
+                    <Dimensions x="36" y="36" />
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-8" offsetY="-8"/>
+                    <OnMouseUp>DynamicCP.OpenCustomRulesMenu()</OnMouseUp>
+                </Texture>
             </Controls>
         </TopLevelControl>
 <!-- ======================================================================================================================= -->

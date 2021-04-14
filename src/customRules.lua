@@ -229,7 +229,7 @@ local function OnEnteredTrial(initial)
         .. difficulties[GetCurrentZoneDungeonDifficulty()] .. "|r")
 
     local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_TRIAL, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
-    ApplyRules(sortedRuleNames, zo_strformat("You have entered trial <<C:1>> (zone id <<2>>).",
+    ApplyRules(sortedRuleNames, zo_strformat("You entered trial <<C:1>> (zone id <<2>>).",
         GetPlayerActiveZoneName(),
         GetZoneId(GetUnitZoneIndex("player"))))
 end

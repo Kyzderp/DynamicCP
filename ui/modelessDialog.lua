@@ -14,7 +14,6 @@ function DynamicCP.SaveModelessDialogPosition()
 end
 
 function DynamicCP.OnModelessConfirm()
-    DynamicCP.dbg("confirm")
     if (not currentCallback) then
         DynamicCP.dbg("SHOULD NOT SEE THIS")
         return
@@ -25,7 +24,6 @@ function DynamicCP.OnModelessConfirm()
 end
 
 function DynamicCP.OnModelessCancel()
-    DynamicCP.dbg("cancel")
     DynamicCPModelessDialog:SetHidden(true)
 end
 
