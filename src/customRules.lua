@@ -81,7 +81,7 @@ local function GetPlayerRole()
 end
 
 -- Convert the pending slottables into the request
-local function ProcessAndCommitRules(sortedRuleNames, pendingSlottables)
+local function ProcessAndCommitRules(sortedRuleNames, pendingSlottables, triggerString)
     local flipped = GetFlippedSlottables()
     local diffMessages = {}
     PrepareChampionPurchaseRequest(false)
@@ -104,12 +104,12 @@ local function ProcessAndCommitRules(sortedRuleNames, pendingSlottables)
         end
     end
     SendChampionPurchaseRequest()
-    -- TODO: handle promptSlotting
     -- TODO: handle promptConflicts
     -- TODO: automatic filling. maybe also automatic filling even if no other slots are changed?
 
     if (DynamicCP.savedOptions.customRules.showInChat) then
-        DynamicCP.msg(string.format("Applying rules %s:\n%s",
+        DynamicCP.msg(string.format("%s\n|cAAAAAAApplying rules %s:\n%s",
+            triggerString,
             table.concat(sortedRuleNames, " < "),
             table.concat(diffMessages, "\n")))
     end
@@ -146,28 +146,16 @@ local function GetSortedRulesForTrigger(trigger, isVet, param1, param2)
 end
 
 -- Apply the stars from this rule
-local function ApplyRules(sortedRuleNames)
+local function ApplyRules(sortedRuleNames, triggerString)
     if (not sortedRuleNames) then return end
 
     -- First pass collects them into pending, overwriting lower priority rules
-    -- local pendingMessages = {}
     local pendingSlottables = {}
     for _, ruleName in ipairs(sortedRuleNames) do
         local rule = DynamicCP.savedOptions.customRules.rules[ruleName]
         for slotIndex, skillId in pairs(rule.stars) do
             if (skillId ~= -1) then
                 pendingSlottables[slotIndex] = skillId
-
-                -- local color = "e46b2e" -- Red
-                -- if (slotIndex <= 8) then color = "59bae7" end -- Blue
-                -- if (slotIndex <= 4) then color = "a5d752" end -- Green
-                -- local pendingMessage = zo_strformat("|c<<1>><<2>> - <<C:3>>",
-                --         color, slotIndex, GetChampionSkillName(skillId))
-                -- local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
-                -- if (not unlocked) then
-                --     pendingMessage = pendingMessage .. " |cFF2222- not unlocked"
-                -- end
-                -- pendingMessages[slotIndex] = pendingMessage
             end
         end
     end
@@ -192,14 +180,14 @@ local function ApplyRules(sortedRuleNames)
                 return
             end
         else
-            DynamicCP.msg("All stars are already slotted from rules " .. table.concat(sortedRuleNames, " < "))
+            DynamicCP.msg(triggerString .. "\nAll stars are already slotted from rules " .. table.concat(sortedRuleNames, " < "))
             return
         end
     end
 
     -- If autoslotting then we can just do it immediately, no need for dialog
     if (DynamicCP.savedOptions.customRules.autoSlot) then
-        ProcessAndCommitRules(sortedRuleNames, pendingSlottables)
+        ProcessAndCommitRules(sortedRuleNames, pendingSlottables, triggerString)
     else
         -- Third pass to generate text for the dialog. Not the most efficient probably...
         local flipped = GetFlippedSlottables()
@@ -218,12 +206,13 @@ local function ApplyRules(sortedRuleNames)
             end
         end
 
-        local text = string.format("Slot these stars according to the custom rules: %s?\n\n%s",
+        local text = string.format("%s\nSlot these stars according to the custom rules: %s?\n\n%s",
+            triggerString,
             table.concat(sortedRuleNames, " < "),
             table.concat(diffMessages, "\n"))
 
         DynamicCP.ShowModelessPrompt(text, function()
-            ProcessAndCommitRules(sortedRuleNames, pendingSlottables)
+            ProcessAndCommitRules(sortedRuleNames, pendingSlottables, triggerString)
         end)
     end
 end
@@ -240,7 +229,9 @@ local function OnEnteredTrial(initial)
         .. difficulties[GetCurrentZoneDungeonDifficulty()] .. "|r")
 
     local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_TRIAL, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
-    ApplyRules(sortedRuleNames)
+    ApplyRules(sortedRuleNames, zo_strformat("You have entered trial <<C:1>> (zone id <<2>>).",
+        GetPlayerActiveZoneName(),
+        GetZoneId(GetUnitZoneIndex("player"))))
 end
 DynamicCP.OnEnteredTrial = OnEnteredTrial -- For testing /script DynamicCP.OnEnteredTrial(true)
 
