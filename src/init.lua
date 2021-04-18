@@ -225,6 +225,7 @@ local function Initialize()
                     tank = true,
                     healer = true,
                     dps = true,
+                    chars = {},
                 },
                 ["Example Trial Dps"] = {
                     name = "Example Trial Dps",
@@ -249,8 +250,11 @@ local function Initialize()
                     tank = false,
                     healer = false,
                     dps = true,
+                    chars = {},
                 },
             }
+            DynamicCP.AddOptionsForEachCharacter("Example Trial")
+            DynamicCP.AddOptionsForEachCharacter("Example Trial Dps")
             -- TODO: unset first time
         end
     end

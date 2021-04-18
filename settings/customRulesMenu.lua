@@ -103,8 +103,37 @@ local function GetCurrentPreview()
         end
     end
 
+    -- Add characters part
+    local isAllChars = true
+    local charNames = {}
+    for index = 1, GetNumCharacters() do
+        local name, _, _, _, _, _, id, _ = GetCharacterInfo(index)
+        local hasChar = rule.chars[id]
+        isAllChars = isAllChars and hasChar
+        if (hasChar) then
+            table.insert(charNames, zo_strformat("<<1>>", name))
+        end
+    end
+
+    if (isAllChars) then
+        preview = preview .. "\nThis rule will apply to |c88FF88all characters|r if the role also matches."
+    else
+        preview = preview .. "\nThis rule will apply to these characters if the role also matches: |c88FF88" .. table.concat(charNames, "|r, |c88FF88")
+        preview = preview .. "|r"
+    end
+
     return preview
 end
+
+---------------------------------------------------------------------
+-- Add the data for per-character toggles
+local function AddOptionsForEachCharacter(ruleName)
+    for index = 1, GetNumCharacters() do
+        local _, _, _, _, _, _, id, _ = GetCharacterInfo(index)
+        DynamicCP.savedOptions.customRules.rules[ruleName].chars[id] = true
+    end
+end
+DynamicCP.AddOptionsForEachCharacter = AddOptionsForEachCharacter
 
 ---------------------------------------------------------------------
 -- Add a new rule
@@ -138,10 +167,13 @@ local function CreateNewRule()
         tank = true,
         healer = true,
         dps = true,
+        chars = {},
     }
 
     DynamicCP.savedOptions.customRules.rules[newName] = newRule
     selectedRuleName = newName
+
+    AddOptionsForEachCharacter(newName)
 
     DynamicCP.SortRuleKeys()
     local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
@@ -168,6 +200,43 @@ local function BuildStarsDropdowns()
     end
 end
 DynamicCP.BuildStarsDropdowns = BuildStarsDropdowns
+
+---------------------------------------------------------------------
+-- Build the per-character toggles in advanced options
+-- GetCharacterInfo(number index)
+-- Returns: string name, number Gender gender, number level, number classId, number raceId, number Alliance alliance, string id, number locationId
+local function MakeCheckboxesForEachCharacter()
+    local controls = {
+        {
+            type = "description",
+            title = nil,
+            text = "You can choose to only apply this rule on certain characters. The role conditions will still apply.",
+            width = "full",
+        },
+    }
+
+    for index = 1, GetNumCharacters() do
+        local name, _, _, classId, _, _, id, _ = GetCharacterInfo(index)
+        name = zo_strformat("<<1>>", name)
+        local checkboxControl = {
+            type = "checkbox",
+            name = name,
+            tooltip = "Apply this rule if you are on " .. name,
+            default = true,
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].chars[id] or false
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].chars[id] = value
+            end,
+            width = "full",
+        }
+        table.insert(controls, checkboxControl)
+    end
+
+    return controls
+end
 
 ---------------------------------------------------------------------
 function DynamicCP.CreateCustomRulesMenu()
@@ -656,13 +725,19 @@ function DynamicCP.CreateCustomRulesMenu()
 -- Advanced options
         {
             type = "submenu",
-            name = "Advanced Conditions",
+            name = "Role Conditions",
             disabled = function() return selectedRuleName == nil end,
             controls = {
                 {
+                    type = "description",
+                    title = nil,
+                    text = "You can choose to only apply this rule on certain roles. This is defined as the role you have set in the Group Finder.",
+                    width = "full",
+                },
+                {
                     type = "checkbox",
                     name = "Apply for tanks",
-                    tooltip = "Apply this rule if you are on a tank, as defined in settings",
+                    tooltip = "Apply this rule if you are on a tank, as defined in Group Finder",
                     default = true,
                     getFunc = function()
                         return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].tank or false
@@ -676,7 +751,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 {
                     type = "checkbox",
                     name = "Apply for healers",
-                    tooltip = "Apply this rule if you are on a healer, as defined in settings",
+                    tooltip = "Apply this rule if you are on a healer, as defined in Group Finder",
                     default = true,
                     getFunc = function()
                         return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].healer or false
@@ -690,7 +765,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 {
                     type = "checkbox",
                     name = "Apply for DPS",
-                    tooltip = "Apply this rule if you are on a DPS, as defined in settings",
+                    tooltip = "Apply this rule if you are on a DPS, as defined in Group Finder",
                     default = true,
                     getFunc = function()
                         return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].dps or false
@@ -702,6 +777,12 @@ function DynamicCP.CreateCustomRulesMenu()
                     width = "full",
                 },
             },
+        },
+        {
+            type = "submenu",
+            name = "Character Conditions",
+            disabled = function() return selectedRuleName == nil end,
+            controls = MakeCheckboxesForEachCharacter(),
         },
     }
 

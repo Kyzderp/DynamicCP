@@ -129,6 +129,7 @@ local function GetSortedRulesForTrigger(trigger, isVet, param1, param2)
     local difficulty = isVet and "veteran" or "normal"
     local ruleNames = {}
     local numRules = 0
+    local charId = GetCurrentCharacterId()
 
     -- Iterate using sorted keys so we get them in prioritized order
     for _, name in ipairs(GetSortedKeys()) do
@@ -137,7 +138,7 @@ local function GetSortedRulesForTrigger(trigger, isVet, param1, param2)
             and (param1 == nil or rule[requiredParams[1]] == param1)
             and (param2 == nil or rule[requiredParams[2]] == param2)
             ) then
-            if (rule[role] and rule[difficulty]) then
+            if (rule[role] and rule[difficulty] and rule.chars[charId]) then
                 table.insert(ruleNames, name)
                 numRules = numRules + 1
             end
