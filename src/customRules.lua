@@ -87,6 +87,11 @@ local function ProcessAndCommitRules(sortedRuleNames, pendingSlottables, trigger
     PrepareChampionPurchaseRequest(false)
     for slotIndex, skillId in pairs(pendingSlottables) do
         local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
+        local color = "e46b2e" -- Red
+        if (slotIndex <= 8) then color = "59bae7" end -- Blue
+        if (slotIndex <= 4) then color = "a5d752" end -- Green
+        local diffMessage = zo_strformat("|c<<1>><<2>> - <<C:3>> → <<C:4>>",
+                color, slotIndex, GetChampionSkillName(flipped[slotIndex]), GetChampionSkillName(skillId))
         if (unlocked) then
             if (flipped[slotIndex] == skillId) then
                 -- If it's the same skill in the same slot, we can skip it
@@ -94,13 +99,11 @@ local function ProcessAndCommitRules(sortedRuleNames, pendingSlottables, trigger
             else
                 -- Not the same
                 AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
-                local color = "e46b2e" -- Red
-                if (slotIndex <= 8) then color = "59bae7" end -- Blue
-                if (slotIndex <= 4) then color = "a5d752" end -- Green
-                local diffMessage = zo_strformat("|c<<1>><<2>> - <<C:3>> → <<C:4>>",
-                        color, slotIndex, GetChampionSkillName(flipped[slotIndex]), GetChampionSkillName(skillId))
                 table.insert(diffMessages, diffMessage)
             end
+        else
+            diffMessage = diffMessage .. " |cFF4444- not unlocked"
+            table.insert(diffMessages, diffMessage)
         end
     end
     SendChampionPurchaseRequest()
@@ -180,7 +183,7 @@ local function ApplyRules(sortedRuleNames, triggerString)
                 return
             end
         else
-            DynamicCP.msg(triggerString .. "\nAll stars are already slotted from rules " .. table.concat(sortedRuleNames, " < "))
+            DynamicCP.msg(triggerString .. "\n|cAAAAAAAll stars are already slotted from rules " .. table.concat(sortedRuleNames, " < "))
             return
         end
     end
@@ -195,15 +198,24 @@ local function ApplyRules(sortedRuleNames, triggerString)
         for slotIndex, skillId in pairs(pendingSlottables) do
             local unlocked = WouldChampionSkillNodeBeUnlocked(skillId,
                 GetNumPointsSpentOnChampionSkill(skillId))
-            if (unlocked and flipped[slotIndex] ~= skillId) then
+            local color = "e46b2e" -- Red
+            if (slotIndex <= 8) then color = "59bae7" end -- Blue
+            if (slotIndex <= 4) then color = "a5d752" end -- Green
+            local diffMessage = zo_strformat("|c<<1>><<2>> - <<C:3>> → <<C:4>>",
+                    color, slotIndex, GetChampionSkillName(flipped[slotIndex]), GetChampionSkillName(skillId))
+            if (not unlocked) then
+                diffMessage = diffMessage .. " |cFF4444- not unlocked"
+                table.insert(diffMessages, diffMessage)
+            elseif (unlocked and flipped[slotIndex] ~= skillId) then
                 -- Not the same
-                local color = "e46b2e" -- Red
-                if (slotIndex <= 8) then color = "59bae7" end -- Blue
-                if (slotIndex <= 4) then color = "a5d752" end -- Green
-                local diffMessage = zo_strformat("|c<<1>><<2>> - <<C:3>> → <<C:4>>",
-                        color, slotIndex, GetChampionSkillName(flipped[slotIndex]), GetChampionSkillName(skillId))
                 table.insert(diffMessages, diffMessage)
             end
+        end
+
+        -- It's possible for there to be no changes here if all potential changes aren't unlocked
+        if (#diffMessages == 0) then
+            DynamicCP.msg(triggerString .. "\n|cAAAAAAAll stars are already slotted from rules " .. table.concat(sortedRuleNames, " < "))
+            return
         end
 
         local text = string.format("%s\nSlot these stars according to the custom rules: %s?\n\n%s",
