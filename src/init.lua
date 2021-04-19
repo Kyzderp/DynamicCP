@@ -1,8 +1,8 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "0.6.6"
+DynamicCP.version = "0.7.0"
 
-DynamicCP.experimental = true -- Flip to true when developing
+DynamicCP.experimental = false -- Flip to true when developing. Nothing currently
 
 local defaultOptions = {
     firstTime = true,
@@ -112,6 +112,7 @@ local function OnPlayerActivated(_, initial)
     -- Post load init
     DynamicCP.InitPoints()
     DynamicCP.InitQuickstars()
+    DynamicCP.InitCustomRules() -- Do this here so we don't do rules on login/reload
 
     if (DynamicCP.savedOptions.hideBackground) then
         local backgroundOverride = function(line) return "/esoui/art/scrying/backdrop_stars.dds" end 
@@ -198,65 +199,64 @@ local function Initialize()
         DynamicCP.savedOptions.firstTime = false
     end
 
-    if (DynamicCP.experimental) then
-        -- TODO: populate with example custom rule
-        if (DynamicCP.savedOptions.customRules.firstTime) then
-            DynamicCP.savedOptions.customRules.rules = {
-                ["Example Trial"] = {
-                    name = "Example Trial",
-                    trigger = DynamicCP.TRIGGER_TRIAL,
-                    priority = 100,
-                    normal = true,
-                    veteran = true,
-                    stars = {
-                        [1] = 79, -- Treasure Hunter
-                        [2] = 66, -- Steed's Blessing
-                        [3] = 86, -- Liquid Efficiency
-                        [4] = -1, -- Flex for JoaT Homemaker / Rationer / Upkeep
-                        [5] = -1,
-                        [6] = -1,
-                        [7] = -1,
-                        [8] = -1,
-                        [9] = -1,
-                        [10] = -1,
-                        [11] = -1,
-                        [12] = -1,
-                    },
-                    tank = true,
-                    healer = true,
-                    dps = true,
-                    chars = {},
+    -- Populate with example custom rule
+    if (DynamicCP.savedOptions.customRules.firstTime) then
+        DynamicCP.savedOptions.customRules.rules = {
+            ["Example Trial"] = {
+                name = "Example Trial",
+                trigger = DynamicCP.TRIGGER_TRIAL,
+                priority = 100,
+                normal = true,
+                veteran = true,
+                stars = {
+                    [1] = 79, -- Treasure Hunter
+                    [2] = 66, -- Steed's Blessing
+                    [3] = 86, -- Liquid Efficiency
+                    [4] = -1, -- Flex for JoaT Homemaker / Rationer / Upkeep
+                    [5] = -1,
+                    [6] = -1,
+                    [7] = -1,
+                    [8] = -1,
+                    [9] = -1,
+                    [10] = -1,
+                    [11] = -1,
+                    [12] = -1,
                 },
-                ["Example Trial Dps"] = {
-                    name = "Example Trial Dps",
-                    trigger = DynamicCP.TRIGGER_TRIAL,
-                    priority = 101,
-                    normal = true,
-                    veteran = true,
-                    stars = {
-                        [1] = -1,
-                        [2] = -1,
-                        [3] = -1,
-                        [4] = -1,
-                        [5] = 31, -- Backstabber
-                        [6] = 12, -- Fighting Finesse
-                        [7] = 25, -- Deadly Aim
-                        [8] = 27, -- Thaumaturge
-                        [9] =  2, -- Boundless Vitality
-                        [10] = 34, -- Ironclad
-                        [11] = 35, -- Rejuvenation
-                        [12] = 56, -- Spirit Mastery
-                    },
-                    tank = false,
-                    healer = false,
-                    dps = true,
-                    chars = {},
+                tank = true,
+                healer = true,
+                dps = true,
+                chars = {},
+            },
+            ["Example Trial Dps"] = {
+                name = "Example Trial Dps",
+                trigger = DynamicCP.TRIGGER_TRIAL,
+                priority = 101,
+                normal = true,
+                veteran = true,
+                stars = {
+                    [1] = -1,
+                    [2] = -1,
+                    [3] = -1,
+                    [4] = -1,
+                    [5] = 31, -- Backstabber
+                    [6] = 12, -- Fighting Finesse
+                    [7] = 25, -- Deadly Aim
+                    [8] = 27, -- Thaumaturge
+                    [9] =  2, -- Boundless Vitality
+                    [10] = 34, -- Ironclad
+                    [11] = 35, -- Rejuvenation
+                    [12] = 56, -- Spirit Mastery
                 },
-            }
-            DynamicCP.AddOptionsForEachCharacter("Example Trial")
-            DynamicCP.AddOptionsForEachCharacter("Example Trial Dps")
-            -- TODO: unset first time
-        end
+                tank = false,
+                healer = false,
+                dps = true,
+                chars = {},
+            },
+        }
+        DynamicCP.AddOptionsForEachCharacter("Example Trial")
+        DynamicCP.AddOptionsForEachCharacter("Example Trial Dps")
+        DynamicCP.ShowFirstTimeDialog()
+        -- TODO: unset first time
     end
 
     -- Migrate settings versions if applicable
@@ -272,18 +272,15 @@ local function Initialize()
 
     -- Settings menu
     DynamicCP:CreateSettingsMenu()
-    if (DynamicCP.experimental) then
-        DynamicCP.CreateCustomRulesMenu()
-    end
+    DynamicCP.CreateCustomRulesMenu()
+
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_MENU", "Toggle CP Preset Window")
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_QUICKSTARS", "Toggle Quickstars Panel")
     ZO_CreateStringId("SI_BINDING_NAME_DCP_CYCLE_QUICKSTARS", "Cycle Quickstars Tab")
 
     -- Initialize
-    if (DynamicCP.experimental) then
-        DynamicCP.InitModelessDialog()
-        DynamicCP.InitCustomRules()
-    end
+    DynamicCP.InitModelessDialog()
+    DynamicCP.SortRuleKeys()
 
     -- Register events
     RegisterEvents()
@@ -313,6 +310,10 @@ local function Initialize()
     SLASH_COMMANDS["/dcp"] = function(arg)
         if (arg == "quickstar" or arg == "quickstars" or arg == "q" or arg == "qs") then
             DynamicCP.ToggleQuickstars()
+        elseif (arg == "rule" or arg == "rules") then
+            DynamicCP.OpenCustomRulesMenu()
+        elseif (arg == "settings") then
+            DynamicCP.OpenSettingsMenu()
         else
             DynamicCP.TogglePresetsWindow()
         end

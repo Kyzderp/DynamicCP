@@ -30,6 +30,17 @@ local lastZoneId = 0
 local sortedKeys = {}
 
 ---------------------------------------------------------------------
+-- First-time dialog box
+---------------------------------------------------------------------
+function DynamicCP.ShowFirstTimeDialog()
+    local text = string.format("Welcome to Dynamic CP v%s!\n\nYou now have the ability to set custom rules for slottable stars. These are conditions that you can define to slot certain stars when you enter certain zones.\n\nThe current defaults demonstrate how to set up a general rule for green stars to slot upon entering a trial, as well as a rule only for DPS to slot blue and red stars upon entering a trial. If you are on a DPS character, both of these rules will be applied when you enter a trial.\n\nGo to the custom rules menu now to add, delete, or change rules?",
+        DynamicCP.version
+        )
+    DynamicCP.ShowModelessPrompt(text, DynamicCP.OpenCustomRulesMenu)
+end
+
+
+---------------------------------------------------------------------
 -- Data
 ---------------------------------------------------------------------
 local function SortRuleKeys()
@@ -237,7 +248,7 @@ end
 -- Params: initial - true if first time entering, false if going through door etc.
 ---------------------------------------------------------------------
 local function OnEnteredTrial(initial)
-    if (not initial) then return end -- TODO: make this a setting
+    if (not initial) then return end -- TODO: make this a setting?
     DynamicCP.dbg("|cFF4444Entered a TRIAL difficulty "
         .. difficulties[GetCurrentZoneDungeonDifficulty()] .. "|r")
 

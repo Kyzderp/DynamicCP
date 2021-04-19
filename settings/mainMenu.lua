@@ -495,6 +495,6 @@ function DynamicCP:CreateSettingsMenu()
     LAM:RegisterOptionControls("DynamicCPOptions", optionsData)
 end
 
-function DynamicCP:OpenSettingsMenu()
+function DynamicCP.OpenSettingsMenu()
     LibAddonMenu2:OpenToPanel(DynamicCP.addonPanel)
 end
