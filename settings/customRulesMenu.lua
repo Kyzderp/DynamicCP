@@ -16,6 +16,7 @@ local triggerDisplays = {
     DynamicCP.TRIGGER_CYRO,
     DynamicCP.TRIGGER_IC,
     DynamicCP.TRIGGER_HOUSE,
+    DynamicCP.TRIGGER_ZONEID,
 }
 
 ---------------------------------------------------------------------
@@ -61,7 +62,7 @@ local function GetCurrentPreview()
 
     local triggerExtraInfo = ""
     if (rule.trigger == DynamicCP.TRIGGER_ZONEID) then
-        -- TODO
+        triggerExtraInfo = string.format("%s (%s)", rule.param1, GetZoneNameById(tonumber(rule.param1)))
     elseif (rule.trigger == DynamicCP.TRIGGER_ZONENAMEMATCH) then
         -- TODO
     end
@@ -185,6 +186,8 @@ local function CreateNewRule()
         healer = true,
         dps = true,
         chars = {},
+        param1 = "",
+        param2 = "",
     }
 
     DynamicCP.savedOptions.customRules.rules[newName] = newRule
@@ -514,6 +517,38 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil or not hasVet[DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger] end,
+        },
+        {
+            type = "editbox",
+            name = "Extra info",
+            tooltip = "Unused for this trigger",
+            getFunc = function()
+                return selectedRuleName ~= nil and tostring(DynamicCP.savedOptions.customRules.rules[selectedRuleName].param1) or ""
+            end,
+            setFunc = function(zoneId)
+                if (not selectedRuleName) then return end
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].param1 = zoneId
+            end,
+            isMultiline = false,
+            isExtraWide = false,
+            maxChars = 30,
+            width = "full",
+            disabled = function()
+                -- Hacky, but the name and tooltip don't get refreshed otherwise
+                local param1Line = WINDOW_MANAGER:GetControlByName("DynamicCP#Param1")
+                if (selectedRuleName) then
+                    local trigger = DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger
+                    if (trigger == DynamicCP.TRIGGER_ZONEID) then
+                        param1Line.label:SetText("Zone ID")
+                        param1Line.data.tooltipText = "The specific zone ID to match. Your current zone ID is " .. tostring(GetZoneId(GetUnitZoneIndex("player"))) .. " (" .. GetPlayerActiveZoneName() .. ")"
+                        return false
+                    end
+                end
+                param1Line.data.tooltipText = "Unused for this trigger"
+                param1Line.label:SetText("Extra info")
+                return true
+            end,
+            reference = "DynamicCP#Param1",
         },
         {
             type = "description",

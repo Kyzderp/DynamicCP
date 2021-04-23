@@ -226,6 +226,8 @@ local function Initialize()
                 healer = true,
                 dps = true,
                 chars = {},
+                param1 = "",
+                param2 = "",
             },
             ["Example Trial Dps"] = {
                 name = "Example Trial Dps",
@@ -251,6 +253,8 @@ local function Initialize()
                 healer = false,
                 dps = true,
                 chars = {},
+                param1 = "",
+                param2 = "",
             },
         }
         DynamicCP.AddOptionsForEachCharacter("Example Trial")

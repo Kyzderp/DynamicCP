@@ -16,9 +16,6 @@ DynamicCP.TRIGGER_BOSS                 = "Boss Area"           -- tbd
 DynamicCP.TRIGGER_BOSSNAME             = "Specific Boss Name"  -- tbd
 DynamicCP.TRIGGER_HOUSE                = "Player House"        -- Done
 
-local triggerParams = {
-}
-
 local difficulties = {
     [DUNGEON_DIFFICULTY_NONE] = "NONE",
     [DUNGEON_DIFFICULTY_NORMAL] = "NORMAL",
@@ -135,7 +132,6 @@ end
 -- Iterate through all rules and find any matching ones
 -- Returns in the format {{name = name, priority = priority,}}
 local function GetSortedRulesForTrigger(trigger, isVet, param1, param2)
-    local requiredParams = triggerParams[trigger]
     local role = GetPlayerRole()
     local difficulty = isVet and "veteran" or "normal"
     local ruleNames = {}
@@ -146,8 +142,8 @@ local function GetSortedRulesForTrigger(trigger, isVet, param1, param2)
     for _, name in ipairs(GetSortedKeys()) do
         local rule = DynamicCP.savedOptions.customRules.rules[name]
         if (rule.trigger == trigger
-            and (param1 == nil or rule[requiredParams[1]] == param1)
-            and (param2 == nil or rule[requiredParams[2]] == param2)
+            and (param1 == nil or rule.param1 == param1)
+            and (param2 == nil or rule.param2 == param2)
             ) then
             if (rule[role] and rule[difficulty] and rule.chars[charId]) then
                 table.insert(ruleNames, {name = name, priority = rule.priority})
@@ -333,6 +329,18 @@ local function OnEnteredOverland(initial)
     return GetSortedRulesForTrigger(DynamicCP.TRIGGER_OVERLAND, false)
 end
 
+--------------------
+-- Zone ID
+local function OnEnteredZoneID(initial)
+    if (not initial) then return {} end
+    DynamicCP.dbg("|cFF4444Checking zone ID|r")
+
+    -- GetSortedRulesForTrigger(trigger, isVet, param1, param2)
+    return GetSortedRulesForTrigger(DynamicCP.TRIGGER_ZONEID,
+        GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN,
+        tostring(GetZoneId(GetUnitZoneIndex("player"))))
+end
+
 
 ---------------------------------------------------------------------
 -- Mappings
@@ -347,6 +355,7 @@ local triggerDisplayNames = {
     [DynamicCP.TRIGGER_CYRO]            = "Cyrodiil:",
     [DynamicCP.TRIGGER_HOUSE]           = "player house",
     [DynamicCP.TRIGGER_OVERLAND]        = "overland zone",
+    [DynamicCP.TRIGGER_ZONEID]          = "zone",
 }
 
 local triggerToFunction = {
@@ -359,6 +368,7 @@ local triggerToFunction = {
     [DynamicCP.TRIGGER_CYRO]            = OnEnteredCyrodiil,
     [DynamicCP.TRIGGER_HOUSE]           = OnEnteredPlayerHouse,
     [DynamicCP.TRIGGER_OVERLAND]        = OnEnteredOverland,
+    [DynamicCP.TRIGGER_ZONEID]          = OnEnteredZoneID,
 }
 
 
@@ -366,6 +376,7 @@ local triggerToFunction = {
 -- Entry point
 ---------------------------------------------------------------------
 local function OnPlayerActivated()
+    DynamicCP.OnModelessCancel()
     local purchaseAvailability = GetChampionPurchaseAvailability()
     if (purchaseAvailability == CHAMPION_PURCHASE_IN_NOCP_CAMPAIGN
         or purchaseAvailability == CHAMPION_PURCHASE_IN_NOCP_BATTLEGROUND
@@ -385,7 +396,8 @@ local function OnPlayerActivated()
     local groupOwnable = IsActiveWorldGroupOwnable()
     local inDungeon = IsUnitInDungeon("player")
 
-    local triggers = {}
+    local triggers = {DynamicCP.TRIGGER_ZONEID}
+    local initialSize = #triggers
 
     if (DynamicCP.TRIAL_ZONEIDS[tostring(zoneId)]) then
         table.insert(triggers, DynamicCP.TRIGGER_TRIAL)
@@ -415,7 +427,10 @@ local function OnPlayerActivated()
         table.insert(triggers, DynamicCP.TRIGGER_CYRO)
     end
 
-    if (#triggers == 0) then
+    -- End trigger collection
+    -------------------------
+
+    if (#triggers == initialSize) then
         DynamicCP.dbg("|cFF0000UNHANDLED ZONE " .. GetPlayerActiveZoneName() .. "|r")
         return
     end
@@ -432,11 +447,6 @@ local function OnPlayerActivated()
         end
     end
 
-    if (#allRules == 0) then
-        DynamicCP.dbg("|cFF4444No rules to apply.")
-        return
-    end
-
     -- Now sort
     local sortedRules = {}
     for name, priority in pairs(allRules) do
@@ -445,6 +455,11 @@ local function OnPlayerActivated()
     table.sort(sortedRules, function(item1, item2)
         return item1.priority < item2.priority
     end)
+
+    if (#sortedRules == 0) then
+        DynamicCP.dbg("|cFF4444No rules to apply.")
+        return
+    end
 
     local sortedRuleNames = {}
     for _, data in ipairs(sortedRules) do
@@ -456,6 +471,11 @@ local function OnPlayerActivated()
         GetPlayerActiveZoneName(),
         GetZoneId(GetUnitZoneIndex("player")),
         triggerDisplayNames[triggers[#triggers]]))
+end
+
+function DynamicCP.Test()
+    lastZoneId = 0
+    OnPlayerActivated()
 end
 
 ---------------------------------------------------------------------
