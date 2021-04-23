@@ -17,8 +17,6 @@ DynamicCP.TRIGGER_BOSSNAME             = "Specific Boss Name"  -- tbd
 DynamicCP.TRIGGER_HOUSE                = "Player House"        -- Done
 
 local triggerParams = {
-    [DynamicCP.TRIGGER_TRIAL] = {
-    },
 }
 
 local difficulties = {
@@ -135,6 +133,7 @@ local function ProcessAndCommitRules(sortedRuleNames, pendingSlottables, trigger
 end
 
 -- Iterate through all rules and find any matching ones
+-- Returns in the format {{name = name, priority = priority,}}
 local function GetSortedRulesForTrigger(trigger, isVet, param1, param2)
     local requiredParams = triggerParams[trigger]
     local role = GetPlayerRole()
@@ -151,13 +150,13 @@ local function GetSortedRulesForTrigger(trigger, isVet, param1, param2)
             and (param2 == nil or rule[requiredParams[2]] == param2)
             ) then
             if (rule[role] and rule[difficulty] and rule.chars[charId]) then
-                table.insert(ruleNames, name)
+                table.insert(ruleNames, {name = name, priority = rule.priority})
                 numRules = numRules + 1
             end
         end
     end
 
-    if (numRules == 0) then return nil end
+    -- if (numRules == 0) then return nil end
     return ruleNames
 end
 
@@ -251,115 +250,116 @@ end
 ------------
 -- Any trial
 local function OnEnteredTrial(initial)
-    if (not initial) then return end
+    if (not initial) then return {} end
     DynamicCP.dbg("|cFF4444Entered a TRIAL difficulty "
         .. difficulties[GetCurrentZoneDungeonDifficulty()] .. "|r")
 
-    local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_TRIAL, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
-    ApplyRules(sortedRuleNames, zo_strformat("You entered trial <<C:1>> (zone id <<2>>).",
-        GetPlayerActiveZoneName(),
-        GetZoneId(GetUnitZoneIndex("player"))))
+    return GetSortedRulesForTrigger(DynamicCP.TRIGGER_TRIAL, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
 end
 DynamicCP.OnEnteredTrial = OnEnteredTrial -- For testing /script DynamicCP.OnEnteredTrial(true)
 
 ------------------
 -- Any group arena
 local function OnEnteredGroupArena(initial)
-    if (not initial) then return end
+    if (not initial) then return {} end
     DynamicCP.dbg("|cFF4444Entered a GROUP ARENA difficulty "
         .. difficulties[GetCurrentZoneDungeonDifficulty()] .. "|r")
 
-    local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_GROUP_ARENA, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
-    ApplyRules(sortedRuleNames, zo_strformat("You entered group arena <<C:1>> (zone id <<2>>).",
-        GetPlayerActiveZoneName(),
-        GetZoneId(GetUnitZoneIndex("player"))))
+    return GetSortedRulesForTrigger(DynamicCP.TRIGGER_GROUP_ARENA, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
 end
 
 -----------------
 -- Any solo arena
 local function OnEnteredSoloArena(initial)
-    if (not initial) then return end
+    if (not initial) then return {} end
     DynamicCP.dbg("|cFF4444Entered a SOLO ARENA difficulty "
         .. difficulties[GetCurrentZoneDungeonDifficulty()] .. "|r")
 
-    local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_SOLO_ARENA, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
-    ApplyRules(sortedRuleNames, zo_strformat("You entered solo arena <<C:1>> (zone id <<2>>).",
-        GetPlayerActiveZoneName(),
-        GetZoneId(GetUnitZoneIndex("player"))))
+    return GetSortedRulesForTrigger(DynamicCP.TRIGGER_SOLO_ARENA, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
 end
 
 --------------------
 -- Any group dungeon
 local function OnEnteredGroupDungeon(initial)
-    if (not initial) then return end
+    if (not initial) then return {} end
     DynamicCP.dbg("|cFF4444Entered a GROUP DUNGEON difficulty "
         .. difficulties[GetCurrentZoneDungeonDifficulty()] .. "|r")
 
-    local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_GROUP_DUNGEON, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
-    ApplyRules(sortedRuleNames, zo_strformat("You entered group dungeon <<C:1>> (zone id <<2>>).",
-        GetPlayerActiveZoneName(),
-        GetZoneId(GetUnitZoneIndex("player"))))
+    return GetSortedRulesForTrigger(DynamicCP.TRIGGER_GROUP_DUNGEON, GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN)
 end
 
 ------------------------------------------
 -- Any public dungeon or delve or instance
 local function OnEnteredPublicInstance(initial)
-    if (not initial) then return end
+    if (not initial) then return {} end
     DynamicCP.dbg("|cFF4444Entered a PUBLIC INSTANCE|r")
 
-    local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_PUBLIC_INSTANCE, false)
-    ApplyRules(sortedRuleNames, zo_strformat("You entered public instance <<C:1>> (zone id <<2>>).",
-        GetPlayerActiveZoneName(),
-        GetZoneId(GetUnitZoneIndex("player"))))
+    return GetSortedRulesForTrigger(DynamicCP.TRIGGER_PUBLIC_INSTANCE, false)
 end
 
 --------------
 -- Any IC zone
 local function OnEnteredImperialCity(initial)
-    if (not initial) then return end
+    if (not initial) then return {} end
     DynamicCP.dbg("|cFF4444Entered IMPERIAL CITY|r")
 
-    local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_IC, false)
-    ApplyRules(sortedRuleNames, zo_strformat("You entered Imperial City: <<C:1>> (zone id <<2>>).",
-        GetPlayerActiveZoneName(),
-        GetZoneId(GetUnitZoneIndex("player"))))
+    return GetSortedRulesForTrigger(DynamicCP.TRIGGER_IC, false)
 end
 
 -----------
 -- Cyrodiil
 local function OnEnteredCyrodiil(initial)
-    if (not initial) then return end
+    if (not initial) then return {} end
     DynamicCP.dbg("|cFF4444Entered CYRODIIL|r")
 
-    local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_CYRO, false)
-    ApplyRules(sortedRuleNames, zo_strformat("You entered Cyrodiil: <<C:1>> (zone id <<2>>).",
-        GetPlayerActiveZoneName(),
-        GetZoneId(GetUnitZoneIndex("player"))))
+    return GetSortedRulesForTrigger(DynamicCP.TRIGGER_CYRO, false)
 end
 
 ------------
 -- Any house
 local function OnEnteredPlayerHouse(initial)
-    if (not initial) then return end
+    if (not initial) then return {} end
     DynamicCP.dbg("|cFF4444Entered PLAYER HOUSE|r")
 
-    local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_HOUSE, false)
-    ApplyRules(sortedRuleNames, zo_strformat("You entered player house <<C:1>> (zone id <<2>>).",
-        GetPlayerActiveZoneName(),
-        GetZoneId(GetUnitZoneIndex("player"))))
+    return GetSortedRulesForTrigger(DynamicCP.TRIGGER_HOUSE, false)
 end
 
 --------------------
 -- Any overland zone
 local function OnEnteredOverland(initial)
-    if (not initial) then return end
+    if (not initial) then return {} end
     DynamicCP.dbg("|cFF4444Entered OVERLAND|r")
 
-    local sortedRuleNames = GetSortedRulesForTrigger(DynamicCP.TRIGGER_OVERLAND, false)
-    ApplyRules(sortedRuleNames, zo_strformat("You entered overland zone <<C:1>> (zone id <<2>>).",
-        GetPlayerActiveZoneName(),
-        GetZoneId(GetUnitZoneIndex("player"))))
+    return GetSortedRulesForTrigger(DynamicCP.TRIGGER_OVERLAND, false)
 end
+
+
+---------------------------------------------------------------------
+-- Mappings
+---------------------------------------------------------------------
+local triggerDisplayNames = {
+    [DynamicCP.TRIGGER_TRIAL]           = "trial",
+    [DynamicCP.TRIGGER_GROUP_ARENA]     = "group arena",
+    [DynamicCP.TRIGGER_SOLO_ARENA]      = "solo arena",
+    [DynamicCP.TRIGGER_GROUP_DUNGEON]   = "group dungeon",
+    [DynamicCP.TRIGGER_PUBLIC_INSTANCE] = "public instance",
+    [DynamicCP.TRIGGER_IC]              = "Imperial City:",
+    [DynamicCP.TRIGGER_CYRO]            = "Cyrodiil:",
+    [DynamicCP.TRIGGER_HOUSE]           = "player house",
+    [DynamicCP.TRIGGER_OVERLAND]        = "overland zone",
+}
+
+local triggerToFunction = {
+    [DynamicCP.TRIGGER_TRIAL]           = OnEnteredTrial,
+    [DynamicCP.TRIGGER_GROUP_ARENA]     = OnEnteredGroupArena,
+    [DynamicCP.TRIGGER_SOLO_ARENA]      = OnEnteredSoloArena,
+    [DynamicCP.TRIGGER_GROUP_DUNGEON]   = OnEnteredGroupDungeon,
+    [DynamicCP.TRIGGER_PUBLIC_INSTANCE] = OnEnteredPublicInstance,
+    [DynamicCP.TRIGGER_IC]              = OnEnteredImperialCity,
+    [DynamicCP.TRIGGER_CYRO]            = OnEnteredCyrodiil,
+    [DynamicCP.TRIGGER_HOUSE]           = OnEnteredPlayerHouse,
+    [DynamicCP.TRIGGER_OVERLAND]        = OnEnteredOverland,
+}
 
 
 ---------------------------------------------------------------------
@@ -385,55 +385,77 @@ local function OnPlayerActivated()
     local groupOwnable = IsActiveWorldGroupOwnable()
     local inDungeon = IsUnitInDungeon("player")
 
+    local triggers = {}
+
     if (DynamicCP.TRIAL_ZONEIDS[tostring(zoneId)]) then
-        OnEnteredTrial(initial)
-        return
-    end
-
-    if (DynamicCP.DUNGEON_ZONEIDS[tostring(zoneId)]) then
-        OnEnteredGroupDungeon(initial)
-        return
-    end
-
-    if (DynamicCP.GROUP_ARENA_ZONEIDS[tostring(zoneId)]) then
-        OnEnteredGroupArena(initial)
-        return
-    end
-
-    if (DynamicCP.SOLO_ARENA_ZONEIDS[tostring(zoneId)]) then
-        OnEnteredSoloArena(initial)
-        return
+        table.insert(triggers, DynamicCP.TRIGGER_TRIAL)
+    elseif (DynamicCP.DUNGEON_ZONEIDS[tostring(zoneId)]) then
+        table.insert(triggers, DynamicCP.TRIGGER_GROUP_DUNGEON)
+    elseif (DynamicCP.GROUP_ARENA_ZONEIDS[tostring(zoneId)]) then
+        table.insert(triggers, DynamicCP.TRIGGER_GROUP_ARENA)
+    elseif (DynamicCP.SOLO_ARENA_ZONEIDS[tostring(zoneId)]) then
+        table.insert(triggers, DynamicCP.TRIGGER_SOLO_ARENA)
+    elseif (GetCurrentZoneHouseId() ~= 0) then
+        table.insert(triggers, DynamicCP.TRIGGER_HOUSE)
     elseif (not groupOwnable and inDungeon) then
         -- Anything that's not group ownable but is a dungeon and not a solo arena are things like public dungeons and delves,
         -- but also outlaws refuges, quest instances, etc.
-        OnEnteredPublicInstance(initial)
-        return
+        table.insert(triggers, DynamicCP.TRIGGER_PUBLIC_INSTANCE)
+    elseif (not groupOwnable and not inDungeon) then
+        -- TODO: is this true?
+        table.insert(triggers, DynamicCP.TRIGGER_OVERLAND)
     end
 
+    -- These not in the main if/else because Cyrodiil delves can trigger both public instances and Cyro
     if (IsInImperialCity()) then
         -- TODO: sewers etc are likely different zones, initial needs fixing
         -- Imperial Sewers 643 Imperial City 584
-        OnEnteredImperialCity(initial)
+        table.insert(triggers, DynamicCP.TRIGGER_IC)
+    elseif (IsInAvAZone()) then
+        table.insert(triggers, DynamicCP.TRIGGER_CYRO)
+    end
+
+    if (#triggers == 0) then
+        DynamicCP.dbg("|cFF0000UNHANDLED ZONE " .. GetPlayerActiveZoneName() .. "|r")
         return
     end
 
-    if (IsInAvAZone()) then
-        OnEnteredCyrodiil(initial)
+    -- Get all the rules for the triggers, deduping them
+    local allRules = {}
+    for _, trigger in ipairs(triggers) do
+        -- TODO: do something about initial
+        local rules = triggerToFunction[trigger](initial)
+
+        -- Add all
+        for _, value in pairs(rules) do
+            allRules[value.name] = value.priority
+        end
+    end
+
+    if (#allRules == 0) then
+        DynamicCP.dbg("|cFF4444No rules to apply.")
         return
     end
 
-    if (GetCurrentZoneHouseId() ~= 0) then
-        OnEnteredPlayerHouse(initial)
-        return
+    -- Now sort
+    local sortedRules = {}
+    for name, priority in pairs(allRules) do
+        table.insert(sortedRules, {name = name, priority = priority})
+    end
+    table.sort(sortedRules, function(item1, item2)
+        return item1.priority < item2.priority
+    end)
+
+    local sortedRuleNames = {}
+    for _, data in ipairs(sortedRules) do
+        table.insert(sortedRuleNames, data.name)
     end
 
-    if (not groupOwnable and not inDungeon) then
-        -- TODO: is this true?
-        OnEnteredOverland(initial)
-        return
-    end
-
-    DynamicCP.dbg("|cFF0000UNHANDLED ZONE " .. GetPlayerActiveZoneName() .. "|r")
+    -- Apply the rules
+    ApplyRules(sortedRuleNames, zo_strformat("You entered <<3>> <<C:1>> (zone id <<2>>).",
+        GetPlayerActiveZoneName(),
+        GetZoneId(GetUnitZoneIndex("player")),
+        triggerDisplayNames[triggers[#triggers]]))
 end
 
 ---------------------------------------------------------------------
