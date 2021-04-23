@@ -17,6 +17,7 @@ local triggerDisplays = {
     DynamicCP.TRIGGER_IC,
     DynamicCP.TRIGGER_HOUSE,
     DynamicCP.TRIGGER_ZONEID,
+    DynamicCP.TRIGGER_BOSSNAME,
 }
 
 ---------------------------------------------------------------------
@@ -33,7 +34,7 @@ local triggerToPreview = {
     [DynamicCP.TRIGGER_ZONEID]               = "specific zone ID",
     [DynamicCP.TRIGGER_ZONENAMEMATCH]        = "any zone name matching",
     [DynamicCP.TRIGGER_BOSS]                 = "any boss area",
-    [DynamicCP.TRIGGER_BOSSNAME]             = "specific boss area",
+    [DynamicCP.TRIGGER_BOSSNAME]             = "specific boss name matching",
     [DynamicCP.TRIGGER_HOUSE]                = "any player house",
 }
 
@@ -62,9 +63,11 @@ local function GetCurrentPreview()
 
     local triggerExtraInfo = ""
     if (rule.trigger == DynamicCP.TRIGGER_ZONEID) then
-        triggerExtraInfo = string.format("%s (%s)", rule.param1, GetZoneNameById(tonumber(rule.param1)))
+        triggerExtraInfo = string.format(" %s (%s)", rule.param1, GetZoneNameById(tonumber(rule.param1)))
     elseif (rule.trigger == DynamicCP.TRIGGER_ZONENAMEMATCH) then
         -- TODO
+    elseif (rule.trigger == DynamicCP.TRIGGER_BOSSNAME) then
+        triggerExtraInfo = " " .. rule.param1
     end
 
     -- Add vet or not
@@ -529,9 +532,8 @@ function DynamicCP.CreateCustomRulesMenu()
                 if (not selectedRuleName) then return end
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].param1 = zoneId
             end,
-            isMultiline = false,
-            isExtraWide = false,
-            maxChars = 30,
+            isExtraWide = true,
+            isMultiline = true,
             width = "full",
             disabled = function()
                 -- Hacky, but the name and tooltip don't get refreshed otherwise
@@ -539,8 +541,12 @@ function DynamicCP.CreateCustomRulesMenu()
                 if (selectedRuleName) then
                     local trigger = DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger
                     if (trigger == DynamicCP.TRIGGER_ZONEID) then
-                        param1Line.label:SetText("Zone ID")
-                        param1Line.data.tooltipText = "The specific zone ID to match. Your current zone ID is " .. tostring(GetZoneId(GetUnitZoneIndex("player"))) .. " (" .. GetPlayerActiveZoneName() .. ")"
+                        param1Line.label:SetText("Zone IDs")
+                        param1Line.data.tooltipText = "The specific zone ID(s) to match. Your current zone ID is " .. tostring(GetZoneId(GetUnitZoneIndex("player"))) .. " (" .. GetPlayerActiveZoneName() .. "). You can set this to trigger on multiple zone IDs by separating them with percentage sign %"
+                        return false
+                    elseif (trigger == DynamicCP.TRIGGER_BOSSNAME) then
+                        param1Line.label:SetText("Boss names")
+                        param1Line.data.tooltipText = "The specific boss name to match. You can set this to trigger on multiple bosses by separating them with percentage sign %"
                         return false
                     end
                 end

@@ -10,10 +10,10 @@ DynamicCP.TRIGGER_PUBLIC_INSTANCE      = "Public Instance *"   -- Done
 DynamicCP.TRIGGER_OVERLAND             = "Overland"            -- Done
 DynamicCP.TRIGGER_CYRO                 = "Cyrodiil"            -- Done
 DynamicCP.TRIGGER_IC                   = "Imperial City"       -- Done
-DynamicCP.TRIGGER_ZONEID               = "Specific Zone ID"    -- tbd
+DynamicCP.TRIGGER_ZONEID               = "Specific Zone ID"    -- Done
 DynamicCP.TRIGGER_ZONENAMEMATCH        = "Zone Name Match"     -- tbd
-DynamicCP.TRIGGER_BOSS                 = "Boss Area"           -- tbd
-DynamicCP.TRIGGER_BOSSNAME             = "Specific Boss Name"  -- tbd
+DynamicCP.TRIGGER_BOSS                 = "Boss Area"           -- tbd - maybe? having all bosses could get hairy
+DynamicCP.TRIGGER_BOSSNAME             = "Specific Boss Name"  -- Done
 DynamicCP.TRIGGER_HOUSE                = "Player House"        -- Done
 
 local difficulties = {
@@ -23,6 +23,7 @@ local difficulties = {
 }
 
 local lastZoneId = 0
+local lastBossNames = ""
 local sortedKeys = {}
 
 ---------------------------------------------------------------------
@@ -131,28 +132,35 @@ end
 
 -- Iterate through all rules and find any matching ones
 -- Returns in the format {{name = name, priority = priority,}}
-local function GetSortedRulesForTrigger(trigger, isVet, param1, param2)
+local function GetSortedRulesForTrigger(trigger, isVet, param1)
     local role = GetPlayerRole()
     local difficulty = isVet and "veteran" or "normal"
     local ruleNames = {}
-    local numRules = 0
     local charId = GetCurrentCharacterId()
 
     -- Iterate using sorted keys so we get them in prioritized order
     for _, name in ipairs(GetSortedKeys()) do
         local rule = DynamicCP.savedOptions.customRules.rules[name]
-        if (rule.trigger == trigger
-            and (param1 == nil or rule.param1 == param1)
-            and (param2 == nil or rule.param2 == param2)
-            ) then
-            if (rule[role] and rule[difficulty] and rule.chars[charId]) then
-                table.insert(ruleNames, {name = name, priority = rule.priority})
-                numRules = numRules + 1
+        if (rule.trigger == trigger) then
+            if (param1 == nil) then
+                if (rule[role] and rule[difficulty] and rule.chars[charId]) then
+                    table.insert(ruleNames, {name = name, priority = rule.priority})
+                end
+            else
+                -- Split param1 on pipe char and attempt to match each one
+                for str in string.gmatch(rule.param1, "([^%%]+)") do
+                    str = string.gsub(str, "^%s+", "")
+                    str = string.gsub(str, "%s+$", "")
+                    d(str)
+                    if (param1 == str) then
+                        table.insert(ruleNames, {name = name, priority = rule.priority})
+                        break
+                    end
+                end
             end
         end
     end
 
-    -- if (numRules == 0) then return nil end
     return ruleNames
 end
 
@@ -356,6 +364,7 @@ local triggerDisplayNames = {
     [DynamicCP.TRIGGER_HOUSE]           = "player house",
     [DynamicCP.TRIGGER_OVERLAND]        = "overland zone",
     [DynamicCP.TRIGGER_ZONEID]          = "zone",
+    [DynamicCP.TRIGGER_BOSSNAME]        = "boss area in",
 }
 
 local triggerToFunction = {
@@ -375,6 +384,33 @@ local triggerToFunction = {
 ---------------------------------------------------------------------
 -- Entry point
 ---------------------------------------------------------------------
+local function SortAndApplyAllRules(allRules, triggerDisplayName)
+    -- Now sort
+    local sortedRules = {}
+    for name, priority in pairs(allRules) do
+        table.insert(sortedRules, {name = name, priority = priority})
+    end
+    table.sort(sortedRules, function(item1, item2)
+        return item1.priority < item2.priority
+    end)
+
+    if (#sortedRules == 0) then
+        DynamicCP.dbg("|cFF4444No rules to apply.")
+        return
+    end
+
+    local sortedRuleNames = {}
+    for _, data in ipairs(sortedRules) do
+        table.insert(sortedRuleNames, data.name)
+    end
+
+    -- Apply the rules
+    ApplyRules(sortedRuleNames, zo_strformat("You entered <<3>> <<C:1>> (zone id <<2>>).",
+        GetPlayerActiveZoneName(),
+        GetZoneId(GetUnitZoneIndex("player")),
+        triggerDisplayName))
+end
+
 local function OnPlayerActivated()
     DynamicCP.OnModelessCancel()
     local purchaseAvailability = GetChampionPurchaseAvailability()
@@ -447,31 +483,46 @@ local function OnPlayerActivated()
         end
     end
 
-    -- Now sort
-    local sortedRules = {}
-    for name, priority in pairs(allRules) do
-        table.insert(sortedRules, {name = name, priority = priority})
-    end
-    table.sort(sortedRules, function(item1, item2)
-        return item1.priority < item2.priority
-    end)
+    SortAndApplyAllRules(allRules, triggerDisplayNames[triggers[#triggers]])
+end
 
-    if (#sortedRules == 0) then
-        DynamicCP.dbg("|cFF4444No rules to apply.")
+local function OnBossesChanged()
+    DynamicCP.dbg("bosses changed")
+    local allRules = {}
+    local bossNames = ""
+
+    -- Slightly more efficient to check first if the bosses even changed
+    for i = 1, MAX_BOSSES do
+        local name = GetUnitName("boss" .. tostring(i))
+        if (name and name ~= "") then
+            bossNames = bossNames .. name
+        end
+    end
+
+    -- If not, don't even match for rules
+    if (bossNames == lastBossNames) then
         return
     end
+    lastBossNames = bossNames
 
-    local sortedRuleNames = {}
-    for _, data in ipairs(sortedRules) do
-        table.insert(sortedRuleNames, data.name)
+    -- Get the rules
+    for i = 1, MAX_BOSSES do
+        local name = GetUnitName("boss" .. tostring(i))
+        if (name and name ~= "") then
+            local rules = GetSortedRulesForTrigger(DynamicCP.TRIGGER_BOSSNAME,
+                GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN,
+                GetUnitName("boss" .. tostring(i)))
+
+            -- Add all
+            for _, value in pairs(rules) do
+                allRules[value.name] = value.priority
+            end
+        end
     end
 
-    -- Apply the rules
-    ApplyRules(sortedRuleNames, zo_strformat("You entered <<3>> <<C:1>> (zone id <<2>>).",
-        GetPlayerActiveZoneName(),
-        GetZoneId(GetUnitZoneIndex("player")),
-        triggerDisplayNames[triggers[#triggers]]))
+    SortAndApplyAllRules(allRules, triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME])
 end
+
 
 function DynamicCP.Test()
     lastZoneId = 0
@@ -483,5 +534,6 @@ end
 function DynamicCP.InitCustomRules()
     SortRuleKeys()
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomActivated", EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
+    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomBossesChanged", EVENT_BOSSES_CHANGED, OnBossesChanged)
     lastZoneId = GetZoneId(GetUnitZoneIndex("player"))
 end
