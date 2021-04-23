@@ -59,6 +59,7 @@ DynamicCP.TRIAL_ZONEIDS = {
     ["1051"] = true,  -- Cloudrest
     ["1121"] = true,  -- Sunspire
     ["1196"] = true,  -- Kyne's Aegis
+    ["1263"] = true,  -- Rockgrove
 }
 
 -- Group arena zoneIds

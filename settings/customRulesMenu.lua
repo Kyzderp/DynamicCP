@@ -8,38 +8,48 @@ local selectedRuleName = nil
 -- Trigger dropdown
 local triggerDisplays = {
     DynamicCP.TRIGGER_TRIAL,
+    DynamicCP.TRIGGER_GROUP_ARENA,
+    DynamicCP.TRIGGER_SOLO_ARENA,
+    DynamicCP.TRIGGER_GROUP_DUNGEON,
+    DynamicCP.TRIGGER_PUBLIC_INSTANCE,
+    DynamicCP.TRIGGER_OVERLAND,
+    DynamicCP.TRIGGER_CYRO,
+    DynamicCP.TRIGGER_IC,
+    DynamicCP.TRIGGER_HOUSE,
 }
 
 ---------------------------------------------------------------------
 -- Get string for preview
 local triggerToPreview = {
-    [DynamicCP.TRIGGER_TRIAL]          = "any trial",
-    [DynamicCP.TRIGGER_GROUP_ARENA]    = "any group arena",
-    [DynamicCP.TRIGGER_SOLO_ARENA]     = "any solo arena",
-    [DynamicCP.TRIGGER_GROUP_DUNGEON]  = "any group dungeon",
-    [DynamicCP.TRIGGER_PUBLIC_DUNGEON] = "any public dungeon",
-    [DynamicCP.TRIGGER_DELVE]          = "any public delve",
-    [DynamicCP.TRIGGER_OVERLAND]       = "any overland zone",
-    [DynamicCP.TRIGGER_CYRO]           = "Cyrodiil",
-    [DynamicCP.TRIGGER_IC]             = "Imperial City or Sewers",
-    [DynamicCP.TRIGGER_ZONEID]         = "specific zone",
-    [DynamicCP.TRIGGER_BOSS]           = "any boss area",
-    [DynamicCP.TRIGGER_BOSSNAME]       = "specific boss",
+    [DynamicCP.TRIGGER_TRIAL]                = "any trial",
+    [DynamicCP.TRIGGER_GROUP_ARENA]          = "any group arena",
+    [DynamicCP.TRIGGER_SOLO_ARENA]           = "any solo arena",
+    [DynamicCP.TRIGGER_GROUP_DUNGEON]        = "any group dungeon",
+    [DynamicCP.TRIGGER_PUBLIC_INSTANCE]      = "any public instance*",
+    [DynamicCP.TRIGGER_OVERLAND]             = "any overland zone",
+    [DynamicCP.TRIGGER_CYRO]                 = "Cyrodiil",
+    [DynamicCP.TRIGGER_IC]                   = "Imperial City or Sewers",
+    [DynamicCP.TRIGGER_ZONEID]               = "specific zone ID",
+    [DynamicCP.TRIGGER_ZONENAMEMATCH]        = "any zone name matching",
+    [DynamicCP.TRIGGER_BOSS]                 = "any boss area",
+    [DynamicCP.TRIGGER_BOSSNAME]             = "specific boss area",
+    [DynamicCP.TRIGGER_HOUSE]                = "any player house",
 }
 
 local hasVet = {
-    [DynamicCP.TRIGGER_TRIAL]          = true,
-    [DynamicCP.TRIGGER_GROUP_ARENA]    = true,
-    [DynamicCP.TRIGGER_SOLO_ARENA]     = true,
-    [DynamicCP.TRIGGER_GROUP_DUNGEON]  = true,
-    [DynamicCP.TRIGGER_PUBLIC_DUNGEON] = false,
-    [DynamicCP.TRIGGER_DELVE]          = false,
-    [DynamicCP.TRIGGER_OVERLAND]       = false,
-    [DynamicCP.TRIGGER_CYRO]           = false,
-    [DynamicCP.TRIGGER_IC]             = false,
-    [DynamicCP.TRIGGER_ZONEID]         = true,
-    [DynamicCP.TRIGGER_BOSS]           = true,
-    [DynamicCP.TRIGGER_BOSSNAME]       = true,
+    [DynamicCP.TRIGGER_TRIAL]                = true,
+    [DynamicCP.TRIGGER_GROUP_ARENA]          = true,
+    [DynamicCP.TRIGGER_SOLO_ARENA]           = true,
+    [DynamicCP.TRIGGER_GROUP_DUNGEON]        = true,
+    [DynamicCP.TRIGGER_PUBLIC_INSTANCE]      = false,
+    [DynamicCP.TRIGGER_OVERLAND]             = false,
+    [DynamicCP.TRIGGER_CYRO]                 = false,
+    [DynamicCP.TRIGGER_IC]                   = false,
+    [DynamicCP.TRIGGER_ZONEID]               = true,
+    [DynamicCP.TRIGGER_ZONENAMEMATCH]        = true,
+    [DynamicCP.TRIGGER_BOSS]                 = true,
+    [DynamicCP.TRIGGER_BOSSNAME]             = true,
+    [DynamicCP.TRIGGER_HOUSE]                = false,
 }
 
 local function GetCurrentPreview()
@@ -49,8 +59,14 @@ local function GetCurrentPreview()
 
     local rule = DynamicCP.savedOptions.customRules.rules[selectedRuleName]
 
+    local triggerExtraInfo = ""
+    if (rule.trigger == DynamicCP.TRIGGER_ZONEID) then
+        -- TODO
+    elseif (rule.trigger == DynamicCP.TRIGGER_ZONENAMEMATCH) then
+        -- TODO
+    end
+
     -- Add vet or not
-    -- TODO: some types don't have vet
     local difficultyString = ""
     if (hasVet[rule.trigger]) then
         if (rule.normal and rule.veteran) then
@@ -85,8 +101,9 @@ local function GetCurrentPreview()
     end
 
     -- Format everything so far
-    local preview = string.format("Upon entering |c88FF88%s|r%s as |c88FF88%s|r, %sautomatically slot the following stars %s:",
+    local preview = string.format("Upon entering |c88FF88%s%s|r%s as |c88FF88%s|r, %sautomatically slot the following stars %s:",
         triggerToPreview[rule.trigger],
+        triggerExtraInfo,
         difficultyString,
         roleString,
         DynamicCP.savedOptions.customRules.promptSlotting and "semi-" or "",
@@ -497,6 +514,12 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil or not hasVet[DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger] end,
+        },
+        {
+            type = "description",
+            title = nil,
+            text = "* Public instances include public dungeons and delves, but also include outlaws refuges and quest instances such as Nighthollow Keep. Cyrodiil delves will trigger both Cyrodiil and Public Instance rules.",
+            width = "full",
         },
 ---------------------------------------------------------------------
 -- Stars
