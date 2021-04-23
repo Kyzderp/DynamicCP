@@ -63,7 +63,13 @@ local function GetCurrentPreview()
 
     local triggerExtraInfo = ""
     if (rule.trigger == DynamicCP.TRIGGER_ZONEID) then
-        triggerExtraInfo = string.format(" %s (%s)", rule.param1, GetZoneNameById(tonumber(rule.param1)))
+        local zoneIds = {}
+        for str in string.gmatch(rule.param1, "([^%%]+)") do
+            str = string.gsub(str, "^%s+", "")
+            str = string.gsub(str, "%s+$", "")
+            table.insert(zoneIds, string.format("%s (%s)", str, GetZoneNameById(tonumber(str))))
+        end
+        triggerExtraInfo = " " .. table.concat(zoneIds, ", ")
     elseif (rule.trigger == DynamicCP.TRIGGER_ZONENAMEMATCH) then
         -- TODO
     elseif (rule.trigger == DynamicCP.TRIGGER_BOSSNAME) then

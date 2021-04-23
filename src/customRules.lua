@@ -151,7 +151,6 @@ local function GetSortedRulesForTrigger(trigger, isVet, param1)
                 for str in string.gmatch(rule.param1, "([^%%]+)") do
                     str = string.gsub(str, "^%s+", "")
                     str = string.gsub(str, "%s+$", "")
-                    d(str)
                     if (param1 == str) then
                         table.insert(ruleNames, {name = name, priority = rule.priority})
                         break
