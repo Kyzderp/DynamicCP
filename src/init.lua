@@ -260,7 +260,7 @@ local function Initialize()
         DynamicCP.AddOptionsForEachCharacter("Example Trial")
         DynamicCP.AddOptionsForEachCharacter("Example Trial Dps")
         DynamicCP.ShowFirstTimeDialog()
-        -- TODO: unset first time
+        DynamicCP.savedOptions.customRules.firstTime = false
     end
 
     -- Migrate settings versions if applicable

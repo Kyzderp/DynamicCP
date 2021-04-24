@@ -486,7 +486,6 @@ local function OnPlayerActivated()
 end
 
 local function OnBossesChanged()
-    DynamicCP.dbg("bosses changed")
     local allRules = {}
     local bossNames = ""
 

@@ -211,6 +211,33 @@ local function CreateNewRule()
 end
 
 ---------------------------------------------------------------------
+-- Duplicate existing rule
+local function DuplicateRule()
+    local oldName = selectedRuleName
+    CreateNewRule()
+
+    local newRule = DynamicCP.savedOptions.customRules.rules[selectedRuleName]
+    local oldRule = DynamicCP.savedOptions.customRules.rules[oldName]
+
+    newRule.trigger = oldRule.trigger
+    newRule.priority = oldRule.priority
+    newRule.normal = oldRule.normal
+    newRule.veteran = oldRule.veteran
+    newRule.tank = oldRule.tank
+    newRule.healer = oldRule.healer
+    newRule.dps = oldRule.dps
+    newRule.param1 = oldRule.param1
+    newRule.param2 = oldRule.param2
+
+    for i, id in ipairs(oldRule.stars) do
+        newRule.stars[i] = id
+    end
+    for id, value in pairs(oldRule.chars) do
+        newRule.chars[id] = value
+    end
+end
+
+---------------------------------------------------------------------
 -- Build the stars dropdown choices
 local starDisplays = {}
 local starValues = {}
@@ -246,7 +273,8 @@ local function MakeCheckboxesForEachCharacter()
 
     for index = 1, GetNumCharacters() do
         local name, _, _, classId, _, _, id, _ = GetCharacterInfo(index)
-        name = zo_strformat("<<1>>", name)
+        local _, _, _, _, _, _, icon = GetClassInfo(GetClassIndexById(classId))
+        name = zo_strformat("|t28:28:<<2>>|t <<1>>", name, icon)
         local checkboxControl = {
             type = "checkbox",
             name = name,
@@ -383,6 +411,14 @@ function DynamicCP.CreateCustomRulesMenu()
             tooltip = "Add a new rule and edit it",
             func = CreateNewRule,
             width = "full",
+        },
+        {
+            type = "button",
+            name = "Duplicate Rule",
+            tooltip = "Add a new rule with the same settings as the currently selected",
+            func = DuplicateRule,
+            width = "full",
+            disabled = function() return selectedRuleName == nil end,
         },
 ---------------------------------------------------------------------
 -- EDIT RULE
