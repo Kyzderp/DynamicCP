@@ -142,18 +142,18 @@ local function GetSortedRulesForTrigger(trigger, isVet, param1)
     for _, name in ipairs(GetSortedKeys()) do
         local rule = DynamicCP.savedOptions.customRules.rules[name]
         if (rule.trigger == trigger) then
-            if (param1 == nil) then
-                if (rule[role] and rule[difficulty] and rule.chars[charId]) then
+            if (rule[role] and rule[difficulty] and rule.chars[charId]) then
+                if (param1 == nil) then
                     table.insert(ruleNames, {name = name, priority = rule.priority})
-                end
-            else
-                -- Split param1 on pipe char and attempt to match each one
-                for str in string.gmatch(rule.param1, "([^%%]+)") do
-                    str = string.gsub(str, "^%s+", "")
-                    str = string.gsub(str, "%s+$", "")
-                    if (param1 == str) then
-                        table.insert(ruleNames, {name = name, priority = rule.priority})
-                        break
+                else
+                    -- Split param1 on pipe char and attempt to match each one
+                    for str in string.gmatch(rule.param1, "([^%%]+)") do
+                        str = string.gsub(str, "^%s+", "")
+                        str = string.gsub(str, "%s+$", "")
+                        if (param1 == str) then
+                            table.insert(ruleNames, {name = name, priority = rule.priority})
+                            break
+                        end
                     end
                 end
             end
@@ -466,6 +466,7 @@ local function OnPlayerActivated()
     -------------------------
 
     if (#triggers == initialSize) then
+        -- TODO: Underground Sepulcher (764)
         DynamicCP.dbg("|cFF0000UNHANDLED ZONE " .. GetPlayerActiveZoneName() .. "|r")
         return
     end
