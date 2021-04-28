@@ -11,13 +11,25 @@
                 </Label>
                 <Texture name="$(parent)Confirm" textureFile="esoui/art/buttons/accept_up.dds" tier="HIGH" color="FF3bdb5e" mouseEnabled="true">
                     <Dimensions x="28" y="28" />
-                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOM" offsetX="-8" offsetY="-12"/>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="24" offsetY="-12"/>
                     <OnMouseUp>DynamicCP.OnModelessConfirm()</OnMouseUp>
+                    <Controls>
+                        <Label name="$(parent)Label" font="ZoFontGameSmall" color="3bdb5e" verticalAlignment="CENTER" horizontalAlignment="LEFT" tier="HIGH" hidden="false" text="Not Bound">
+                            <Dimensions x="80" y="30"/>
+                            <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT"/>
+                        </Label>
+                    </Controls>
                 </Texture>
                 <Texture name="$(parent)Cancel" textureFile="esoui/art/buttons/decline_up.dds" tier="HIGH" color="FF3bdb5e" mouseEnabled="true">
                     <Dimensions x="28" y="28" />
-                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOM" offsetX="8" offsetY="-12"/>
+                    <Anchor point="LEFT" relativeTo="$(parent)ConfirmLabel" relativePoint="RIGHT" offsetX="12"/>
                     <OnMouseUp>DynamicCP.OnModelessCancel()</OnMouseUp>
+                    <Controls>
+                        <Label name="$(parent)Label" font="ZoFontGameSmall" color="3bdb5e" verticalAlignment="CENTER" horizontalAlignment="LEFT" tier="HIGH" hidden="false" text="Not Bound">
+                            <Dimensions x="80" y="30"/>
+                            <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT"/>
+                        </Label>
+                    </Controls>
                 </Texture>
                 <Texture name="$(parent)Options" textureFile="esoui/art/chatwindow/chat_options_up.dds" tier="HIGH" color="FF3bdb5e" mouseEnabled="true">
                     <Dimensions x="36" y="36" />

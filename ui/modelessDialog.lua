@@ -39,6 +39,19 @@ function DynamicCP.ShowModelessPrompt(text, callback)
     DynamicCPModelessDialog:SetHeight(labelHeight + 70)
     DynamicCPModelessDialog:SetHidden(false)
     currentCallback = callback
+
+    -- Update the keybinds in case
+    local layerIndex, categoryIndex, actionIndex = GetActionIndicesFromName("DCP_DIALOG_CONFIRM")
+    local keyCode, mod1, mod2, mod3, mod4 = GetActionBindingInfo(layerIndex, categoryIndex, actionIndex, 1)
+    local confirmString = ZO_Keybindings_GetBindingStringFromKeys(keyCode, mod1, mod2, mod3, mod4)
+    DynamicCPModelessDialogConfirmLabel:SetText(confirmString)
+    DynamicCPModelessDialogConfirmLabel:SetWidth(80)
+    DynamicCPModelessDialogConfirmLabel:SetWidth(DynamicCPModelessDialogConfirmLabel:GetTextWidth())
+
+    layerIndex, categoryIndex, actionIndex = GetActionIndicesFromName("DCP_DIALOG_CANCEL")
+    keyCode, mod1, mod2, mod3, mod4 = GetActionBindingInfo(layerIndex, categoryIndex, actionIndex, 1)
+    local cancelString = ZO_Keybindings_GetBindingStringFromKeys(keyCode, mod1, mod2, mod3, mod4)
+    DynamicCPModelessDialogCancelLabel:SetText(cancelString)
 end
 
 
