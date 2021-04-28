@@ -373,6 +373,19 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
         },
+        {
+            type = "checkbox",
+            name = "Re-evaluate leaving subarea",
+            tooltip = "Set to ON to re-evaluate slotted stars upon exiting subarea triggers. For example, if you have a rule for a specific boss name, setting this to ON will make Dynamic CP try to re-apply rules for the zone you are in when you leave the boss. Setting this to OFF means there will be no change since you're still in the same zone", -- TODO: subzone
+            default = true,
+            getFunc = function()
+                return DynamicCP.savedOptions.customRules.reevalOnLeave
+            end,
+            setFunc = function(value)
+                DynamicCP.savedOptions.customRules.reevalOnLeave = value
+            end,
+            width = "full",
+        },
         -- {
         --     type = "checkbox",
         --     name = "Prompt conflicts",

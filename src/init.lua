@@ -59,6 +59,7 @@ local defaultOptions = {
         overrideOrder = true,
         autoSlot = false,
         promptConflicts = true,
+        reevalOnLeave = true,
         rules = {},
     },
 

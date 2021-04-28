@@ -25,6 +25,7 @@ local difficulties = {
 local lastZoneId = 0
 local lastBossNames = ""
 local sortedKeys = {}
+local appliedBossNameRule = false
 
 ---------------------------------------------------------------------
 -- First-time dialog box
@@ -403,6 +404,10 @@ local function SortAndApplyAllRules(allRules, triggerDisplayName)
         table.insert(sortedRuleNames, data.name)
     end
 
+    if (triggerDisplayName == triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME]) then
+        appliedBossNameRule = true
+    end
+
     -- Apply the rules
     ApplyRules(sortedRuleNames, zo_strformat("You entered <<3>> <<C:1>> (zone id <<2>>).",
         GetPlayerActiveZoneName(),
@@ -503,6 +508,19 @@ local function OnBossesChanged()
         return
     end
     lastBossNames = bossNames
+
+    -- At this point, this is a change from having a boss to no boss
+    if (bossNames == "") then
+        DynamicCP.dbg("left boss area")
+        -- So do a reeval if we had applied a boss name trigger
+        if (appliedBossNameRule and DynamicCP.savedOptions.customRules.reevalOnLeave) then
+            DynamicCP.ReEval()
+            appliedBossNameRule = false
+            -- TODO: setting for waiting for cooldown
+        end
+        return
+    end
+    appliedBossNameRule = false
 
     -- Get the rules
     for i = 1, MAX_BOSSES do
