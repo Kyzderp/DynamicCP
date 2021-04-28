@@ -198,7 +198,7 @@ local function ApplyRules(sortedRuleNames, triggerString)
                 return
             end
         else
-            DynamicCP.msg(triggerString .. "\n|cAAAAAAAll stars are already slotted from rules " .. table.concat(sortedRuleNames, " < "))
+            DynamicCP.msg(triggerString .. "\n|cAAAAAAAll stars are already slotted from rules: " .. table.concat(sortedRuleNames, " < "))
             return
         end
     end
@@ -229,7 +229,7 @@ local function ApplyRules(sortedRuleNames, triggerString)
 
         -- It's possible for there to be no changes here if all potential changes aren't unlocked
         if (#diffMessages == 0) then
-            DynamicCP.msg(triggerString .. "\n|cAAAAAAAll stars are already slotted from rules " .. table.concat(sortedRuleNames, " < "))
+            DynamicCP.msg(triggerString .. "\n|cAAAAAAAll stars are already slotted from rules: " .. table.concat(sortedRuleNames, " < "))
             return
         end
 
@@ -466,7 +466,7 @@ local function OnPlayerActivated()
     -------------------------
 
     if (#triggers == initialSize) then
-        -- TODO: Underground Sepulcher (764)
+        -- TODO: Underground Sepulcher (764) The Hideaway (770) Secluded Sewers (763)
         DynamicCP.dbg("|cFF0000UNHANDLED ZONE " .. GetPlayerActiveZoneName() .. "|r")
         return
     end
@@ -523,7 +523,7 @@ local function OnBossesChanged()
 end
 
 
-function DynamicCP.Test()
+function DynamicCP.ReEval()
     lastZoneId = 0
     OnPlayerActivated()
 end

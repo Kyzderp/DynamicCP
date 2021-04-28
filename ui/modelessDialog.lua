@@ -15,15 +15,17 @@ end
 
 function DynamicCP.OnModelessConfirm()
     if (not currentCallback) then
-        DynamicCP.dbg("SHOULD NOT SEE THIS")
+        DynamicCP.msg("There is no dialog to confirm.")
         return
     end
 
     currentCallback()
+    currentCallback = nil
     DynamicCPModelessDialog:SetHidden(true)
 end
 
 function DynamicCP.OnModelessCancel()
+    currentCallback = nil
     DynamicCPModelessDialog:SetHidden(true)
 end
 

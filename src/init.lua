@@ -281,6 +281,8 @@ local function Initialize()
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_MENU", "Toggle CP Preset Window")
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_QUICKSTARS", "Toggle Quickstars Panel")
     ZO_CreateStringId("SI_BINDING_NAME_DCP_CYCLE_QUICKSTARS", "Cycle Quickstars Tab")
+    ZO_CreateStringId("SI_BINDING_NAME_DCP_DIALOG_CONFIRM", "Confirm Custom Rules Dialog")
+    ZO_CreateStringId("SI_BINDING_NAME_DCP_DIALOG_CANCEL", "Cancel Custom Rules Dialog")
 
     -- Initialize
     DynamicCP.InitModelessDialog()
@@ -318,6 +320,8 @@ local function Initialize()
             DynamicCP.OpenCustomRulesMenu()
         elseif (arg == "settings") then
             DynamicCP.OpenSettingsMenu()
+        elseif (arg == "eval") then
+            DynamicCP.ReEval()
         else
             DynamicCP.TogglePresetsWindow()
         end
