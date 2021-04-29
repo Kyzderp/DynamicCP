@@ -60,6 +60,7 @@ local defaultOptions = {
         autoSlot = false,
         promptConflicts = true,
         reevalOnLeave = true,
+        applyBossOnCombatEnd = true,
         rules = {},
     },
 

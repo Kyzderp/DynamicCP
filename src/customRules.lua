@@ -26,6 +26,9 @@ local lastZoneId = 0
 local lastBossNames = ""
 local sortedKeys = {}
 local appliedBossNameRule = false
+local inCombat = false
+
+local pendingRules = nil -- Boss rules that are pending if we are in combat
 
 ---------------------------------------------------------------------
 -- First-time dialog box
@@ -385,6 +388,7 @@ local triggerToFunction = {
 -- Entry point
 ---------------------------------------------------------------------
 local function SortAndApplyAllRules(allRules, triggerDisplayName)
+    pendingRules = nil
     -- Now sort
     local sortedRules = {}
     for name, priority in pairs(allRules) do
@@ -415,6 +419,7 @@ local function SortAndApplyAllRules(allRules, triggerDisplayName)
         triggerDisplayName))
 end
 
+---------------------------------------------------------------------
 local function OnPlayerActivated()
     DynamicCP.OnModelessCancel()
     local purchaseAvailability = GetChampionPurchaseAvailability()
@@ -471,7 +476,7 @@ local function OnPlayerActivated()
     -------------------------
 
     if (#triggers == initialSize) then
-        -- TODO: Underground Sepulcher (764) The Hideaway (770) Secluded Sewers (763)
+        -- TODO: Underground Sepulcher (764) The Hideaway (770) Secluded Sewers (763) Deadhollow Halls (767)
         DynamicCP.dbg("|cFF0000UNHANDLED ZONE " .. GetPlayerActiveZoneName() .. "|r")
         return
     end
@@ -491,8 +496,8 @@ local function OnPlayerActivated()
     SortAndApplyAllRules(allRules, triggerDisplayNames[triggers[#triggers]])
 end
 
+---------------------------------------------------------------------
 local function OnBossesChanged()
-    local allRules = {}
     local bossNames = ""
 
     -- Slightly more efficient to check first if the bosses even changed
@@ -522,6 +527,8 @@ local function OnBossesChanged()
     end
     appliedBossNameRule = false
 
+    local allRules = {}
+    local numRules = 0
     -- Get the rules
     for i = 1, MAX_BOSSES do
         local name = GetUnitName("boss" .. tostring(i))
@@ -533,11 +540,36 @@ local function OnBossesChanged()
             -- Add all
             for _, value in pairs(rules) do
                 allRules[value.name] = value.priority
+                numRules = numRules + 1
             end
         end
     end
 
-    SortAndApplyAllRules(allRules, triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME])
+    if (numRules == 0) then
+        DynamicCP.dbg("No rules to apply on boss.")
+        return
+    end
+
+    if (inCombat) then
+        if (DynamicCP.savedOptions.customRules.applyBossOnCombatEnd) then
+            pendingRules = allRules
+            DynamicCP.msg("Waiting for combat to end before applying pending boss rules...") -- TODO: within X seconds
+        else
+            DynamicCP.msg("Did not apply boss rule because player is in combat.")
+        end
+    else
+        SortAndApplyAllRules(allRules, triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME])
+    end
+end
+
+---------------------------------------------------------------------
+local function OnCombatStateChanged(_, combat)
+    inCombat = combat
+    if (not inCombat and pendingRules ~= nil) then
+        -- pendingRules will be zeroed by this call
+        DynamicCP.dbg("delayed boss rule")
+        SortAndApplyAllRules(pendingRules, triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME])
+    end
 end
 
 
@@ -552,5 +584,6 @@ function DynamicCP.InitCustomRules()
     SortRuleKeys()
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomActivated", EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomBossesChanged", EVENT_BOSSES_CHANGED, OnBossesChanged)
+    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomCombatState", EVENT_PLAYER_COMBAT_STATE, OnCombatStateChanged)
     lastZoneId = GetZoneId(GetUnitZoneIndex("player"))
 end
