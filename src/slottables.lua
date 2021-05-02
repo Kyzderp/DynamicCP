@@ -26,7 +26,6 @@ local function ToggleSlotStar(championSkillData)
     local slot = CHAMPION_PERKS.championBar:FindSlotMatchingChampionSkill(championSkillData)
     if (slot) then
         -- Remove it from the bar
-        DynamicCP.dbg(zo_strformat("Unslotting <<C:1>>", GetChampionSkillName(id)))
         slot:ClearSlot()
         return
     end
@@ -37,12 +36,10 @@ local function ToggleSlotStar(championSkillData)
         local possibleIndex = disciplineIndex * 4 - 4 + i
         local possibleSlot = CHAMPION_PERKS.championBar:GetSlot(possibleIndex)
         if (not possibleSlot.championSkillData) then
-            DynamicCP.dbg(zo_strformat("Slotting <<C:1>>", GetChampionSkillName(id)))
             possibleSlot:AssignChampionSkillToSlot(championSkillData)
             return
         end
     end
-    DynamicCP.dbg("Couldn't find an empty slot")
 end
 
 
@@ -56,7 +53,6 @@ local function AddMouseDoubleClickStars()
             local id = child.star.championSkillData.championSkillId
             if (CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))) then
                 if (child:GetHandler("OnMouseDoubleClick") == nil) then
-                    -- DynamicCP.dbg(zo_strformat("Adding doubleclick handler for <<C:1>>", GetChampionSkillName(id)))
                     child:SetHandler("OnMouseDoubleClick", function()
                         ToggleSlotStar(child.star.championSkillData)
                     end)
@@ -68,8 +64,6 @@ end
 DynamicCP.AddMouseDoubleClickStars = AddMouseDoubleClickStars
 
 local function AddMouseDoubleClick()
-    DynamicCP.dbg("Adding mouse actions")
-
     AddMouseDoubleClickStars()
 
     -- Do the hotbar slots too
@@ -94,7 +88,6 @@ local function CollectCurrentSlottables()
 end
 
 local function OnSlotsChanged()
-    -- DynamicCP.dbg("OnSlotsChanged")
     local currTime = GetGameTimeMilliseconds()
     if (not slotUpdateThrottling) then
         slotUpdateThrottling = true
@@ -110,7 +103,6 @@ local function OnSlotsChanged()
         EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "SlotsChangedThrottle")
 
         -- Slots have finished updating
-        -- DynamicCP.dbg("OnSlotsChanged PASSED")
         CollectCurrentSlottables()
         DynamicCP.ApplyCurrentSlottables(currentSlottables)
     end)
@@ -119,17 +111,13 @@ end
 DynamicCP.OnSlotsChanged = OnSlotsChanged
 
 local function AddSlotChange()
-    DynamicCP.dbg("Adding slot change callbacks")
-
     -- Slot changes from the UI
     CHAMPION_PERKS.championBar:RegisterCallback("SlotChanged", function()
-        -- DynamicCP.dbg("slot changed")
         OnSlotsChanged()
     end)
 
     -- This is called when starting or stopping respec
     CHAMPION_DATA_MANAGER:RegisterCallback("AllPointsChanged", function()
-        -- DynamicCP.dbg("all points changed")
         OnSlotsChanged()
     end)
 end
@@ -142,7 +130,6 @@ end
 local function GetCommittedSlottables()
     -- Cached to avoid more calls
     if (committedSlottables ~= nil) then
-        -- DynamicCP.dbg("cached")
         return committedSlottables
     end
 
@@ -150,7 +137,6 @@ local function GetCommittedSlottables()
     for i = 1, 12 do
         local skillId = GetSlotBoundId(i, HOTBAR_CATEGORY_CHAMPION)
         committedSlottables[skillId] = i
-        -- DynamicCP.dbg(zo_strformat("<<1>> <<C:2>>", i, GetChampionSkillName(skillId)))
     end
     return committedSlottables
 end
@@ -159,7 +145,6 @@ DynamicCP.GetCommittedSlottables = GetCommittedSlottables
 -- Clear cache
 local function ClearCommittedSlottables()
     committedSlottables = nil
-    -- DynamicCP.dbg("clearing committed cache")
 end
 DynamicCP.ClearCommittedSlottables = ClearCommittedSlottables
 
@@ -187,7 +172,6 @@ local function CleanPendingSlottables()
     end
 
     -- If nothing changed, then we can just clear everything
-    DynamicCP.dbg("Cleaned ALL slottables")
     pendingSlottables = {}
 end
 
@@ -201,7 +185,6 @@ local function ConvertPendingSlottablesToPurchase()
         if (id == -1) then
             id = nil
         end
-        DynamicCP.dbg(zo_strformat("purchasing <<C:1>> <<2>>", GetChampionSkillName(id), slotIndex))
         AddHotbarSlotToChampionPurchaseRequest(slotIndex, id)
     end
 end

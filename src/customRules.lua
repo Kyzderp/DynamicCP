@@ -476,8 +476,8 @@ local function OnPlayerActivated()
     -------------------------
 
     if (#triggers == initialSize) then
-        -- TODO: Underground Sepulcher (764) The Hideaway (770) Secluded Sewers (763) Deadhollow Halls (767)
-        DynamicCP.dbg("|cFF0000UNHANDLED ZONE " .. GetPlayerActiveZoneName() .. "|r")
+        -- TODO: Underground Sepulcher (764) The Hideaway (770) Secluded Sewers (763) Deadhollow Halls (767) Glittering Grotto (771)
+        DynamicCP.dbg("|cFF0000UNHANDLED ZONE " .. GetPlayerActiveZoneName() .. " (" .. tostring(zoneId) .. ")|r")
         return
     end
 
