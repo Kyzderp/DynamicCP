@@ -254,16 +254,44 @@ local starDisplays = {}
 local starValues = {}
 
 local function BuildStarsDropdowns()
+    local unlockedColor = {
+        [1] = "a5d752",
+        [2] = "59bae7",
+        [3] = "e46b2e",
+    }
+    local unsortedStars = {}
     for disciplineIndex = 1, GetNumChampionDisciplines() do
         starDisplays[disciplineIndex] = {"--"}
         starValues[disciplineIndex] = {-1}
         for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
             local skillId = GetChampionSkillId(disciplineIndex, skillIndex)
             if (CanChampionSkillTypeBeSlotted(GetChampionSkillType(skillId))) then
-                table.insert(starDisplays[disciplineIndex], zo_strformat("<<C:1>>", GetChampionSkillName(skillId)))
-                table.insert(starValues[disciplineIndex], skillId)
+                local name = zo_strformat("<<C:1>>", GetChampionSkillName(skillId))
+                local displayName = name
+                local numPoints = GetNumPointsSpentOnChampionSkill(skillId)
+                if (WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))) then
+                    displayName = string.format("|c%s%s - %d/%d|r",
+                        unlockedColor[disciplineIndex],
+                        name,
+                        numPoints,
+                        GetChampionSkillMaxPoints(skillId))
+                end
+                table.insert(unsortedStars, {
+                    disciplineIndex = disciplineIndex,
+                    skillId = skillId,
+                    name = name,
+                    displayName = displayName,
+                })
             end
         end
+    end
+
+    table.sort(unsortedStars, function(item1, item2)
+            return item1.name < item2. name
+        end)
+    for _, data in ipairs(unsortedStars) do
+        table.insert(starDisplays[data.disciplineIndex], data.displayName)
+        table.insert(starValues[data.disciplineIndex], data.skillId)
     end
 end
 DynamicCP.BuildStarsDropdowns = BuildStarsDropdowns
