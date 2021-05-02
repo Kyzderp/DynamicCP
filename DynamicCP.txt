@@ -10,6 +10,7 @@
 ## SavedVariables: DynamicCPSavedVariables
 
 src/init.lua
+src/cooldown.lua
 src/points.lua
 src/presetData.lua
 src/screenUpdates.lua
