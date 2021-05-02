@@ -491,6 +491,24 @@ function DynamicCP.CreateCustomRulesMenu()
             width = "full",
             disabled = function() return selectedRuleName == nil end,
         },
+        {
+            type = "button",
+            name = "Delete Rule",
+            tooltip = "Delete this rule. This cannot be undone!",
+            func = function()
+                DynamicCP.dbg("Deleting " .. selectedRuleName)
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName] = nil
+                selectedRuleName = nil
+
+                DynamicCP.SortRuleKeys()
+                local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+            end,
+            warning = "Delete this rule. This cannot be undone!",
+            isDangerous = true,
+            width = "full",
+            disabled = function() return selectedRuleName == nil end,
+        },
 ---------------------------------------------------------------------
 -- EDIT RULE
         {
@@ -562,24 +580,6 @@ function DynamicCP.CreateCustomRulesMenu()
                 rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
                 rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
             end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-        },
-        {
-            type = "button",
-            name = "Delete Rule",
-            tooltip = "Delete this rule. This cannot be undone!",
-            func = function()
-                DynamicCP.dbg("Deleting " .. selectedRuleName)
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName] = nil
-                selectedRuleName = nil
-
-                DynamicCP.SortRuleKeys()
-                local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
-                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
-            end,
-            warning = "Delete this rule. This cannot be undone!",
-            isDangerous = true,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
         },
