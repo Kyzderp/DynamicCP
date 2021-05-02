@@ -30,6 +30,7 @@ local appliedBossNameRule = false
 local inCombat = false
 
 local pendingRules = nil -- Boss rules that are pending if we are in combat
+local pendingName = ""
 
 ---------------------------------------------------------------------
 -- First-time dialog box
@@ -401,6 +402,7 @@ local triggerToFunction = {
 ---------------------------------------------------------------------
 local function SortAndApplyAllRules(allRules, triggerDisplayName)
     pendingRules = nil
+    pendingName = ""
     -- Now sort
     local sortedRules = {}
     for name, priority in pairs(allRules) do
@@ -509,6 +511,7 @@ local function OnPlayerActivated()
         end
     end
 
+    -- TODO: onCooldown
     SortAndApplyAllRules(allRules, triggerDisplayNames[triggers[#triggers]])
 end
 
@@ -569,6 +572,7 @@ local function OnBossesChanged()
     if (inCombat) then
         if (DynamicCP.savedOptions.customRules.applyBossOnCombatEnd) then
             pendingRules = allRules
+            pendingName = triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME]
             DynamicCP.msg("Waiting for combat to end before applying pending boss rules...") -- TODO: within X seconds
         else
             DynamicCP.msg("Did not apply boss rule because player is in combat.")
@@ -581,13 +585,16 @@ end
 ---------------------------------------------------------------------
 local function OnCombatStateChanged(_, combat)
     inCombat = combat
-    if (not inCombat and pendingRules ~= nil) then
-        -- pendingRules will be zeroed by this call
-        DynamicCP.dbg("delayed boss rule")
-        SortAndApplyAllRules(pendingRules, triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME])
-    end
+    DynamicCP.ApplyPendingRules()
 end
 
+function DynamicCP.ApplyPendingRules()
+    if (not inCombat and pendingRules ~= nil) then
+        -- pendingRules will be zeroed by this call
+        DynamicCP.dbg("delayed rule " .. pendingName)
+        SortAndApplyAllRules(pendingRules, pendingName)
+    end
+end
 
 function DynamicCP.ReEval()
     lastZoneId = 0
