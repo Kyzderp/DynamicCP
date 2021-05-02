@@ -7,6 +7,7 @@ DynamicCP.TRIGGER_GROUP_ARENA          = "Group Arena"         -- Done
 DynamicCP.TRIGGER_SOLO_ARENA           = "Solo Arena"          -- Done
 DynamicCP.TRIGGER_GROUP_DUNGEON        = "Group Dungeon"       -- Done
 DynamicCP.TRIGGER_PUBLIC_INSTANCE      = "Public Instance *"   -- Done
+DynamicCP.TRIGGER_GROUP_INSTANCE       = "Group Instance **"   -- Done
 DynamicCP.TRIGGER_OVERLAND             = "Overland"            -- Done
 DynamicCP.TRIGGER_CYRO                 = "Cyrodiil"            -- Done
 DynamicCP.TRIGGER_IC                   = "Imperial City"       -- Done
@@ -304,6 +305,15 @@ local function OnEnteredPublicInstance(initial)
     return GetSortedRulesForTrigger(DynamicCP.TRIGGER_PUBLIC_INSTANCE, false)
 end
 
+--------------------------------------------------------------------
+-- Any group instance - heists and sacraments, craglorn group delves
+local function OnEnteredGroupInstance(initial)
+    if (not initial) then return {} end
+    DynamicCP.dbg("|cFF4444Entered a GROUP INSTANCE|r")
+
+    return GetSortedRulesForTrigger(DynamicCP.TRIGGER_GROUP_INSTANCE, false)
+end
+
 --------------
 -- Any IC zone
 local function OnEnteredImperialCity(initial)
@@ -362,6 +372,7 @@ local triggerDisplayNames = {
     [DynamicCP.TRIGGER_SOLO_ARENA]      = "solo arena",
     [DynamicCP.TRIGGER_GROUP_DUNGEON]   = "group dungeon",
     [DynamicCP.TRIGGER_PUBLIC_INSTANCE] = "public instance",
+    [DynamicCP.TRIGGER_GROUP_INSTANCE]  = "group instance",
     [DynamicCP.TRIGGER_IC]              = "Imperial City:",
     [DynamicCP.TRIGGER_CYRO]            = "Cyrodiil:",
     [DynamicCP.TRIGGER_HOUSE]           = "player house",
@@ -376,6 +387,7 @@ local triggerToFunction = {
     [DynamicCP.TRIGGER_SOLO_ARENA]      = OnEnteredSoloArena,
     [DynamicCP.TRIGGER_GROUP_DUNGEON]   = OnEnteredGroupDungeon,
     [DynamicCP.TRIGGER_PUBLIC_INSTANCE] = OnEnteredPublicInstance,
+    [DynamicCP.TRIGGER_GROUP_INSTANCE]  = OnEnteredGroupInstance,
     [DynamicCP.TRIGGER_IC]              = OnEnteredImperialCity,
     [DynamicCP.TRIGGER_CYRO]            = OnEnteredCyrodiil,
     [DynamicCP.TRIGGER_HOUSE]           = OnEnteredPlayerHouse,
@@ -455,12 +467,17 @@ local function OnPlayerActivated()
     elseif (GetCurrentZoneHouseId() ~= 0) then
         table.insert(triggers, DynamicCP.TRIGGER_HOUSE)
     elseif (not groupOwnable and inDungeon) then
-        -- Anything that's not group ownable but is a dungeon and not a solo arena are things like public dungeons and delves,
+        -- Anything that's not group ownable but is a dungeon and not a solo arena is things like public dungeons and delves,
         -- but also outlaws refuges, quest instances, etc.
         table.insert(triggers, DynamicCP.TRIGGER_PUBLIC_INSTANCE)
     elseif (not groupOwnable and not inDungeon) then
         -- TODO: is this true?
         table.insert(triggers, DynamicCP.TRIGGER_OVERLAND)
+    elseif (groupOwnable and inDungeon) then
+        -- Anything that's not a group trial/dungeon/arena but is group ownable and a dungeon is things like
+        -- heist and sacrament areas, as well as Craglorn group delves
+        -- Underground Sepulcher (764) The Hideaway (770) Secluded Sewers (763) Deadhollow Halls (767) Glittering Grotto (771)
+        table.insert(triggers, DynamicCP.TRIGGER_GROUP_INSTANCE)
     end
 
     -- These not in the main if/else because Cyrodiil delves can trigger both public instances and Cyro
@@ -476,7 +493,6 @@ local function OnPlayerActivated()
     -------------------------
 
     if (#triggers == initialSize) then
-        -- TODO: Underground Sepulcher (764) The Hideaway (770) Secluded Sewers (763) Deadhollow Halls (767) Glittering Grotto (771)
         DynamicCP.dbg("|cFF0000UNHANDLED ZONE " .. GetPlayerActiveZoneName() .. " (" .. tostring(zoneId) .. ")|r")
         return
     end

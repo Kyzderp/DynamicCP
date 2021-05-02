@@ -12,6 +12,7 @@ local triggerDisplays = {
     DynamicCP.TRIGGER_SOLO_ARENA,
     DynamicCP.TRIGGER_GROUP_DUNGEON,
     DynamicCP.TRIGGER_PUBLIC_INSTANCE,
+    DynamicCP.TRIGGER_GROUP_INSTANCE,
     DynamicCP.TRIGGER_OVERLAND,
     DynamicCP.TRIGGER_CYRO,
     DynamicCP.TRIGGER_IC,
@@ -28,6 +29,7 @@ local triggerToPreview = {
     [DynamicCP.TRIGGER_SOLO_ARENA]           = "any solo arena",
     [DynamicCP.TRIGGER_GROUP_DUNGEON]        = "any group dungeon",
     [DynamicCP.TRIGGER_PUBLIC_INSTANCE]      = "any public instance*",
+    [DynamicCP.TRIGGER_GROUP_INSTANCE]       = "any group instance**",
     [DynamicCP.TRIGGER_OVERLAND]             = "any overland zone",
     [DynamicCP.TRIGGER_CYRO]                 = "Cyrodiil",
     [DynamicCP.TRIGGER_IC]                   = "Imperial City or Sewers",
@@ -44,6 +46,7 @@ local hasVet = {
     [DynamicCP.TRIGGER_SOLO_ARENA]           = true,
     [DynamicCP.TRIGGER_GROUP_DUNGEON]        = true,
     [DynamicCP.TRIGGER_PUBLIC_INSTANCE]      = false,
+    [DynamicCP.TRIGGER_GROUP_INSTANCE]       = false,
     [DynamicCP.TRIGGER_OVERLAND]             = false,
     [DynamicCP.TRIGGER_CYRO]                 = false,
     [DynamicCP.TRIGGER_IC]                   = false,
@@ -669,7 +672,7 @@ function DynamicCP.CreateCustomRulesMenu()
         {
             type = "description",
             title = nil,
-            text = "* Public instances include public dungeons and delves, but also include outlaws refuges and quest instances such as Nighthollow Keep. Cyrodiil delves will trigger both Cyrodiil and Public Instance rules.",
+            text = "* Public instances include public dungeons and delves, but also include outlaws refuges and quest instances such as Nighthollow Keep. Cyrodiil delves will trigger both Cyrodiil and Public Instance rules.\n** Group instances are heist and sacrament zones, as well as Craglorn group delves. Group dungeons, trials, and arenas are not included in this.",
             width = "full",
         },
 ---------------------------------------------------------------------
