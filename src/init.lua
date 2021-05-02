@@ -149,7 +149,6 @@ local function RegisterEvents()
             DynamicCP.ClearCommittedCP() -- Invalidate the cache
             DynamicCP.ClearCommittedSlottables() -- Invalidate the cache
             DynamicCP.OnSlotsChanged()
-            DynamicCP.OnCooldownStarted(result)
             DynamicCP.QuickstarsOnPurchased()
         end)
 
@@ -289,6 +288,7 @@ local function Initialize()
 
     -- Initialize
     DynamicCP.InitModelessDialog()
+    DynamicCP.InitCooldown()
     DynamicCP.SortRuleKeys()
 
     -- Register events
