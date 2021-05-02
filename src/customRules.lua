@@ -422,10 +422,6 @@ local function SortAndApplyAllRules(allRules, triggerDisplayName)
         table.insert(sortedRuleNames, data.name)
     end
 
-    if (triggerDisplayName == triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME]) then
-        appliedBossNameRule = true
-    end
-
     -- Apply the rules
     ApplyRules(sortedRuleNames, zo_strformat("You entered <<3>> <<C:1>> (zone id <<2>>).",
         GetPlayerActiveZoneName(),
@@ -511,8 +507,17 @@ local function OnPlayerActivated()
         end
     end
 
-    -- TODO: onCooldown
-    SortAndApplyAllRules(allRules, triggerDisplayNames[triggers[#triggers]])
+    if (DynamicCP.IsOnCooldown()) then
+        if (DynamicCP.savedOptions.customRules.applyOnCooldownEnd) then
+            pendingRules = allRules
+            pendingName = triggerDisplayNames[triggers[#triggers]]
+            DynamicCP.msg("Waiting for cooldown to end before applying pending rules...")
+        else
+            DynamicCP.msg("Did not apply rules because player is on cooldown.")
+        end
+    else
+        SortAndApplyAllRules(allRules, triggerDisplayNames[triggers[#triggers]])
+    end
 end
 
 ---------------------------------------------------------------------
@@ -569,6 +574,8 @@ local function OnBossesChanged()
         return
     end
 
+    appliedBossNameRule = true
+
     if (inCombat) then
         if (DynamicCP.savedOptions.customRules.applyBossOnCombatEnd) then
             pendingRules = allRules
@@ -576,6 +583,14 @@ local function OnBossesChanged()
             DynamicCP.msg("Waiting for combat to end before applying pending boss rules...") -- TODO: within X seconds
         else
             DynamicCP.msg("Did not apply boss rule because player is in combat.")
+        end
+    elseif (DynamicCP.IsOnCooldown()) then
+        if (DynamicCP.savedOptions.customRules.applyOnCooldownEnd) then
+            pendingRules = allRules
+            pendingName = triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME]
+            DynamicCP.msg("Waiting for cooldown to end before applying pending boss rules...")
+        else
+            DynamicCP.msg("Did not apply boss rule because player is on cooldown.")
         end
     else
         SortAndApplyAllRules(allRules, triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME])
@@ -585,16 +600,19 @@ end
 ---------------------------------------------------------------------
 local function OnCombatStateChanged(_, combat)
     inCombat = combat
-    DynamicCP.ApplyPendingRules()
+    if (not inCombat) then
+        DynamicCP.ApplyPendingRules()
+    end
 end
 
-function DynamicCP.ApplyPendingRules()
-    if (not inCombat and pendingRules ~= nil) then
+function ApplyPendingRules()
+    if (pendingRules ~= nil) then
         -- pendingRules will be zeroed by this call
         DynamicCP.dbg("delayed rule " .. pendingName)
         SortAndApplyAllRules(pendingRules, pendingName)
     end
 end
+DynamicCP.ApplyPendingRules = ApplyPendingRules
 
 function DynamicCP.ReEval()
     lastZoneId = 0
@@ -609,4 +627,6 @@ function DynamicCP.InitCustomRules()
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomBossesChanged", EVENT_BOSSES_CHANGED, OnBossesChanged)
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomCombatState", EVENT_PLAYER_COMBAT_STATE, OnCombatStateChanged)
     lastZoneId = GetZoneId(GetUnitZoneIndex("player"))
+
+    DynamicCP.RegisterCooldownListener("CustomRules", nil, nil, ApplyPendingRules)
 end

@@ -430,6 +430,19 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
         },
+        {
+            type = "checkbox",
+            name = "Wait for cooldown",
+            tooltip = "If you are on ZOS's 30-second cooldown when a rule is triggered, setting this to ON will delay the star slotting to when the cooldown is over. Setting this to OFF means the rule(s) will not be applied",
+            default = true,
+            getFunc = function()
+                return DynamicCP.savedOptions.customRules.applyOnCooldownEnd
+            end,
+            setFunc = function(value)
+                DynamicCP.savedOptions.customRules.applyOnCooldownEnd = value
+            end,
+            width = "full",
+        },
         -- {
         --     type = "checkbox",
         --     name = "Prompt conflicts",

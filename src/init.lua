@@ -61,6 +61,7 @@ local defaultOptions = {
         promptConflicts = true,
         reevalOnLeave = true,
         applyBossOnCombatEnd = true,
+        applyOnCooldownEnd = true,
         rules = {},
     },
 
