@@ -326,8 +326,10 @@ local function Initialize()
             DynamicCP.OpenSettingsMenu()
         elseif (arg == "eval") then
             DynamicCP.ReEval()
-        else
+        elseif (arg == "preset" or arg == "presets") then
             DynamicCP.TogglePresetsWindow()
+        else
+            DynamicCP.msg("Usage: /dcp <presets || quickstar || settings || rules>")
         end
     end
 end

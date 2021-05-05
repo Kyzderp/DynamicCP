@@ -53,6 +53,9 @@ local function SortRuleKeys()
     end
 
     table.sort(sortedRules, function(item1, item2)
+        if (item1.priority == item2.priority) then
+            return item1.name < item2.name
+        end
         return item1.priority < item2.priority
     end)
 
