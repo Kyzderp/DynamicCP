@@ -631,5 +631,5 @@ function DynamicCP.InitCustomRules()
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomCombatState", EVENT_PLAYER_COMBAT_STATE, OnCombatStateChanged)
     lastZoneId = GetZoneId(GetUnitZoneIndex("player"))
 
-    DynamicCP.RegisterCooldownListener("CustomRules", nil, nil, ApplyPendingRules)
+    DynamicCP.RegisterCooldownListener("CustomRules", function() DynamicCP.BuildStarsDropdowns() DynamicCP.UpdateStarsDropdowns() end, nil, ApplyPendingRules)
 end

@@ -253,7 +253,36 @@ end
 local starDisplays = {}
 local starValues = {}
 
+local function UpdateStarsDropdowns()
+    local dropdowns = {
+        CraftStar1Dropdown = 1,
+        CraftStar2Dropdown = 1,
+        CraftStar3Dropdown = 1,
+        CraftStar4Dropdown = 1,
+        WarfareStar1Dropdown = 2,
+        WarfareStar2Dropdown = 2,
+        WarfareStar3Dropdown = 2,
+        WarfareStar4Dropdown = 2,
+        FitnessStar1Dropdown = 3,
+        FitnessStar2Dropdown = 3,
+        FitnessStar3Dropdown = 3,
+        FitnessStar4Dropdown = 3,
+    }
+
+    for reference, disciplineIndex in pairs(dropdowns) do
+        local dropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#" .. reference)
+        if (dropdown) then -- May not be initialized if menu hasn't been opened yet
+            dropdown:UpdateChoices(starDisplays[disciplineIndex], starValues[disciplineIndex])
+        end
+    end
+end
+DynamicCP.UpdateStarsDropdowns = UpdateStarsDropdowns
+
 local function BuildStarsDropdowns()
+    DynamicCP.dbg("building stars dropdowns")
+    starDisplays = {}
+    starValues = {}
+
     local unlockedColor = {
         [1] = "a5d752",
         [2] = "59bae7",
@@ -295,6 +324,7 @@ local function BuildStarsDropdowns()
     end
 end
 DynamicCP.BuildStarsDropdowns = BuildStarsDropdowns
+
 
 ---------------------------------------------------------------------
 -- Build the per-character toggles in advanced options
@@ -739,6 +769,7 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#CraftStar1Dropdown"
         },
         {
             type = "dropdown",
@@ -756,6 +787,7 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#CraftStar2Dropdown"
         },
         {
             type = "dropdown",
@@ -773,6 +805,7 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#CraftStar3Dropdown"
         },
         {
             type = "dropdown",
@@ -790,6 +823,7 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#CraftStar4Dropdown"
         },
         {
             type = "header",
@@ -813,6 +847,7 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#WarfareStar1Dropdown"
         },
         {
             type = "dropdown",
@@ -830,6 +865,7 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#WarfareStar2Dropdown"
         },
         {
             type = "dropdown",
@@ -847,6 +883,7 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#WarfareStar3Dropdown"
         },
         {
             type = "dropdown",
@@ -864,6 +901,7 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#WarfareStar4Dropdown"
         },
         {
             type = "header",
@@ -887,6 +925,7 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#FitnessStar1Dropdown"
         },
         {
             type = "dropdown",
@@ -904,6 +943,7 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#FitnessStar2Dropdown"
         },
         {
             type = "dropdown",
@@ -921,6 +961,7 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#FitnessStar3Dropdown"
         },
         {
             type = "dropdown",
@@ -938,6 +979,7 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
+            reference = "DynamicCP#FitnessStar4Dropdown"
         },
 ---------------------------------------------------------------------
 -- Advanced options
