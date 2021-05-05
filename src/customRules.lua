@@ -31,6 +31,7 @@ local inCombat = false
 
 local pendingRules = nil -- Boss rules that are pending if we are in combat
 local pendingName = ""
+local hasTemporarilyHiddenDialog = false
 
 ---------------------------------------------------------------------
 -- First-time dialog box
@@ -518,6 +519,11 @@ local function OnPlayerActivated()
         else
             DynamicCP.msg("Did not apply rules because player is on cooldown.")
         end
+    elseif (inCombat) then
+        -- This should only happen on a reeval if player leaves boss area while in combat
+        pendingRules = allRules
+        pendingName = triggerDisplayNames[triggers[#triggers]]
+        DynamicCP.msg("Waiting for combat to end before reevaluating rules...")
     else
         SortAndApplyAllRules(allRules, triggerDisplayNames[triggers[#triggers]])
     end
@@ -604,12 +610,37 @@ end
 local function OnCombatStateChanged(_, combat)
     inCombat = combat
     if (not inCombat) then
-        DynamicCP.ApplyPendingRules()
+        -- Several situations are possible to get to possibly conflicting rules
+        -- Autoslot: if user is on cooldown and enters a boss trigger, and then becomes in combat
+        -- Semi-auto: if user enters a boss trigger but doesn't accept the change before getting in combat
+        --      if the player dies, we will get combat_state_changed
+        --      if the player runs away from boss area, we will get bosses_changed but not be out of combat
+        --      if the boss dies, we will get both bosses_changed and combat_state_changed
+        -- The last is problematic because combat_state_changed wants to apply the previously pending rules, from the boss. bosses_changed wants to do a reeval
+        -- We should do the reeval and not the previously pending rules
+        -- If bosses_changed fires first, it's fine because reeval will clear the pendingRules
+        -- If combat_state_changed fires first... easiest hacky way would probably be to slightly delay... but just don't do anything about it for now
+        if (pendingRules) then
+            DynamicCP.ApplyPendingRules()
+        elseif (hasTemporarilyHiddenDialog) then
+            DynamicCP.dbg("unhiding temporarily hidden dialog")
+            DynamicCPModelessDialog:SetHidden(false)
+        end
+        hasTemporarilyHiddenDialog = false
+    else
+        if (DynamicCP.TemporarilyHideModelessPrompt()) then
+            hasTemporarilyHiddenDialog = true
+            DynamicCP.dbg("hiding dialog due to combat")
+        end
     end
 end
 
 function ApplyPendingRules()
     if (pendingRules ~= nil) then
+        if (inCombat) then
+            DynamicCP.dbg("further delaying rule " .. pendingName .. " because in combat")
+            return
+        end
         -- pendingRules will be zeroed by this call
         DynamicCP.dbg("delayed rule " .. pendingName)
         SortAndApplyAllRules(pendingRules, pendingName)

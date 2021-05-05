@@ -54,6 +54,15 @@ function DynamicCP.ShowModelessPrompt(text, callback)
     DynamicCPModelessDialogCancelLabel:SetText(cancelString)
 end
 
+-- Only called when player enters combat
+function DynamicCP.TemporarilyHideModelessPrompt()
+    if (DynamicCPModelessDialog:IsHidden()) then return end
+    -- So this is if there's a dialog currently showing, but player enters combat
+    -- Then we shouldn't remove the callback and instead only hide the dialog so it can be shown after exiting combat
+    DynamicCPModelessDialog:SetHidden(true)
+    return true
+end
+
 
 ---------------------------------------------------------------------
 -- Init
