@@ -57,6 +57,10 @@ local hasVet = {
     [DynamicCP.TRIGGER_HOUSE]                = false,
 }
 
+local canReeval = {
+    [DynamicCP.TRIGGER_BOSSNAME] = true, -- TODO: enable for leaving boss only
+}
+
 local function GetCurrentPreview()
     if (not selectedRuleName) then
         return ""
@@ -180,6 +184,7 @@ local function CreateNewRule()
         priority = 500,
         normal = true,
         veteran = true,
+        reeval = false,
         stars = {
             [1] = -1,
             [2] = -1,
@@ -436,19 +441,6 @@ function DynamicCP.CreateCustomRulesMenu()
         },
         {
             type = "checkbox",
-            name = "Re-evaluate leaving subarea",
-            tooltip = "Set to ON to re-evaluate slotted stars upon exiting subarea triggers. For example, if you have a rule for a specific boss name, setting this to ON will try to re-apply rules for the zone you are in when you leave the boss. Setting this to OFF means there will be no change since you're still in the same zone", -- TODO: subzone
-            default = true,
-            getFunc = function()
-                return DynamicCP.savedOptions.customRules.reevalOnLeave
-            end,
-            setFunc = function(value)
-                DynamicCP.savedOptions.customRules.reevalOnLeave = value
-            end,
-            width = "full",
-        },
-        {
-            type = "checkbox",
             name = "Wait for combat on boss",
             tooltip = "If you are in combat when a boss rule is triggered, setting this to ON will delay the star slotting to when you exit combat. Setting this to OFF means the rule(s) will not be applied",
             default = true,
@@ -661,8 +653,18 @@ function DynamicCP.CreateCustomRulesMenu()
             width = "full",
             disabled = function() return selectedRuleName == nil end,
         },
+---------------------------------------------------------------------
         {
-            type = "divider",
+            type = "header",
+            name = "|c3bdb5eCondition|r",
+            width = "full",
+        },
+        {
+            type = "description",
+            title = nil,
+            text = "What conditions should this rule apply to?",
+            disabled = function() return selectedRuleName == nil end,
+            width = "full",
         },
         {
             type = "dropdown",
@@ -747,241 +749,6 @@ function DynamicCP.CreateCustomRulesMenu()
             width = "full",
         },
 ---------------------------------------------------------------------
--- Stars
-        {
-            type = "header",
-            name = "|ca5d752Craft|r",
-            width = "full",
-        },
-        {
-            type = "dropdown",
-            name = "Craft Star 1",
-            tooltip = "Which star to slot in slot 1 of the Craft tree",
-            choices = starDisplays[1],
-            choicesValues = starValues[1],
-            getFunc = function()
-                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[1] or -1
-            end,
-            setFunc = function(value)
-                if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(value))
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[1] = value
-            end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-            reference = "DynamicCP#CraftStar1Dropdown"
-        },
-        {
-            type = "dropdown",
-            name = "Craft Star 2",
-            tooltip = "Which star to slot in slot 2 of the Craft tree",
-            choices = starDisplays[1],
-            choicesValues = starValues[1],
-            getFunc = function()
-                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[2] or -1
-            end,
-            setFunc = function(value)
-                if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(value))
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[2] = value
-            end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-            reference = "DynamicCP#CraftStar2Dropdown"
-        },
-        {
-            type = "dropdown",
-            name = "Craft Star 3",
-            tooltip = "Which star to slot in slot 3 of the Craft tree",
-            choices = starDisplays[1],
-            choicesValues = starValues[1],
-            getFunc = function()
-                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[3] or -1
-            end,
-            setFunc = function(value)
-                if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(value))
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[3] = value
-            end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-            reference = "DynamicCP#CraftStar3Dropdown"
-        },
-        {
-            type = "dropdown",
-            name = "Craft Star 4",
-            tooltip = "Which star to slot in slot 4 of the Craft tree",
-            choices = starDisplays[1],
-            choicesValues = starValues[1],
-            getFunc = function()
-                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[4] or -1
-            end,
-            setFunc = function(value)
-                if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(value))
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[4] = value
-            end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-            reference = "DynamicCP#CraftStar4Dropdown"
-        },
-        {
-            type = "header",
-            name = "|c59bae7Warfare|r",
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-        },
-        {
-            type = "dropdown",
-            name = "Warfare Star 1",
-            tooltip = "Which star to slot in slot 1 of the Warfare tree",
-            choices = starDisplays[2],
-            choicesValues = starValues[2],
-            getFunc = function()
-                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[5] or -1
-            end,
-            setFunc = function(value)
-                if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(value))
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[5] = value
-            end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-            reference = "DynamicCP#WarfareStar1Dropdown"
-        },
-        {
-            type = "dropdown",
-            name = "Warfare Star 2",
-            tooltip = "Which star to slot in slot 2 of the Warfare tree",
-            choices = starDisplays[2],
-            choicesValues = starValues[2],
-            getFunc = function()
-                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[6] or -1
-            end,
-            setFunc = function(value)
-                if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(value))
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[6] = value
-            end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-            reference = "DynamicCP#WarfareStar2Dropdown"
-        },
-        {
-            type = "dropdown",
-            name = "Warfare Star 3",
-            tooltip = "Which star to slot in slot 3 of the Warfare tree",
-            choices = starDisplays[2],
-            choicesValues = starValues[2],
-            getFunc = function()
-                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[7] or -1
-            end,
-            setFunc = function(value)
-                if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(value))
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[7] = value
-            end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-            reference = "DynamicCP#WarfareStar3Dropdown"
-        },
-        {
-            type = "dropdown",
-            name = "Warfare Star 4",
-            tooltip = "Which star to slot in slot 4 of the Warfare tree",
-            choices = starDisplays[2],
-            choicesValues = starValues[2],
-            getFunc = function()
-                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[8] or -1
-            end,
-            setFunc = function(value)
-                if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(value))
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[8] = value
-            end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-            reference = "DynamicCP#WarfareStar4Dropdown"
-        },
-        {
-            type = "header",
-            name = "|ce46b2eFitness|r",
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-        },
-        {
-            type = "dropdown",
-            name = "Fitness Star 1",
-            tooltip = "Which star to slot in slot 1 of the Fitness tree",
-            choices = starDisplays[3],
-            choicesValues = starValues[3],
-            getFunc = function()
-                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[9] or -1
-            end,
-            setFunc = function(value)
-                if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(value))
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[9] = value
-            end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-            reference = "DynamicCP#FitnessStar1Dropdown"
-        },
-        {
-            type = "dropdown",
-            name = "Fitness Star 2",
-            tooltip = "Which star to slot in slot 2 of the Fitness tree",
-            choices = starDisplays[3],
-            choicesValues = starValues[3],
-            getFunc = function()
-                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[10] or -1
-            end,
-            setFunc = function(value)
-                if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(value))
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[10] = value
-            end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-            reference = "DynamicCP#FitnessStar2Dropdown"
-        },
-        {
-            type = "dropdown",
-            name = "Fitness Star 3",
-            tooltip = "Which star to slot in slot 3 of the Fitness tree",
-            choices = starDisplays[3],
-            choicesValues = starValues[3],
-            getFunc = function()
-                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[11] or -1
-            end,
-            setFunc = function(value)
-                if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(value))
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[11] = value
-            end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-            reference = "DynamicCP#FitnessStar3Dropdown"
-        },
-        {
-            type = "dropdown",
-            name = "Fitness Star 4",
-            tooltip = "Which star to slot in slot 4 of the Fitness tree",
-            choices = starDisplays[3],
-            choicesValues = starValues[3],
-            getFunc = function()
-                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[12] or -1
-            end,
-            setFunc = function(value)
-                if (not selectedRuleName) then return end
-                DynamicCP.dbg("selected " .. tostring(value))
-                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[12] = value
-            end,
-            width = "full",
-            disabled = function() return selectedRuleName == nil end,
-            reference = "DynamicCP#FitnessStar4Dropdown"
-        },
----------------------------------------------------------------------
 -- Advanced options
         {
             type = "submenu",
@@ -1043,6 +810,268 @@ function DynamicCP.CreateCustomRulesMenu()
             name = "Character Conditions",
             disabled = function() return selectedRuleName == nil end,
             controls = MakeCheckboxesForEachCharacter(),
+        },
+---------------------------------------------------------------------
+-- Stars
+        {
+            type = "header",
+            name = "|c3bdb5eResult|r",
+            width = "full",
+        },
+        {
+            type = "description",
+            title = nil,
+            text = "What result should happen if the conditions are met?",
+            disabled = function() return selectedRuleName == nil end,
+            width = "full",
+        },
+        {
+            type = "checkbox",
+            name = "Re-evaluate instead of slotting stars",
+            tooltip = "This is only available for triggers within the same zone.\nSet to ON to trigger a re-evaluation of the other rules. For example, if you attach this to a trigger for leaving a certain boss, setting this to ON will try to re-apply rules for the zone you are in when you leave the boss.\nThis will always override other stars, regardless of priority",
+            default = true,
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval = value
+            end,
+            disabled = function() return selectedRuleName == nil or not canReeval[DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger] end,
+            width = "full",
+        },
+        {
+            type = "header",
+            name = "|ca5d752Craft|r",
+            width = "full",
+        },
+        {
+            type = "dropdown",
+            name = "Craft Star 1",
+            tooltip = "Which star to slot in slot 1 of the Craft tree",
+            choices = starDisplays[1],
+            choicesValues = starValues[1],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[1] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[1] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#CraftStar1Dropdown"
+        },
+        {
+            type = "dropdown",
+            name = "Craft Star 2",
+            tooltip = "Which star to slot in slot 2 of the Craft tree",
+            choices = starDisplays[1],
+            choicesValues = starValues[1],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[2] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[2] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#CraftStar2Dropdown"
+        },
+        {
+            type = "dropdown",
+            name = "Craft Star 3",
+            tooltip = "Which star to slot in slot 3 of the Craft tree",
+            choices = starDisplays[1],
+            choicesValues = starValues[1],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[3] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[3] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#CraftStar3Dropdown"
+        },
+        {
+            type = "dropdown",
+            name = "Craft Star 4",
+            tooltip = "Which star to slot in slot 4 of the Craft tree",
+            choices = starDisplays[1],
+            choicesValues = starValues[1],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[4] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[4] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#CraftStar4Dropdown"
+        },
+        {
+            type = "header",
+            name = "|c59bae7Warfare|r",
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+        },
+        {
+            type = "dropdown",
+            name = "Warfare Star 1",
+            tooltip = "Which star to slot in slot 1 of the Warfare tree",
+            choices = starDisplays[2],
+            choicesValues = starValues[2],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[5] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[5] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#WarfareStar1Dropdown"
+        },
+        {
+            type = "dropdown",
+            name = "Warfare Star 2",
+            tooltip = "Which star to slot in slot 2 of the Warfare tree",
+            choices = starDisplays[2],
+            choicesValues = starValues[2],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[6] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[6] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#WarfareStar2Dropdown"
+        },
+        {
+            type = "dropdown",
+            name = "Warfare Star 3",
+            tooltip = "Which star to slot in slot 3 of the Warfare tree",
+            choices = starDisplays[2],
+            choicesValues = starValues[2],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[7] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[7] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#WarfareStar3Dropdown"
+        },
+        {
+            type = "dropdown",
+            name = "Warfare Star 4",
+            tooltip = "Which star to slot in slot 4 of the Warfare tree",
+            choices = starDisplays[2],
+            choicesValues = starValues[2],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[8] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[8] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#WarfareStar4Dropdown"
+        },
+        {
+            type = "header",
+            name = "|ce46b2eFitness|r",
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+        },
+        {
+            type = "dropdown",
+            name = "Fitness Star 1",
+            tooltip = "Which star to slot in slot 1 of the Fitness tree",
+            choices = starDisplays[3],
+            choicesValues = starValues[3],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[9] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[9] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#FitnessStar1Dropdown"
+        },
+        {
+            type = "dropdown",
+            name = "Fitness Star 2",
+            tooltip = "Which star to slot in slot 2 of the Fitness tree",
+            choices = starDisplays[3],
+            choicesValues = starValues[3],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[10] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[10] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#FitnessStar2Dropdown"
+        },
+        {
+            type = "dropdown",
+            name = "Fitness Star 3",
+            tooltip = "Which star to slot in slot 3 of the Fitness tree",
+            choices = starDisplays[3],
+            choicesValues = starValues[3],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[11] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[11] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#FitnessStar3Dropdown"
+        },
+        {
+            type = "dropdown",
+            name = "Fitness Star 4",
+            tooltip = "Which star to slot in slot 4 of the Fitness tree",
+            choices = starDisplays[3],
+            choicesValues = starValues[3],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[12] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[12] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#FitnessStar4Dropdown"
         },
     }
 

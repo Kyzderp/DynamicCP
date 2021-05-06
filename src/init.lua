@@ -59,7 +59,6 @@ local defaultOptions = {
         overrideOrder = true,
         autoSlot = false,
         promptConflicts = true,
-        reevalOnLeave = true,
         applyBossOnCombatEnd = true,
         applyOnCooldownEnd = true,
         rules = {},
@@ -211,6 +210,7 @@ local function Initialize()
                 priority = 100,
                 normal = true,
                 veteran = true,
+                reeval = false,
                 stars = {
                     [1] = 79, -- Treasure Hunter
                     [2] = 66, -- Steed's Blessing
@@ -238,6 +238,7 @@ local function Initialize()
                 priority = 101,
                 normal = true,
                 veteran = true,
+                reeval = false,
                 stars = {
                     [1] = -1,
                     [2] = -1,

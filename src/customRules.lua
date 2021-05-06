@@ -177,15 +177,30 @@ end
 local function ApplyRules(sortedRuleNames, triggerString)
     if (not sortedRuleNames) then return end
 
+    local doReeval = false
+    local reevalRuleName = ""
+
     -- First pass collects them into pending, overwriting lower priority rules
     local pendingSlottables = {}
     for _, ruleName in ipairs(sortedRuleNames) do
         local rule = DynamicCP.savedOptions.customRules.rules[ruleName]
+        if (rule.reeval) then
+            doReeval = true
+            reevalRuleName = ruleName
+            break
+        end
         for slotIndex, skillId in pairs(rule.stars) do
             if (skillId ~= -1) then
                 pendingSlottables[slotIndex] = skillId
             end
         end
+    end
+
+    -- If ANY of the rules triggers a reeval, do that only and ignore everything else
+    if (doReeval) then
+        DynamicCP.dbg("|cFF8888Re-evaluating according to " .. reevalRuleName)
+        DynamicCP.ReEval()
+        return
     end
 
     -- Second pass checks if all of the stars are already slotted, or if they're all in the same slots
@@ -520,10 +535,10 @@ local function OnPlayerActivated()
             DynamicCP.msg("Did not apply rules because player is on cooldown.")
         end
     elseif (inCombat) then
-        -- This should only happen on a reeval if player leaves boss area while in combat
+        -- This should only happen on a "leave boss" if player leaves boss area while in combat
         pendingRules = allRules
         pendingName = triggerDisplayNames[triggers[#triggers]]
-        DynamicCP.msg("Waiting for combat to end before reevaluating rules...")
+        DynamicCP.msg("Waiting for combat to end before evaluating rules...")
     else
         SortAndApplyAllRules(allRules, triggerDisplayNames[triggers[#triggers]])
     end
@@ -550,12 +565,7 @@ local function OnBossesChanged()
     -- At this point, this is a change from having a boss to no boss
     if (bossNames == "") then
         DynamicCP.dbg("left boss area")
-        -- So do a reeval if we had applied a boss name trigger
-        if (appliedBossNameRule and DynamicCP.savedOptions.customRules.reevalOnLeave) then
-            DynamicCP.ReEval()
-            appliedBossNameRule = false
-            -- TODO: setting for waiting for cooldown
-        end
+        -- TODO: leave boss trigger
         return
     end
     appliedBossNameRule = false
@@ -610,16 +620,6 @@ end
 local function OnCombatStateChanged(_, combat)
     inCombat = combat
     if (not inCombat) then
-        -- Several situations are possible to get to possibly conflicting rules
-        -- Autoslot: if user is on cooldown and enters a boss trigger, and then becomes in combat
-        -- Semi-auto: if user enters a boss trigger but doesn't accept the change before getting in combat
-        --      if the player dies, we will get combat_state_changed
-        --      if the player runs away from boss area, we will get bosses_changed but not be out of combat
-        --      if the boss dies, we will get both bosses_changed and combat_state_changed
-        -- The last is problematic because combat_state_changed wants to apply the previously pending rules, from the boss. bosses_changed wants to do a reeval
-        -- We should do the reeval and not the previously pending rules
-        -- If bosses_changed fires first, it's fine because reeval will clear the pendingRules
-        -- If combat_state_changed fires first... easiest hacky way would probably be to slightly delay... but just don't do anything about it for now
         if (pendingRules) then
             DynamicCP.ApplyPendingRules()
         elseif (hasTemporarilyHiddenDialog) then
