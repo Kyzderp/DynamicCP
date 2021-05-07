@@ -117,14 +117,21 @@ local function GetCurrentPreview()
         roleString = table.concat(roles, "/")
     end
 
+    -- The result to actually do
+    local result = "|c88FF88re-evaluate all rules|r for the current zone."
+    if (not rule.reeval) then
+        result = string.format("slot the following stars %s:",
+            DynamicCP.savedOptions.customRules.overrideOrder and "in this specific order" or ", ignoring them if they are already slotted")
+    end
+
     -- Format everything so far
-    local preview = string.format("Upon |c88FF88%s%s|r%s as |c88FF88%s|r, %sautomatically slot the following stars %s:",
+    local preview = string.format("Upon |c88FF88%s%s|r%s as |c88FF88%s|r, %sautomatically %s",
         triggerToPreview[rule.trigger],
         triggerExtraInfo,
         difficultyString,
         roleString,
         DynamicCP.savedOptions.customRules.promptSlotting and "semi-" or "",
-        DynamicCP.savedOptions.customRules.overrideOrder and "in this specific order" or ", ignoring them if they are already slotted"
+        result
         )
 
     -- Add the stars
