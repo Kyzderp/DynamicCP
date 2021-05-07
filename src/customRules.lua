@@ -388,20 +388,20 @@ end
 -- Mappings
 ---------------------------------------------------------------------
 local triggerDisplayNames = {
-    [DynamicCP.TRIGGER_TRIAL]           = "trial",
-    [DynamicCP.TRIGGER_GROUP_ARENA]     = "group arena",
-    [DynamicCP.TRIGGER_SOLO_ARENA]      = "solo arena",
-    [DynamicCP.TRIGGER_GROUP_DUNGEON]   = "group dungeon",
-    [DynamicCP.TRIGGER_PUBLIC_INSTANCE] = "public instance",
-    [DynamicCP.TRIGGER_GROUP_INSTANCE]  = "group instance",
-    [DynamicCP.TRIGGER_IC]              = "Imperial City:",
-    [DynamicCP.TRIGGER_CYRO]            = "Cyrodiil:",
-    [DynamicCP.TRIGGER_HOUSE]           = "player house",
-    [DynamicCP.TRIGGER_OVERLAND]        = "overland zone",
-    [DynamicCP.TRIGGER_ZONEID]          = "zone",
-    [DynamicCP.TRIGGER_BOSSNAME]        = "boss area in",
-    [DynamicCP.TRIGGER_LEAVE_BOSSNAME]  = "boss area in", -- TODO: change to left
-    [DynamicCP.TRIGGER_BOSS_DIED]       = "boss death in",
+    [DynamicCP.TRIGGER_TRIAL]           = "You entered trial",
+    [DynamicCP.TRIGGER_GROUP_ARENA]     = "You entered group arena",
+    [DynamicCP.TRIGGER_SOLO_ARENA]      = "You entered solo arena",
+    [DynamicCP.TRIGGER_GROUP_DUNGEON]   = "You entered group dungeon",
+    [DynamicCP.TRIGGER_PUBLIC_INSTANCE] = "You entered public instance",
+    [DynamicCP.TRIGGER_GROUP_INSTANCE]  = "You entered group instance",
+    [DynamicCP.TRIGGER_IC]              = "You entered Imperial City:",
+    [DynamicCP.TRIGGER_CYRO]            = "You entered Cyrodiil:",
+    [DynamicCP.TRIGGER_HOUSE]           = "You entered player house",
+    [DynamicCP.TRIGGER_OVERLAND]        = "You entered overland zone",
+    [DynamicCP.TRIGGER_ZONEID]          = "You entered zone",
+    [DynamicCP.TRIGGER_BOSSNAME]        = "You entered boss area in",
+    [DynamicCP.TRIGGER_LEAVE_BOSSNAME]  = "You left boss area in",
+    [DynamicCP.TRIGGER_BOSS_DIED]       = "Boss died in",
 }
 
 local triggerToFunction = {
@@ -445,7 +445,7 @@ local function SortAndApplyAllRules(allRules, triggerDisplayName)
     end
 
     -- Apply the rules
-    ApplyRules(sortedRuleNames, zo_strformat("You entered <<3>> <<C:1>> (zone id <<2>>).",
+    ApplyRules(sortedRuleNames, zo_strformat("<<3>> <<C:1>> (zone id <<2>>).",
         GetPlayerActiveZoneName(),
         GetZoneId(GetUnitZoneIndex("player")),
         triggerDisplayName))
