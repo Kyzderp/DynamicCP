@@ -13,9 +13,10 @@ DynamicCP.TRIGGER_CYRO                 = "Cyrodiil"
 DynamicCP.TRIGGER_IC                   = "Imperial City"
 DynamicCP.TRIGGER_ZONEID               = "Specific Zone ID"
 DynamicCP.TRIGGER_ZONENAMEMATCH        = "Zone Name Match" -- tbd
-DynamicCP.TRIGGER_BOSSNAME             = "Specific Boss Name" -- Done
-DynamicCP.TRIGGER_LEAVE_BOSSNAME       = "Leaving Specific Boss" -- tbd
-DynamicCP.TRIGGER_HOUSE                = "Player House" -- Done
+DynamicCP.TRIGGER_HOUSE                = "Player House"
+DynamicCP.TRIGGER_BOSSNAME             = "Specific Boss Name"
+DynamicCP.TRIGGER_LEAVE_BOSSNAME       = "Leaving Specific Boss"
+DynamicCP.TRIGGER_BOSS_DIED            = "Specific Boss Death"
 
 local difficulties = {
     [DUNGEON_DIFFICULTY_NONE] = "NONE",
@@ -575,12 +576,13 @@ local function OnBossesChanged()
 
     local allRules = {}
     local numRules = 0
+    local trigger = bossesHash ~= "" and DynamicCP.TRIGGER_BOSSNAME or DynamicCP.TRIGGER_LEAVE_BOSSNAME
     -- Get the rules
     for i = 1, MAX_BOSSES do
         local name = bossesHash ~= "" and GetUnitName("boss" .. tostring(i)) or lastBosses[i]
         if (name and name ~= "") then
             local rules = GetSortedRulesForTrigger(
-                bossesHash ~= "" and DynamicCP.TRIGGER_BOSSNAME or DynamicCP.TRIGGER_LEAVE_BOSSNAME,
+                trigger,
                 GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN,
                 name)
 
@@ -602,23 +604,76 @@ local function OnBossesChanged()
     if (inCombat) then
         if (DynamicCP.savedOptions.customRules.applyBossOnCombatEnd) then
             pendingRules = allRules
-            pendingName = triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME]
-            DynamicCP.msg("Waiting for combat to end before applying pending boss rules...") -- TODO: within X seconds
+            pendingName = triggerDisplayNames[trigger]
+            DynamicCP.msg("Waiting for combat to end before applying pending boss rules...")
         else
             DynamicCP.msg("Did not apply boss rule because player is in combat.")
         end
     elseif (DynamicCP.IsOnCooldown()) then
         if (DynamicCP.savedOptions.customRules.applyOnCooldownEnd) then
             pendingRules = allRules
-            pendingName = triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME]
+            pendingName = triggerDisplayNames[trigger]
             DynamicCP.msg("Waiting for cooldown to end before applying pending boss rules...")
         else
             DynamicCP.msg("Did not apply boss rule because player is on cooldown.")
         end
     else
-        SortAndApplyAllRules(allRules, triggerDisplayNames[DynamicCP.TRIGGER_BOSSNAME])
+        SortAndApplyAllRules(allRules, triggerDisplayNames[trigger])
     end
 end
+
+
+---------------------------------------------------------------------
+local function OnDeathStateChanged(_, unitTag, isDead)
+    if (not isDead) then return end
+    if (not string.find(unitTag, "^boss")) then return end
+
+    local name = GetUnitName(unitTag)
+    DynamicCP.dbg("|cFF4444Checking boss died " .. name .. "|r")
+
+    local allRules = {}
+    local numRules = 0
+    -- Get the rules
+    if (name and name ~= "") then
+        local rules = GetSortedRulesForTrigger(
+            DynamicCP.TRIGGER_BOSS_DIED,
+            GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN,
+            name)
+
+        -- Add all
+        for _, value in pairs(rules) do
+            allRules[value.name] = value.priority
+            numRules = numRules + 1
+        end
+    end
+
+    if (numRules == 0) then
+        DynamicCP.dbg("No rules to apply on boss death.")
+        return
+    end
+
+
+    if (inCombat) then
+        if (DynamicCP.savedOptions.customRules.applyBossOnCombatEnd) then
+            pendingRules = allRules
+            pendingName = triggerDisplayNames[DynamicCP.TRIGGER_BOSS_DIED]
+            DynamicCP.msg("Waiting for combat to end before applying pending boss death rules...")
+        else
+            DynamicCP.msg("Did not apply boss death rule because player is in combat.")
+        end
+    elseif (DynamicCP.IsOnCooldown()) then
+        if (DynamicCP.savedOptions.customRules.applyOnCooldownEnd) then
+            pendingRules = allRules
+            pendingName = triggerDisplayNames[DynamicCP.TRIGGER_BOSS_DIED]
+            DynamicCP.msg("Waiting for cooldown to end before applying pending boss death rules...")
+        else
+            DynamicCP.msg("Did not apply boss death rule because player is on cooldown.")
+        end
+    else
+        SortAndApplyAllRules(allRules, triggerDisplayNames[DynamicCP.TRIGGER_BOSS_DIED])
+    end
+end
+
 
 ---------------------------------------------------------------------
 local function OnCombatStateChanged(_, combat)
@@ -663,6 +718,7 @@ function DynamicCP.InitCustomRules()
     SortRuleKeys()
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomActivated", EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomBossesChanged", EVENT_BOSSES_CHANGED, OnBossesChanged)
+    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomBossDied", EVENT_UNIT_DEATH_STATE_CHANGED, OnDeathStateChanged)
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "CustomCombatState", EVENT_PLAYER_COMBAT_STATE, OnCombatStateChanged)
     lastZoneId = GetZoneId(GetUnitZoneIndex("player"))
 

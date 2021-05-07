@@ -20,6 +20,7 @@ local triggerDisplays = {
     DynamicCP.TRIGGER_ZONEID,
     DynamicCP.TRIGGER_BOSSNAME,
     DynamicCP.TRIGGER_LEAVE_BOSSNAME,
+    DynamicCP.TRIGGER_BOSS_DIED,
 }
 
 ---------------------------------------------------------------------
@@ -38,6 +39,7 @@ local triggerToPreview = {
     [DynamicCP.TRIGGER_ZONEID]               = "entering specific zone ID",
     [DynamicCP.TRIGGER_BOSSNAME]             = "encountering specific bosses with name",
     [DynamicCP.TRIGGER_LEAVE_BOSSNAME]       = "leaving specific bosses with name",
+    [DynamicCP.TRIGGER_BOSS_DIED]            = "death of specific bosses with name",
 }
 
 local hasVet = {
@@ -54,11 +56,19 @@ local hasVet = {
     [DynamicCP.TRIGGER_ZONEID]               = true,
     [DynamicCP.TRIGGER_BOSSNAME]             = true,
     [DynamicCP.TRIGGER_LEAVE_BOSSNAME]       = true,
+    [DynamicCP.TRIGGER_BOSS_DIED]            = true,
+}
+
+local isBossTrigger = {
+    [DynamicCP.TRIGGER_BOSSNAME] = true,
+    [DynamicCP.TRIGGER_LEAVE_BOSSNAME] = true,
+    [DynamicCP.TRIGGER_BOSS_DIED] = true,
 }
 
 local canReeval = {
     [DynamicCP.TRIGGER_BOSSNAME] = true,
     [DynamicCP.TRIGGER_LEAVE_BOSSNAME] = true,
+    [DynamicCP.TRIGGER_BOSS_DIED] = true,
 }
 
 local function GetCurrentPreview()
@@ -77,9 +87,7 @@ local function GetCurrentPreview()
             table.insert(zoneIds, string.format("%s (%s)", str, GetZoneNameById(tonumber(str))))
         end
         triggerExtraInfo = " " .. table.concat(zoneIds, ", ")
-    elseif (rule.trigger == DynamicCP.TRIGGER_ZONENAMEMATCH) then
-        -- TODO
-    elseif (rule.trigger == DynamicCP.TRIGGER_BOSSNAME or rule.trigger == DynamicCP.TRIGGER_LEAVE_BOSSNAME) then
+    elseif (isBossTrigger[rule.trigger]) then
         triggerExtraInfo = " " .. string.gsub(rule.param1, "%%", "|r or |c88FF88")
     end
 
@@ -737,7 +745,7 @@ function DynamicCP.CreateCustomRulesMenu()
                         param1Line.label:SetText("Zone IDs")
                         param1Line.data.tooltipText = "The specific zone ID(s) to match. Your current zone ID is " .. tostring(GetZoneId(GetUnitZoneIndex("player"))) .. " (" .. GetPlayerActiveZoneName() .. "). You can set this to trigger on multiple zone IDs by separating them with percentage sign %"
                         return false
-                    elseif (trigger == DynamicCP.TRIGGER_BOSSNAME or trigger == DynamicCP.TRIGGER_LEAVE_BOSSNAME) then
+                    elseif (isBossTrigger[trigger]) then
                         param1Line.label:SetText("Boss names")
                         param1Line.data.tooltipText = "The specific boss name to match. You can set this to trigger on multiple bosses by separating them with percentage sign %"
                         return false
