@@ -348,6 +348,28 @@ DynamicCP.BuildStarsDropdowns = BuildStarsDropdowns
 
 ---------------------------------------------------------------------
 -- Build the per-character toggles in advanced options
+local function ToggleCharacterCheckboxes(matchingClassId)
+    -- First pass checks if any of the relevant ones are off
+    local shouldToggleOn = false
+    for index = 1, GetNumCharacters() do
+        local _, _, _, classId, _, _, id, _ = GetCharacterInfo(index)
+        if (not matchingClassId or matchingClassId == classId) then
+            if (not DynamicCP.savedOptions.customRules.rules[selectedRuleName].chars[id]) then
+                shouldToggleOn = true
+                break
+            end
+        end
+    end
+
+    -- Second pass turns them whichever way
+    for index = 1, GetNumCharacters() do
+        local name, _, _, classId, _, _, id, _ = GetCharacterInfo(index)
+        if (not matchingClassId or matchingClassId == classId) then
+            DynamicCP.savedOptions.customRules.rules[selectedRuleName].chars[id] = shouldToggleOn
+        end
+    end
+end
+
 -- GetCharacterInfo(number index)
 -- Returns: string name, number Gender gender, number level, number classId, number raceId, number Alliance alliance, string id, number locationId
 local function MakeCheckboxesForEachCharacter()
@@ -356,6 +378,56 @@ local function MakeCheckboxesForEachCharacter()
             type = "description",
             title = nil,
             text = "You can choose to only apply this rule on certain characters. The role conditions will still apply.",
+            width = "full",
+        },
+        -- idk, they take up a lot of space
+        -- {
+        --     type = "button",
+        --     name = "Toggle Dragonknights",
+        --     tooltip = "Toggle all dragonknights on or off",
+        --     func = function() ToggleCharacterCheckboxes(1) end,
+        --     width = "full",
+        -- },
+        -- {
+        --     type = "button",
+        --     name = "Toggle Sorcerers",
+        --     tooltip = "Toggle all sorcerers on or off",
+        --     func = function() ToggleCharacterCheckboxes(2) end,
+        --     width = "full",
+        -- },
+        -- {
+        --     type = "button",
+        --     name = "Toggle Nightblades",
+        --     tooltip = "Toggle all nightblades on or off",
+        --     func = function() ToggleCharacterCheckboxes(3) end,
+        --     width = "full",
+        -- },
+        -- {
+        --     type = "button",
+        --     name = "Toggle Templars",
+        --     tooltip = "Toggle all templars on or off",
+        --     func = function() ToggleCharacterCheckboxes(6) end,
+        --     width = "full",
+        -- },
+        -- {
+        --     type = "button",
+        --     name = "Toggle Wardens",
+        --     tooltip = "Toggle all wardens on or off",
+        --     func = function() ToggleCharacterCheckboxes(4) end,
+        --     width = "full",
+        -- },
+        -- {
+        --     type = "button",
+        --     name = "Toggle Necromancers",
+        --     tooltip = "Toggle all necromancers on or off",
+        --     func = function() ToggleCharacterCheckboxes(5) end,
+        --     width = "full",
+        -- },
+        {
+            type = "button",
+            name = "Toggle All",
+            tooltip = "Toggle all characters on or off",
+            func = function() ToggleCharacterCheckboxes() end,
             width = "full",
         },
     }

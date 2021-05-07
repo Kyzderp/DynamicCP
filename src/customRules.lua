@@ -400,6 +400,8 @@ local triggerDisplayNames = {
     [DynamicCP.TRIGGER_OVERLAND]        = "overland zone",
     [DynamicCP.TRIGGER_ZONEID]          = "zone",
     [DynamicCP.TRIGGER_BOSSNAME]        = "boss area in",
+    [DynamicCP.TRIGGER_LEAVE_BOSSNAME]  = "boss area in", -- TODO: change to left
+    [DynamicCP.TRIGGER_BOSS_DIED]       = "boss death in",
 }
 
 local triggerToFunction = {
@@ -452,6 +454,7 @@ end
 ---------------------------------------------------------------------
 local function OnPlayerActivated()
     DynamicCP.OnModelessCancel()
+    lastBossesHash = ""
     local purchaseAvailability = GetChampionPurchaseAvailability()
     if (purchaseAvailability == CHAMPION_PURCHASE_IN_NOCP_CAMPAIGN
         or purchaseAvailability == CHAMPION_PURCHASE_IN_NOCP_BATTLEGROUND
