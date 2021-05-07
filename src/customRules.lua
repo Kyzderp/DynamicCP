@@ -486,7 +486,10 @@ local function OnPlayerActivated()
     elseif (DynamicCP.SOLO_ARENA_ZONEIDS[tostring(zoneId)]) then
         table.insert(triggers, DynamicCP.TRIGGER_SOLO_ARENA)
     elseif (GetCurrentZoneHouseId() ~= 0) then
-        table.insert(triggers, DynamicCP.TRIGGER_HOUSE)
+        -- Do not trigger for housing preview
+        if (GetCurrentHouseOwner() ~= "") then
+            table.insert(triggers, DynamicCP.TRIGGER_HOUSE)
+        end
     elseif (not groupOwnable and inDungeon) then
         -- Anything that's not group ownable but is a dungeon and not a solo arena is things like public dungeons and delves,
         -- but also outlaws refuges, quest instances, etc.
