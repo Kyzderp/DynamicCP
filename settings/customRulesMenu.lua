@@ -19,25 +19,25 @@ local triggerDisplays = {
     DynamicCP.TRIGGER_HOUSE,
     DynamicCP.TRIGGER_ZONEID,
     DynamicCP.TRIGGER_BOSSNAME,
+    DynamicCP.TRIGGER_LEAVE_BOSSNAME,
 }
 
 ---------------------------------------------------------------------
 -- Get string for preview
 local triggerToPreview = {
-    [DynamicCP.TRIGGER_TRIAL]                = "any trial",
-    [DynamicCP.TRIGGER_GROUP_ARENA]          = "any group arena",
-    [DynamicCP.TRIGGER_SOLO_ARENA]           = "any solo arena",
-    [DynamicCP.TRIGGER_GROUP_DUNGEON]        = "any group dungeon",
-    [DynamicCP.TRIGGER_PUBLIC_INSTANCE]      = "any public instance*",
-    [DynamicCP.TRIGGER_GROUP_INSTANCE]       = "any group instance**",
-    [DynamicCP.TRIGGER_OVERLAND]             = "any overland zone",
-    [DynamicCP.TRIGGER_CYRO]                 = "Cyrodiil",
-    [DynamicCP.TRIGGER_IC]                   = "Imperial City or Sewers",
-    [DynamicCP.TRIGGER_ZONEID]               = "specific zone ID",
-    [DynamicCP.TRIGGER_ZONENAMEMATCH]        = "any zone name matching",
-    [DynamicCP.TRIGGER_BOSS]                 = "any boss area",
-    [DynamicCP.TRIGGER_BOSSNAME]             = "specific boss name matching",
-    [DynamicCP.TRIGGER_HOUSE]                = "any player house",
+    [DynamicCP.TRIGGER_TRIAL]                = "entering any trial",
+    [DynamicCP.TRIGGER_GROUP_ARENA]          = "entering any group arena",
+    [DynamicCP.TRIGGER_SOLO_ARENA]           = "entering any solo arena",
+    [DynamicCP.TRIGGER_GROUP_DUNGEON]        = "entering any group dungeon",
+    [DynamicCP.TRIGGER_PUBLIC_INSTANCE]      = "entering any public instance*",
+    [DynamicCP.TRIGGER_GROUP_INSTANCE]       = "entering any group instance**",
+    [DynamicCP.TRIGGER_OVERLAND]             = "entering any overland zone",
+    [DynamicCP.TRIGGER_CYRO]                 = "entering Cyrodiil",
+    [DynamicCP.TRIGGER_IC]                   = "entering Imperial City or Sewers",
+    [DynamicCP.TRIGGER_HOUSE]                = "entering any player house",
+    [DynamicCP.TRIGGER_ZONEID]               = "entering specific zone ID",
+    [DynamicCP.TRIGGER_BOSSNAME]             = "encountering specific bosses with name",
+    [DynamicCP.TRIGGER_LEAVE_BOSSNAME]       = "leaving specific bosses with name",
 }
 
 local hasVet = {
@@ -50,15 +50,15 @@ local hasVet = {
     [DynamicCP.TRIGGER_OVERLAND]             = false,
     [DynamicCP.TRIGGER_CYRO]                 = false,
     [DynamicCP.TRIGGER_IC]                   = false,
-    [DynamicCP.TRIGGER_ZONEID]               = true,
-    [DynamicCP.TRIGGER_ZONENAMEMATCH]        = true,
-    [DynamicCP.TRIGGER_BOSS]                 = true,
-    [DynamicCP.TRIGGER_BOSSNAME]             = true,
     [DynamicCP.TRIGGER_HOUSE]                = false,
+    [DynamicCP.TRIGGER_ZONEID]               = true,
+    [DynamicCP.TRIGGER_BOSSNAME]             = true,
+    [DynamicCP.TRIGGER_LEAVE_BOSSNAME]       = true,
 }
 
 local canReeval = {
-    [DynamicCP.TRIGGER_BOSSNAME] = true, -- TODO: enable for leaving boss only
+    [DynamicCP.TRIGGER_BOSSNAME] = true,
+    [DynamicCP.TRIGGER_LEAVE_BOSSNAME] = true,
 }
 
 local function GetCurrentPreview()
@@ -79,8 +79,8 @@ local function GetCurrentPreview()
         triggerExtraInfo = " " .. table.concat(zoneIds, ", ")
     elseif (rule.trigger == DynamicCP.TRIGGER_ZONENAMEMATCH) then
         -- TODO
-    elseif (rule.trigger == DynamicCP.TRIGGER_BOSSNAME) then
-        triggerExtraInfo = " " .. rule.param1
+    elseif (rule.trigger == DynamicCP.TRIGGER_BOSSNAME or rule.trigger == DynamicCP.TRIGGER_LEAVE_BOSSNAME) then
+        triggerExtraInfo = " " .. string.gsub(rule.param1, "%%", "|r or |c88FF88")
     end
 
     -- Add vet or not
@@ -118,7 +118,7 @@ local function GetCurrentPreview()
     end
 
     -- Format everything so far
-    local preview = string.format("Upon entering |c88FF88%s%s|r%s as |c88FF88%s|r, %sautomatically slot the following stars %s:",
+    local preview = string.format("Upon |c88FF88%s%s|r%s as |c88FF88%s|r, %sautomatically slot the following stars %s:",
         triggerToPreview[rule.trigger],
         triggerExtraInfo,
         difficultyString,
@@ -730,7 +730,7 @@ function DynamicCP.CreateCustomRulesMenu()
                         param1Line.label:SetText("Zone IDs")
                         param1Line.data.tooltipText = "The specific zone ID(s) to match. Your current zone ID is " .. tostring(GetZoneId(GetUnitZoneIndex("player"))) .. " (" .. GetPlayerActiveZoneName() .. "). You can set this to trigger on multiple zone IDs by separating them with percentage sign %"
                         return false
-                    elseif (trigger == DynamicCP.TRIGGER_BOSSNAME) then
+                    elseif (trigger == DynamicCP.TRIGGER_BOSSNAME or trigger == DynamicCP.TRIGGER_LEAVE_BOSSNAME) then
                         param1Line.label:SetText("Boss names")
                         param1Line.data.tooltipText = "The specific boss name to match. You can set this to trigger on multiple bosses by separating them with percentage sign %"
                         return false

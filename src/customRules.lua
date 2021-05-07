@@ -2,20 +2,20 @@ DynamicCP = DynamicCP or {}
 
 ---------------------------------------------------------------------
 -- Constants
-DynamicCP.TRIGGER_TRIAL                = "Trial"               -- Done
-DynamicCP.TRIGGER_GROUP_ARENA          = "Group Arena"         -- Done
-DynamicCP.TRIGGER_SOLO_ARENA           = "Solo Arena"          -- Done
-DynamicCP.TRIGGER_GROUP_DUNGEON        = "Group Dungeon"       -- Done
-DynamicCP.TRIGGER_PUBLIC_INSTANCE      = "Public Instance *"   -- Done
-DynamicCP.TRIGGER_GROUP_INSTANCE       = "Group Instance **"   -- Done
-DynamicCP.TRIGGER_OVERLAND             = "Overland"            -- Done
-DynamicCP.TRIGGER_CYRO                 = "Cyrodiil"            -- Done
-DynamicCP.TRIGGER_IC                   = "Imperial City"       -- Done
-DynamicCP.TRIGGER_ZONEID               = "Specific Zone ID"    -- Done
-DynamicCP.TRIGGER_ZONENAMEMATCH        = "Zone Name Match"     -- tbd
-DynamicCP.TRIGGER_BOSS                 = "Boss Area"           -- tbd - maybe? having all bosses could get hairy
-DynamicCP.TRIGGER_BOSSNAME             = "Specific Boss Name"  -- Done
-DynamicCP.TRIGGER_HOUSE                = "Player House"        -- Done
+DynamicCP.TRIGGER_TRIAL                = "Trial"
+DynamicCP.TRIGGER_GROUP_ARENA          = "Group Arena"
+DynamicCP.TRIGGER_SOLO_ARENA           = "Solo Arena"
+DynamicCP.TRIGGER_GROUP_DUNGEON        = "Group Dungeon"
+DynamicCP.TRIGGER_PUBLIC_INSTANCE      = "Public Instance *"
+DynamicCP.TRIGGER_GROUP_INSTANCE       = "Group Instance **"
+DynamicCP.TRIGGER_OVERLAND             = "Overland"
+DynamicCP.TRIGGER_CYRO                 = "Cyrodiil"
+DynamicCP.TRIGGER_IC                   = "Imperial City"
+DynamicCP.TRIGGER_ZONEID               = "Specific Zone ID"
+DynamicCP.TRIGGER_ZONENAMEMATCH        = "Zone Name Match" -- tbd
+DynamicCP.TRIGGER_BOSSNAME             = "Specific Boss Name" -- Done
+DynamicCP.TRIGGER_LEAVE_BOSSNAME       = "Leaving Specific Boss" -- tbd
+DynamicCP.TRIGGER_HOUSE                = "Player House" -- Done
 
 local difficulties = {
     [DUNGEON_DIFFICULTY_NONE] = "NONE",
@@ -24,9 +24,9 @@ local difficulties = {
 }
 
 local lastZoneId = 0
-local lastBossNames = ""
+local lastBossesHash = ""
+local lastBosses = {}
 local sortedKeys = {}
-local appliedBossNameRule = false
 local inCombat = false
 
 local pendingRules = nil -- Boss rules that are pending if we are in combat
@@ -545,40 +545,44 @@ local function OnPlayerActivated()
 end
 
 ---------------------------------------------------------------------
+-- Upon entering or leaving boss areas
+-- TODO: boss deaths will be handled separately, but a thing to think about... boss dies and then usually leaving boss area triggers a little later
 local function OnBossesChanged()
-    local bossNames = ""
+    local bossesHash = ""
+    local currentBosses = {}
 
     -- Slightly more efficient to check first if the bosses even changed
     for i = 1, MAX_BOSSES do
         local name = GetUnitName("boss" .. tostring(i))
         if (name and name ~= "") then
-            bossNames = bossNames .. name
+            currentBosses[i] = name
+            bossesHash = bossesHash .. name
         end
     end
 
     -- If not, don't even match for rules
-    if (bossNames == lastBossNames) then
+    if (bossesHash == lastBossesHash) then
         return
     end
-    lastBossNames = bossNames
+    lastBossesHash = bossesHash
 
     -- At this point, this is a change from having a boss to no boss
-    if (bossNames == "") then
-        DynamicCP.dbg("left boss area")
-        -- TODO: leave boss trigger
-        return
+    if (bossesHash == "") then
+        DynamicCP.dbg("|cFF4444Checking leave boss(es) " .. table.concat(lastBosses, ", ") .. "|r")
+    else
+        DynamicCP.dbg("|cFF4444Checking encountered boss(es) " .. table.concat(currentBosses, ", ") .. "|r")
     end
-    appliedBossNameRule = false
 
     local allRules = {}
     local numRules = 0
     -- Get the rules
     for i = 1, MAX_BOSSES do
-        local name = GetUnitName("boss" .. tostring(i))
+        local name = bossesHash ~= "" and GetUnitName("boss" .. tostring(i)) or lastBosses[i]
         if (name and name ~= "") then
-            local rules = GetSortedRulesForTrigger(DynamicCP.TRIGGER_BOSSNAME,
+            local rules = GetSortedRulesForTrigger(
+                bossesHash ~= "" and DynamicCP.TRIGGER_BOSSNAME or DynamicCP.TRIGGER_LEAVE_BOSSNAME,
                 GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN,
-                GetUnitName("boss" .. tostring(i)))
+                name)
 
             -- Add all
             for _, value in pairs(rules) do
@@ -587,13 +591,13 @@ local function OnBossesChanged()
             end
         end
     end
+    lastBosses = currentBosses
 
     if (numRules == 0) then
         DynamicCP.dbg("No rules to apply on boss.")
         return
     end
 
-    appliedBossNameRule = true
 
     if (inCombat) then
         if (DynamicCP.savedOptions.customRules.applyBossOnCombatEnd) then
