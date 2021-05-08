@@ -246,7 +246,7 @@ local function DeepCopyRule(oldRule, newRule)
     newRule.dps = oldRule.dps
     newRule.param1 = oldRule.param1
     newRule.param2 = oldRule.param2
-    newRule.reeval = oldRule.reeval
+    newRule.reeval = oldRule.reeval or false
 
     newRule.stars = {}
     for i, id in ipairs(oldRule.stars) do
@@ -463,20 +463,29 @@ local function MakeImportButtons()
         {
             type = "description",
             title = nil,
-            text = "You can import an example full set of custom rules to get you started. These are the rules that I personally use at the time of writing. |cFF4444Warning: this will overwrite your current rules!|r",
+            text = "You can import an example full set of custom rules to get you started. These are the rules that I personally use at the time of writing. |cFF4444This will overwrite ALL of your current rules!|r",
             width = "full",
         },
         {
             type = "button",
             name = "Import Kyzer's Rules",
-            tooltip = "Import example set of custom rules. This will overwrite your current rules!",
+            tooltip = "Import example set of custom rules. This will overwrite ALL of your current rules!",
             func = function()
                 DynamicCP.savedOptions.customRules.rules = {}
 
-                for ruleName, rule in pairs(DynamicCP.kyzersRules) do
-                    DynamicCP.savedOptions.customRules.rules[ruleName] = {}
-                    DeepCopyRule(rule, DynamicCP.savedOptions.customRules.rules[ruleName])
-                    DynamicCP.AddOptionsForEachCharacter(ruleName)
+                for name, data in pairs(DynamicCP.exampleRules) do
+                    for ruleName, rule in pairs(data.rules) do
+                        DynamicCP.savedOptions.customRules.rules[ruleName] = {}
+                        DeepCopyRule(rule, DynamicCP.savedOptions.customRules.rules[ruleName])
+                        DynamicCP.AddOptionsForEachCharacter(ruleName)
+                    end
+                end
+                for name, data in pairs(DynamicCP.exampleBossRules) do
+                    for ruleName, rule in pairs(data.rules) do
+                        DynamicCP.savedOptions.customRules.rules[ruleName] = {}
+                        DeepCopyRule(rule, DynamicCP.savedOptions.customRules.rules[ruleName])
+                        DynamicCP.AddOptionsForEachCharacter(ruleName)
+                    end
                 end
 
                 DynamicCP.SortRuleKeys()
@@ -491,13 +500,43 @@ local function MakeImportButtons()
         {
             type = "description",
             title = nil,
-            text = "Alternatively, these are some example subsets of rules for more specific triggers, along with their descriptions. All of these are included in the full set above. |cFF4444Warning: this will overwrite rules that have the same name!|r",
+            text = "Alternatively, these are some example subsets of rules for more specific triggers, along with their descriptions. All of these are included in the full set above. |cFF4444This will overwrite any rules that have the same name!|r",
             width = "full",
         },
     }
 
     -- Add buttons for each of the examples
     for name, data in pairs(DynamicCP.exampleRules) do
+        local button = {
+            type = "button",
+            name = name,
+            tooltip = data.description,
+            func = function()
+                for ruleName, rule in pairs(data.rules) do
+                    DynamicCP.savedOptions.customRules.rules[ruleName] = {}
+                    DeepCopyRule(rule, DynamicCP.savedOptions.customRules.rules[ruleName])
+                    DynamicCP.AddOptionsForEachCharacter(ruleName)
+                end
+
+                DynamicCP.SortRuleKeys()
+                local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
+            end,
+            width = "full",
+        }
+        table.insert(controls, button)
+    end
+
+    -- Add the boss rules
+    table.insert(controls,
+        {
+            type = "description",
+            title = nil,
+            text = "Finally, these are advanced example rules that trigger on specific zones or specific bosses. These differences can be due to special mechanics, the ability or inability to flank those bosses for Backstabber, etc. |cFF4444This will overwrite any rules that have the same name!|r",
+            width = "full",
+        })
+    for name, data in pairs(DynamicCP.exampleBossRules) do
         local button = {
             type = "button",
             name = name,
