@@ -58,6 +58,7 @@ local defaultOptions = {
         firstTime = true,
         overrideOrder = true,
         autoSlot = false,
+        autoDetectStamMag = true,
         promptConflicts = true,
         applyBossOnCombatEnd = true,
         applyOnCooldownEnd = true,

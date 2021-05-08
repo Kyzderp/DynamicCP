@@ -188,6 +188,21 @@ local function ApplyRules(sortedRuleNames, triggerString)
         end
         for slotIndex, skillId in pairs(rule.stars) do
             if (skillId ~= -1) then
+                -- If smart detection is on, we check if the user's max stam or mag is higher, and change the skill accordingly
+                if (DynamicCP.savedOptions.customRules.autoDetectStamMag and (skillId == 47 or skillId == 48)) then
+                    local _, maxStam = GetUnitPower("player", POWERTYPE_STAMINA)
+                    local _, maxMag = GetUnitPower("player", POWERTYPE_MAGICKA)
+                    local newSkillId = skillId
+                    if (maxStam < maxMag) then
+                        newSkillId = 47
+                    else
+                        newSkillId = 48
+                    end
+                    DynamicCP.dbg(zo_strformat("|c44FF44max mag <<1>> / max stam <<2>> - <<C:3>> → <<C:4>>|r",
+                        maxMag, maxStam, GetChampionSkillName(skillId), GetChampionSkillName(newSkillId)))
+                    skillId = newSkillId
+                end
+
                 pendingSlottables[slotIndex] = skillId
             end
         end

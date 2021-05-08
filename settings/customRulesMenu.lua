@@ -617,6 +617,19 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             width = "full",
         },
+        {
+            type = "checkbox",
+            name = "Automatically detect stamina or magicka dps",
+            tooltip = "For rules that will slot either Bloody Renewal or Siphoning Spells, check your character's max resources. If max stam is higher, Bloody Renewal will be slotted; if max mag is higher, Siphoning Spells will be slotted, regardless of which one is specified in the rule. To force the rule to follow the exact star instead, turn this OFF",
+            default = true,
+            getFunc = function()
+                return DynamicCP.savedOptions.customRules.autoDetectStamMag
+            end,
+            setFunc = function(value)
+                DynamicCP.savedOptions.customRules.autoDetectStamMag = value
+            end,
+            width = "full",
+        },
         -- {
         --     type = "checkbox",
         --     name = "Prompt conflicts",
