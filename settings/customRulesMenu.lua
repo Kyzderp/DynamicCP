@@ -229,7 +229,7 @@ local function CreateNewRule()
 
     DynamicCP.SortRuleKeys()
     local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
-    rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+    rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeyDisplays(), DynamicCP.GetSortedKeys())
     rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
 end
 
@@ -491,7 +491,7 @@ local function MakeImportButtons()
 
                 DynamicCP.SortRuleKeys()
                 local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
-                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeyDisplays(), DynamicCP.GetSortedKeys())
                 rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
             end,
             warning = "Import example set of custom rules. This will overwrite your current rules!",
@@ -508,7 +508,7 @@ local function MakeImportButtons()
 
                 DynamicCP.SortRuleKeys()
                 local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
-                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeyDisplays(), DynamicCP.GetSortedKeys())
                 rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
             end,
             warning = "Delete all rules. This cannot be undone!",
@@ -538,7 +538,7 @@ local function MakeImportButtons()
 
                 DynamicCP.SortRuleKeys()
                 local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
-                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeyDisplays(), DynamicCP.GetSortedKeys())
                 rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
             end,
             width = "half",
@@ -568,7 +568,7 @@ local function MakeImportButtons()
 
                 DynamicCP.SortRuleKeys()
                 local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
-                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeyDisplays(), DynamicCP.GetSortedKeys())
                 rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
             end,
             width = "half",
@@ -709,7 +709,7 @@ function DynamicCP.CreateCustomRulesMenu()
         },
         {
             type = "header",
-            name = "Custom Rules",
+            name = "|c3bdb5eCustom Rules|r",
             width = "full",
         },
         {
@@ -722,7 +722,8 @@ function DynamicCP.CreateCustomRulesMenu()
             type = "dropdown",
             name = "Select rule to edit",
             tooltip = "Choose a rule to edit",
-            choices = DynamicCP.GetSortedKeys(),
+            choices = DynamicCP.GetSortedKeyDisplays(),
+            choicesValues = DynamicCP.GetSortedKeys(),
             getFunc = function()
                 return selectedRuleName
             end,
@@ -759,7 +760,7 @@ function DynamicCP.CreateCustomRulesMenu()
 
                 DynamicCP.SortRuleKeys()
                 local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
-                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeyDisplays(), DynamicCP.GetSortedKeys())
             end,
             warning = "Delete this rule. This cannot be undone!",
             isDangerous = true,
@@ -807,7 +808,7 @@ function DynamicCP.CreateCustomRulesMenu()
 
                 DynamicCP.SortRuleKeys()
                 local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
-                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeyDisplays(), DynamicCP.GetSortedKeys())
                 rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
             end,
             isMultiline = false,
@@ -833,7 +834,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.SortRuleKeys()
 
                 local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
-                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeyDisplays(), DynamicCP.GetSortedKeys())
                 rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
             end,
             width = "full",

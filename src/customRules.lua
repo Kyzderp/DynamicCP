@@ -24,10 +24,12 @@ local difficulties = {
     [DUNGEON_DIFFICULTY_VETERAN] = "VETERAN",
 }
 
+local sortedKeys = {}
+local sortedKeyDisplays = {}
+
 local lastZoneId = 0
 local lastBossesHash = ""
 local lastBosses = {}
-local sortedKeys = {}
 local inCombat = false
 
 local pendingRules = nil -- Boss rules that are pending if we are in combat
@@ -62,8 +64,10 @@ local function SortRuleKeys()
     end)
 
     sortedKeys = {}
+    sortedKeyDisplays = {}
     for _, data in ipairs(sortedRules) do
         table.insert(sortedKeys, data.name)
+        table.insert(sortedKeyDisplays, string.format("%d: %s", data.priority, data.name))
     end
 end
 DynamicCP.SortRuleKeys = SortRuleKeys
@@ -72,6 +76,11 @@ local function GetSortedKeys()
     return sortedKeys
 end
 DynamicCP.GetSortedKeys = GetSortedKeys
+
+local function GetSortedKeyDisplays()
+    return sortedKeyDisplays
+end
+DynamicCP.GetSortedKeyDisplays = GetSortedKeyDisplays
 
 local function GetFlippedSlottables()
     local committed = DynamicCP.GetCommittedSlottables() -- [skillId] = index
