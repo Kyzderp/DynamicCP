@@ -246,6 +246,7 @@ local function DeepCopyRule(oldRule, newRule)
     newRule.dps = oldRule.dps
     newRule.param1 = oldRule.param1
     newRule.param2 = oldRule.param2
+    newRule.reeval = oldRule.reeval
 
     newRule.stars = {}
     for i, id in ipairs(oldRule.stars) do
@@ -754,7 +755,6 @@ function DynamicCP.CreateCustomRulesMenu()
             end,
             isMultiline = false,
             isExtraWide = false,
-            maxChars = 30,
             width = "full",
             disabled = function() return selectedRuleName == nil end,
             reference = "DynamicCP#NameEditBox"
