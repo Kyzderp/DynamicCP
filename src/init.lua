@@ -117,7 +117,7 @@ local function OnPlayerActivated(_, initial)
     DynamicCP.InitCustomRules() -- Do this here so we don't do rules on login/reload
 
     if (DynamicCP.savedOptions.hideBackground) then
-        local backgroundOverride = function(line) return "/esoui/art/scrying/backdrop_stars.dds" end 
+        local backgroundOverride = function(line) return "/esoui/art/scrying/backdrop_stars.dds" end
         GetChampionDisciplineBackgroundTexture = backgroundOverride
         GetChampionDisciplineBackgroundGlowTexture = backgroundOverride
         GetChampionDisciplineBackgroundSelectedTexture = backgroundOverride

@@ -482,7 +482,7 @@ function DynamicCP:ToggleOptionButton(textureButton)
             DynamicCP.savedOptions.cp[tree][presetName].roles = {
                 Tank = true,
                 Healer = true,
-                Dps = true, 
+                Dps = true,
             }
         end
         DynamicCP.savedOptions.cp[tree][presetName].roles[textureButton.role] = textureButton.enabled

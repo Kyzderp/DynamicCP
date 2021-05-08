@@ -61,7 +61,7 @@ end
 local function DockWindow(activeConstellation)
     local ox, oy = DynamicCPPresets:GetCenter()
     local tx, ty = DynamicCPPresets:GetCenter()
-    
+
     if (activeConstellation == "All" or activeConstellation == "Green" or activeConstellation == "Cluster") then
         tx = GuiRoot:GetWidth() - DynamicCPPresets:GetWidth() / 2 - 10
         ty = DynamicCPPresets:GetHeight() / 2 + 10
@@ -112,7 +112,6 @@ local function OnCanvasAnimationStopped()
     elseif (redBounds) then
         activeConstellation = "Red"
     else
-        -- TODO: clusters
         activeConstellation = "Cluster"
         DynamicCP.RefreshLabels(DynamicCP.savedOptions.showLabels)
         DynamicCP.AddMouseDoubleClickStars()

@@ -92,11 +92,7 @@ local function GetPlayerRole()
         [LFG_ROLE_HEAL] = "healer",
         [LFG_ROLE_TANK] = "tank",
     }
-    local role = roles[GetSelectedLFGRole()]
-
-    -- TODO: extra handling with roles like player-specified or something. smh fake tanks and healers
-
-    return role
+    return roles[GetSelectedLFGRole()]
 end
 
 -- Convert the pending slottables into the request

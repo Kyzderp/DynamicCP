@@ -370,8 +370,6 @@ local function ToggleCharacterCheckboxes(matchingClassId)
     end
 end
 
--- GetCharacterInfo(number index)
--- Returns: string name, number Gender gender, number level, number classId, number raceId, number Alliance alliance, string id, number locationId
 local function MakeCheckboxesForEachCharacter()
     local controls = {
         {
