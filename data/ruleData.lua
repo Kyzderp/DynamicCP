@@ -46,7 +46,7 @@ DynamicCP.exampleRules = {
             },
         },
     },
-    ["General Trial"] = {
+    ["Trial"] = {
         description = "A set of rules that slots:\n\n|ca5d752Treasure Hunter|r, |ca5d752Steed's Blessing|r, |ca5d752Liquid Efficiency|r, |ce46b2eBoundless Vitality|r, |ce46b2eIronclad|r, and |ce46b2eRejuvenation|r on all roles;\n\n|ce46b2eSpirit Mastery|r, |c59bae7Backstabber|r, |c59bae7Fighting Finesse|r, |c59bae7Biting Aura|r, and |c59bae7Thaumaturge|r on dps;\n\n|ce46b2eExpert Evasion|r, |c59bae7Duelist's Rebuff|r, |c59bae7Enduring Resolve|r, |c59bae7Unassailable|r, and |c59bae7Bulwark|r on tank;\n\n|ce46b2eSlippery|r, |c59bae7Soothing Tide|r, |c59bae7Fighting Finesse|r, |c59bae7Arcane Supremacy|r, and |c59bae7Untamed Aggression|r on healer;\n\nwhen you enter a trial.",
         rules = {
             ["Trial Green / Red"] = {
@@ -406,7 +406,7 @@ DynamicCP.exampleRules = {
         },
     },
     ["Overland"] = {
-        description = "A set of rules that slots:\n\n|ca5d752Treasure Hunter|r, |ca5d752Steed's Blessing|r, |ca5d752Gifted Rider|r, and |ca5d752Meticulous Disassembly|r on all roles;\n\n|ce46b2eBloody Renewal / Siphoning Spells|r, |c59bae7Deadly Aim|r, |c59bae7Fighting Finesse|r, |c59bae7Biting Aura|r, and |c59bae7Thaumaturge|r on dps;\n\nwhen you enter an overland zone.\n\nAnd |ca5d752Liquid Efficiency|r and |ca5d752Homemaker|r instead of Gifted Rider and Meticulous Disassembly in public dungeons, delves, and group instances.",
+        description = "A set of rules that slots:\n\n|ca5d752Treasure Hunter|r, |ca5d752Steed's Blessing|r, |ca5d752Gifted Rider|r, and |ca5d752Meticulous Disassembly|r on all roles;\n\n|ce46b2eBloody Renewal / Siphoning Spells|r, |c59bae7Deadly Aim|r, |c59bae7Fighting Finesse|r, |c59bae7Biting Aura|r, and |c59bae7Thaumaturge|r on dps;\n\nwhen you enter an overland zone.\n\nAnd slots |ca5d752Liquid Efficiency|r and |ca5d752Homemaker|r instead of Gifted Rider and Meticulous Disassembly in public dungeons, delves, and group instances.",
         rules = {
             ["Instance Green"] = {
                 ["name"] = "Instance Green",
@@ -834,7 +834,7 @@ DynamicCP.exampleBossRules = {
             },
         },
     },
-    ["Maelstrom"] = {
+    ["Maelstrom Arena"] = {
         description = "Backstabber is viable on some bosses in Maelstrom Arena, especially if you use mechanics to stun the bosses. This set of rules will slot |c59bae7Backstabber|r instead of Deadly Aim when you encounter The Control Guardian (arena 4), Champion of Atrocity (arena 6), and Voriak Solkyn (arena 9). Upon death of the bosses, your solo arena rules will be restored.",
         rules = {
             ["vMA ReEval NonStab"] = {

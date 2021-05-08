@@ -463,7 +463,7 @@ local function MakeImportButtons()
         {
             type = "description",
             title = nil,
-            text = "You can import an example full set of custom rules to get you started. These are the rules that I personally use at the time of writing. |cFF4444This will overwrite ALL of your current rules!|r",
+            text = "You can import a full set of example rules to get you started. These are the rules that I personally use at the time of writing. All of these rules can also be found separately below, if you're curious about exactly what they do. |cFF4444This will overwrite ALL of your current rules!|r",
             width = "full",
         },
         {
@@ -472,6 +472,7 @@ local function MakeImportButtons()
             tooltip = "Import example set of custom rules. This will overwrite ALL of your current rules!",
             func = function()
                 DynamicCP.savedOptions.customRules.rules = {}
+                selectedRuleName = nil
 
                 for name, data in pairs(DynamicCP.exampleRules) do
                     for ruleName, rule in pairs(data.rules) do
@@ -495,12 +496,29 @@ local function MakeImportButtons()
             end,
             warning = "Import example set of custom rules. This will overwrite your current rules!",
             isDangerous = true,
-            width = "full",
+            width = "half",
+        },
+        {
+            type = "button",
+            name = "Delete All Rules",
+            tooltip = "Delete all rules. This cannot be undone!",
+            func = function()
+                DynamicCP.savedOptions.customRules.rules = {}
+                selectedRuleName = nil
+
+                DynamicCP.SortRuleKeys()
+                local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
+            end,
+            warning = "Delete all rules. This cannot be undone!",
+            isDangerous = true,
+            width = "half",
         },
         {
             type = "description",
             title = nil,
-            text = "Alternatively, these are some example subsets of rules for more specific triggers, along with their descriptions. All of these are included in the full set above. |cFF4444This will overwrite any rules that have the same name!|r",
+            text = "These are sets of example rules for general triggers, along with their descriptions. All of these are included in the full set above. This will overwrite any rules that have the same name!",
             width = "full",
         },
     }
@@ -523,7 +541,7 @@ local function MakeImportButtons()
                 rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
                 rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
             end,
-            width = "full",
+            width = "half",
         }
         table.insert(controls, button)
     end
@@ -533,7 +551,7 @@ local function MakeImportButtons()
         {
             type = "description",
             title = nil,
-            text = "Finally, these are advanced example rules that trigger on specific zones or specific bosses. These differences can be due to special mechanics, the ability or inability to flank those bosses for Backstabber, etc. |cFF4444This will overwrite any rules that have the same name!|r",
+            text = "Finally, these are advanced example rules that trigger on specific zones or specific bosses. These differences can be due to special mechanics, the ability or inability to flank those bosses for Backstabber, etc. All of these are included in the full set above. This will overwrite any rules that have the same name!",
             width = "full",
         })
     for name, data in pairs(DynamicCP.exampleBossRules) do
@@ -553,7 +571,7 @@ local function MakeImportButtons()
                 rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
                 rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
             end,
-            width = "full",
+            width = "half",
         }
         table.insert(controls, button)
     end
