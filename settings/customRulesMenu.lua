@@ -253,8 +253,10 @@ local function DeepCopyRule(oldRule, newRule)
     end
 
     newRule.chars = {}
-    for id, value in pairs(oldRule.chars) do
-        newRule.chars[id] = value
+    if (oldRule.chars) then
+        for id, value in pairs(oldRule.chars) do
+            newRule.chars[id] = value
+        end
     end
 end
 
@@ -455,6 +457,71 @@ local function MakeCheckboxesForEachCharacter()
 end
 
 ---------------------------------------------------------------------
+local function MakeImportButtons()
+    local controls = {
+        {
+            type = "description",
+            title = nil,
+            text = "You can import an example full set of custom rules to get you started. These are the rules that I personally use at the time of writing. |cFF4444Warning: this will overwrite your current rules!|r",
+            width = "full",
+        },
+        {
+            type = "button",
+            name = "Import Kyzer's Rules",
+            tooltip = "Import example set of custom rules. This will overwrite your current rules!",
+            func = function()
+                DynamicCP.savedOptions.customRules.rules = {}
+
+                for ruleName, rule in pairs(DynamicCP.kyzersRules) do
+                    DynamicCP.savedOptions.customRules.rules[ruleName] = {}
+                    DeepCopyRule(rule, DynamicCP.savedOptions.customRules.rules[ruleName])
+                    DynamicCP.AddOptionsForEachCharacter(ruleName)
+                end
+
+                DynamicCP.SortRuleKeys()
+                local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
+            end,
+            warning = "Import example set of custom rules. This will overwrite your current rules!",
+            isDangerous = true,
+            width = "full",
+        },
+        {
+            type = "description",
+            title = nil,
+            text = "Alternatively, these are some example subsets of rules for more specific triggers, along with their descriptions. All of these are included in the full set above. |cFF4444Warning: this will overwrite rules that have the same name!|r",
+            width = "full",
+        },
+    }
+
+    -- Add buttons for each of the examples
+    for name, data in pairs(DynamicCP.exampleRules) do
+        local button = {
+            type = "button",
+            name = name,
+            tooltip = data.description,
+            func = function()
+                for ruleName, rule in pairs(data.rules) do
+                    DynamicCP.savedOptions.customRules.rules[ruleName] = {}
+                    DeepCopyRule(rule, DynamicCP.savedOptions.customRules.rules[ruleName])
+                    DynamicCP.AddOptionsForEachCharacter(ruleName)
+                end
+
+                DynamicCP.SortRuleKeys()
+                local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
+                rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
+                rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
+            end,
+            width = "full",
+        }
+        table.insert(controls, button)
+    end
+
+    return controls
+end
+
+---------------------------------------------------------------------
 function DynamicCP.CreateCustomRulesMenu()
     DynamicCP.SortRuleKeys()
     BuildStarsDropdowns()
@@ -567,36 +634,7 @@ function DynamicCP.CreateCustomRulesMenu()
         {
             type = "submenu",
             name = "Import",
-            controls = {
-                {
-                    type = "description",
-                    title = nil,
-                    text = "You can import an example set of custom rules to get you started. Warning: this will overwrite your current rules!",
-                    width = "full",
-                },
-                {
-                    type = "button",
-                    name = "Import Kyzer's Rules",
-                    tooltip = "Import example set of custom rules. This will overwrite your current rules!",
-                    func = function()
-                        DynamicCP.savedOptions.customRules.rules = {}
-
-                        for ruleName, rule in pairs(DynamicCP.kyzersRules) do
-                            DynamicCP.savedOptions.customRules.rules[ruleName] = {}
-                            DeepCopyRule(rule, DynamicCP.savedOptions.customRules.rules[ruleName])
-                            DynamicCP.AddOptionsForEachCharacter(ruleName)
-                        end
-
-                        DynamicCP.SortRuleKeys()
-                        local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
-                        rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeys())
-                        rulesDropdown.dropdown:SetSelectedItem(selectedRuleName)
-                    end,
-                    warning = "Import example set of custom rules. This will overwrite your current rules!",
-                    isDangerous = true,
-                    width = "full",
-                },
-            },
+            controls = MakeImportButtons(),
         },
         {
             type = "header",
