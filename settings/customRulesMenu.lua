@@ -721,7 +721,7 @@ function DynamicCP.CreateCustomRulesMenu()
         {
             type = "dropdown",
             name = "Select rule to edit",
-            tooltip = "Choose a rule to edit",
+            tooltip = "Choose a rule to edit. Rules that would apply for your current conditions (zone, role, character) are highlighted in |c3bdb5egreen|r (may not update immediately).",
             choices = DynamicCP.GetSortedKeyDisplays(),
             choicesValues = DynamicCP.GetSortedKeys(),
             getFunc = function()
@@ -1271,6 +1271,17 @@ function DynamicCP.CreateCustomRulesMenu()
 
     DynamicCP.customRulesPanel = LAM:RegisterAddonPanel(DynamicCP.name .. "CustomRules", panelData)
     LAM:RegisterOptionControls(DynamicCP.name .. "CustomRules", optionsData)
+
+    CALLBACK_MANAGER:RegisterCallback("LAM-PanelOpened",
+        function(currentPanel)
+            if (currentPanel == DynamicCP.customRulesPanel) then
+                DynamicCP.SortRuleKeys()
+                local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
+                if (rulesDropdown) then
+                    rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeyDisplays(), DynamicCP.GetSortedKeys())
+                end
+            end
+        end)
 end
 
 function DynamicCP.OpenCustomRulesMenu()

@@ -50,28 +50,6 @@ end
 ---------------------------------------------------------------------
 -- Data
 ---------------------------------------------------------------------
-local function SortRuleKeys()
-    local sortedRules = {}
-    for name, rule in pairs(DynamicCP.savedOptions.customRules.rules) do
-        table.insert(sortedRules, {name = name, priority = rule.priority})
-    end
-
-    table.sort(sortedRules, function(item1, item2)
-        if (item1.priority == item2.priority) then
-            return item1.name < item2.name
-        end
-        return item1.priority < item2.priority
-    end)
-
-    sortedKeys = {}
-    sortedKeyDisplays = {}
-    for _, data in ipairs(sortedRules) do
-        table.insert(sortedKeys, data.name)
-        table.insert(sortedKeyDisplays, string.format("%d: %s", data.priority, data.name))
-    end
-end
-DynamicCP.SortRuleKeys = SortRuleKeys
-
 local function GetSortedKeys()
     return sortedKeys
 end
@@ -472,25 +450,7 @@ local function SortAndApplyAllRules(allRules, triggerDisplayName)
 end
 
 ---------------------------------------------------------------------
-local function OnPlayerActivated()
-    DynamicCP.OnModelessCancel()
-    lastBossesHash = ""
-    local purchaseAvailability = GetChampionPurchaseAvailability()
-    if (purchaseAvailability == CHAMPION_PURCHASE_IN_NOCP_CAMPAIGN
-        or purchaseAvailability == CHAMPION_PURCHASE_IN_NOCP_BATTLEGROUND
-        or purchaseAvailability == CHAMPION_PURCHASE_CP_DISABLED) then
-        DynamicCP.dbg("champion points are not active")
-        return
-    end
-
-    DynamicCP.dbg(string.format("IsActiveWorldGroupOwnable: %s IsUnitInDungeon: %s",
-        tostring(IsActiveWorldGroupOwnable()),
-        tostring(IsUnitInDungeon("player"))
-    ))
-    local zoneId = GetZoneId(GetUnitZoneIndex("player"))
-    local initial = zoneId ~= lastZoneId
-    lastZoneId = zoneId
-
+local function GetTriggersForZoneId(zoneId)
     local groupOwnable = IsActiveWorldGroupOwnable()
     local inDungeon = IsUnitInDungeon("player")
 
@@ -533,13 +493,92 @@ local function OnPlayerActivated()
         table.insert(triggers, DynamicCP.TRIGGER_CYRO)
     end
 
-    -- End trigger collection
-    -------------------------
-
     if (#triggers == initialSize) then
         DynamicCP.dbg("|cFF0000UNHANDLED ZONE " .. GetPlayerActiveZoneName() .. " (" .. tostring(zoneId) .. ")|r")
+        return nil
+    end
+
+    return triggers
+end
+
+---------------------------------------------------------------------
+local function SortRuleKeys()
+    -- Sort the rules
+    local sortedRules = {}
+    for name, rule in pairs(DynamicCP.savedOptions.customRules.rules) do
+        table.insert(sortedRules, {name = name, priority = rule.priority})
+    end
+
+    table.sort(sortedRules, function(item1, item2)
+        if (item1.priority == item2.priority) then
+            return item1.name < item2.name
+        end
+        return item1.priority < item2.priority
+    end)
+
+    -- And convert them to the dropdown values
+    sortedKeys = {}
+    for _, data in ipairs(sortedRules) do
+        table.insert(sortedKeys, data.name)
+    end
+
+    -- Get all the rules for triggers of the current zone
+    local allRules = {}
+    local triggers = GetTriggersForZoneId(GetZoneId(GetUnitZoneIndex("player")))
+    if (triggers) then
+        for _, trigger in ipairs(triggers) do
+            local rules = triggerToFunction[trigger](true)
+            for _, value in pairs(rules) do
+                allRules[value.name] = value.priority
+            end
+        end
+    end
+
+    -- This loop must be done after getting the rules for the current zone
+    -- because the sortedKeys are used in iterating through the rules
+    sortedKeyDisplays = {}
+    for _, data in ipairs(sortedRules) do
+        if (allRules[data.name]) then
+            table.insert(sortedKeyDisplays, string.format("|c3bdb5e%d: %s|r", data.priority, data.name))
+        else
+            table.insert(sortedKeyDisplays, string.format("%d: %s", data.priority, data.name))
+        end
+    end
+    local rulesDropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#RulesDropdown")
+    if (rulesDropdown) then
+        rulesDropdown:UpdateChoices(DynamicCP.GetSortedKeyDisplays(), DynamicCP.GetSortedKeys())
+    end
+end
+DynamicCP.SortRuleKeys = SortRuleKeys
+
+---------------------------------------------------------------------
+local function OnPlayerActivated()
+    DynamicCP.OnModelessCancel()
+    lastBossesHash = ""
+    local purchaseAvailability = GetChampionPurchaseAvailability()
+    if (purchaseAvailability == CHAMPION_PURCHASE_IN_NOCP_CAMPAIGN
+        or purchaseAvailability == CHAMPION_PURCHASE_IN_NOCP_BATTLEGROUND
+        or purchaseAvailability == CHAMPION_PURCHASE_CP_DISABLED) then
+        DynamicCP.dbg("champion points are not active")
         return
     end
+
+    DynamicCP.dbg(string.format("IsActiveWorldGroupOwnable: %s IsUnitInDungeon: %s",
+        tostring(IsActiveWorldGroupOwnable()),
+        tostring(IsUnitInDungeon("player"))
+    ))
+    local zoneId = GetZoneId(GetUnitZoneIndex("player"))
+    local initial = zoneId ~= lastZoneId
+    lastZoneId = zoneId
+
+    local triggers = GetTriggersForZoneId(zoneId)
+
+    if (not triggers) then
+        return
+    end
+
+    -- End trigger collection
+    -------------------------
 
     -- Get all the rules for the triggers, deduping them
     local allRules = {}
