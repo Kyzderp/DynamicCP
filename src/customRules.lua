@@ -177,8 +177,8 @@ local function ApplyRules(sortedRuleNames, triggerString)
             if (skillId ~= -1) then
                 -- If smart detection is on, we check if the user's max stam or mag is higher, and change the skill accordingly
                 if (DynamicCP.savedOptions.customRules.autoDetectStamMag and (skillId == 47 or skillId == 48)) then
-                    local _, maxStam = GetUnitPower("player", POWERTYPE_STAMINA)
-                    local _, maxMag = GetUnitPower("player", POWERTYPE_MAGICKA)
+                    local _, maxStam, effectiveMaxStam = GetUnitPower("player", POWERTYPE_STAMINA)
+                    local _, maxMag, effectiveMaxMag = GetUnitPower("player", POWERTYPE_MAGICKA)
                     local newSkillId = skillId
                     if (maxStam < maxMag) then
                         newSkillId = 47
@@ -187,6 +187,8 @@ local function ApplyRules(sortedRuleNames, triggerString)
                     end
                     DynamicCP.dbg(zo_strformat("|c44FF44max mag <<1>> / max stam <<2>> - <<C:3>> → <<C:4>>|r",
                         maxMag, maxStam, GetChampionSkillName(skillId), GetChampionSkillName(newSkillId)))
+                    DynamicCP.dbg(zo_strformat("|c44FF44effective max mag <<1>> / effective max stam <<2>>|r",
+                        effectiveMaxMag, effectiveMaxStam))
                     skillId = newSkillId
                 end
 
@@ -745,7 +747,14 @@ local function OnCombatStateChanged(_, combat)
     inCombat = combat
     if (not inCombat) then
         if (pendingRules) then
-            DynamicCP.ApplyPendingRules()
+            -- Wait 1 second after combat ends because it might fire at the same time as boss death
+            -- Kinda hacky but not sure what else could be done...
+            -- DynamicCP.dbg("|cFFAAAADelaying ApplyPendingRules by 1 second|r")
+            EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "CustomDelay", 1000, function()
+                    EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "CustomDelay")
+                    DynamicCP.dbg("|cFFAAAAApplying the 1s delay pending rules|r")
+                    DynamicCP.ApplyPendingRules()
+                end)
         elseif (hasTemporarilyHiddenDialog) then
             DynamicCP.dbg("unhiding temporarily hidden dialog")
             DynamicCPModelessDialog:SetHidden(false)
@@ -763,6 +772,9 @@ function ApplyPendingRules()
     if (pendingRules ~= nil) then
         if (inCombat) then
             DynamicCP.dbg("further delaying rule " .. pendingName .. " because in combat")
+            return
+        elseif (DynamicCP.IsOnCooldown()) then
+            DynamicCP.dbg("further delaying rule " .. pendingName .. " because on cooldown")
             return
         end
         -- pendingRules will be zeroed by this call

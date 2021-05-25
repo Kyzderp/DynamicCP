@@ -138,7 +138,7 @@ local function GetCurrentPreview()
         triggerExtraInfo,
         difficultyString,
         roleString,
-        DynamicCP.savedOptions.customRules.promptSlotting and "semi-" or "",
+        DynamicCP.savedOptions.customRules.autoSlot and "" or "semi-",
         result
         )
 

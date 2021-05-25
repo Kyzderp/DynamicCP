@@ -46,10 +46,10 @@ local function OnCooldownStarted(_, result)
     -- Update the cooldown label
     EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "Cooldown", 1000, function()
         local secondsRemaining = GetCooldownSeconds()
-        if (secondsRemaining <= 0) then
+        if (secondsRemaining < 0) then -- Using < instead of <= here just to ensure we're not early by a fraction of a second
             EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "Cooldown")
-            ProcessListeners("endFunc")
             isOnCooldown = false
+            ProcessListeners("endFunc")
         else
             ProcessListeners("updateFunc")
         end
