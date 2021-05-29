@@ -143,12 +143,14 @@ local function GetCurrentPreview()
         )
 
     -- Add the stars
-    for slotIndex, skillId in ipairs(rule.stars) do
-        if (skillId ~= -1) then
-            local color = "e46b2e" -- Red
-            if (slotIndex <= 8) then color = "59bae7" end -- Blue
-            if (slotIndex <= 4) then color = "a5d752" end -- Green
-            preview = zo_strformat("<<1>>\n|c<<4>><<C:2>> in slot <<3>>|r", preview, GetChampionSkillName(skillId), slotIndex, color)
+    if (not rule.reeval) then
+        for slotIndex, skillId in ipairs(rule.stars) do
+            if (skillId ~= -1) then
+                local color = "e46b2e" -- Red
+                if (slotIndex <= 8) then color = "59bae7" end -- Blue
+                if (slotIndex <= 4) then color = "a5d752" end -- Green
+                preview = zo_strformat("<<1>>\n|c<<4>><<C:2>> in slot <<3>>|r", preview, GetChampionSkillName(skillId), slotIndex, color)
+            end
         end
     end
 
@@ -850,7 +852,9 @@ function DynamicCP.CreateCustomRulesMenu()
 ---------------------------------------------------------------------
         {
             type = "header",
-            name = "|c3bdb5eCondition|r",
+            name = function()
+                return selectedRuleName ~= nil and "Condition" or "|c555555Condition|r"
+            end,
             width = "full",
         },
         {
@@ -940,6 +944,7 @@ function DynamicCP.CreateCustomRulesMenu()
             type = "description",
             title = nil,
             text = "* Public instances include public dungeons and delves, but also include outlaws refuges and quest instances such as Nighthollow Keep. Cyrodiil delves will trigger both Cyrodiil and Public Instance rules.\n** Group instances are heist and sacrament zones, as well as Craglorn group delves. Group dungeons, trials, and arenas are not included in this.",
+            disabled = function() return selectedRuleName == nil end,
             width = "full",
         },
 ---------------------------------------------------------------------
@@ -1009,7 +1014,9 @@ function DynamicCP.CreateCustomRulesMenu()
 -- Stars
         {
             type = "header",
-            name = "|c3bdb5eResult|r",
+            name = function()
+                return selectedRuleName ~= nil and "Result" or "|c555555Result|r"
+            end,
             width = "full",
         },
         {
@@ -1035,8 +1042,10 @@ function DynamicCP.CreateCustomRulesMenu()
             width = "full",
         },
         {
-            type = "header",
-            name = "|ca5d752Craft|r",
+            type = "description",
+            title = function()
+                return selectedRuleName ~= nil and "|ca5d752Craft|r" or "|c555555Craft|r"
+            end,
             width = "full",
         },
         {
@@ -1112,8 +1121,10 @@ function DynamicCP.CreateCustomRulesMenu()
             reference = "DynamicCP#CraftStar4Dropdown"
         },
         {
-            type = "header",
-            name = "|c59bae7Warfare|r",
+            type = "description",
+            title = function()
+                return selectedRuleName ~= nil and "|c59bae7Warfare|r" or "|c555555Warfare|r"
+            end,
             width = "full",
             disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
         },
@@ -1190,10 +1201,11 @@ function DynamicCP.CreateCustomRulesMenu()
             reference = "DynamicCP#WarfareStar4Dropdown"
         },
         {
-            type = "header",
-            name = "|ce46b2eFitness|r",
+            type = "description",
+            title = function()
+                return selectedRuleName ~= nil and "|ce46b2eFitness|r" or "|c555555Fitness|r"
+            end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
         },
         {
             type = "dropdown",

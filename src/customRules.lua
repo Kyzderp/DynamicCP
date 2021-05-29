@@ -628,6 +628,8 @@ local function OnBossesChanged()
         end
     end
 
+    -- DynamicCP.dbg("|c44FF44BOSSES CHANGED " .. table.concat(currentBosses, ", ") .. "|r")
+
     -- If not, don't even match for rules
     if (bossesHash == lastBossesHash) then
         return
