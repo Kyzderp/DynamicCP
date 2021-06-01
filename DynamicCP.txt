@@ -2,8 +2,8 @@
 ## Champion Point presets per tree, with role and class filters!
 ## Author: Kyzeragon
 ## Contributors: Raijindono (UX), camrenis (testing & feedback)
-## Version: 1.0.0
-## APIVersion: 100034
+## Version: 1.1.0
+## APIVersion: 100035
 
 ## DependsOn: LibAddonMenu-2.0>=31 LibDialog>=126
 

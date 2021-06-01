@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "1.0.0"
+DynamicCP.version = "1.1.0"
 
 DynamicCP.experimental = false -- Flip to true when developing. Nothing currently
 
@@ -121,10 +121,9 @@ local function OnPlayerActivated(_, initial)
 
     if (DynamicCP.savedOptions.hideBackground) then
         local backgroundOverride = function(line) return "/esoui/art/scrying/backdrop_stars.dds" end
-        GetChampionDisciplineBackgroundTexture = backgroundOverride
-        GetChampionDisciplineBackgroundGlowTexture = backgroundOverride
-        GetChampionDisciplineBackgroundSelectedTexture = backgroundOverride
-        GetChampionClusterBackgroundTexture = backgroundOverride
+        GetChampionDisciplineZoomedInBackground = backgroundOverride
+        GetChampionDisciplineZoomedOutBackground = backgroundOverride
+        GetChampionDisciplineSelectedZoomedOutOverlay = backgroundOverride
     end
 
     -- Hide the pulldown because it's expanded by default
