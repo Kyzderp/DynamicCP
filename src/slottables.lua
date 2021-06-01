@@ -186,6 +186,7 @@ local function ConvertPendingSlottablesToPurchase()
             id = nil
         end
         AddHotbarSlotToChampionPurchaseRequest(slotIndex, id)
+        DynamicCP.dbg(string.format("%d %s", slotIndex, GetChampionSkillName(id)))
     end
 end
 DynamicCP.ConvertPendingSlottablesToPurchase = ConvertPendingSlottablesToPurchase

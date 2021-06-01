@@ -19,6 +19,7 @@ src/customRules.lua
 data/presetData.lua
 data/zoneData.lua
 data/ruleData.lua
+data/convertDataIndices.lua
 
 settings/mainMenu.lua
 settings/customRulesMenu.lua
@@ -31,6 +32,7 @@ ui/modelessDialog.lua
 xml/presets.xml
 xml/infolabel.xml
 xml/warning.xml
+xml/mildWarning.xml
 xml/pulldown.xml
 xml/quickstars.xml
 xml/modelessDialog.xml

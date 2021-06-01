@@ -77,6 +77,23 @@ end
 
 
 ---------------------------------------------------------------------
+local function DisplayMildWarning(text)
+    DynamicCPMildWarningLabel:SetText(text)
+    DynamicCPMildWarning:SetHidden(false)
+    DynamicCPMildWarning:ClearAnchors()
+    DynamicCPMildWarning:SetAnchor(BOTTOM, DynamicCPWarning, TOP, 0, -10)
+end
+
+local function SetMildWarning(text)
+    DynamicCPMildWarning:SetText(text)
+end
+
+local function HideMildWarning()
+    DynamicCPMildWarning:SetHidden(true)
+end
+
+
+---------------------------------------------------------------------
 -- Find and build string of the diff between two cp sets
 -- TODO: pull the logic portion out into points.lua
 local function GenerateDiff(before, after)
@@ -117,11 +134,11 @@ local function GenerateTree(cp, tree)
     local result = "|cBBBBBB"
 
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
-    for skill = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
-        local points = cp[disciplineIndex][skill]
+    for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
+        local points = cp[disciplineIndex][skillIndex]
         if (points ~= 0) then
             local line = zo_strformat("\n<<C:1>>:  <<2>>",
-                GetChampionSkillName(GetChampionSkillId(disciplineIndex, skill)),
+                GetChampionSkillName(GetChampionSkillId(disciplineIndex, skillIndex)),
                 points)
             result = result .. line
         end
@@ -162,18 +179,27 @@ function DynamicCP:OnApplyClicked(button)
     local cp = DynamicCP.savedOptions.cp[tree][presetName]
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
     local slottablesData = {}
+    local hasOverMaxPoints = false
     for skill = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
         local id = GetChampionSkillId(disciplineIndex, skill)
         local numPoints = 0
-        if (cp[disciplineIndex] and cp[disciplineIndex][skill]) then
-            numPoints = cp[disciplineIndex][skill]
+        if (cp[disciplineIndex] and cp[disciplineIndex][skill] ~= nil) then
+            local maxPoints = GetChampionSkillMaxPoints(id)
+            if (cp[disciplineIndex][skill] > maxPoints) then
+                numPoints = maxPoints
+                hasOverMaxPoints = true
+            else
+                numPoints = cp[disciplineIndex][skill]
+            end
         else
-            numPoints = currentCP[disciplineIndex][skill]
+            DynamicCP.dbg("else" .. GetChampionSkillName(id))
+            numPoints = 0
         end
 
         -- Unslot slottables that are no longer slottable because of not enough points
         -- We still do this even though slottables are replaced later because user could have slotStars setting off
         if (currentHotbar[id] and not WouldChampionSkillNodeBeUnlocked(id, numPoints)) then
+            DynamicCP.dbg("unslotting" .. GetChampionSkillName(id))
             DynamicCP.SetSlottableInIndex(currentHotbar[id], -1)
         end
 
@@ -222,6 +248,11 @@ function DynamicCP:OnApplyClicked(button)
         DynamicCPPresetsInnerConfirmButton:SetText("Confirm (" .. tostring(GetChampionRespecCost()) .. " |t18:18:esoui/art/currency/currency_gold.dds|t)")
     else
         DynamicCPPresetsInnerConfirmButton:SetText("Confirm")
+    end
+
+    -- Show warning message
+    if (hasOverMaxPoints) then
+        DisplayMildWarning("Warning: the preset you applied has more than the maximum points allowed in certain stars. The points will be left as extra. Make sure to save the preset after you allocate your points to overwrite the old preset! If this was a default preset, you can also re-import all of the default presets in the add-on settings by clicking on the gear icon.")
     end
 end
 

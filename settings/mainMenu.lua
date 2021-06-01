@@ -258,6 +258,70 @@ function DynamicCP:CreateSettingsMenu()
                     end,
                     width = "full",
                 },
+                {
+                    type = "description",
+                    title = "Manage Default Presets",
+                    text = "You can delete ALL of the default presets using the button below. This will delete any presets that match the names of the default presets, so be careful if you made changes to any!",
+                    width = "full",
+                },
+                {
+                    type = "button",
+                    name = "Delete Default Presets",
+                    tooltip = "Delete all default presets. This cannot be undone!",
+                    func = function()
+                        DynamicCP.dbg("Deleting default presets")
+                        for treeName, tree in pairs(DynamicCP.savedOptions.cp) do
+                            for name, data in pairs(tree) do
+                                if (DynamicCP.oldDefaultPresetNames[name] or data.isDefault == true) then
+                                    DynamicCP.savedOptions.cp[treeName][name] = nil
+                                end
+                            end
+                        end
+                        DynamicCP:InitializeDropdowns()
+                    end,
+                    warning = "Delete all default presets. This cannot be undone!",
+                    isDangerous = true,
+                    width = "full",
+                },
+                {
+                    type = "description",
+                    title = nil,
+                    text = "You can reset ALL of the default presets using the button below. This will delete any presets that match the names of the default presets, so be careful if you made changes to any! Then, it will add the latest updated default presets to your preset window.",
+                    width = "full",
+                },
+                {
+                    type = "button",
+                    name = "Reset Default Presets",
+                    tooltip = "Reset all default presets. This will delete all default presets and re-add them!",
+                    func = function()
+                        DynamicCP.dbg("Resetting default presets")
+                        for treeName, tree in pairs(DynamicCP.savedOptions.cp) do
+                            for name, data in pairs(tree) do
+                                if (DynamicCP.oldDefaultPresetNames[name] or data.isDefault == true) then
+                                    DynamicCP.savedOptions.cp[treeName][name] = nil
+                                end
+                            end
+                        end
+
+                        -- Now deep copy
+                        for treeName, tree in pairs(DynamicCP.defaultPresets) do
+                            for name, data in pairs(tree) do
+                                DynamicCP.savedOptions.cp[treeName][name] = {}
+                                for disciplineIndex, disciplineData in pairs(data) do
+                                    DynamicCP.savedOptions.cp[treeName][name][disciplineIndex] = {}
+                                    for skillIndex, points in pairs(disciplineData) do
+                                        DynamicCP.savedOptions.cp[treeName][name][disciplineIndex][skillIndex] = points
+                                    end
+                                end
+                            end
+                        end
+
+                        DynamicCP:InitializeDropdowns()
+                    end,
+                    warning = "Reset all default presets. This will delete all default presets and re-add them!",
+                    isDangerous = true,
+                    width = "full",
+                },
             },
         },
 ---------------------------------------------------------------------

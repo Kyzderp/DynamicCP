@@ -68,6 +68,8 @@ local defaultOptions = {
     modelessX = GuiRoot:GetWidth() / 4, -- Anchor center
     modelessY = 0,
 
+    convertedIndices = false,
+
     -- 1: added quickstarsShowOnHudUi, which should inherit quickstarsShowOnHud
     -- settingsVersion = 1,
 }
@@ -151,6 +153,7 @@ local function RegisterEvents()
             DynamicCP.ClearCommittedSlottables() -- Invalidate the cache
             DynamicCP.OnSlotsChanged()
             DynamicCP.QuickstarsOnPurchased()
+            DynamicCPMildWarning:SetHidden(true)
         end)
 
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Gained", EVENT_CHAMPION_POINT_GAINED,
@@ -198,8 +201,30 @@ local function Initialize()
 
     -- Populate defaults only on first time, otherwise the keys will be remade even if user deletes
     if (DynamicCP.savedOptions.firstTime) then
+        DynamicCP.savedOptions.convertedIndices = true
         DynamicCP.savedOptions.cp = DynamicCP.defaultPresets
         DynamicCP.savedOptions.firstTime = false
+    end
+
+    -- If this isn't a new Blackwood install, we need to convert the old indices
+    -- TODO: change everything to index by ID later
+    if (not DynamicCP.savedOptions.convertedIndices) then
+        DynamicCP.dbg("CONVERTING TO NEW INDICES")
+        for treeName, tree in pairs(DynamicCP.savedOptions.cp) do
+            for cpName, cp in pairs(tree) do
+                DynamicCP.dbg(cpName)
+                for disciplineIndex, data in pairs(cp) do
+                    DynamicCP.dbg("disciplineIndex" .. tostring(disciplineIndex))
+                    local newData = {}
+                    for oldSkillIndex, points in pairs(data) do
+                        local converted = type(oldSkillIndex) == "number" and DynamicCP.convertIndex(disciplineIndex, oldSkillIndex) or oldSkillIndex
+                        newData[converted] = points
+                    end
+                    DynamicCP.savedOptions.cp[treeName][cpName][disciplineIndex] = newData
+                end
+            end
+        end
+        DynamicCP.savedOptions.convertedIndices = true
     end
 
     -- Populate with example custom rule
