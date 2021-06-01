@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "1.1.0"
+DynamicCP.version = "1.1.1"
 
 DynamicCP.experimental = false -- Flip to true when developing. Nothing currently
 
@@ -159,17 +159,7 @@ local function RegisterEvents()
         function(_, championPointsDelta)
             -- Show CP gained message
             if (DynamicCP.savedOptions.showPointGainedMessage) then
-                DynamicCP.dbg("Gained " .. tostring(championPointsDelta))
-                -- This is what the game code uses to generate the center announcement text,
-                -- but it's actually kinda buggy. If you gain more than 1 point at once, the
-                -- text shows the wrong tree gained because it's already updated.
-                -- We'll live with that for now though...
-                local gainedString = ZO_CenterScreenAnnounce_GetEventHandler(EVENT_CHAMPION_POINT_GAINED)(championPointsDelta).secondaryText
-                gainedString = string.gsub(gainedString, "\n", " ")
-                if (championPointsDelta > 1) then
-                    gainedString = tostring(championPointsDelta) .. " points: " .. gainedString
-                end
-                CHAT_SYSTEM:AddMessage("|cAAAAAAGained " .. gainedString .. "|r")
+                CHAT_SYSTEM:AddMessage(string.format("|cAAAAAAGained %d champion point%s|r", championPointsDelta, (championPointsDelta > 1) and "s" or ""))
             end
 
             -- Update totals label
