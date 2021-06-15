@@ -340,6 +340,15 @@ function DynamicCP:OnSaveClicked(button, tree)
     for k, v in pairs(currentCP[disciplineIndex]) do
         newCP[disciplineIndex][k] = v
     end
+    -- Also copy the other things like role and class
+    for index, _ in pairs(DynamicCP.savedOptions.cp[tree][presetName]) do
+        if (index ~= disciplineIndex) then
+            newCP[index] = {}
+            for k, v in pairs(DynamicCP.savedOptions.cp[tree][presetName][index]) do
+                newCP[index][k] = v
+            end
+        end
+    end
 
     -- Don't want to deal with formatting, colors are stripped when parsing name from dropdown
     local newName = DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsTextField"):GetText()
