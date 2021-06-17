@@ -28,6 +28,7 @@ local defaultOptions = {
     showPulldownPoints = false,
     showPointGainedMessage = true,
     presetsBackdropAlpha = 0.5,
+    presetsShowClassButtons = true,
     passiveLabelColor = {1, 1, 0.5},
     passiveLabelSize = 24,
     slottableLabelColor = {1, 1, 1},

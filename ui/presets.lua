@@ -589,10 +589,22 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
 
         local buttons = DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsButtons")
         for class, _ in pairs(CLASSES) do
-            SetTextureButtonEnabled(buttons:GetNamedChild(class), data.classes == nil or data.classes[class] == nil or data.classes[class]) -- Both nil or true
+            local button = buttons:GetNamedChild(class)
+            SetTextureButtonEnabled(button, data.classes == nil or data.classes[class] == nil or data.classes[class]) -- Both nil or true
+            -- Completely hide button rows
+            button:SetHidden(not DynamicCP.savedOptions.presetsShowClassButtons)
         end
         for role, _ in pairs(ROLES) do
             SetTextureButtonEnabled(buttons:GetNamedChild(role), data.roles == nil or data.roles[role] == nil or data.roles[role]) -- Both nil or true
+        end
+
+        -- If class buttons are hidden, role buttons should be anchored higher
+        if (DynamicCP.savedOptions.presetsShowClassButtons) then
+            buttons:GetNamedChild("Tank"):SetAnchor(TOP, buttons:GetNamedChild("Dragonknight"), BOTTOM, 4, 6)
+            buttons:GetNamedChild("Help"):SetAnchor(TOP, buttons:GetNamedChild("Necromancer"), BOTTOM, 0, 6)
+        else
+            buttons:GetNamedChild("Tank"):SetAnchor(TOPLEFT, buttons, TOPLEFT, 2)
+            buttons:GetNamedChild("Help"):SetAnchor(TOPRIGHT, buttons, TOPRIGHT, -2)
         end
 
         if (presetName == CREATE_NEW_STRING) then
