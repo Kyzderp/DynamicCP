@@ -63,8 +63,8 @@ local function OnPlayerActivated()
     local zoneId = GetZoneId(GetUnitZoneIndex("player"))
     if (zoneId ~= lastZoneId and isOnCooldown) then
         DynamicCP.dbg("resetting cooldown because different zone")
-        ProcessListeners("endFunc")
         isOnCooldown = false
+        ProcessListeners("endFunc")
     end
     lastZoneId = zoneId
 end
