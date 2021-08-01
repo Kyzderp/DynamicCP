@@ -168,6 +168,7 @@ function DynamicCP.OnPurchased(_, result)
         [CHAMPION_PURCHASE_CARRYING_DAEDRIC_ARTIFACT] = "CARRYING_DAEDRIC_ARTIFACT",
         [CHAMPION_PURCHASE_CHAMPION_BAR_ILLEGAL_SLOT] = "CHAMPION_BAR_ILLEGAL_SLOT",
         [CHAMPION_PURCHASE_CHAMPION_BAR_NOT_CHAMPION_SKILL] = "CHAMPION_BAR_NOT_CHAMPION_SKILL",
+        [CHAMPION_PURCHASE_CHAMPION_BAR_ON_COOLDOWN] = "CHAMPION_PURCHASE_CHAMPION_BAR_ON_COOLDOWN",
         [CHAMPION_PURCHASE_CHAMPION_BAR_SKILL_NOT_PURCHASED] = "CHAMPION_BAR_SKILL_NOT_PURCHASED",
         [CHAMPION_PURCHASE_CHAMPION_BAR_SKILL_NOT_SLOTTABLE] = "CHAMPION_BAR_SKILL_NOT_SLOTTABLE",
         [CHAMPION_PURCHASE_CHAMPION_BAR_WRONG_DISCIPLINE] = "CHAMPION_BAR_WRONG_DISCIPLINE",
@@ -190,9 +191,9 @@ function DynamicCP.OnPurchased(_, result)
     if (result == CHAMPION_PURCHASE_SUCCESS) then
         HideWarning()
         lastSlottableChange = GetGameTimeMilliseconds()
-    elseif (result == CHAMPION_PURCHASE_CHAMPION_BAR_ILLEGAL_SLOT) then
+    elseif (result == CHAMPION_PURCHASE_CHAMPION_BAR_ON_COOLDOWN) then
         if (not DynamicCP.savedOptions.showCooldownWarning) then return end
-        -- This is apparently the result that's given when we're on slottable cooldown
+        -- This is now the result that's given when we're on slottable cooldown
         local secondsRemaining = (SLOTTABLE_COOLDOWN - GetGameTimeMilliseconds() + lastSlottableChange) / 1000
         DisplayWarning(string.format(SLOTTABLE_COOLDOWN_STRING, secondsRemaining))
 
