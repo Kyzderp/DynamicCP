@@ -193,7 +193,7 @@ local function Initialize()
     -- Populate defaults only on first time, otherwise the keys will be remade even if user deletes
     if (DynamicCP.savedOptions.firstTime) then
         DynamicCP.savedOptions.convertedIndices = true
-        -- DynamicCP.savedOptions.usingSkillId = true
+        DynamicCP.savedOptions.usingSkillId = true
         DynamicCP.savedOptions.cp = DynamicCP.defaultPresets
         DynamicCP.savedOptions.firstTime = false
     end
