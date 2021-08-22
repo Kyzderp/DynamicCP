@@ -3,6 +3,7 @@ DynamicCP = DynamicCP or {}
 -- I need to fix preset window to use IDs later instead of index...
 -- but for now, just convert the old index to new index
 
+-- Pre-Blackwood index to id
 local oldIndexToId = {
     [1] = {
         [ 1] = 68, -- Out of Sight
@@ -111,6 +112,7 @@ local oldIndexToId = {
     },
 }
 
+-- Blackwood id to index
 local newIdToIndex = {
     [68] = 1, -- Out of Sight
     [76] = 2, -- Friends in Low Places
@@ -221,7 +223,126 @@ local newIdToIndex = {
     [2] = 32, -- Boundless Vitality
 }
 
+-- Blackwood index to id, should not need further conversions after this
+local blackwoodIndexToId = {
+    [1] = {
+        [1] = 68, -- Out of Sight
+        [2] = 76, -- Friends in Low Places
+        [3] = 84, -- Fade Away
+        [4] = 90, -- Cutpurse's Art
+        [5] = 80, -- Shadowstrike
+        [6] = 78, -- Master Gatherer
+        [7] = 79, -- Treasure Hunter
+        [8] = 75, -- Steadfast Enchantment
+        [9] = 85, -- Rationer
+        [10] = 86, -- Liquid Efficiency
+        [11] = 89, -- Angler's Instincts
+        [12] = 88, -- Reel Technique
+        [13] = 91, -- Homemaker
+        [14] = 70, -- Wanderer
+        [15] = 81, -- Plentiful Harvest
+        [16] = 82, -- War Mount
+        [17] = 92, -- Gifted Rider
+        [18] = 83, -- Meticulous Disassembly
+        [19] = 72, -- Inspiration Boost
+        [20] = 71, -- Fortune's Favor
+        [21] = 77, -- Infamous
+        [22] = 67, -- Fleet Phantom
+        [23] = 74, -- Gilded Fingers
+        [24] = 69, -- Breakfall
+        [25] = 87, -- Soul Reservoir
+        [26] = 66, -- Steed's Blessing
+        [27] = 65, -- Sustaining Shadows
+        [28] = 1, -- Professional Upkeep
+    },
+    [2] = {
+        [1] = 11, -- Precision
+        [2] = 12, -- Fighting Finesse
+        [3] = 108, -- Blessed
+        [4] = 262, -- From the Brink
+        [5] = 263, -- Enlivening Overflow
+        [6] = 261, -- Hope Infusion
+        [7] = 260, -- Salve of Renewal
+        [8] = 24, -- Soothing Tide
+        [9] = 9, -- Rejuvenator
+        [10] = 163, -- Foresight
+        [11] = 29, -- Cleansing Revival
+        [12] = 26, -- Focused Mending
+        [13] = 28, -- Swift Renewal
+        [14] = 10, -- Piercing
+        [15] = 264, -- Master-at-Arms
+        [16] = 259, -- Weapons Expert
+        [17] = 17, -- Flawless Ritual
+        [18] = 21, -- War Mage
+        [19] = 18, -- Battle Mastery
+        [20] = 22, -- Mighty
+        [21] = 25, -- Deadly Aim
+        [22] = 23, -- Biting Aura
+        [23] = 27, -- Thaumaturge
+        [24] = 30, -- Reaving Blows
+        [25] = 8, -- Wrathful Strikes
+        [26] = 32, -- Occult Overload
+        [27] = 31, -- Backstabber
+        [28] = 6, -- Tireless Discipline
+        [29] = 20, -- Quick Recovery
+        [30] = 13, -- Resilience
+        [31] = 14, -- Preparation
+        [32] = 15, -- Elemental Aegis
+        [33] = 16, -- Hardy
+        [34] = 136, -- Enduring Resolve
+        [35] = 160, -- Reinforced
+        [36] = 162, -- Riposte
+        [37] = 159, -- Bulwark
+        [38] = 161, -- Last Stand
+        [39] = 33, -- Cutting Defense
+        [40] = 134, -- Duelist's Rebuff
+        [41] = 133, -- Unassailable
+        [42] = 99, -- Eldritch Insight
+        [43] = 5, -- Endless Endurance
+        [44] = 4, -- Untamed Aggression
+        [45] = 3, -- Arcane Supremacy
+    },
+    [3] = {
+        [1] = 38, -- Sprinter
+        [2] = 42, -- Hasty
+        [3] = 113, -- Hero's Vigor
+        [4] = 63, -- Shield Master
+        [5] = 46, -- Bastion
+        [6] = 58, -- Tempered Soul
+        [7] = 57, -- Survival Instincts
+        [8] = 56, -- Spirit Mastery
+        [9] = 61, -- Arcane Alacrity
+        [10] = 45, -- Piercing Gaze
+        [11] = 48, -- Bloody Renewal
+        [12] = 49, -- Strategic Reserve
+        [13] = 53, -- Mystic Tenacity
+        [14] = 47, -- Siphoning Spells
+        [15] = 62, -- Rousing Speed
+        [16] = 39, -- Tireless Guardian
+        [17] = 40, -- Savage Defense
+        [18] = 50, -- Bashing Brutality
+        [19] = 44, -- Nimble Protector
+        [20] = 60, -- On Guard
+        [21] = 43, -- Fortification
+        [22] = 37, -- Tumbling
+        [23] = 51, -- Expert Evasion
+        [24] = 128, -- Defiance
+        [25] = 52, -- Slippery
+        [26] = 64, -- Unchained
+        [27] = 59, -- Juggernaut
+        [28] = 54, -- Peace of Mind
+        [29] = 55, -- Hardened
+        [30] = 35, -- Rejuvenation
+        [31] = 34, -- Ironclad
+        [32] = 2, -- Boundless Vitality
+    },
+}
+
 function DynamicCP.convertIndex(oldDisciplineIndex, oldIndex)
     local id = oldIndexToId[oldDisciplineIndex][oldIndex]
     return newIdToIndex[id]
+end
+
+function DynamicCP.convertBlackwoodToId(oldDisciplineIndex, oldSkillIndex)
+    return blackwoodIndexToId[oldDisciplineIndex][oldSkillIndex]
 end

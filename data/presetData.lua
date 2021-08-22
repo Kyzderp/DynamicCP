@@ -4,110 +4,113 @@ DynamicCP = DynamicCP or {}
 /script for i=1,3 do for j=1,GetNumChampionDisciplineSkills(i) do local id = GetChampionSkillId(i, j) d(string.format("%d %s %d", j, GetChampionSkillName(id), id)) end end
 GetChampionSkillName(GetChampionSkillId(disciplineIndex, skillIndex))
 
-Craft(28)
-* [ 1] Out of Sight - 68
-* [ 2] Fleet Phantom - 67
-* [ 3] Friends in Low Places - 76
-* [ 4] Infamous - 77
-* [ 5] Shadowstrike - 80
-* [ 6] Cutpurse's Art - 90
-* [ 7] Fade Away - 84
-* [ 8] Master Gatherer - 78
-* [ 9] Treasure Hunter - 79
-* [10] Steadfast Enchantment - 75
-* [11] Rationer - 85
-* [12] Liquid Efficiency - 86
-* [13] Angler's Instincts - 89
-* [14] Reel Technique - 88
-* [15] Homemaker - 91
-* [16] Wanderer - 70
-* [17] Plentiful Harvest - 81
-* [18] War Mount - 82
-* [19] Gifted Rider - 92
-* [20] Meticulous Disassembly - 83
-* [21] Inspiration Boost - 72
-* [22] Fortune's Favor - 71
-* [23] Gilded Fingers - 74
-* [24] Breakfall - 69
-* [25] Soul Reservoir - 87
-* [26] Steed's Blessing - 66
-* [27] Sustaining Shadows - 65
-* [28] Professional Upkeep - 1
+1 Out of Sight 68
+2 Friends in Low Places 76
+3 Fade Away 84
+4 Cutpurse's Art 90
+5 Shadowstrike 80
+6 Master Gatherer 78
+7 Treasure Hunter 79
+8 Steadfast Enchantment 75
+9 Rationer 85
+10 Liquid Efficiency 86
+11 Angler's Instincts 89
+12 Reel Technique 88
+13 Homemaker 91
+14 Wanderer 70
+15 Plentiful Harvest 81
+16 War Mount 82
+17 Gifted Rider 92
+18 Meticulous Disassembly 83
+19 Inspiration Boost 72
+20 Fortune's Favor 71
+21 Infamous 77
+22 Fleet Phantom 67
+23 Gilded Fingers 74
+24 Breakfall 69
+25 Soul Reservoir 87
+26 Steed's Blessing 66
+27 Sustaining Shadows 65
+28 Professional Upkeep 1
 
-Warfare(39)
-* [ 1] Precision - 11
-* [ 2] Fighting Finesse - 12
-* [ 3] Blessed - 108
-* [ 4] Soothing Tide - 24
-* [ 5] Rejuvenator - 9
-* [ 6] Foresight - 163
-* [ 7] Cleansing Revival - 29
-* [ 8] Focused Mending - 26
-* [ 9] Swift Renewal - 28
-* [10] Piercing - 10
-* [11] Flawless Ritual - 17
-* [12] War Mage - 21
-* [13] Battle Mastery - 18
-* [14] Mighty - 22
-* [15] Deadly Aim - 25
-* [16] Biting Aura - 23
-* [17] Thaumaturge - 27
-* [18] Reaving Blows - 30
-* [19] Wrathful Strikes - 8
-* [20] Occult Overload - 32
-* [21] Backstabber - 31
-* [22] Tireless Discipline - 6
-* [23] Quick Recovery - 20
-* [24] Resilience - 13
-* [25] Preparation - 14
-* [26] Elemental Aegis - 15
-* [27] Hardy - 16
-* [28] Enduring Resolve - 136
-* [29] Reinforced - 160
-* [30] Riposte - 162
-* [31] Bulwark - 159
-* [32] Last Stand - 161
-* [33] Cutting Defense - 33
-* [34] Duelist's Rebuff - 134
-* [35] Unassailable - 133
-* [36] Eldritch Insight - 99
-* [37] Endless Endurance - 5
-* [38] Untamed Aggression - 4
-* [39] Arcane Supremacy - 3
+1 Precision 11
+2 Fighting Finesse 12
+3 Blessed 108
+4 From the Brink 262
+5 Enlivening Overflow 263
+6 Hope Infusion 261
+7 Salve of Renewal 260
+8 Soothing Tide 24
+9 Rejuvenator 9
+10 Foresight 163
+11 Cleansing Revival 29
+12 Focused Mending 26
+13 Swift Renewal 28
+14 Piercing 10
+15 Master-at-Arms 264
+16 Weapons Expert 259
+17 Flawless Ritual 17
+18 War Mage 21
+19 Battle Mastery 18
+20 Mighty 22
+21 Deadly Aim 25
+22 Biting Aura 23
+23 Thaumaturge 27
+24 Reaving Blows 30
+25 Wrathful Strikes 8
+26 Occult Overload 32
+27 Backstabber 31
+28 Tireless Discipline 6
+29 Quick Recovery 20
+30 Resilience 13
+31 Preparation 14
+32 Elemental Aegis 15
+33 Hardy 16
+34 Enduring Resolve 136
+35 Reinforced 160
+36 Riposte 162
+37 Bulwark 159
+38 Last Stand 161
+39 Cutting Defense 33
+40 Duelist's Rebuff 134
+41 Unassailable 133
+42 Eldritch Insight 99
+43 Endless Endurance 5
+44 Untamed Aggression 4
+45 Arcane Supremacy 3
 
-Fitness(32)
-* [ 1] Sprinter - 38
-* [ 2] Rousing Speed - 62
-* [ 3] Hasty - 42
-* [ 4] Hero's Vigor - 113
-* [ 5] Piercing Gaze - 45
-* [ 6] Tempered Soul - 58
-* [ 7] Survival Instincts - 57
-* [ 8] Bastion - 46
-* [ 9] Arcane Alacrity - 61
-* [10] Spirit Mastery - 56
-* [11] Strategic Reserve - 49
-* [12] Mystic Tenacity - 53
-* [13] Shield Master - 63
-* [14] Bloody Renewal - 48
-* [15] Siphoning Spells - 47
-* [16] Tireless Guardian - 39
-* [17] Savage Defense - 40
-* [18] Bashing Brutality - 50
-* [19] On Guard - 60
-* [20] Nimble Protector - 44
-* [21] Fortification - 43
-* [22] Tumbling - 37
-* [23] Expert Evasion - 51
-* [24] Defiance - 128
-* [25] Slippery - 52
-* [26] Unchained - 64
-* [27] Juggernaut - 59
-* [28] Peace of Mind - 54
-* [29] Hardened - 55
-* [30] Rejuvenation - 35
-* [31] Ironclad - 34
-* [32] Boundless Vitality - 2
+1 Sprinter 38
+2 Hasty 42
+3 Hero's Vigor 113
+4 Shield Master 63
+5 Bastion 46
+6 Tempered Soul 58
+7 Survival Instincts 57
+8 Spirit Mastery 56
+9 Arcane Alacrity 61
+10 Piercing Gaze 45
+11 Bloody Renewal 48
+12 Strategic Reserve 49
+13 Mystic Tenacity 53
+14 Siphoning Spells 47
+15 Rousing Speed 62
+16 Tireless Guardian 39
+17 Savage Defense 40
+18 Bashing Brutality 50
+19 Nimble Protector 44
+20 On Guard 60
+21 Fortification 43
+22 Tumbling 37
+23 Expert Evasion 51
+24 Defiance 128
+25 Slippery 52
+26 Unchained 64
+27 Juggernaut 59
+28 Peace of Mind 54
+29 Hardened 55
+30 Rejuvenation 35
+31 Ironclad 34
+32 Boundless Vitality 2
 ]]
 
 DynamicCP.defaultPresets =

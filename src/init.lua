@@ -69,7 +69,8 @@ local defaultOptions = {
     modelessX = GuiRoot:GetWidth() / 4, -- Anchor center
     modelessY = 0,
 
-    convertedIndices = false,
+    convertedIndices = false, -- Pre-Blackwood to Blackwood indices
+    usingSkillId = false, -- Converted from Blackwood indices to saving using skilLId
 
     -- 1: added quickstarsShowOnHudUi, which should inherit quickstarsShowOnHud
     -- settingsVersion = 1,
