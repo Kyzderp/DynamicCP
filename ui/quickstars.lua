@@ -39,14 +39,13 @@ local function GetAvailableSlottables(tree)
         Blue = 2,
         Red = 3,
     }
-    -- [disciplineIndex][skillIndex] = points
+    -- [disciplineIndex][skillId] = points
     local committedPoints = DynamicCP.GetCommittedCP()
     local available = {}
 
     local disciplineIndex = treeToIndex[tree]
     local disciplineData = committedPoints[disciplineIndex]
-    for skillIndex, points in pairs(disciplineData) do
-        local skillId = GetChampionSkillId(disciplineIndex, skillIndex)
+    for skillId, points in pairs(disciplineData) do
         if (CanChampionSkillTypeBeSlotted(GetChampionSkillType(skillId)) and WouldChampionSkillNodeBeUnlocked(skillId, points)) then
             available[skillId] = points
         end

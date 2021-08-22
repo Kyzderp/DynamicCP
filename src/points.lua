@@ -4,7 +4,7 @@ DynamicCP = DynamicCP or {}
 --[[ Both of these should be of the format:
 {
     [disciplineIndex] = {
-        [skillIndex] = points,
+        [skillId] = points,
     },
     [3] = {
         [28] = 50,
@@ -28,8 +28,8 @@ local function GetCommittedCP()
     for disciplineIndex = 1, GetNumChampionDisciplines() do
         current[disciplineIndex] = {}
         for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
-            local id = GetChampionSkillId(disciplineIndex, skillIndex)
-            current[disciplineIndex][skillIndex] = GetNumPointsSpentOnChampionSkill(id)
+            local skillId = GetChampionSkillId(disciplineIndex, skillIndex)
+            current[disciplineIndex][skillId] = GetNumPointsSpentOnChampionSkill(skillId)
         end
     end
     committedCP = current
@@ -60,13 +60,13 @@ local function NeedsRespec()
     local committed = GetCommittedCP()
     local needsRespec = false
     for disciplineIndex, disciplineData in pairs(pendingCP) do
-        for skillIndex, points in pairs(disciplineData) do
-            local committedPoints = committed[disciplineIndex][skillIndex]
+        for skillId, points in pairs(disciplineData) do
+            local committedPoints = committed[disciplineIndex][skillId]
             if (points ~= committedPoints) then
                 if (not cleaned[disciplineIndex]) then
                     cleaned[disciplineIndex] = {}
                 end
-                cleaned[disciplineIndex][skillIndex] = points
+                cleaned[disciplineIndex][skillId] = points
                 if (points < committedPoints) then
                     needsRespec = true
                 end
@@ -83,14 +83,14 @@ DynamicCP.NeedsRespec = NeedsRespec
 
 
 -- Should be called whenever preset wants to apply points
-local function SetStarPoints(disciplineIndex, skillIndex, points)
+local function SetStarPoints(disciplineIndex, skillId, points)
     if (not pendingCP) then
         pendingCP = {}
     end
     if (not pendingCP[disciplineIndex]) then
         pendingCP[disciplineIndex] = {}
     end
-    pendingCP[disciplineIndex][skillIndex] = points
+    pendingCP[disciplineIndex][skillId] = points
 end
 DynamicCP.SetStarPoints = SetStarPoints
 
@@ -103,8 +103,7 @@ DynamicCP.ClearPendingCP = ClearPendingCP
 -- Iterate through the pending points and add to purchase request
 local function ConvertPendingPointsToPurchase()
     for disciplineIndex, disciplineData in pairs(pendingCP) do
-        for skillIndex, points in pairs(disciplineData) do
-            local skillId = GetChampionSkillId(disciplineIndex, skillIndex)
+        for skillId, points in pairs(disciplineData) do
             AddSkillToChampionPurchaseRequest(skillId, points)
         end
     end

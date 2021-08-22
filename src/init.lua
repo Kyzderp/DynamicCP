@@ -193,6 +193,7 @@ local function Initialize()
     -- Populate defaults only on first time, otherwise the keys will be remade even if user deletes
     if (DynamicCP.savedOptions.firstTime) then
         DynamicCP.savedOptions.convertedIndices = true
+        -- DynamicCP.savedOptions.usingSkillId = true
         DynamicCP.savedOptions.cp = DynamicCP.defaultPresets
         DynamicCP.savedOptions.firstTime = false
     end
@@ -216,6 +217,26 @@ local function Initialize()
             end
         end
         DynamicCP.savedOptions.convertedIndices = true
+    end
+
+    -- If user is still on old data storage method with indices, we should convert them to id instead
+    if (not DynamicCP.savedOptions.usingSkillId) then
+        DynamicCP.dbg("CONVERTING TO IDS HALP PLZ DON'T BREAK")
+        for treeName, tree in pairs(DynamicCP.savedOptions.cp) do
+            for cpName, cp in pairs(tree) do
+                DynamicCP.dbg(cpName)
+                for disciplineIndex, data in pairs(cp) do
+                    DynamicCP.dbg("disciplineIndex" .. tostring(disciplineIndex))
+                    local newData = {}
+                    for oldSkillIndex, points in pairs(data) do
+                        local converted = type(oldSkillIndex) == "number" and DynamicCP.convertBlackwoodToId(disciplineIndex, oldSkillIndex) or oldSkillIndex
+                        newData[converted] = points
+                    end
+                    DynamicCP.savedOptions.cp[treeName][cpName][disciplineIndex] = newData
+                end
+            end
+        end
+        DynamicCP.savedOptions.usingSkillId = true
     end
 
     -- Populate with example custom rule

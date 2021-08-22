@@ -250,7 +250,7 @@ function DynamicCP:CreateSettingsMenu()
                 {
                     type = "checkbox",
                     name = "Automatically slot stars",
-                    tooltip = "After confirming a preset, automatically slot slottable stars. If there are more than 4 slottables, they are prioritized by most maxed, then most points, then star index",
+                    tooltip = "After confirming a preset, automatically slot slottable stars. If there are more than 4 slottables, they are prioritized by most maxed, then most points, then star ID",
                     default = true,
                     getFunc = function() return DynamicCP.savedOptions.slotStars end,
                     setFunc = function(value)
@@ -309,8 +309,8 @@ function DynamicCP:CreateSettingsMenu()
                                 DynamicCP.savedOptions.cp[treeName][name] = {}
                                 for disciplineIndex, disciplineData in pairs(data) do
                                     DynamicCP.savedOptions.cp[treeName][name][disciplineIndex] = {}
-                                    for skillIndex, points in pairs(disciplineData) do
-                                        DynamicCP.savedOptions.cp[treeName][name][disciplineIndex][skillIndex] = points
+                                    for skillId, points in pairs(disciplineData) do
+                                        DynamicCP.savedOptions.cp[treeName][name][disciplineIndex][skillId] = points
                                     end
                                 end
                             end

@@ -102,11 +102,12 @@ local function GenerateDiff(before, after)
     for disciplineIndex = 1, GetNumChampionDisciplines() do
         if (before[disciplineIndex] and after[disciplineIndex]) then
             for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
-                local first = before[disciplineIndex][skillIndex] or 0
-                local second = after[disciplineIndex][skillIndex] or 0
+                local skillId = GetChampionSkillId(disciplineIndex, skillIndex)
+                local first = before[disciplineIndex][skillId] or 0
+                local second = after[disciplineIndex][skillId] or 0
                 if (first ~= second and (first ~= 0 or second ~= 0)) then
                     local line = zo_strformat("\n|cBBBBBB<<C:1>>:  <<2>> → <<3>>",
-                        GetChampionSkillName(GetChampionSkillId(disciplineIndex, skillIndex)),
+                        GetChampionSkillName(skillId),
                         first,
                         second)
 
@@ -135,10 +136,11 @@ local function GenerateTree(cp, tree)
 
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
     for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
-        local points = cp[disciplineIndex][skillIndex]
+        local skillId = GetChampionSkillId(disciplineIndex, skillIndex)
+        local points = cp[disciplineIndex][skillId]
         if (points ~= 0) then
             local line = zo_strformat("\n<<C:1>>:  <<2>>",
-                GetChampionSkillName(GetChampionSkillId(disciplineIndex, skillIndex)),
+                GetChampionSkillName(skillId),
                 points)
             result = result .. line
         end
@@ -181,35 +183,35 @@ function DynamicCP:OnApplyClicked(button)
     local slottablesData = {}
     local hasOverMaxPoints = false
     for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
-        local id = GetChampionSkillId(disciplineIndex, skillIndex)
+        local skillId = GetChampionSkillId(disciplineIndex, skillIndex)
         local numPoints = 0
-        if (cp[disciplineIndex] and cp[disciplineIndex][skillIndex] ~= nil) then
-            local maxPoints = GetChampionSkillMaxPoints(id)
-            if (cp[disciplineIndex][skillIndex] > maxPoints) then
+        if (cp[disciplineIndex] and cp[disciplineIndex][skillId] ~= nil) then
+            local maxPoints = GetChampionSkillMaxPoints(skillId)
+            if (cp[disciplineIndex][skillId] > maxPoints) then
                 numPoints = maxPoints
                 hasOverMaxPoints = true
             else
-                numPoints = cp[disciplineIndex][skillIndex]
+                numPoints = cp[disciplineIndex][skillId]
             end
         else
-            DynamicCP.dbg("else" .. GetChampionSkillName(id))
+            DynamicCP.dbg("else" .. GetChampionSkillName(skillId))
             numPoints = 0
         end
 
         -- Unslot slottables that are no longer slottable because of not enough points
         -- We still do this even though slottables are replaced later because user could have slotStars setting off
-        if (currentHotbar[id] and not WouldChampionSkillNodeBeUnlocked(id, numPoints)) then
-            DynamicCP.dbg("unslotting" .. GetChampionSkillName(id))
-            DynamicCP.SetSlottableInIndex(currentHotbar[id], -1)
+        if (currentHotbar[skillId] and not WouldChampionSkillNodeBeUnlocked(skillId, numPoints)) then
+            DynamicCP.dbg("unslotting" .. GetChampionSkillName(skillId))
+            DynamicCP.SetSlottableInIndex(currentHotbar[skillId], -1)
         end
 
         -- Collect slottables
-        local isSlottable = CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))
-        if (isSlottable and WouldChampionSkillNodeBeUnlocked(id, numPoints)) then
-            table.insert(slottablesData, {skillIndex = skillIndex, points = numPoints, maxPoints = GetChampionSkillMaxPoints(id)})
+        local isSlottable = CanChampionSkillTypeBeSlotted(GetChampionSkillType(skillId))
+        if (isSlottable and WouldChampionSkillNodeBeUnlocked(skillId, numPoints)) then
+            table.insert(slottablesData, {skillId = skillId, points = numPoints, maxPoints = GetChampionSkillMaxPoints(skillId)})
         end
 
-        DynamicCP.SetStarPoints(disciplineIndex, skillIndex, numPoints)
+        DynamicCP.SetStarPoints(disciplineIndex, skillId, numPoints)
     end
 
     -- Apply slottables if applicable
@@ -220,8 +222,8 @@ function DynamicCP:OnApplyClicked(button)
             local prop2 = item2.points / item2.maxPoints
             if (prop1 == prop2) then
                 if (item1.maxPoints == item2.maxPoints) then
-                    -- Last resort, sort by skill index
-                    return item1.skillIndex < item2.skillIndex
+                    -- Last resort, sort by skill id
+                    return item1.skillId < item2.skillId
                 end
                 -- If proportions are equal, prioritize ones with higher max because idk
                 return item1.maxPoints > item2.maxPoints
@@ -233,9 +235,9 @@ function DynamicCP:OnApplyClicked(button)
         local offset = HOTBAR_OFFSET[tree]
         for i = 1, 4 do
             if (slottablesData[i]) then
-                local id = GetChampionSkillId(disciplineIndex, slottablesData[i].skillIndex)
-                DynamicCP.SetSlottableInIndex(i + offset, id)
-                DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(id), i + offset))
+                local skillId = slottablesData[i].skillId
+                DynamicCP.SetSlottableInIndex(i + offset, skillId)
+                DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(skillId), i + offset))
             end
         end
     end
