@@ -127,6 +127,9 @@ function DynamicCP.OnQuickstarConfirm()
     -- need to use the button spend points again, with confirmation dialog
     SendChampionPurchaseRequest()
 
+    if (DynamicCP.savedOptions.quickstarsPlaySound) then
+        PlaySound(SOUNDS.CHAMPION_POINTS_COMMITTED)
+    end
     -- TODO: add message maybe
 end
 

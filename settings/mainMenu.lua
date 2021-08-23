@@ -476,6 +476,17 @@ function DynamicCP:CreateSettingsMenu()
                 },
                 {
                     type = "checkbox",
+                    name = "Play sound",
+                    tooltip = "Play the champion points committed sound when changing slottables",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.quickstarsPlaySound end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.quickstarsPlaySound = value
+                    end,
+                    width = "full",
+                },
+                {
+                    type = "checkbox",
                     name = "Show cooldown",
                     tooltip = "Show a small label with a countdown indicating the 30-second cooldown on changing slottables",
                     default = true,

@@ -52,6 +52,7 @@ local defaultOptions = {
     quickstarsShowOnCpScreen = false,
     quickstarsShowCooldown = true,
     quickstarsCooldownColor = {0.7, 0.7, 0.7},
+    quickstarsPlaySound = true,
 
     customRules = {
         playSound = true, -- CHAMPION_POINTS_COMMITTED
