@@ -62,55 +62,65 @@ GetChampionSkillName(GetChampionSkillId(disciplineIndex, skillIndex))
 27 Backstabber 31
 28 Tireless Discipline 6
 29 Quick Recovery 20
-30 Resilience 13
-31 Preparation 14
-32 Elemental Aegis 15
-33 Hardy 16
-34 Enduring Resolve 136
-35 Reinforced 160
-36 Riposte 162
-37 Bulwark 159
-38 Last Stand 161
-39 Cutting Defense 33
-40 Duelist's Rebuff 134
-41 Unassailable 133
-42 Eldritch Insight 99
-43 Endless Endurance 5
-44 Untamed Aggression 4
-45 Arcane Supremacy 3
+30 Ironclad 265
+31 Resilience 13
+32 Preparation 14
+33 Elemental Aegis 15
+34 Hardy 16
+35 Enduring Resolve 136
+36 Reinforced 160
+37 Riposte 162
+38 Bulwark 159
+39 Last Stand 161
+40 Cutting Defense 33
+41 Duelist's Rebuff 134
+42 Unassailable 133
+43 Eldritch Insight 99
+44 Endless Endurance 5
+45 Untamed Aggression 4
+46 Arcane Supremacy 3
 
 1 Sprinter 38
 2 Hasty 42
-3 Hero's Vigor 113
-4 Shield Master 63
-5 Bastion 46
-6 Tempered Soul 58
-7 Survival Instincts 57
-8 Spirit Mastery 56
-9 Arcane Alacrity 61
-10 Piercing Gaze 45
-11 Bloody Renewal 48
-12 Strategic Reserve 49
-13 Mystic Tenacity 53
-14 Siphoning Spells 47
-15 Rousing Speed 62
-16 Tireless Guardian 39
-17 Savage Defense 40
-18 Bashing Brutality 50
-19 Nimble Protector 44
-20 On Guard 60
-21 Fortification 43
-22 Tumbling 37
-23 Expert Evasion 51
-24 Defiance 128
-25 Slippery 52
-26 Unchained 64
-27 Juggernaut 59
-28 Peace of Mind 54
-29 Hardened 55
-30 Rejuvenation 35
-31 Ironclad 34
-32 Boundless Vitality 2
+3 Thrill of the Hunt 272
+4 Celerity 270
+5 Refreshing Stride 271
+6 Hero's Vigor 113
+7 Shield Master 63
+8 Bastion 46
+9 Tempered Soul 58
+10 Survival Instincts 57
+11 Spirit Mastery 56
+12 Arcane Alacrity 61
+13 Piercing Gaze 45
+14 Bloody Renewal 48
+15 Strategic Reserve 49
+16 Mystic Tenacity 53
+17 Relentlessness 274
+18 Pain's Refuge 275
+19 Sustained by Suffering 273
+20 Siphoning Spells 47
+21 Rousing Speed 62
+22 Tireless Guardian 39
+23 Savage Defense 40
+24 Bashing Brutality 50
+25 Nimble Protector 44
+26 Soothing Shield 268
+27 Bracing Anchor 267
+28 Ward Master 266
+29 On Guard 60
+30 Fortification 43
+31 Tumbling 37
+32 Expert Evasion 51
+33 Defiance 128
+34 Slippery 52
+35 Unchained 64
+36 Juggernaut 59
+37 Peace of Mind 54
+38 Hardened 55
+39 Rejuvenation 35
+40 Fortified 34
+41 Boundless Vitality 2
 ]]
 
 DynamicCP.defaultPresets =

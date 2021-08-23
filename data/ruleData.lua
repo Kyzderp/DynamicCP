@@ -413,12 +413,12 @@ DynamicCP.exampleRules = {
         },
     },
     ["Overland"] = {
-        description = "A set of rules that slots:\n\n|ca5d752Treasure Hunter|r, |ca5d752Steed's Blessing|r, |ca5d752Homemaker|r, and |ca5d752Gifted Rider|r on all roles;\n\n|ce46b2eBloody Renewal / Siphoning Spells|r, |c59bae7Deadly Aim|r, |c59bae7Fighting Finesse|r, |c59bae7Biting Aura|r, and |c59bae7Thaumaturge|r on dps;\n\nwhen you enter an overland zone.\n\nAnd slots |ca5d752Liquid Efficiency|r instead of Gifted Rider in public dungeons, delves, and group instances.",
+        description = "A set of rules that slots:\n\n|ca5d752Treasure Hunter|r, |ca5d752Steed's Blessing|r, |ca5d752Homemaker|r, |ca5d752Gifted Rider|r, and |ce46b2eCelerity|r on all roles;\n\n|ce46b2eBloody Renewal / Siphoning Spells|r, |c59bae7Deadly Aim|r, |c59bae7Fighting Finesse|r, |c59bae7Biting Aura|r, and |c59bae7Thaumaturge|r on dps;\n\nwhen you enter an overland zone.\n\nAnd slots |ca5d752Liquid Efficiency|r instead of Gifted Rider in public dungeons, delves, and group instances.",
         rules = {
-            ["Instance Green"] = {
+            ["Instance Green / Red"] = {
                 ["dps"] = true,
                 ["healer"] = true,
-                ["name"] = "Instance Green",
+                ["name"] = "Instance Green / Red",
                 ["normal"] = true,
                 ["param1"] = "",
                 ["param2"] = "",
@@ -438,7 +438,7 @@ DynamicCP.exampleRules = {
                     [8] = -1,
                     [9] = -1,
                     [10] = -1,
-                    [11] = -1,
+                    [11] = 270, -- Celerity
                     [12] = -1,
                 },
             },
@@ -469,10 +469,10 @@ DynamicCP.exampleRules = {
                     [12] = -1,
                 },
             },
-            ["Overland Green"] = {
+            ["Overland Green / Red"] = {
                 ["dps"] = true,
                 ["healer"] = true,
-                ["name"] = "Overland Green",
+                ["name"] = "Overland Green / Red",
                 ["normal"] = true,
                 ["param1"] = "",
                 ["param2"] = "",
@@ -492,7 +492,7 @@ DynamicCP.exampleRules = {
                     [8] = -1,
                     [9] = -1,
                     [10] = -1,
-                    [11] = -1,
+                    [11] = 270, -- Celerity
                     [12] = -1,
                 },
             },
@@ -523,7 +523,7 @@ DynamicCP.exampleRules = {
                     [12] = -1,
                 },
             },
-            ["Public / Delve Green"] = {
+            ["Public / Delve Green / Red"] = {
                 ["dps"] = true,
                 ["healer"] = true,
                 ["name"] = "Public / Delve Green",
@@ -546,7 +546,7 @@ DynamicCP.exampleRules = {
                     [8] = -1,
                     [9] = -1,
                     [10] = -1,
-                    [11] = -1,
+                    [11] = 270, -- Celerity
                     [12] = -1,
                 },
             },

@@ -46,6 +46,8 @@ DynamicCP.DUNGEON_ZONEIDS = {
     ["1201"] = true,  -- Castle Thorn
     ["1228"] = true,  -- Black Drake Villa
     ["1229"] = true,  -- The Cauldron
+    ["1267"] = true,  -- Red Petal Bastion
+    ["1268"] = true,  -- The Dread Cellar
 }
 
 -- Trial zoneIds

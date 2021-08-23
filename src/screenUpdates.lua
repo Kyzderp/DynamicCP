@@ -20,11 +20,7 @@ function DynamicCP.RefreshLabels(show)
             if (not n) then
                 n = WINDOW_MANAGER:CreateControl("$(parent)Name", child, CT_LABEL)
                 n:SetInheritScale(false)
-                if (GetAPIVersion() <= 100035) then
-                    n:SetAnchor(CENTER, child, CENTER, 0, -40)
-                else
-                    n:SetAnchor(CENTER, child, CENTER, 0, -20)
-                end
+                n:SetAnchor(CENTER, child, CENTER, 0, -20)
             end
 
             local slottable = CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))
@@ -47,11 +43,7 @@ function DynamicCP.RefreshLabels(show)
             if (not n) then
                 n = WINDOW_MANAGER:CreateControl("$(parent)Name", child, CT_LABEL)
                 n:SetInheritScale(false)
-                if (GetAPIVersion() <= 100035) then
-                    n:SetAnchor(CENTER, child, CENTER, 0, -40)
-                else
-                    n:SetAnchor(CENTER, child, CENTER, 0, -20)
-                end
+                n:SetAnchor(CENTER, child, CENTER, 0, -20)
             end
             n:SetFont(string.format("$(BOLD_FONT)|%d|soft-shadow-thin", DynamicCP.savedOptions.clusterLabelSize))
             n:SetColor(unpack(DynamicCP.savedOptions.clusterLabelColor))
