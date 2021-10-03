@@ -2,7 +2,7 @@
 ## Champion Point presets per tree, with role and class filters!
 ## Author: Kyzeragon
 ## Contributors: Raijindono (UX), camrenis (testing & feedback)
-## Version: 1.2.1
+## Version: 2.0.0
 ## APIVersion: 101031
 
 ## DependsOn: LibAddonMenu-2.0>=31 LibDialog>=126
@@ -30,6 +30,7 @@ ui/quickstars.lua
 ui/modelessDialog.lua
 
 xml/presets.xml
+xml/sidePresets.xml
 xml/infolabel.xml
 xml/warning.xml
 xml/mildWarning.xml

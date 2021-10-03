@@ -1,6 +1,7 @@
 DynamicCP = DynamicCP or {}
 
 local CREATE_NEW_STRING = "-- Create New --"
+local MESSAGES_TOOLTIP_GAP = 24
 
 local ROLE_TO_STRING = {
     [LFG_ROLE_DPS] = "Dps",
@@ -49,30 +50,99 @@ local selected = {
 }
 
 ---------------------------------------------------------------------
+function UseSidePresets()
+    return DynamicCP.savedOptions.useSidePresets
+end
+
+function GetSubControl(name)
+    if (not name) then
+        name = ""
+    end
+
+    if (UseSidePresets()) then
+        return DynamicCPSidePresets:GetNamedChild(name)
+    else
+        return DynamicCPPresets:GetNamedChild(name)
+    end
+end
+DynamicCP.GetSubControl = GetSubControl
+
+---------------------------------------------------------------------
 -- Strip control name down to just Red/Green/Blue
 local function GetTreeName(name, prefix, suffix)
     return name:sub(prefix:len() + 1, name:len() - suffix:len())
 end
 
-
 ---------------------------------------------------------------------
 -- Show a message in the area under the options
-local function ShowMessage(tree, text)
-    local label = DynamicCPPresetsInner:GetNamedChild(tree .. "Messages")
-    label:SetHidden(false)
-    label:SetText(text)
+local function ShowMessage(tree, text, diffText, color, numChanges, col1, col2)
+    local messages = GetSubControl("Inner"):GetNamedChild(tree .. "Messages")
+    messages:SetHidden(false)
 
-    -- Need to move it upwards if it's a "delete" which means nothing is selected and it looks empty
-    if (DynamicCPPresetsInner:GetNamedChild(tree .. "Options"):IsHidden()) then
-        label:SetAnchor(TOP, DynamicCPPresetsInner:GetNamedChild(tree), TOP, 0, 80)
+    if (UseSidePresets()) then
+        numChanges = numChanges or 0
+        messages:GetNamedChild("Backdrop"):SetEdgeColor(unpack(color))
+        messages:GetNamedChild("Label"):SetText(text)
+        messages:GetNamedChild("Tooltip"):SetHidden(diffText == nil or diffText == "")
+        messages:GetNamedChild("Tooltip"):SetHeight(numChanges * 19 + 4)
+
+        if (col1 ~= nil and col2 ~= nil) then
+            -- Adjust width of the popup
+            local col1Text = table.concat(col1, "\n")
+            local col2Text = table.concat(col2, "\n")
+            messages:GetNamedChild("TooltipLabel"):SetText(col1Text)
+            messages:GetNamedChild("TooltipLabel2"):SetText(col2Text)
+            messages:GetNamedChild("Tooltip"):SetWidth(500)
+            messages:GetNamedChild("Tooltip"):SetWidth(messages:GetNamedChild("TooltipLabel"):GetTextWidth() + messages:GetNamedChild("TooltipLabel2"):GetTextWidth() + MESSAGES_TOOLTIP_GAP)
+        else
+            messages:GetNamedChild("TooltipLabel"):SetText(diffText)
+            messages:GetNamedChild("TooltipLabel2"):SetText("")
+        end
+
+        -- Do a second panel
+        if (numChanges >= 12 and col1 ~= nil and col2 ~= nil) then
+            local halfLines = math.floor((numChanges + 1) / 2)
+
+            local col1Text = table.concat(col1, "\n", 1, halfLines)
+            local col2Text = table.concat(col2, "\n", 1, halfLines)
+            messages:GetNamedChild("Tooltip"):SetHeight(halfLines * 19 + 4)
+            messages:GetNamedChild("TooltipLabel"):SetText(col1Text)
+            messages:GetNamedChild("TooltipLabel2"):SetText(col2Text)
+            messages:GetNamedChild("Tooltip"):SetWidth(500)
+            messages:GetNamedChild("Tooltip"):SetWidth(messages:GetNamedChild("TooltipLabel"):GetTextWidth() + messages:GetNamedChild("TooltipLabel2"):GetTextWidth() + MESSAGES_TOOLTIP_GAP)
+
+            col1Text = table.concat(col1, "\n", halfLines + 1, #col1)
+            col2Text = table.concat(col2, "\n", halfLines + 1, #col2)
+            messages:GetNamedChild("TooltipExtra"):SetHidden(false)
+            messages:GetNamedChild("TooltipExtra"):SetHeight(halfLines * 19 + 4)
+            messages:GetNamedChild("TooltipExtraLabel"):SetText(col1Text)
+            messages:GetNamedChild("TooltipExtraLabel2"):SetText(col2Text)
+            messages:GetNamedChild("TooltipExtra"):SetWidth(500)
+            messages:GetNamedChild("TooltipExtra"):SetWidth(messages:GetNamedChild("TooltipExtraLabel"):GetTextWidth() + messages:GetNamedChild("TooltipExtraLabel2"):GetTextWidth() + MESSAGES_TOOLTIP_GAP + 10)
+        else
+            messages:GetNamedChild("TooltipExtra"):SetHidden(true)
+        end
+
+        -- Need to move it upwards if it's a "delete" which means nothing is selected and it looks empty
+        if (GetSubControl("Inner"):GetNamedChild(tree .. "Options"):IsHidden()) then
+            messages:SetAnchor(TOP, GetSubControl("Inner"):GetNamedChild(tree .. "Dropdown"), BOTTOM, 0, 4)
+        else
+            messages:SetAnchor(TOP, GetSubControl("Inner"):GetNamedChild(tree .. "OptionsButtons"), BOTTOM, 0, 0)
+        end
     else
-        label:SetAnchor(TOP, DynamicCPPresetsInner:GetNamedChild(tree), TOP, 0, 300)
+        messages:SetText(diffText .. "\n\n" .. text)
+        -- Need to move it upwards if it's a "delete" which means nothing is selected and it looks empty
+        if (GetSubControl("Inner"):GetNamedChild(tree .. "Options"):IsHidden()) then
+            messages:SetAnchor(TOP, GetSubControl("Inner"):GetNamedChild(tree), TOP, 0, 80)
+        else
+            messages:SetAnchor(TOP, GetSubControl("Inner"):GetNamedChild(tree), TOP, 0, 300)
+        end
     end
 end
 
 local function HideMessage(tree)
-    local label = DynamicCPPresetsInner:GetNamedChild(tree .. "Messages")
-    label:SetHidden(true)
+    local messages = GetSubControl("Inner"):GetNamedChild(tree .. "Messages")
+    messages:SetHidden(true)
 end
 
 
@@ -98,7 +168,10 @@ end
 -- TODO: pull the logic portion out into points.lua
 local function GenerateDiff(before, after)
     local result = "Changes:"
+    local col1 = {}
+    local col2 = {}
 
+    local numChanges = 0
     for disciplineIndex = 1, GetNumChampionDisciplines() do
         if (before[disciplineIndex] and after[disciplineIndex]) then
             for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
@@ -111,12 +184,16 @@ local function GenerateDiff(before, after)
                         first,
                         second)
 
+                    table.insert(col1, zo_strformat("<<C:1>>", GetChampionSkillName(skillId)))
                     if (first < second) then
                         line = line .. "|c00FF00↑|r"
+                        table.insert(col2, zo_strformat("<<1>> → <<2>>|c00FF00↑|r", first, second))
                     else
                         line = line .. "|cFF0000↓|r"
+                        table.insert(col2, zo_strformat("<<1>> → <<2>>|cFF0000↓|r", first, second))
                     end
                     result = result .. line
+                    numChanges = numChanges + 1
                 end
             end
         end
@@ -125,7 +202,7 @@ local function GenerateDiff(before, after)
     if (result == "Changes:") then
         result = "|cBBBBBBNo changes.|r"
     end
-    return result
+    return result, numChanges, col1, col2
 end
 
 
@@ -133,6 +210,9 @@ end
 -- Build string for this CP, but only for certain tree
 local function GenerateTree(cp, tree)
     local result = "|cBBBBBB"
+    local col1 = {}
+    local col2 = {}
+    local numLines = 0
 
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
     for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
@@ -143,17 +223,20 @@ local function GenerateTree(cp, tree)
                 GetChampionSkillName(skillId),
                 points)
             result = result .. line
+            numLines = numLines + 1
+            table.insert(col1, zo_strformat("<<C:1>>", GetChampionSkillName(skillId)))
+            table.insert(col2, zo_strformat("<<1>>", points))
         end
     end
 
-    return result .. "|r"
+    return result .. "|r", numLines, col1, col2
 end
 
 
 ---------------------------------------------------------------------
 -- When apply button is clicked
 function DynamicCP:OnApplyClicked(button)
-    local tree = GetTreeName(button:GetName(), "DynamicCPPresetsInner", "OptionsApplyButton")
+    local tree = GetTreeName(button:GetName(), GetSubControl():GetName() .. "Inner", "OptionsApplyButton")
     local presetName = selected[tree]
 
     if (not presetName) then
@@ -242,14 +325,15 @@ function DynamicCP:OnApplyClicked(button)
         end
     end
 
-    ShowMessage(tree, GenerateDiff(DynamicCP.GetCommittedCP(), cp) .. "\n\n|c00FF00Preset " .. presetName .. " loaded!|cBBBBBB\nPress \"Confirm\" to commit.|r")
+    local diffText, numChanges, col1, col2 = GenerateDiff(DynamicCP.GetCommittedCP(), cp)
+    ShowMessage(tree, "|c00FF00Preset loaded!\nPress \"Confirm\" to commit.|r", diffText, {0, 1, 0, 1}, numChanges, col1, col2)
     -- Unhide confirm button and also update the cost
-    DynamicCPPresetsInnerConfirmButton:SetHidden(false)
-    DynamicCPPresetsInnerCancelButton:SetHidden(false)
+    GetSubControl("InnerConfirmButton"):SetHidden(false)
+    GetSubControl("InnerCancelButton"):SetHidden(false)
     if (DynamicCP.NeedsRespec()) then
-        DynamicCPPresetsInnerConfirmButton:SetText("Confirm (" .. tostring(GetChampionRespecCost()) .. " |t18:18:esoui/art/currency/currency_gold.dds|t)")
+        GetSubControl("InnerConfirmButton"):SetText("Confirm (" .. tostring(GetChampionRespecCost()) .. " |t18:18:esoui/art/currency/currency_gold.dds|t)")
     else
-        DynamicCPPresetsInnerConfirmButton:SetText("Confirm")
+        GetSubControl("InnerConfirmButton"):SetText("Confirm")
     end
 
     -- Show warning message
@@ -273,8 +357,8 @@ function DynamicCP:OnConfirmClicked(button)
 
         isRespeccing = false
         DynamicCP.ClearPendingCP()
-        DynamicCPPresetsInnerConfirmButton:SetHidden(true)
-        DynamicCPPresetsInnerCancelButton:SetHidden(true)
+        GetSubControl("InnerConfirmButton"):SetHidden(true)
+        GetSubControl("InnerCancelButton"):SetHidden(true)
         HideMessage("Green")
         HideMessage("Blue")
         HideMessage("Red")
@@ -296,11 +380,11 @@ end
 
 ---------------------------------------------------------------------
 -- When cancel button is clicked
-function DynamicCP:OnCancelClicked(button)
+function DynamicCP:OnCancelClicked()
     isRespeccing = false
     DynamicCP.ClearPendingCP()
-    DynamicCPPresetsInnerConfirmButton:SetHidden(true)
-    DynamicCPPresetsInnerCancelButton:SetHidden(true)
+    GetSubControl("InnerConfirmButton"):SetHidden(true)
+    GetSubControl("InnerCancelButton"):SetHidden(true)
     HideMessage("Green")
     HideMessage("Blue")
     HideMessage("Red")
@@ -317,17 +401,18 @@ local function SavePreset(tree, oldName, presetName, newCP, message)
     DynamicCP.savedOptions.cp[tree][presetName] = newCP
 
     DynamicCP:InitializeDropdown(tree, presetName)
-    DynamicCP.dbg("Saved preset " .. presetName)
+    DynamicCP.dbg("|c00FF00Saved preset \"" .. presetName .. "\"|r")
 
-    message = message or ("|c00FF00Done! Saved preset \"" .. presetName .. "\"|r\n" .. GenerateTree(newCP, tree))
-    ShowMessage(tree, message)
+    message = message or ("|c00FF00Done! Saved preset \"" .. presetName .. "\"|r")
+    local treeText, numChanges, col1, col2 = GenerateTree(newCP, tree)
+    ShowMessage(tree, message, treeText, {0, 1, 0, 1}, numChanges, col1, col2)
 end
 
 
 ---------------------------------------------------------------------
 -- When save button is clicked
 function DynamicCP:OnSaveClicked(button, tree)
-    tree = tree or GetTreeName(button:GetName(), "DynamicCPPresetsInner", "OptionsSaveButton")
+    tree = tree or GetTreeName(button:GetName(), GetSubControl():GetName() .. "Inner", "OptionsSaveButton")
     local presetName = selected[tree]
     if (presetName == nil) then
         d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnSaveClicked")
@@ -355,9 +440,9 @@ function DynamicCP:OnSaveClicked(button, tree)
     end
 
     -- Don't want to deal with formatting, colors are stripped when parsing name from dropdown
-    local newName = DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsTextField"):GetText()
+    local newName = GetSubControl("Inner"):GetNamedChild(tree .. "OptionsTextField"):GetText()
     if (newName:find("|")) then
-        ShowMessage(tree, "|cFF0000\"||\" is not allowed in preset names.|r")
+        ShowMessage(tree, "|cFF0000\"||\" is not allowed in preset names.|r", nil, {1, 0, 0, 1}, 0)
         return
     end
 
@@ -395,7 +480,7 @@ end
 -- When focus is lost on the text field
 function DynamicCP:OnTextFocusLost(textfield)
     DynamicCP.dbg("focus lost")
-    local tree = GetTreeName(textfield:GetName(), "DynamicCPPresetsInner", "OptionsTextField")
+    local tree = GetTreeName(textfield:GetName(), GetSubControl():GetName() .. "Inner", "OptionsTextField")
     local presetName = selected[tree]
     if (presetName == nil) then
         d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnTextFocusLost")
@@ -406,7 +491,7 @@ function DynamicCP:OnTextFocusLost(textfield)
         return
     end
 
-    local newName = DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsTextField"):GetText()
+    local newName = GetSubControl("Inner"):GetNamedChild(tree .. "OptionsTextField"):GetText()
 
     if (presetName == newName) then
         return
@@ -421,7 +506,7 @@ end
 ---------------------------------------------------------------------
 -- When delete button is clicked
 function DynamicCP:OnDeleteClicked(button)
-    local tree = GetTreeName(button:GetName(), "DynamicCPPresetsInner", "OptionsDeleteButton")
+    local tree = GetTreeName(button:GetName(), GetSubControl():GetName() .. "Inner", "OptionsDeleteButton")
     local presetName = selected[tree]
     if (presetName == nil or presetName == CREATE_NEW_STRING) then
         d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnDeleteClicked")
@@ -432,7 +517,7 @@ function DynamicCP:OnDeleteClicked(button)
         DynamicCP.savedOptions.cp[tree][presetName] = nil
         DynamicCP:InitializeDropdown(tree)
         DynamicCP.dbg("Deleted " .. presetName)
-        ShowMessage(tree, "Preset \"" .. presetName .. "\" deleted.")
+        ShowMessage(tree, "|c00FF00Preset \"" .. presetName .. "\" deleted.|r", nil, {0, 1, 0, 1}, 0)
     end
 
     libDialog:RegisterDialog(
@@ -451,23 +536,25 @@ end
 ---------------------------------------------------------------------
 -- Hide/unhide the options
 local function AdjustDividers()
-    local r = not DynamicCPPresetsInner:GetNamedChild("RedOptions"):IsHidden()
-    local g = not DynamicCPPresetsInner:GetNamedChild("GreenOptions"):IsHidden()
-    local b = not DynamicCPPresetsInner:GetNamedChild("BlueOptions"):IsHidden()
+    local r = not GetSubControl("Inner"):GetNamedChild("RedOptions"):IsHidden()
+    local g = not GetSubControl("Inner"):GetNamedChild("GreenOptions"):IsHidden()
+    local b = not GetSubControl("Inner"):GetNamedChild("BlueOptions"):IsHidden()
 
-    DynamicCPPresetsInnerGreenBlueDivider:SetHeight((g or b) and 230 or 60)
-    DynamicCPPresetsInnerBlueRedDivider:SetHeight((r or g) and 230 or 60)
+    GetSubControl("InnerInstructions"):SetHidden(r or g or b)
 
-    DynamicCPPresetsInnerInstructions:SetHidden(r or g or b)
+    if (UseSidePresets()) then return end
+
+    GetSubControl("InnerGreenBlueDivider"):SetHeight((g or b) and 230 or 60)
+    GetSubControl("InnerBlueRedDivider"):SetHeight((r or g) and 230 or 60)
 end
 
 local function UnhideOptions(tree)
-    DynamicCPPresetsInner:GetNamedChild(tree .. "Options"):SetHidden(false)
+    GetSubControl("Inner"):GetNamedChild(tree .. "Options"):SetHidden(false)
     AdjustDividers()
 end
 
 local function HideOptions(tree)
-    DynamicCPPresetsInner:GetNamedChild(tree .. "Options"):SetHidden(true)
+    GetSubControl("Inner"):GetNamedChild(tree .. "Options"):SetHidden(true)
     AdjustDividers()
 end
 
@@ -498,7 +585,7 @@ local function SetTextureButtonEnabled(textureButton, enabled)
 end
 
 function DynamicCP:ToggleOptionButton(textureButton)
-    local tree = GetTreeName(textureButton:GetName(), "DynamicCPPresetsInner", "OptionsButtons" .. (textureButton.class or textureButton.role))
+    local tree = GetTreeName(textureButton:GetName(), GetSubControl():GetName() .. "Inner", "OptionsButtons" .. (textureButton.class or textureButton.role))
 
     if (selected[tree] == CREATE_NEW_STRING) then
         d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. ToggleOptionButton")
@@ -533,21 +620,21 @@ function DynamicCP:ToggleOptionButton(textureButton)
     end
 
     -- Update the dropdown to reflect matching or not matching
-    local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPPresetsInner:GetNamedChild(tree .. "Dropdown"))
+    local dropdown = ZO_ComboBox_ObjectFromContainer(GetSubControl("Inner"):GetNamedChild(tree .. "Dropdown"))
     local itemData = dropdown:GetSelectedItemData()
     itemData.name = DecoratePresetName(presetName, DynamicCP.savedOptions.cp[tree][presetName])
     dropdown:UpdateItems()
     dropdown:SelectItem(itemData)
 
-    ZO_ComboBox_ObjectFromContainer(DynamicCPPresetsInnerRedDropdown)
+    ZO_ComboBox_ObjectFromContainer(GetSubControl("InnerRedDropdown"))
 end
 
 
 ---------------------------------------------------------------------
 -- Open/close this window
 local function TogglePresetsWindow()
-    local isHidden = DynamicCPPresets:IsHidden()
-    DynamicCPPresets:SetHidden(not isHidden)
+    local isHidden = GetSubControl():IsHidden()
+    GetSubControl():SetHidden(not isHidden)
     if (isHidden) then
         DynamicCP:InitializeDropdowns()
         DynamicCPPresetsContainer:SetHidden(false)
@@ -575,35 +662,37 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
             while (DynamicCP.savedOptions.cp[tree]["Preset " .. newIndex] ~= nil) do
                 newIndex = newIndex + 1
             end
-            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsTextField"):SetText("Preset " .. newIndex)
-            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(true)
-            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(true)
-            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(190)
-            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsButtons"):SetHidden(true)
+            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsTextField"):SetText("Preset " .. newIndex)
+            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(true)
+            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(true)
+            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(190)
+            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsButtons"):SetHidden(true)
         else
-            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsTextField"):SetText(presetName)
-            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(false)
-            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(false)
-            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(95)
-            DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsButtons"):SetHidden(false)
+            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsTextField"):SetText(presetName)
+            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(false)
+            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(false)
+            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(95)
+            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsButtons"):SetHidden(false)
         end
 
 
         local data = DynamicCP.savedOptions.cp[tree][presetName] or {}
 
-        local buttons = DynamicCPPresetsInner:GetNamedChild(tree .. "OptionsButtons")
-        for class, _ in pairs(CLASSES) do
-            local button = buttons:GetNamedChild(class)
-            SetTextureButtonEnabled(button, data.classes == nil or data.classes[class] == nil or data.classes[class]) -- Both nil or true
-            -- Completely hide button rows
-            button:SetHidden(not DynamicCP.savedOptions.presetsShowClassButtons)
+        local buttons = GetSubControl("Inner"):GetNamedChild(tree .. "OptionsButtons")
+        if (not UseSidePresets()) then
+            for class, _ in pairs(CLASSES) do
+                local button = buttons:GetNamedChild(class)
+                SetTextureButtonEnabled(button, data.classes == nil or data.classes[class] == nil or data.classes[class]) -- Both nil or true
+                -- Completely hide button rows
+                button:SetHidden(not DynamicCP.savedOptions.presetsShowClassButtons)
+            end
         end
         for role, _ in pairs(ROLES) do
             SetTextureButtonEnabled(buttons:GetNamedChild(role), data.roles == nil or data.roles[role] == nil or data.roles[role]) -- Both nil or true
         end
 
         -- If class buttons are hidden, role buttons should be anchored higher
-        if (DynamicCP.savedOptions.presetsShowClassButtons) then
+        if (DynamicCP.savedOptions.presetsShowClassButtons and not UseSidePresets()) then
             buttons:GetNamedChild("Tank"):SetAnchor(TOP, buttons:GetNamedChild("Dragonknight"), BOTTOM, 4, 6)
             buttons:GetNamedChild("Help"):SetAnchor(TOP, buttons:GetNamedChild("Necromancer"), BOTTOM, 0, 6)
         else
@@ -612,15 +701,17 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
         end
 
         if (presetName == CREATE_NEW_STRING) then
-            ShowMessage(tree, "|cBBBBBBRename and click \"Save\" to create a new preset.|r\n\nCurrent points:" .. GenerateTree(DynamicCP.GetCommittedCP(), tree))
+            local diffText, numChanges, col1, col2 = GenerateTree(DynamicCP.GetCommittedCP(), tree)
+            ShowMessage(tree, "Rename and click \"Save\" to create a new preset.", diffText, {1, 1, 1, 1}, numChanges, col1, col2)
         else
-            ShowMessage(tree, GenerateDiff(DynamicCP.GetCommittedCP(), data) .. "\n\n|cBBBBBBClick \"Apply\" to load this preset.|r")
+            local diffText, numChanges, col1, col2 = GenerateDiff(DynamicCP.GetCommittedCP(), data)
+            ShowMessage(tree, "Click \"Apply\" to load this preset.", diffText, {1, 1, 1, 1}, numChanges, col1, col2)
         end
     end
 
     -- Add entries to dropdown
     local data = DynamicCP.savedOptions.cp[tree]
-    local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPPresetsInner:GetNamedChild(tree .. "Dropdown"))
+    local dropdown = ZO_ComboBox_ObjectFromContainer(GetSubControl("Inner"):GetNamedChild(tree .. "Dropdown"))
     local desiredEntry = nil
     dropdown:ClearItems()
     for presetName, cp in pairs(data) do
@@ -645,11 +736,32 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
     end
 end
 
+----------------------------------------------------------------------
+local expanded = true
+function DynamicCP.OnSidebarClicked()
+    if (expanded) then
+        -- Close it
+        DynamicCPSidePresets.slide:SetDeltaOffsetX(DynamicCPSidePresets:GetWidth())
+        DynamicCPSidePresetsSidebarClose.rotateAnimation:PlayFromStart()
+    else
+        -- Expand it
+        DynamicCPSidePresets.slide:SetDeltaOffsetX(-1 * DynamicCPSidePresets:GetWidth())
+        DynamicCPSidePresetsSidebarClose.rotateAnimation:PlayBackward()
+    end
+    expanded = not expanded
+    DynamicCPSidePresets.slideAnimation:PlayFromStart()
+end
 
 ---------------------------------------------------------------------
 -- Entry point
 function DynamicCP:InitializeDropdowns()
     if (isRespeccing) then return end -- Skip doing this so we don't overwrite
+
+    DynamicCPSidePresets.slideAnimation = GetAnimationManager():CreateTimelineFromVirtual("ZO_LootSlideInAnimation", DynamicCPSidePresets)
+    DynamicCPSidePresets.slide = DynamicCPSidePresets.slideAnimation:GetFirstAnimation()
+    DynamicCPSidePresetsSidebarClose.rotateAnimation = GetAnimationManager():CreateTimelineFromVirtual("ArrowRotateAnim", DynamicCPSidePresetsSidebarClose)
+    DynamicCPSidePresetsSidebarClose.rotate = DynamicCPSidePresetsSidebarClose.rotateAnimation:GetFirstAnimation()
+
     DynamicCP:InitializeDropdown("Red")
     DynamicCP:InitializeDropdown("Green")
     DynamicCP:InitializeDropdown("Blue")

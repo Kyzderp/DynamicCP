@@ -195,8 +195,28 @@ function DynamicCP:CreateSettingsMenu()
                     width = "full",
                 },
                 {
+                    type = "dropdown",
+                    name = "Preset window style",
+                    tooltip = "Side Navigation Menu provides a simpler slideable menu that takes up less horizontal space.\n\nStandalone Window is an older UI from version < 2.0.0 that displays the trees next to each other instead. This option keeps the class icons.",
+                    choices = {"Side Navigation Menu", "Standalone Window"},
+                    choicesValues = {1, 2}, -- Apparently having "false" as a value does not work
+                    getFunc = function()
+                        return DynamicCP.savedOptions.useSidePresets and 1 or 2
+                    end,
+                    setFunc = function(value)
+                        value = value == 1
+                        DynamicCP:OnCancelClicked() -- clear potential stuff from the previous UI
+                        DynamicCP.savedOptions.useSidePresets = value
+                        DynamicCPPresetsContainer:SetHidden(false)
+                        DynamicCPPresets:SetHidden(value)
+                        DynamicCPSidePresets:SetHidden(not value)
+                        DynamicCP:InitializeDropdowns()
+                    end,
+                    width = "full",
+                },
+                {
                     type = "checkbox",
-                    name = "Dock window",
+                    name = "Dock standalone window",
                     tooltip = "Display the window in different positions on each constellation to avoid overlapping with stars. Recommend adjusting the scale so it fits in the Fitness tree, between Arcane Alacrity and Bashing Brutality",
                     default = true,
                     getFunc = function() return DynamicCP.savedOptions.dockWithSpace end,
@@ -204,11 +224,12 @@ function DynamicCP:CreateSettingsMenu()
                         DynamicCP.savedOptions.dockWithSpace = value
                     end,
                     width = "full",
+                    disabled = function() return DynamicCP.savedOptions.useSidePresets end
                 },
                 {
                     type = "slider",
                     name = "Window scale %",
-                    tooltip = "Scale of the window to display. Some spacing will look weird especially at more extreme values",
+                    tooltip = "Scale of the window to display. Some spacing may look weird especially at more extreme values",
                     default = 100,
                     min = 50,
                     max = 150,
@@ -217,8 +238,9 @@ function DynamicCP:CreateSettingsMenu()
                     setFunc = function(value)
                         DynamicCP.savedOptions.scale = value / 100
                         DynamicCPPresetsContainer:SetHidden(false)
-                        DynamicCPPresets:SetHidden(false)
+                        DynamicCP.GetSubControl():SetHidden(false)
                         DynamicCPPresets:SetScale(value / 100)
+                        DynamicCPSidePresets:SetScale(value / 100)
                     end,
                     width = "full",
                 },
@@ -234,8 +256,9 @@ function DynamicCP:CreateSettingsMenu()
                     setFunc = function(value)
                         DynamicCP.savedOptions.presetsBackdropAlpha = value / 100
                         DynamicCPPresetsContainer:SetHidden(false)
-                        DynamicCPPresets:SetHidden(false)
+                        DynamicCP.GetSubControl():SetHidden(false)
                         DynamicCPPresetsBackdrop:SetAlpha(value / 100)
+                        DynamicCPSidePresetsBackdrop:SetAlpha(value / 100)
                     end,
                     width = "full",
                 },

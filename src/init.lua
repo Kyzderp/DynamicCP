@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "1.2.1"
+DynamicCP.version = "2.0.0"
 
 DynamicCP.experimental = false -- Flip to true when developing. Nothing currently
 
@@ -27,8 +27,9 @@ local defaultOptions = {
     showPresetsWithCP = true,
     showPulldownPoints = false,
     showPointGainedMessage = true,
+    useSidePresets = true,
     presetsBackdropAlpha = 0.5,
-    presetsShowClassButtons = true,
+    presetsShowClassButtons = true, -- Not settable by user - side presets don't have class buttons
     passiveLabelColor = {1, 1, 0.5},
     passiveLabelSize = 24,
     slottableLabelColor = {1, 1, 1},
@@ -335,6 +336,13 @@ local function Initialize()
     -- Register events
     RegisterEvents()
 
+    DynamicCPPresets:SetScale(DynamicCP.savedOptions.scale)
+    DynamicCPSidePresets:SetScale(DynamicCP.savedOptions.scale)
+    DynamicCPPresetsBackdrop:SetAlpha(DynamicCP.savedOptions.presetsBackdropAlpha)
+    DynamicCPSidePresetsBackdrop:SetAlpha(DynamicCP.savedOptions.presetsBackdropAlpha)
+    DynamicCPPresets:SetHidden(UseSidePresets())
+    DynamicCPSidePresets:SetHidden(not UseSidePresets())
+
     CHAMPION_PERKS_CONSTELLATIONS_FRAGMENT:RegisterCallback("StateChange", function(oldState, newState)
         if (newState == SCENE_HIDDEN) then
             DynamicCP.OnExitedCPScreen()
@@ -342,7 +350,7 @@ local function Initialize()
         end
 
         if (newState ~= SCENE_SHOWN) then return end
-        DynamicCPPresets:SetHidden(not DynamicCP.savedOptions.showPresetsWithCP)
+        DynamicCP.GetSubControl():SetHidden(not DynamicCP.savedOptions.showPresetsWithCP)
         DynamicCP:InitializeDropdowns() -- Call it every time in case LFG role is changed
 
         -- First time opened calls
@@ -350,7 +358,6 @@ local function Initialize()
             initialOpened = true
             DynamicCP.InitLabels()
             DynamicCP.InitSlottables()
-            DynamicCPPresets:SetScale(DynamicCP.savedOptions.scale)
             if (DynamicCP.savedOptions.showLabels) then
                 DynamicCP.RefreshLabels(true)
             end
