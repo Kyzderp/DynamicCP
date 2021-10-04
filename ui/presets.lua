@@ -86,6 +86,12 @@ local function ShowMessage(tree, text, diffText, color, numChanges, col1, col2)
         messages:GetNamedChild("Tooltip"):SetHidden(diffText == nil or diffText == "")
         messages:GetNamedChild("Tooltip"):SetHeight(numChanges * 19 + 4)
 
+        if (numChanges == 0) then
+            numChanges = 1
+            messages:GetNamedChild("Tooltip"):SetHeight(numChanges * 19 + 4)
+            table.insert(col1, "No changes.")
+        end
+
         if (col1 ~= nil and col2 ~= nil) then
             -- Adjust width of the popup
             local col1Text = table.concat(col1, "\n")
