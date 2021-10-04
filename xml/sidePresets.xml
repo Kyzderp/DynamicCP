@@ -104,9 +104,9 @@
                 </Label>
                 <Control name="$(parent)Tooltip" hidden="false">
                     <Dimensions x="200" y="200"/>
-                    <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="-12"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="-12"/>
                     <Controls>
-                        <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="CC000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                        <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="CC000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
                         <Label name="$(parent)Label" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="HIGH" hidden="false" text="Done">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-2"/>
@@ -120,7 +120,7 @@
                             <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPLEFT"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT"/>
                             <Controls>
-                                <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="CC000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                                <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="CC000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
                                 <Label name="$(parent)Label" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="HIGH" hidden="false" text="Done">
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-2"/>
@@ -139,7 +139,7 @@
         </Control>
 
 <!-- ======================================================================================================================= -->
-                <Control name="DynamicCPSidePresets" clampedToScreen="false" mouseEnabled="false" movable="false" hidden="false">
+                <Control name="DynamicCPSidePresets" clampedToScreen="false" mouseEnabled="true" movable="false" hidden="false">
                     <Dimensions x="240" y="980"/>
                     <Anchor point="TOPRIGHT" relativeTo="ZO_ChampionPerksCanvas" relativePoint="TOPRIGHT"/>
                     <OnInitialized>

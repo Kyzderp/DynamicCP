@@ -742,14 +742,23 @@ function DynamicCP.OnSidebarClicked()
     if (expanded) then
         -- Close it
         DynamicCPSidePresets.slide:SetDeltaOffsetX(DynamicCPSidePresets:GetWidth())
+        DynamicCPSidePresetsInnerGreenMessagesTooltip.slide:SetDeltaOffsetX(400)
+        DynamicCPSidePresetsInnerBlueMessagesTooltip.slide:SetDeltaOffsetX(400)
+        DynamicCPSidePresetsInnerRedMessagesTooltip.slide:SetDeltaOffsetX(400)
         DynamicCPSidePresetsSidebarClose.rotateAnimation:PlayFromStart()
     else
         -- Expand it
         DynamicCPSidePresets.slide:SetDeltaOffsetX(-1 * DynamicCPSidePresets:GetWidth())
+        DynamicCPSidePresetsInnerGreenMessagesTooltip.slide:SetDeltaOffsetX(-400)
+        DynamicCPSidePresetsInnerBlueMessagesTooltip.slide:SetDeltaOffsetX(-400)
+        DynamicCPSidePresetsInnerRedMessagesTooltip.slide:SetDeltaOffsetX(-400)
         DynamicCPSidePresetsSidebarClose.rotateAnimation:PlayBackward()
     end
     expanded = not expanded
     DynamicCPSidePresets.slideAnimation:PlayFromStart()
+    DynamicCPSidePresetsInnerGreenMessagesTooltip.slideAnimation:PlayFromStart()
+    DynamicCPSidePresetsInnerBlueMessagesTooltip.slideAnimation:PlayFromStart()
+    DynamicCPSidePresetsInnerRedMessagesTooltip.slideAnimation:PlayFromStart()
 end
 
 ---------------------------------------------------------------------
@@ -761,6 +770,13 @@ function DynamicCP:InitializeDropdowns()
     DynamicCPSidePresets.slide = DynamicCPSidePresets.slideAnimation:GetFirstAnimation()
     DynamicCPSidePresetsSidebarClose.rotateAnimation = GetAnimationManager():CreateTimelineFromVirtual("ArrowRotateAnim", DynamicCPSidePresetsSidebarClose)
     DynamicCPSidePresetsSidebarClose.rotate = DynamicCPSidePresetsSidebarClose.rotateAnimation:GetFirstAnimation()
+
+    DynamicCPSidePresetsInnerGreenMessagesTooltip.slideAnimation = GetAnimationManager():CreateTimelineFromVirtual("ZO_LootSlideInAnimation", DynamicCPSidePresetsInnerGreenMessagesTooltip)
+    DynamicCPSidePresetsInnerGreenMessagesTooltip.slide = DynamicCPSidePresetsInnerGreenMessagesTooltip.slideAnimation:GetFirstAnimation()
+    DynamicCPSidePresetsInnerBlueMessagesTooltip.slideAnimation = GetAnimationManager():CreateTimelineFromVirtual("ZO_LootSlideInAnimation", DynamicCPSidePresetsInnerBlueMessagesTooltip)
+    DynamicCPSidePresetsInnerBlueMessagesTooltip.slide = DynamicCPSidePresetsInnerBlueMessagesTooltip.slideAnimation:GetFirstAnimation()
+    DynamicCPSidePresetsInnerRedMessagesTooltip.slideAnimation = GetAnimationManager():CreateTimelineFromVirtual("ZO_LootSlideInAnimation", DynamicCPSidePresetsInnerRedMessagesTooltip)
+    DynamicCPSidePresetsInnerRedMessagesTooltip.slide = DynamicCPSidePresetsInnerRedMessagesTooltip.slideAnimation:GetFirstAnimation()
 
     DynamicCP:InitializeDropdown("Red")
     DynamicCP:InitializeDropdown("Green")
