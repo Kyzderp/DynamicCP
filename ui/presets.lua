@@ -77,6 +77,7 @@ end
 -- Show a message in the area under the options
 local function ShowMessage(tree, text, diffText, color, numChanges, col1, col2)
     local messages = GetSubControl("Inner"):GetNamedChild(tree .. "Messages")
+    if (not diffText) then diffText = "" end
     messages:SetHidden(false)
 
     if (UseSidePresets()) then
@@ -89,7 +90,9 @@ local function ShowMessage(tree, text, diffText, color, numChanges, col1, col2)
         if (numChanges == 0) then
             numChanges = 1
             messages:GetNamedChild("Tooltip"):SetHeight(numChanges * 19 + 4)
-            table.insert(col1, "No changes.")
+            if (col1) then
+                table.insert(col1, "No changes.")
+            end
         end
 
         if (col1 ~= nil and col2 ~= nil) then
@@ -542,9 +545,9 @@ end
 ---------------------------------------------------------------------
 -- Hide/unhide the options
 local function AdjustDividers()
-    local r = not GetSubControl("Inner"):GetNamedChild("RedOptions"):IsHidden()
-    local g = not GetSubControl("Inner"):GetNamedChild("GreenOptions"):IsHidden()
-    local b = not GetSubControl("Inner"):GetNamedChild("BlueOptions"):IsHidden()
+    local r = not GetSubControl("Inner"):GetNamedChild("RedOptions"):IsHidden() or not GetSubControl("Inner"):GetNamedChild("RedMessages"):IsHidden()
+    local g = not GetSubControl("Inner"):GetNamedChild("GreenOptions"):IsHidden() or not GetSubControl("Inner"):GetNamedChild("GreenMessages"):IsHidden()
+    local b = not GetSubControl("Inner"):GetNamedChild("BlueOptions"):IsHidden() or not GetSubControl("Inner"):GetNamedChild("BlueMessages"):IsHidden()
 
     GetSubControl("InnerInstructions"):SetHidden(r or g or b)
 
