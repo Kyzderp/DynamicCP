@@ -224,7 +224,9 @@ local function ApplyRules(sortedRuleNames, triggerString)
                 return
             end
         else
-            DynamicCP.msg(triggerString .. "\n|cAAAAAAAll stars are already slotted from rules: " .. table.concat(sortedRuleNames, " < "))
+            if (DynamicCP.savedOptions.customRules.showInChat) then
+                DynamicCP.msg(triggerString .. "\n|cAAAAAAAll stars are already slotted from rules: " .. table.concat(sortedRuleNames, " < "))
+            end
             return
         end
     end
@@ -255,7 +257,9 @@ local function ApplyRules(sortedRuleNames, triggerString)
 
         -- It's possible for there to be no changes here if all potential changes aren't unlocked
         if (#diffMessages == 0) then
-            DynamicCP.msg(triggerString .. "\n|cAAAAAAAll stars are already slotted from rules: " .. table.concat(sortedRuleNames, " < "))
+            if (DynamicCP.savedOptions.customRules.showInChat) then
+                DynamicCP.msg(triggerString .. "\n|cAAAAAAAll stars are already slotted from rules: " .. table.concat(sortedRuleNames, " < "))
+            end
             return
         end
 
@@ -598,15 +602,21 @@ local function OnPlayerActivated()
         if (DynamicCP.savedOptions.customRules.applyOnCooldownEnd) then
             pendingRules = allRules
             pendingName = triggerDisplayNames[triggers[#triggers]]
-            DynamicCP.msg("Waiting for cooldown to end before applying pending rules...")
+            if (DynamicCP.savedOptions.customRules.extraChat) then
+                DynamicCP.msg("Waiting for cooldown to end before applying pending rules...")
+            end
         else
-            DynamicCP.msg("Did not apply rules because player is on cooldown.")
+            if (DynamicCP.savedOptions.customRules.extraChat) then
+                DynamicCP.msg("Did not apply rules because player is on cooldown.")
+            end
         end
     elseif (inCombat) then
         -- This should only happen on a "leave boss" if player leaves boss area while in combat
         pendingRules = allRules
         pendingName = triggerDisplayNames[triggers[#triggers]]
-        DynamicCP.msg("Waiting for combat to end before evaluating rules...")
+        if (DynamicCP.savedOptions.customRules.extraChat) then
+            DynamicCP.msg("Waiting for combat to end before evaluating rules...")
+        end
     else
         SortAndApplyAllRules(allRules, triggerDisplayNames[triggers[#triggers]])
     end
@@ -674,17 +684,25 @@ local function OnBossesChanged()
         if (DynamicCP.savedOptions.customRules.applyBossOnCombatEnd) then
             pendingRules = allRules
             pendingName = triggerDisplayNames[trigger]
-            DynamicCP.msg("Waiting for combat to end before applying pending boss rules...")
+            if (DynamicCP.savedOptions.customRules.extraChat) then
+                DynamicCP.msg("Waiting for combat to end before applying pending boss rules...")
+            end
         else
-            DynamicCP.msg("Did not apply boss rule because player is in combat.")
+            if (DynamicCP.savedOptions.customRules.extraChat) then
+                DynamicCP.msg("Did not apply boss rule because player is in combat.")
+            end
         end
     elseif (DynamicCP.IsOnCooldown()) then
         if (DynamicCP.savedOptions.customRules.applyOnCooldownEnd) then
             pendingRules = allRules
             pendingName = triggerDisplayNames[trigger]
-            DynamicCP.msg("Waiting for cooldown to end before applying pending boss rules...")
+            if (DynamicCP.savedOptions.customRules.extraChat) then
+                DynamicCP.msg("Waiting for cooldown to end before applying pending boss rules...")
+            end
         else
-            DynamicCP.msg("Did not apply boss rule because player is on cooldown.")
+            if (DynamicCP.savedOptions.customRules.extraChat) then
+                DynamicCP.msg("Did not apply boss rule because player is on cooldown.")
+            end
         end
     else
         SortAndApplyAllRules(allRules, triggerDisplayNames[trigger])
@@ -726,17 +744,25 @@ local function OnDeathStateChanged(_, unitTag, isDead)
         if (DynamicCP.savedOptions.customRules.applyBossOnCombatEnd) then
             pendingRules = allRules
             pendingName = triggerDisplayNames[DynamicCP.TRIGGER_BOSS_DIED]
-            DynamicCP.msg("Waiting for combat to end before applying pending boss death rules...")
+            if (DynamicCP.savedOptions.customRules.extraChat) then
+                DynamicCP.msg("Waiting for combat to end before applying pending boss death rules...")
+            end
         else
-            DynamicCP.msg("Did not apply boss death rule because player is in combat.")
+            if (DynamicCP.savedOptions.customRules.extraChat) then
+                DynamicCP.msg("Did not apply boss death rule because player is in combat.")
+            end
         end
     elseif (DynamicCP.IsOnCooldown()) then
         if (DynamicCP.savedOptions.customRules.applyOnCooldownEnd) then
             pendingRules = allRules
             pendingName = triggerDisplayNames[DynamicCP.TRIGGER_BOSS_DIED]
-            DynamicCP.msg("Waiting for cooldown to end before applying pending boss death rules...")
+            if (DynamicCP.savedOptions.customRules.extraChat) then
+                DynamicCP.msg("Waiting for cooldown to end before applying pending boss death rules...")
+            end
         else
-            DynamicCP.msg("Did not apply boss death rule because player is on cooldown.")
+            if (DynamicCP.savedOptions.customRules.extraChat) then
+                DynamicCP.msg("Did not apply boss death rule because player is on cooldown.")
+            end
         end
     else
         SortAndApplyAllRules(allRules, triggerDisplayNames[DynamicCP.TRIGGER_BOSS_DIED])

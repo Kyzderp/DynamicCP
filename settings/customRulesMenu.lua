@@ -627,6 +627,17 @@ function DynamicCP.CreateCustomRulesMenu()
         },
         {
             type = "checkbox",
+            name = "Show extra messages in chat",
+            tooltip = "Show extra messages in chatbox when rule evaluation is delayed due to being in combat, on cooldown, etc.",
+            default = true,
+            getFunc = function() return DynamicCP.savedOptions.customRules.extraChat end,
+            setFunc = function(value)
+                DynamicCP.savedOptions.customRules.extraChat = value
+            end,
+            width = "full",
+        },
+        {
+            type = "checkbox",
             name = "Override different order",
             tooltip = "Re-slot the stars in the specified order, even if they are already slotted in a different order",
             default = true,

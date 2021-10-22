@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "2.0.3"
+DynamicCP.version = "2.0.4"
 
 DynamicCP.experimental = false -- Flip to true when developing. Nothing currently
 
@@ -58,6 +58,7 @@ local defaultOptions = {
     customRules = {
         playSound = true, -- CHAMPION_POINTS_COMMITTED
         showInChat = true,
+        extraChat = true,
         firstTime = true,
         overrideOrder = true,
         autoSlot = false,
