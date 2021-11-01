@@ -160,7 +160,7 @@ function DynamicCP.OnExitedCPScreen()
     end
 end
 
-function DynamicCP.OnPurchased(_, result)
+function DynamicCP.OnPurchased(result, isArmory)
     local resultToString = {
         [CHAMPION_PURCHASE_ABILITY_CAP_EXCEEDED] = "ABILITY_CAP_EXCEEDED",
         [CHAMPION_PURCHASE_ABILITY_LINE_LEVEL_NOT_MET] = "ABILITY_LINE_LEVEL_NOT_MET",
@@ -186,9 +186,28 @@ function DynamicCP.OnPurchased(_, result)
         [CHAMPION_PURCHASE_SKILL_NOT_CONNECTED] = "SKILL_NOT_CONNECTED",
         [CHAMPION_PURCHASE_SUCCESS] = "SUCCESS",
     }
-    DynamicCP.dbg("Purchased " .. resultToString[result])
+    local armoryResultToString = {
+        [ARMORY_BUILD_RESTORE_RESULT_BAD_INDEX] = "BAD_INDEX",
+        [ARMORY_BUILD_RESTORE_RESULT_BUSY] = "BUSY",
+        [ARMORY_BUILD_RESTORE_RESULT_COOLDOWN] = "COOLDOWN",
+        [ARMORY_BUILD_RESTORE_RESULT_INVALID_PLAYER_STATE] = "INVALID_PLAYER_STATE",
+        [ARMORY_BUILD_RESTORE_RESULT_NO_GEAR_SPACE] = "NO_GEAR_SPACE",
+        [ARMORY_BUILD_RESTORE_RESULT_REMOVE_GEAR_FAILURE] = "REMOVE_GEAR_FAILURE",
+        [ARMORY_BUILD_RESTORE_RESULT_RESTORE_FAILED] = "RESTORE_FAILED",
+        [ARMORY_BUILD_RESTORE_RESULT_SUCCESS] = "SUCCESS",
+        [ARMORY_BUILD_RESTORE_RESULT_TIMEOUT] = "TIMEOUT",
+    }
 
-    if (result == CHAMPION_PURCHASE_SUCCESS) then
+    if (isArmory) then
+        DynamicCP.dbg("Armory change " .. armoryResultToString[result])
+    else
+        DynamicCP.dbg("Purchased " .. resultToString[result])
+    end
+
+    if (isArmory) then
+        HideWarning()
+        -- Loading from armory does NOT affect the cooldown
+    elseif (result == CHAMPION_PURCHASE_SUCCESS) then
         HideWarning()
         lastSlottableChange = GetGameTimeMilliseconds()
     elseif (result == CHAMPION_PURCHASE_CHAMPION_BAR_ON_COOLDOWN) then

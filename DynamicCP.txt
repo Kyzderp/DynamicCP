@@ -2,8 +2,8 @@
 ## Champion Point presets per tree, with role filters, quality of life changes, and more!
 ## Author: Kyzeragon
 ## Contributors: Raijindono (UX), camrenis (testing & feedback)
-## Version: 2.0.4
-## APIVersion: 101031
+## Version: 2.0.5
+## APIVersion: 101032
 
 ## DependsOn: LibAddonMenu-2.0>=31 LibDialog>=126
 

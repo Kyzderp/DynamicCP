@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "2.0.4"
+DynamicCP.version = "2.0.5"
 
 DynamicCP.experimental = false -- Flip to true when developing. Nothing currently
 
@@ -144,21 +144,22 @@ local function OnPlayerActivated(_, initial)
     EVENT_MANAGER:UnregisterForEvent(DynamicCP.name .. "Activated", EVENT_PLAYER_ACTIVATED)
 end
 
+local function UpdateAllPoints(result, isArmory)
+    DynamicCP.OnPurchased(result, isArmory)
+    DynamicCP.ClearCommittedCP() -- Invalidate the cache
+    DynamicCP.ClearCommittedSlottables() -- Invalidate the cache
+    DynamicCP.OnSlotsChanged()
+    DynamicCP.QuickstarsOnPurchased()
+    DynamicCPMildWarning:SetHidden(true)
+end
 
 ---------------------------------------------------------------------
 -- Register events
 local function RegisterEvents()
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Activated", EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
 
-    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Purchase", EVENT_CHAMPION_PURCHASE_RESULT,
-        function(eventCode, result)
-            DynamicCP.OnPurchased(eventCode, result)
-            DynamicCP.ClearCommittedCP() -- Invalidate the cache
-            DynamicCP.ClearCommittedSlottables() -- Invalidate the cache
-            DynamicCP.OnSlotsChanged()
-            DynamicCP.QuickstarsOnPurchased()
-            DynamicCPMildWarning:SetHidden(true)
-        end)
+    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Purchase", EVENT_CHAMPION_PURCHASE_RESULT, function(_, result) UpdateAllPoints(result, false) end)
+    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "ArmoryEquipped", EVENT_ARMORY_BUILD_RESTORE_RESPONSE, function(_, result) UpdateAllPoints(result, true) end)
 
     EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "Gained", EVENT_CHAMPION_POINT_GAINED,
         function(_, championPointsDelta)
