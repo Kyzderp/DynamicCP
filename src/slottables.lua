@@ -191,6 +191,11 @@ local function ConvertPendingSlottablesToPurchase()
 end
 DynamicCP.ConvertPendingSlottablesToPurchase = ConvertPendingSlottablesToPurchase
 
+local function ClearPendingSlottables()
+    pendingSlottables = {}
+end
+DynamicCP.ClearPendingSlottables = ClearPendingSlottables
+
 ---------------------------------------------------------------------
 -- Modifications to slottables UI
 function DynamicCP.InitSlottables()

@@ -266,6 +266,7 @@ function DynamicCP:OnApplyClicked(button)
 
     if (not isRespeccing) then
         DynamicCP.ClearPendingCP()
+        DynamicCP.ClearPendingSlottables()
         isRespeccing = true
     end
 
@@ -366,6 +367,7 @@ function DynamicCP:OnConfirmClicked(button)
 
         isRespeccing = false
         DynamicCP.ClearPendingCP()
+        DynamicCP.ClearPendingSlottables()
         GetSubControl("InnerConfirmButton"):SetHidden(true)
         GetSubControl("InnerCancelButton"):SetHidden(true)
         HideMessage("Green")
@@ -392,6 +394,7 @@ end
 function DynamicCP:OnCancelClicked()
     isRespeccing = false
     DynamicCP.ClearPendingCP()
+    DynamicCP.ClearPendingSlottables()
     GetSubControl("InnerConfirmButton"):SetHidden(true)
     GetSubControl("InnerCancelButton"):SetHidden(true)
     HideMessage("Green")
