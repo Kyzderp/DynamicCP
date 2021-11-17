@@ -6,6 +6,7 @@
 ## APIVersion: 101032
 
 ## DependsOn: LibAddonMenu-2.0>=31 LibDialog>=126
+## OptionalDependsOn: LibFilteredChatPanel
 
 ## SavedVariables: DynamicCPSavedVariables
 

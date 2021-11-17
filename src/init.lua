@@ -79,7 +79,9 @@ local defaultOptions = {
     -- settingsVersion = 1,
 }
 
+---------------------------------------------------------------------
 local initialOpened = false
+local debugFilter
 
 ---------------------------------------------------------------------
 -- Collect messages for displaying later when addon is not fully loaded
@@ -87,7 +89,9 @@ DynamicCP.dbgMessages = {}
 function DynamicCP.dbg(msg)
     if (not msg) then return end
     if (not DynamicCP.savedOptions.debug) then return end
-    if (CHAT_SYSTEM.primaryContainer) then
+    if (debugFilter) then
+        debugFilter:AddMessage(tostring(msg))
+    elseif (CHAT_SYSTEM.primaryContainer) then
         d("|c6666FF[DCP]|r " .. tostring(msg))
     else
         DynamicCP.dbgMessages[#DynamicCP.dbgMessages + 1] = msg
@@ -192,6 +196,12 @@ end
 -- Initialize
 local function Initialize()
     DynamicCP.savedOptions = ZO_SavedVars:NewAccountWide("DynamicCPSavedVariables", 1, "Options", defaultOptions)
+
+    -- Debug chat panel
+    if (LibFilteredChatPanel) then
+        debugFilter = LibFilteredChatPanel:CreateFilter(DynamicCP.name, "/esoui/art/champion/champion_icon.dds", {0.5, 0.8, 1}, false)
+    end
+
     DynamicCP.dbg("Initializing...")
 
     -- Populate defaults only on first time, otherwise the keys will be remade even if user deletes
