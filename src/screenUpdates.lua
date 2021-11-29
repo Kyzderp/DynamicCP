@@ -1,9 +1,5 @@
 DynamicCP = DynamicCP or {}
 
--- Throttle for animation listening
-local rectThrottling = false
-local lastThrottle = 0
-
 -- ZOS has currently implemented a cooldown on how often you can change slottables
 local SLOTTABLE_COOLDOWN_STRING = "ERROR: Unable to commit changes. This is probably due to ZOS's 30-second cooldown on changing slottables. Try again in %.0f seconds."
 local SLOTTABLE_COOLDOWN = 30000
@@ -93,6 +89,8 @@ end
 -- idk if this is the right way to do it...
 -- When the animations have settled, check positions of the canvases to see which is active
 local function OnCanvasAnimationStopped()
+    EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "RectTimeout")
+
     if (ZO_ChampionPerksCanvas:IsHidden()) then
         -- This is not consistent, do not use this to trigger exit events
         return
@@ -241,25 +239,9 @@ end
 ---------------------------------------------------------------------
 -- Some first-time actions
 function DynamicCP.InitLabels()
-    -- some throttling to not spam operations on every animation tick
-    ZO_ChampionPerksCanvasConstellation1:SetHandler("OnRectChanged", function(control, newLeft, newTop, newRight, newBottom, oldLeft, oldTop, oldRight, oldBottom)
-        local currTime = GetGameTimeMilliseconds()
-        if (not rectThrottling) then
-            rectThrottling = true
-        elseif (currTime - lastThrottle > 150) then
-            lastThrottle = currTime
-        else
-            return
-        end
-
-        EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "RectThrottle")
-        EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "RectThrottle", 200, function()
-            rectThrottling = false
-            EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "RectThrottle")
-
-            -- Position has finished changing
-            OnCanvasAnimationStopped()
-        end)
+    -- Timeout to not spam operations on every animation tick
+    ZO_ChampionPerksCanvasConstellation1:SetHandler("OnRectChanged", function()
+        EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "RectTimeout", 200, OnCanvasAnimationStopped)
     end)
 
     -- Create sliding animation
