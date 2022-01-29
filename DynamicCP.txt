@@ -12,10 +12,12 @@
 
 src/init.lua
 src/cooldown.lua
-src/points.lua
 src/screenUpdates.lua
-src/slottables.lua
 src/customRules.lua
+
+src/points.lua
+src/slottables.lua
+src/lastPresets.lua
 
 data/presetData.lua
 data/zoneData.lua

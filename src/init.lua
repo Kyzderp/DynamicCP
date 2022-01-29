@@ -12,6 +12,7 @@ local defaultOptions = {
         Blue = {},
     },
     pulldownExpanded = true,
+    charData = {}, -- {[123214123] = {green="craft", blue="dps", red="magdps", armoryBuilds={[1]={green="craft", blue="dps", red="magdps"}}}}
 
 -- user options
     hideBackground = false,
@@ -69,6 +70,10 @@ local defaultOptions = {
         rules = {},
     },
 
+    lastPresetsApplyBehavior = 1,
+    lastPresetsHasVisitedSettings = false,
+
+-- Internal
     modelessX = GuiRoot:GetWidth() / 4, -- Anchor center
     modelessY = 0,
 
@@ -124,7 +129,6 @@ local function OnPlayerActivated(_, initial)
     DynamicCP.messages = {}
 
     -- Post load init
-    DynamicCP.InitPoints()
     DynamicCP.InitQuickstars()
     DynamicCP.InitCustomRules() -- Do this here so we don't do rules on login/reload
 

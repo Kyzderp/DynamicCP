@@ -379,7 +379,6 @@ end
 -- Zone ID
 local function OnEnteredZoneID(initial)
     if (not initial) then return {} end
-    DynamicCP.dbg("|cFF4444Checking zone ID|r")
 
     -- GetSortedRulesForTrigger(trigger, isVet, param1, param2)
     return GetSortedRulesForTrigger(DynamicCP.TRIGGER_ZONEID,

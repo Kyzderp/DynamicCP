@@ -109,8 +109,3 @@ local function ConvertPendingPointsToPurchase()
     end
 end
 DynamicCP.ConvertPendingPointsToPurchase = ConvertPendingPointsToPurchase
-
----------------------------------------------------------------------
--- Init
-function DynamicCP.InitPoints()
-end

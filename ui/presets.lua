@@ -41,8 +41,6 @@ local isRespeccing = false
 
 ---------------------------------------------------------------------
 -- TODO: use heuristics to make non-stam/non-mag more grayed out? needs more sorting then
-local libDialog = LibDialog
-
 local selected = {
     Red = nil,
     Green = nil,
@@ -267,6 +265,7 @@ function DynamicCP:OnApplyClicked(button)
     if (not isRespeccing) then
         DynamicCP.ClearPendingCP()
         DynamicCP.ClearPendingSlottables()
+        DynamicCP.ClearPendingPresets()
         isRespeccing = true
     end
 
@@ -335,6 +334,8 @@ function DynamicCP:OnApplyClicked(button)
         end
     end
 
+    DynamicCP.OnPresetApplied(tree, presetName)
+
     local diffText, numChanges, col1, col2 = GenerateDiff(DynamicCP.GetCommittedCP(), cp)
     ShowMessage(tree, "|c00FF00Preset loaded!\nPress \"Confirm\" to commit.|r", diffText, {0, 1, 0, 1}, numChanges, col1, col2)
     -- Unhide confirm button and also update the cost
@@ -368,6 +369,7 @@ function DynamicCP:OnConfirmClicked(button)
         isRespeccing = false
         DynamicCP.ClearPendingCP()
         DynamicCP.ClearPendingSlottables()
+        DynamicCP.ConfirmPendingPresets()
         GetSubControl("InnerConfirmButton"):SetHidden(true)
         GetSubControl("InnerCancelButton"):SetHidden(true)
         HideMessage("Green")
@@ -376,7 +378,7 @@ function DynamicCP:OnConfirmClicked(button)
     end
 
     local respecCost = "\nRedistribution cost: "  .. GetChampionRespecCost() .. " |t18:18:esoui/art/currency/currency_gold.dds|t"
-    libDialog:RegisterDialog(
+    LibDialog:RegisterDialog(
             DynamicCP.name,
             "ConfirmConfirmation",
             "Confirm Changes",
@@ -385,7 +387,7 @@ function DynamicCP:OnConfirmClicked(button)
             nil,
             nil,
             true)
-    libDialog:ShowDialog(DynamicCP.name, "ConfirmConfirmation")
+    LibDialog:ShowDialog(DynamicCP.name, "ConfirmConfirmation")
 end
 
 
@@ -395,6 +397,7 @@ function DynamicCP:OnCancelClicked()
     isRespeccing = false
     DynamicCP.ClearPendingCP()
     DynamicCP.ClearPendingSlottables()
+    DynamicCP.ClearPendingPresets()
     GetSubControl("InnerConfirmButton"):SetHidden(true)
     GetSubControl("InnerCancelButton"):SetHidden(true)
     HideMessage("Green")
@@ -411,6 +414,10 @@ local function SavePreset(tree, oldName, presetName, newCP, message)
     end
 
     DynamicCP.savedOptions.cp[tree][presetName] = newCP
+
+    -- If we're saving to this preset, that means we're also "applying" it
+    -- for the purposes of last-used preset
+    DynamicCP.OnPresetSaved(tree, presetName)
 
     DynamicCP:InitializeDropdown(tree, presetName)
     DynamicCP.dbg("|c00FF00Saved preset \"" .. presetName .. "\"|r")
@@ -471,7 +478,7 @@ function DynamicCP:OnSaveClicked(button, tree)
                 "|c00FF00Done! Overwrote preset \"" .. presetName .. "\"|r")
         end
 
-        libDialog:RegisterDialog(
+        LibDialog:RegisterDialog(
             DynamicCP.name,
             "OverwriteConfirmation",
             "Overwrite Preset",
@@ -480,7 +487,7 @@ function DynamicCP:OnSaveClicked(button, tree)
             nil,
             nil,
             true)
-        libDialog:ShowDialog(DynamicCP.name, "OverwriteConfirmation")
+        LibDialog:ShowDialog(DynamicCP.name, "OverwriteConfirmation")
 
     else
         d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnSaveClicked fallthrough")
@@ -532,7 +539,7 @@ function DynamicCP:OnDeleteClicked(button)
         ShowMessage(tree, "|c00FF00Preset \"" .. presetName .. "\" deleted.|r", nil, {0, 1, 0, 1}, 0)
     end
 
-    libDialog:RegisterDialog(
+    LibDialog:RegisterDialog(
         DynamicCP.name,
         "DeleteConfirmation",
         "Delete Preset",
@@ -541,7 +548,7 @@ function DynamicCP:OnDeleteClicked(button)
         nil,
         nil,
         true)
-    libDialog:ShowDialog(DynamicCP.name, "DeleteConfirmation")
+    LibDialog:ShowDialog(DynamicCP.name, "DeleteConfirmation")
 end
 
 
