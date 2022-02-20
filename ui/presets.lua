@@ -803,4 +803,6 @@ function DynamicCP:InitializeDropdowns()
     HideMessage("Red")
     HideMessage("Green")
     HideMessage("Blue")
+
+    DynamicCP.UpdateLastPresetsUI()
 end

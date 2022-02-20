@@ -14,19 +14,20 @@ local PROMPT_RESPEC = 2
 local pendingPresets = {}
 
 ---------------------------------------------------------------------
--- Time data
+-- UI Update
 ---------------------------------------------------------------------
-local function GetLocalDateTimeString(timeStamp)
-    local timeShift = GetSecondsSinceMidnight() - (GetTimeStamp() % 86400)
+local function UpdateLastPresetsUI()
+    local charId = GetCurrentCharacterId()
+    local lastPresets = DynamicCP.savedOptions.charData[charId] or {}
 
-    if (timeShift < -12 * 60 * 60) then
-        timeShift = timeShift + 86400
-    end
+    -- Not doing the windowed mode for now
+    if (DynamicCP.GetSubControl("InnerGreenLastPreset") == nil) then return end
 
-    local dateString = GetDateStringFromTimestamp(timeStamp - timeShift)
-    local timeString = ZO_FormatTime(timeStamp % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR)
-    return dateString .. " " .. timeString
+    DynamicCP.GetSubControl("InnerGreenLastPreset"):SetText(string.format("Last preset: %s", lastPresets.Green or "none"))
+    DynamicCP.GetSubControl("InnerBlueLastPreset"):SetText(string.format("Last preset: %s", lastPresets.Blue or "none"))
+    DynamicCP.GetSubControl("InnerRedLastPreset"):SetText(string.format("Last preset: %s", lastPresets.Red or "none"))
 end
+DynamicCP.UpdateLastPresetsUI = UpdateLastPresetsUI
 
 ---------------------------------------------------------------------
 -- Keep track of pending presets
@@ -48,36 +49,19 @@ local function ConfirmPendingPresets()
 
     -- Save
     if (pendingPresets.Red) then
-        newData.lastRedPreset = {
-            name = pendingPresets.Red,
-            time = GetTimeStamp()
-        }
+        newData.Red = pendingPresets.Red
     end
     if (pendingPresets.Green) then
-        newData.lastGreenPreset = {
-            name = pendingPresets.Green,
-            time = GetTimeStamp()
-        }
+        newData.Green = pendingPresets.Green
     end
     if (pendingPresets.Blue) then
-        newData.lastBluePreset = {
-            name = pendingPresets.Blue,
-            time = GetTimeStamp()
-        }
+        newData.Blue = pendingPresets.Blue
     end
     DynamicCP.savedOptions.charData[charId] = newData
 
     -- Clear
     ClearPendingPresets()
-
-    -- Debug results
-    DynamicCP.dbg(string.format(" Green: %s (%s) Blue: %s (%s) Red: %s (%s)",
-        newData.lastGreenPreset and newData.lastGreenPreset.name or "",
-        newData.lastGreenPreset and GetLocalDateTimeString(newData.lastGreenPreset.time) or "",
-        newData.lastBluePreset and newData.lastBluePreset.name or "",
-        newData.lastBluePreset and GetLocalDateTimeString(newData.lastBluePreset.time) or "",
-        newData.lastRedPreset and newData.lastRedPreset.name or "",
-        newData.lastRedPreset and GetLocalDateTimeString(newData.lastRedPreset.time) or ""))
+    UpdateLastPresetsUI()
 end
 DynamicCP.ConfirmPendingPresets = ConfirmPendingPresets
 
@@ -98,21 +82,10 @@ local function OnPresetSaved(tree, name)
         newData.armoryBuilds = {}
     end
 
-    newData[tree] = {
-        name = name,
-        time = GetTimeStamp()
-    }
+    newData[tree] = name
 
     DynamicCP.savedOptions.charData[charId] = newData
-
-    -- Debug results
-    DynamicCP.dbg(string.format(" Green: %s (%s) Blue: %s (%s) Red: %s (%s)",
-        newData.lastGreenPreset and newData.lastGreenPreset.name or "",
-        newData.lastGreenPreset and GetLocalDateTimeString(newData.lastGreenPreset.time) or "",
-        newData.lastBluePreset and newData.lastBluePreset.name or "",
-        newData.lastBluePreset and GetLocalDateTimeString(newData.lastBluePreset.time) or "",
-        newData.lastRedPreset and newData.lastRedPreset.name or "",
-        newData.lastRedPreset and GetLocalDateTimeString(newData.lastRedPreset.time) or ""))
+    UpdateLastPresetsUI()
 end
 DynamicCP.OnPresetSaved = OnPresetSaved
 
@@ -130,6 +103,7 @@ DynamicCP.OnPresetSaved = OnPresetSaved
 -- TODO: what if you load from armory?? save preset per armory build
 
 -- TODO: if respec manually, clear last presets, how to get for only one? or maybe don't care, just check if assigning the new points requires respec
+-- TODO: autodetect?
 
 -- * EVENT_ARMORY_BUILD_RESTORE_RESPONSE (*[ArmoryBuildRestoreResult|#ArmoryBuildRestoreResult]* _result_, *luaindex* _buildIndex_)
 -- * EVENT_ARMORY_BUILD_SAVE_RESPONSE (*[ArmoryBuildSaveResult|#ArmoryBuildSaveResult]* _result_, *luaindex* _buildIndex_)
