@@ -3,7 +3,7 @@
 ## Author: Kyzeragon
 ## Contributors: Raijindono (UX), camrenis (testing & feedback)
 ## Version: 2.0.7
-## APIVersion: 101032
+## APIVersion: 101033 101032
 
 ## DependsOn: LibAddonMenu-2.0>=31 LibDialog>=126
 ## OptionalDependsOn: LibFilteredChatPanel
