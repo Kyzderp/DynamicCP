@@ -177,8 +177,14 @@ local function ApplyRules(sortedRuleNames, triggerString)
             if (skillId ~= -1) then
                 -- If smart detection is on, we check if the user's max stam or mag is higher, and change the skill accordingly
                 if (DynamicCP.savedOptions.customRules.autoDetectStamMag and (skillId == 47 or skillId == 48)) then
-                    local _, maxStam, effectiveMaxStam = GetUnitPower("player", POWERTYPE_STAMINA)
-                    local _, maxMag, effectiveMaxMag = GetUnitPower("player", POWERTYPE_MAGICKA)
+                    local maxStam, effectiveMaxStam, maxMag, effectiveMaxMag
+                    if (GetAPIVersion() >= 101034) then
+                        _, maxStam, effectiveMaxStam = GetUnitPower("player", COMBAT_MECHANIC_FLAGS_STAMINA)
+                        _, maxMag, effectiveMaxMag = GetUnitPower("player", COMBAT_MECHANIC_FLAGS_MAGICKA)
+                    else
+                        _, maxStam, effectiveMaxStam = GetUnitPower("player", POWERTYPE_STAMINA)
+                        _, maxMag, effectiveMaxMag = GetUnitPower("player", POWERTYPE_MAGICKA)
+                    end
                     local newSkillId = skillId
                     if (maxStam < maxMag) then
                         newSkillId = 47
