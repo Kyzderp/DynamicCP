@@ -8,7 +8,7 @@
     </Animations>
     <Controls>
 <!-- ======================================================================================================================= -->
-        <Control name="DynamicCPSideTreeOptions" virtual="true" hidden="true">
+        <Control name="DynamicCPSideTreeOptions" virtual="true" hidden="true" tier="HIGH">
             <Dimensions x="200"/>
             <Anchor point="TOP" relativeTo="$(parent)Dropdown" relativePoint="BOTTOM" offsetY="4"/>
             <Controls>
@@ -46,7 +46,7 @@
                     </OnMouseEnter>
                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>
-                <Control name="$(parent)Buttons">
+                <Control name="$(parent)Buttons" tier="HIGH">
                     <Dimensions x="190" y="34"/>
                     <Anchor point="TOP" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOM" offsetY="48"/>
                     <Controls>
@@ -79,7 +79,7 @@
                             </OnInitialized>
                         </Texture>
 
-                        <Button name="$(parent)Help" alpha="1" clickSound="Default_Click" topmost="true">
+                        <Button name="$(parent)Help" alpha="1" clickSound="Default_Click" topmost="true" tier="HIGH">
                             <Textures normal="/esoui/art/miscellaneous/help_icon.dds"/>
                             <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-6" offsetY="2"/>
                             <Dimensions x="30" y="30"/>
@@ -94,15 +94,15 @@
         </Control>
 
 <!-- ======================================================================================================================= -->
-        <Control name="DynamicCPSideMessagesTemplate" virtual="true" hidden="true">
+        <Control name="DynamicCPSideMessagesTemplate" virtual="true" hidden="true" tier="HIGH">
             <Dimensions x="190" y="42"/>
             <Controls>
-                <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="88000000" edgeColor="8800FF00"><Edge edgeSize="2"/><AnchorFill/></Backdrop>
+                <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="88000000" edgeColor="8800FF00" tier="MEDIUM"><Edge edgeSize="2"/><AnchorFill/></Backdrop>
                 <Label name="$(parent)Label" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="false" text="Preset loaded&#13;&#10;5 changes">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-2"/>
                 </Label>
-                <Control name="$(parent)Tooltip" hidden="false">
+                <Control name="$(parent)Tooltip" hidden="false" tier="HIGH">
                     <Dimensions x="200" y="200"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="-12"/>
                     <Controls>
@@ -115,7 +115,7 @@
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-2"/>
                         </Label>
-                        <Control name="$(parent)Extra" hidden="true">
+                        <Control name="$(parent)Extra" hidden="true" tier="HIGH">
                             <Dimensions x="210" y="200"/>
                             <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPLEFT"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT"/>
@@ -139,24 +139,24 @@
         </Control>
 
 <!-- ======================================================================================================================= -->
-                <Control name="DynamicCPSidePresets" clampedToScreen="false" mouseEnabled="true" movable="false" hidden="false">
+                <Control name="DynamicCPSidePresets" clampedToScreen="false" mouseEnabled="true" movable="false" hidden="false" tier="HIGH">
                     <Dimensions x="240" y="980"/>
                     <Anchor point="TOPRIGHT" relativeTo="ZO_ChampionPerksCanvas" relativePoint="TOPRIGHT"/>
                     <OnInitialized>
                         self:SetParent(DynamicCPPresetsContainer)
                     </OnInitialized>
                     <Controls>
-                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000"><AnchorFill/></Backdrop>
-                        <Control name="$(parent)Sidebar" mouseEnabled="true">
+                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
+                        <Control name="$(parent)Sidebar" mouseEnabled="true" tier="HIGH">
                             <Dimensions x="50" y="700"/>
                             <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPLEFT"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT"/>
                             <Controls>
-                                <Backdrop name="$(parent)Backdrop" centerColor="99000000" edgeColor="00000000" hidden="false">
+                                <Backdrop name="$(parent)Backdrop" centerColor="99000000" edgeColor="00000000" hidden="false" tier="MEDIUM">
                                     <AnchorFill/>
                                     <Edge edgeSize="1"/>
                                 </Backdrop>
-                                <Label name="$(parent)Label" font="ZoFontGameBold" text="Dynamic CP" horizontalAlignment="LEFT">
+                                <Label name="$(parent)Label" font="ZoFontGameBold" text="Dynamic CP" horizontalAlignment="LEFT" tier="HIGH">
                                     <Dimensions x="300"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="TOP" offsetY="20"/>
                                     <OnInitialized>
@@ -164,12 +164,12 @@
                                         self:SetTransformRotationZ(math.rad(90))
                                     </OnInitialized>
                                 </Label>
-                                <Texture name="$(parent)Close" textureFile="/esoui/art/buttons/large_rightarrow_up.dds">
+                                <Texture name="$(parent)Close" textureFile="/esoui/art/buttons/large_rightarrow_up.dds" tier="HIGH">
                                     <Anchor point="BOTTOM" relativeTo="$(parent)" relativePoint="BOTTOM" offsetX="0" offsetY="-10" />
                                     <Dimensions x="32" y="32" />
                                     <!-- <OnClicked>DynamicCP.OnSidebarClicked()</OnClicked> -->
                                 </Texture>
-                                <Button name="$(parent)Options" alpha="1" topmost="true">
+                                <Button name="$(parent)Options" alpha="1" topmost="true" tier="HIGH">
                                     <Textures normal="/esoui/art/chatwindow/chat_options_up.dds" mouseOver="/esoui/art/chatwindow/chat_options_over.dds"/>
                                     <Anchor point="BOTTOM" relativeTo="$(parent)Close" relativePoint="TOP" offsetY="0"/>
                                     <Dimensions x="36" y="36" />
@@ -180,11 +180,11 @@
                                 DynamicCP.OnSidebarClicked()
                             </OnMouseUp>
                         </Control>
-                        <Control name="$(parent)Inner" hidden="false">
+                        <Control name="$(parent)Inner" hidden="false" tier="HIGH">
                             <AnchorFill/>
                             <Controls>
                                 <!-- GREEN TREE -->
-                                <Control name="$(parent)Green">
+                                <Control name="$(parent)Green" tier="HIGH">
                                     <Dimensions x="200" y="300"/>
                                     <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="10"/>
                                     <OnInitialized>
@@ -208,7 +208,7 @@
                                 </Control>
 
                                 <!-- BLUE TREE -->
-                                <Control name="$(parent)Blue">
+                                <Control name="$(parent)Blue" tier="HIGH">
                                     <Dimensions x="200" y="300"/>
                                     <Anchor point="TOP" relativeTo="$(parent)Green" relativePoint="BOTTOM"/>
                                     <OnInitialized>
@@ -232,7 +232,7 @@
                                 </Control>
 
                                 <!-- RED TREE -->
-                                <Control name="$(parent)Red">
+                                <Control name="$(parent)Red" tier="HIGH">
                                     <Dimensions x="200" y="300"/>
                                     <Anchor point="TOP" relativeTo="$(parent)Blue" relativePoint="BOTTOM"/>
                                     <OnInitialized>
@@ -291,7 +291,7 @@
                                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                                 </Button>
 
-                                <Control name="$(parent)Instructions" mouseEnabled="false">
+                                <Control name="$(parent)Instructions" mouseEnabled="false" tier="HIGH">
                                     <Controls>
                                         <Label name="$(parent)1" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="HIGH" hidden="false"
                                             text="Select a preset from a dropdown and click &quot;Apply&quot; to apply the preset to your Champion Points, then click &quot;Confirm&quot; below to commit your points.">

@@ -1,11 +1,11 @@
 <GuiXml>
     <Controls>
-        <TopLevelControl name="DynamicCPMildWarning" mouseEnabled="false" movable="false" hidden="true">
+        <TopLevelControl name="DynamicCPMildWarning" mouseEnabled="false" movable="false" hidden="true" tier="HIGH">
             <Dimensions x="740" y="140"/>
             <Anchor point="BOTTOM" relativeTo="DynamicCPWarning" relativePoint="TOP" offsetY="-10"/>
             <Controls>
-                <Backdrop name="$(parent)Backdrop" centerColor="BB000000" edgeColor="BBFFDD00"><Edge edgeSize="2"/><AnchorFill/></Backdrop>
-                <Button name="$(parent)Close" alpha="1" topmost="true">
+                <Backdrop name="$(parent)Backdrop" centerColor="BB000000" edgeColor="BBFFDD00" tier="MEDIUM"><Edge edgeSize="2"/><AnchorFill/></Backdrop>
+                <Button name="$(parent)Close" alpha="1" topmost="true" tier="HIGH">
                     <Textures normal="/esoui/art/hud/radialicon_cancel_up.dds" mouseOver="/esoui/art/hud/radialicon_cancel_over.dds" />
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-2" offsetY="2" />
                     <Dimensions x="32" y="32" />

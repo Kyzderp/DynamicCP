@@ -1,7 +1,7 @@
 <GuiXml>
     <Controls>
 <!-- ======================================================================================================================= -->
-        <Control name="DynamicCPTreeOptions" virtual="true" hidden="true">
+        <Control name="DynamicCPTreeOptions" virtual="true" hidden="true" tier="HIGH">
             <Dimensions x="200"/>
             <Anchor point="TOP" relativeTo="$(parent)Dropdown" relativePoint="BOTTOM" offsetY="4"/>
             <Controls>
@@ -40,7 +40,7 @@
                     </OnMouseEnter>
                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>
-                <Control name="$(parent)Buttons">
+                <Control name="$(parent)Buttons" tier="HIGH">
                     <Dimensions x="190" y="80"/>
                     <Anchor point="TOP" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOM" offsetY="48"/>
                     <Controls>
@@ -129,7 +129,7 @@
                             </OnInitialized>
                         </Texture>
 
-                        <Button name="$(parent)Help" alpha="1" clickSound="Default_Click" topmost="true">
+                        <Button name="$(parent)Help" alpha="1" clickSound="Default_Click" topmost="true" tier="HIGH">
                             <Textures normal="/esoui/art/miscellaneous/help_icon.dds"/>
                             <Anchor point="TOP" relativeTo="$(parent)Necromancer" relativePoint="BOTTOM" offsetY="6"/>
                             <Dimensions x="30" y="30"/>
@@ -144,17 +144,17 @@
         </Control>
 
 <!-- ======================================================================================================================= -->
-        <TopLevelControl name="DynamicCPPresetsContainer" mouseEnabled="false" movable="false" hidden="true">
+        <TopLevelControl name="DynamicCPPresetsContainer" mouseEnabled="false" movable="false" hidden="true" tier="HIGH">
             <OnInitialized>
                 CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
                 GAMEPAD_CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
             </OnInitialized>
             <Controls>
-                <Control name="DynamicCPPresets" clampedToScreen="true" mouseEnabled="true" movable="true" hidden="false">
+                <Control name="DynamicCPPresets" clampedToScreen="true" mouseEnabled="true" movable="true" hidden="false" tier="HIGH">
                     <Dimensions x="680" y="334"/>
                     <Anchor point="TOPRIGHT" relativeTo="ZO_ChampionPerksCanvas" relativePoint="TOPRIGHT" offsetX="-10" offsetY="10"/>
                     <Controls>
-                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
                         <Label name="$(parent)Title" font="ZoFontWinH4" color="CCCCCC" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="false" text="Dynamic CP">
                             <Dimensions x="190" y="20"/>
                             <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="4"/>
@@ -162,25 +162,25 @@
                                 self:SetText("Dynamic CP " .. DynamicCP.version)
                             </OnInitialized>
                         </Label>
-                        <Button name="$(parent)Close" alpha="1" topmost="true">
+                        <Button name="$(parent)Close" alpha="1" topmost="true" tier="HIGH">
                             <Textures normal="/esoui/art/hud/radialicon_cancel_up.dds" mouseOver="/esoui/art/hud/radialicon_cancel_over.dds" />
                             <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-2" offsetY="2" />
                             <Dimensions x="36" y="36" />
                             <OnClicked>DynamicCPPresets:SetHidden(true)</OnClicked>
                         </Button>
-                        <Button name="$(parent)Options" alpha="1" topmost="true">
+                        <Button name="$(parent)Options" alpha="1" topmost="true" tier="HIGH">
                             <Textures normal="/esoui/art/chatwindow/chat_options_up.dds" mouseOver="/esoui/art/chatwindow/chat_options_over.dds"/>
                             <Anchor point="RIGHT" relativeTo="$(parent)Close" relativePoint="LEFT"/>
                             <Dimensions x="36" y="36" />
                             <OnClicked>DynamicCP.OpenSettingsMenu()</OnClicked>
                         </Button>
-                        <Control name="$(parent)Inner" hidden="false">
+                        <Control name="$(parent)Inner" hidden="false" tier="HIGH">
                             <Dimensions x="660" y="280"/>
                             <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="40"/>
                             <Controls>
                                 <!-- <Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop> -->
                                 <!-- RED TREE -->
-                                <Control name="$(parent)Red">
+                                <Control name="$(parent)Red" tier="HIGH">
                                     <Dimensions x="200" y="300"/>
                                     <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT"/>
                                     <OnInitialized>CreateControlFromVirtual("$(parent)Options", self, "DynamicCPTreeOptions", "")</OnInitialized>
@@ -202,7 +202,7 @@
                                 </Control>
 
                                 <!-- GREEN TREE -->
-                                <Control name="$(parent)Green">
+                                <Control name="$(parent)Green" tier="HIGH">
                                     <Dimensions x="200" y="300"/>
                                     <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT"/>
                                     <OnInitialized>CreateControlFromVirtual("$(parent)Options", self, "DynamicCPTreeOptions", "")</OnInitialized>
@@ -224,7 +224,7 @@
                                 </Control>
 
                                 <!-- BLUE TREE -->
-                                <Control name="$(parent)Blue">
+                                <Control name="$(parent)Blue" tier="HIGH">
                                     <Dimensions x="200" y="300"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
                                     <OnInitialized>CreateControlFromVirtual("$(parent)Options", self, "DynamicCPTreeOptions", "")</OnInitialized>
