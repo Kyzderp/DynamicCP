@@ -3,7 +3,7 @@
         <TopLevelControl name="DynamicCPQuickstarsContainer" mouseEnabled="false" movable="false" hidden="true" tier="HIGH">
             <Controls>
 <!-- ======================================================================================================================= -->
-                <Control name="DynamicCPQuickstars" mouseEnabled="true" movable="true" clampedToScreen="true" hidden="false" tier="HIGH">
+                <Control name="DynamicCPQuickstars" mouseEnabled="true" movable="true" clampedToScreen="true" hidden="false" tier="MEDIUM">
                     <Dimensions x="240" y="172"/>
                     <OnMoveStop>DynamicCP.SaveQuickstarsPosition()</OnMoveStop>
                     <Controls>
@@ -18,11 +18,11 @@
                                 </Texture>
                             </Controls>
                         </Backdrop>
-                        <Control name="$(parent)GreenButton" tier="HIGH">
+                        <Control name="$(parent)GreenButton" tier="MEDIUM">
                             <Dimensions x="32" y="32"/>
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT"/>
                             <Controls>
-                                <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000"><AnchorFill/></Backdrop>
+                                <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000"tier="MEDIUM"><AnchorFill/></Backdrop>
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_stamina_icon-hud-32.dds" tier="HIGH" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
@@ -30,7 +30,7 @@
                                 </Texture>
                             </Controls>
                         </Control>
-                        <Control name="$(parent)BlueButton" tier="HIGH">
+                        <Control name="$(parent)BlueButton" tier="MEDIUM">
                             <Dimensions x="32" y="32"/>
                             <Anchor point="TOPLEFT" relativeTo="$(parent)GreenButton" relativePoint="BOTTOMLEFT"/>
                             <Controls>
@@ -42,7 +42,7 @@
                                 </Texture>
                             </Controls>
                         </Control>
-                        <Control name="$(parent)RedButton" tier="HIGH">
+                        <Control name="$(parent)RedButton" tier="MEDIUM">
                             <Dimensions x="32" y="32"/>
                             <Anchor point="TOPLEFT" relativeTo="$(parent)BlueButton" relativePoint="BOTTOMLEFT"/>
                             <Controls>

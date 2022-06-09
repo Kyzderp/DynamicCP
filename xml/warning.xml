@@ -1,6 +1,6 @@
 <GuiXml>
     <Controls>
-        <TopLevelControl name="DynamicCPWarning" mouseEnabled="false" movable="false" hidden="true" tier="HIGH">
+        <TopLevelControl name="DynamicCPWarning" movable="false" hidden="true" tier="HIGH">
             <Dimensions x="740" y="80"/>
             <Anchor point="BOTTOM" relativeTo="ZO_Dialog1" relativePoint="TOP" offsetY="-10"/>
             <Controls>

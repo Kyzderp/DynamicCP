@@ -150,7 +150,7 @@
                 GAMEPAD_CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
             </OnInitialized>
             <Controls>
-                <Control name="DynamicCPPresets" clampedToScreen="true" mouseEnabled="true" movable="true" hidden="false" tier="HIGH">
+                <Control name="DynamicCPPresets" clampedToScreen="true" mouseEnabled="true" movable="true" hidden="false" tier="MEDIUM">
                     <Dimensions x="680" y="334"/>
                     <Anchor point="TOPRIGHT" relativeTo="ZO_ChampionPerksCanvas" relativePoint="TOPRIGHT" offsetX="-10" offsetY="10"/>
                     <Controls>

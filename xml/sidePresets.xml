@@ -139,7 +139,7 @@
         </Control>
 
 <!-- ======================================================================================================================= -->
-                <Control name="DynamicCPSidePresets" clampedToScreen="false" mouseEnabled="true" movable="false" hidden="false" tier="HIGH">
+                <Control name="DynamicCPSidePresets" clampedToScreen="false" mouseEnabled="true" movable="false" hidden="false" tier="MEDIUM">
                     <Dimensions x="240" y="980"/>
                     <Anchor point="TOPRIGHT" relativeTo="ZO_ChampionPerksCanvas" relativePoint="TOPRIGHT"/>
                     <OnInitialized>
@@ -147,7 +147,7 @@
                     </OnInitialized>
                     <Controls>
                         <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                        <Control name="$(parent)Sidebar" mouseEnabled="true" tier="HIGH">
+                        <Control name="$(parent)Sidebar" mouseEnabled="true" tier="MEDIUM">
                             <Dimensions x="50" y="700"/>
                             <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPLEFT"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT"/>
@@ -291,7 +291,7 @@
                                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                                 </Button>
 
-                                <Control name="$(parent)Instructions" mouseEnabled="false" tier="HIGH">
+                                <Control name="$(parent)Instructions" tier="HIGH">
                                     <Controls>
                                         <Label name="$(parent)1" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="HIGH" hidden="false"
                                             text="Select a preset from a dropdown and click &quot;Apply&quot; to apply the preset to your Champion Points, then click &quot;Confirm&quot; below to commit your points.">
