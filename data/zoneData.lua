@@ -50,6 +50,8 @@ DynamicCP.DUNGEON_ZONEIDS = {
     ["1268"] = true,  -- The Dread Cellar
     ["1301"] = true,  -- Coral Aerie
     ["1302"] = true,  -- Shipwright's Regret
+    ["1360"] = true,  -- Earthen Root Enclave
+    ["1361"] = true,  -- Graven Deep
 }
 
 -- Trial zoneIds
