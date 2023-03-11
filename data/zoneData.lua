@@ -52,6 +52,8 @@ DynamicCP.DUNGEON_ZONEIDS = {
     ["1302"] = true,  -- Shipwright's Regret
     ["1360"] = true,  -- Earthen Root Enclave
     ["1361"] = true,  -- Graven Deep
+    ["1389"] = true,  -- Bal Sunnar
+    ["1390"] = true,  -- Scrivener's Hall
 }
 
 -- Trial zoneIds
