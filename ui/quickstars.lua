@@ -479,6 +479,7 @@ function DynamicCP.InitQuickstars()
     DynamicCPQuickstars:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, DynamicCP.savedOptions.quickstarsX, DynamicCP.savedOptions.quickstarsY)
     DynamicCPQuickstars:SetHidden(not DynamicCP.savedOptions.showQuickstars)
     DynamicCPQuickstars:SetMovable(not DynamicCP.savedOptions.lockQuickstars)
+    DynamicCPQuickstars:SetMouseEnabled(not DynamicCP.savedOptions.lockQuickstars)
     DynamicCPQuickstarsBackdrop:SetHidden(DynamicCP.savedOptions.lockQuickstars)
 
     DynamicCP.ResizeQuickstars()
