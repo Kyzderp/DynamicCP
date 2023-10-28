@@ -1,53 +1,53 @@
 <GuiXml>
     <Controls>
-        <TopLevelControl name="DynamicCPQuickstarsContainer" mouseEnabled="false" movable="false" hidden="true" tier="HIGH">
+        <TopLevelControl name="DynamicCPQuickstarsContainer" mouseEnabled="false" movable="false" hidden="true" tier="MEDIUM">
             <Controls>
 <!-- ======================================================================================================================= -->
-                <Control name="DynamicCPQuickstars" mouseEnabled="true" movable="true" clampedToScreen="true" hidden="false" tier="MEDIUM">
+                <Control name="DynamicCPQuickstars" mouseEnabled="true" movable="true" clampedToScreen="true" hidden="false" tier="LOW">
                     <Dimensions x="240" y="172"/>
                     <OnMoveStop>DynamicCP.SaveQuickstarsPosition()</OnMoveStop>
                     <Controls>
-                        <Backdrop name="$(parent)Backdrop" centerColor="1114D91D" edgeColor="FF3bdb5e" tier="MEDIUM">
+                        <Backdrop name="$(parent)Backdrop" centerColor="1114D91D" edgeColor="FF3bdb5e" tier="LOW">
                             <Edge edgeSize="2"/>
                             <AnchorFill/>
                             <Controls>
-                                <Texture name="$(parent)Options" textureFile="esoui/art/chatwindow/chat_options_up.dds" tier="HIGH" color="FF3bdb5e" mouseEnabled="true">
+                                <Texture name="$(parent)Options" textureFile="esoui/art/chatwindow/chat_options_up.dds" tier="MEDIUM" color="FF3bdb5e" mouseEnabled="true">
                                     <Dimensions x="36" y="36" />
                                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-2" offsetY="-2"/>
                                     <OnMouseUp>DynamicCP.OpenSettingsMenu()</OnMouseUp>
                                 </Texture>
                             </Controls>
                         </Backdrop>
-                        <Control name="$(parent)GreenButton" tier="MEDIUM">
+                        <Control name="$(parent)GreenButton" tier="LOW">
                             <Dimensions x="32" y="32"/>
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT"/>
                             <Controls>
-                                <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000"tier="MEDIUM"><AnchorFill/></Backdrop>
-                                <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_stamina_icon-hud-32.dds" tier="HIGH" mouseEnabled="true">
+                                <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000"tier="LOW"><AnchorFill/></Backdrop>
+                                <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_stamina_icon-hud-32.dds" tier="MEDIUM" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
                                     <OnMouseUp>DynamicCP.SelectQuickstarsTab("Green")</OnMouseUp>
                                 </Texture>
                             </Controls>
                         </Control>
-                        <Control name="$(parent)BlueButton" tier="MEDIUM">
+                        <Control name="$(parent)BlueButton" tier="LOW">
                             <Dimensions x="32" y="32"/>
                             <Anchor point="TOPLEFT" relativeTo="$(parent)GreenButton" relativePoint="BOTTOMLEFT"/>
                             <Controls>
-                                <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                                <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_magicka_icon-hud-32.dds" tier="HIGH" mouseEnabled="true">
+                                <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="LOW"><AnchorFill/></Backdrop>
+                                <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_magicka_icon-hud-32.dds" tier="MEDIUM" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
                                     <OnMouseUp>DynamicCP.SelectQuickstarsTab("Blue")</OnMouseUp>
                                 </Texture>
                             </Controls>
                         </Control>
-                        <Control name="$(parent)RedButton" tier="MEDIUM">
+                        <Control name="$(parent)RedButton" tier="LOW">
                             <Dimensions x="32" y="32"/>
                             <Anchor point="TOPLEFT" relativeTo="$(parent)BlueButton" relativePoint="BOTTOMLEFT"/>
                             <Controls>
-                                <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                                <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_health_icon-hud-32.dds" tier="HIGH" mouseEnabled="true">
+                                <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="LOW"><AnchorFill/></Backdrop>
+                                <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_health_icon-hud-32.dds" tier="MEDIUM" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
                                     <OnMouseUp>DynamicCP.SelectQuickstarsTab("Red")</OnMouseUp>
@@ -55,16 +55,16 @@
                             </Controls>
                         </Control>
 <!-- ================================================================================================== -->
-                        <Control name="$(parent)List" tier="HIGH">
+                        <Control name="$(parent)List" tier="MEDIUM">
                             <Dimensions x="208" y="144"/>
                             <Anchor point="TOPLEFT" relativeTo="$(parent)GreenButton" relativePoint="TOPRIGHT"/>
                             <Controls>
-                                <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                                <Control name="$(parent)Star1" inherits="ZO_ComboBox" tier="HIGH">
+                                <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="LOW"><AnchorFill/></Backdrop>
+                                <Control name="$(parent)Star1" inherits="ZO_ComboBox" tier="MEDIUM">
                                     <Dimensions x="200"/>
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="4"/>
                                     <Controls>
-                                        <Button name="$(parent)Unsaved" hidden="true" tier="HIGH">
+                                        <Button name="$(parent)Unsaved" hidden="true" tier="MEDIUM">
                                             <Dimensions x="24" y="24"/>
                                             <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="8"/>
                                             <Textures normal="/esoui/art/miscellaneous/eso_icon_warning.dds"/>
@@ -75,11 +75,11 @@
                                         </Button>
                                     </Controls>
                                 </Control>
-                                <Control name="$(parent)Star2" inherits="ZO_ComboBox" tier="HIGH">
+                                <Control name="$(parent)Star2" inherits="ZO_ComboBox" tier="MEDIUM">
                                     <Dimensions x="200"/>
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)Star1" relativePoint="BOTTOMLEFT" offsetY="4"/>
                                     <Controls>
-                                        <Button name="$(parent)Unsaved" hidden="true" tier="HIGH">
+                                        <Button name="$(parent)Unsaved" hidden="true" tier="MEDIUM">
                                             <Dimensions x="24" y="24"/>
                                             <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="8"/>
                                             <Textures normal="/esoui/art/miscellaneous/eso_icon_warning.dds"/>
@@ -90,11 +90,11 @@
                                         </Button>
                                     </Controls>
                                 </Control>
-                                <Control name="$(parent)Star3" inherits="ZO_ComboBox" tier="HIGH">
+                                <Control name="$(parent)Star3" inherits="ZO_ComboBox" tier="MEDIUM">
                                     <Dimensions x="200"/>
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)Star2" relativePoint="BOTTOMLEFT" offsetY="4"/>
                                     <Controls>
-                                        <Button name="$(parent)Unsaved" hidden="true" tier="HIGH">
+                                        <Button name="$(parent)Unsaved" hidden="true" tier="MEDIUM">
                                             <Dimensions x="24" y="24"/>
                                             <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="8"/>
                                             <Textures normal="/esoui/art/miscellaneous/eso_icon_warning.dds"/>
@@ -105,11 +105,11 @@
                                         </Button>
                                     </Controls>
                                 </Control>
-                                <Control name="$(parent)Star4" inherits="ZO_ComboBox" tier="HIGH">
+                                <Control name="$(parent)Star4" inherits="ZO_ComboBox" tier="MEDIUM">
                                     <Dimensions x="200"/>
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)Star3" relativePoint="BOTTOMLEFT" offsetY="4"/>
                                     <Controls>
-                                        <Button name="$(parent)Unsaved" hidden="true" tier="HIGH">
+                                        <Button name="$(parent)Unsaved" hidden="true" tier="MEDIUM">
                                             <Dimensions x="24" y="24"/>
                                             <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="8"/>
                                             <Textures normal="/esoui/art/miscellaneous/eso_icon_warning.dds"/>
@@ -121,31 +121,31 @@
                                     </Controls>
                                 </Control>
 
-                                <Control name="$(parent)Cancel" mouseEnabled="true" tier="HIGH">
+                                <Control name="$(parent)Cancel" mouseEnabled="true" tier="MEDIUM">
                                     <Dimensions x="28" y="28"/>
                                     <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT"/>
                                     <OnMouseUp>DynamicCP.OnQuickstarCancel()</OnMouseUp>
                                     <Controls>
-                                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                                        <Texture name="$(parent)Button" textureFile="esoui/art/buttons/decline_up.dds" tier="HIGH" color="FF444444">
+                                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="LOW"><AnchorFill/></Backdrop>
+                                        <Texture name="$(parent)Button" textureFile="esoui/art/buttons/decline_up.dds" tier="MEDIUM" color="FF444444">
                                             <Dimensions x="22" y="22" />
                                             <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
                                         </Texture>
                                     </Controls>
                                 </Control>
-                                <Control name="$(parent)Confirm" mouseEnabled="true" tier="HIGH">
+                                <Control name="$(parent)Confirm" mouseEnabled="true" tier="MEDIUM">
                                     <Dimensions x="28" y="28"/>
                                     <Anchor point="TOPRIGHT" relativeTo="$(parent)Cancel" relativePoint="TOPLEFT"/>
                                     <OnMouseUp>DynamicCP.OnQuickstarConfirm()</OnMouseUp>
                                     <Controls>
-                                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                                        <Texture name="$(parent)Button" textureFile="esoui/art/buttons/accept_up.dds" tier="HIGH" color="FF444444">
+                                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="LOW"><AnchorFill/></Backdrop>
+                                        <Texture name="$(parent)Button" textureFile="esoui/art/buttons/accept_up.dds" tier="MEDIUM" color="FF444444">
                                             <Dimensions x="22" y="22" />
                                             <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
                                         </Texture>
                                     </Controls>
                                 </Control>
-                                <Label name="$(parent)Cooldown" font="ZoFontGameSmall" color="AAAAAA" verticalAlignment="CENTER" horizontalAlignment="RIGHT" text="Cooldown 30s" hidden="true" tier="HIGH">
+                                <Label name="$(parent)Cooldown" font="ZoFontGameSmall" color="AAAAAA" verticalAlignment="CENTER" horizontalAlignment="RIGHT" text="Cooldown 30s" hidden="true" tier="MEDIUM">
                                     <Dimensions x="100" y="16"/>
                                     <Anchor point="RIGHT" relativeTo="$(parent)Confirm" relativePoint="LEFT" offsetX="-4"/>
                                 </Label>

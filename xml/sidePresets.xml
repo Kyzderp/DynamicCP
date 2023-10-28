@@ -8,18 +8,18 @@
     </Animations>
     <Controls>
 <!-- ======================================================================================================================= -->
-        <Control name="DynamicCPSideTreeOptions" virtual="true" hidden="true" tier="HIGH">
+        <Control name="DynamicCPSideTreeOptions" virtual="true" hidden="true" tier="MEDIUM">
             <Dimensions x="200"/>
             <Anchor point="TOP" relativeTo="$(parent)Dropdown" relativePoint="BOTTOM" offsetY="4"/>
             <Controls>
-                <EditBox name="$(parent)TextField" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" tier="HIGH">
+                <EditBox name="$(parent)TextField" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" tier="MEDIUM">
                     <Dimensions x="190"/>
                     <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP"/>
-                    <Controls><Backdrop name="$(parent)Backdrop" centerColor="55000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
+                    <Controls><Backdrop name="$(parent)Backdrop" centerColor="55000000" edgeColor="88000000" tier="LOW"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
                     <OnInitialized>ZO_EditDefaultText_Initialize(self, "   Name")</OnInitialized>
                     <OnFocusLost>DynamicCP:OnTextFocusLost(self)</OnFocusLost>
                 </EditBox>
-                <Button name="$(parent)ApplyButton" inherits="ZO_DefaultButton" tier="HIGH" text="Apply">
+                <Button name="$(parent)ApplyButton" inherits="ZO_DefaultButton" tier="MEDIUM" text="Apply">
                     <Dimensions x="190"/>
                     <Anchor point="TOP" relativeTo="$(parent)TextField" relativePoint="BOTTOM" offsetY="6"/>
                     <OnClicked>DynamicCP:OnApplyClicked(self)</OnClicked>
@@ -28,7 +28,7 @@
                     </OnMouseEnter>
                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>
-                <Button name="$(parent)SaveButton" inherits="ZO_DefaultButton" tier="HIGH" text="Save">
+                <Button name="$(parent)SaveButton" inherits="ZO_DefaultButton" tier="MEDIUM" text="Save">
                     <Dimensions x="95"/>
                     <Anchor point="TOPLEFT" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOMLEFT" offsetY="6"/>
                     <OnClicked>DynamicCP:OnSaveClicked(self)</OnClicked>
@@ -37,7 +37,7 @@
                     </OnMouseEnter>
                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>
-                <Button name="$(parent)DeleteButton" inherits="ZO_DefaultButton" tier="HIGH" text="Delete">
+                <Button name="$(parent)DeleteButton" inherits="ZO_DefaultButton" tier="MEDIUM" text="Delete">
                     <Dimensions x="95"/>
                     <Anchor point="TOPLEFT" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOM" offsetY="6"/>
                     <OnClicked>DynamicCP:OnDeleteClicked(self)</OnClicked>
@@ -46,12 +46,12 @@
                     </OnMouseEnter>
                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>
-                <Control name="$(parent)Buttons" tier="HIGH">
+                <Control name="$(parent)Buttons" tier="MEDIUM">
                     <Dimensions x="190" y="34"/>
                     <Anchor point="TOP" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOM" offsetY="48"/>
                     <Controls>
                         <!-- Role -->
-                        <Texture name="$(parent)Tank" textureFile="esoui/art/lfg/lfg_tank_down_no_glow_64.dds" tier="HIGH" mouseEnabled="true" movable="false">
+                        <Texture name="$(parent)Tank" textureFile="esoui/art/lfg/lfg_tank_down_no_glow_64.dds" tier="MEDIUM" mouseEnabled="true" movable="false">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)=" relativePoint="TOPLEFT" offsetX="6" offsetY="2"/>
                             <Dimensions x="30" y="30"/>
                             <OnMouseUp>DynamicCP:ToggleOptionButton(self)</OnMouseUp>
@@ -60,7 +60,7 @@
                                 self.role = "Tank"
                             </OnInitialized>
                         </Texture>
-                        <Texture name="$(parent)Healer" textureFile="esoui/art/lfg/lfg_healer_down_no_glow_64.dds" tier="HIGH" mouseEnabled="true" movable="false">
+                        <Texture name="$(parent)Healer" textureFile="esoui/art/lfg/lfg_healer_down_no_glow_64.dds" tier="MEDIUM" mouseEnabled="true" movable="false">
                             <Anchor point="LEFT" relativeTo="$(parent)Tank" relativePoint="RIGHT" offsetX="2"/>
                             <Dimensions x="30" y="30"/>
                             <OnMouseUp>DynamicCP:ToggleOptionButton(self)</OnMouseUp>
@@ -69,7 +69,7 @@
                                 self.role = "Healer"
                             </OnInitialized>
                         </Texture>
-                        <Texture name="$(parent)Dps" textureFile="esoui/art/lfg/lfg_dps_down_no_glow_64.dds" tier="HIGH" mouseEnabled="true" movable="false">
+                        <Texture name="$(parent)Dps" textureFile="esoui/art/lfg/lfg_dps_down_no_glow_64.dds" tier="MEDIUM" mouseEnabled="true" movable="false">
                             <Anchor point="LEFT" relativeTo="$(parent)Healer" relativePoint="RIGHT" offsetX="2"/>
                             <Dimensions x="30" y="30"/>
                             <OnMouseUp>DynamicCP:ToggleOptionButton(self)</OnMouseUp>
@@ -79,7 +79,7 @@
                             </OnInitialized>
                         </Texture>
 
-                        <Button name="$(parent)Help" alpha="1" clickSound="Default_Click" topmost="true" tier="HIGH">
+                        <Button name="$(parent)Help" alpha="1" clickSound="Default_Click" topmost="true" tier="MEDIUM">
                             <Textures normal="/esoui/art/miscellaneous/help_icon.dds"/>
                             <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-6" offsetY="2"/>
                             <Dimensions x="30" y="30"/>
@@ -94,38 +94,38 @@
         </Control>
 
 <!-- ======================================================================================================================= -->
-        <Control name="DynamicCPSideMessagesTemplate" virtual="true" hidden="true" tier="HIGH">
+        <Control name="DynamicCPSideMessagesTemplate" virtual="true" hidden="true" tier="MEDIUM">
             <Dimensions x="190" y="42"/>
             <Controls>
-                <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="88000000" edgeColor="8800FF00" tier="MEDIUM"><Edge edgeSize="2"/><AnchorFill/></Backdrop>
-                <Label name="$(parent)Label" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="false" text="Preset loaded&#13;&#10;5 changes">
+                <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="88000000" edgeColor="8800FF00" tier="LOW"><Edge edgeSize="2"/><AnchorFill/></Backdrop>
+                <Label name="$(parent)Label" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="MEDIUM" hidden="false" text="Preset loaded&#13;&#10;5 changes">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-2"/>
                 </Label>
-                <Control name="$(parent)Tooltip" hidden="false" tier="HIGH">
+                <Control name="$(parent)Tooltip" hidden="false" tier="MEDIUM">
                     <Dimensions x="200" y="200"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="-12"/>
                     <Controls>
-                        <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="CC000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                        <Label name="$(parent)Label" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="HIGH" hidden="false" text="Done">
+                        <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="CC000000" edgeColor="00000000" tier="LOW"><AnchorFill/></Backdrop>
+                        <Label name="$(parent)Label" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="MEDIUM" hidden="false" text="Done">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-2"/>
                         </Label>
-                        <Label name="$(parent)Label2" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="RIGHT" tier="HIGH" hidden="false" text="">
+                        <Label name="$(parent)Label2" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="RIGHT" tier="MEDIUM" hidden="false" text="">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-2"/>
                         </Label>
-                        <Control name="$(parent)Extra" hidden="true" tier="HIGH">
+                        <Control name="$(parent)Extra" hidden="true" tier="MEDIUM">
                             <Dimensions x="210" y="200"/>
                             <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPLEFT"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT"/>
                             <Controls>
-                                <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="CC000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                                <Label name="$(parent)Label" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="HIGH" hidden="false" text="Done">
+                                <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="CC000000" edgeColor="00000000" tier="LOW"><AnchorFill/></Backdrop>
+                                <Label name="$(parent)Label" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="MEDIUM" hidden="false" text="Done">
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-2"/>
                                 </Label>
-                                <Label name="$(parent)Label2" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="RIGHT" tier="HIGH" hidden="false" text="">
+                                <Label name="$(parent)Label2" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="RIGHT" tier="MEDIUM" hidden="false" text="">
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-14" offsetY="-2"/>
                                 </Label>
@@ -139,24 +139,24 @@
         </Control>
 
 <!-- ======================================================================================================================= -->
-                <Control name="DynamicCPSidePresets" clampedToScreen="false" mouseEnabled="true" movable="false" hidden="false" tier="MEDIUM">
+                <Control name="DynamicCPSidePresets" clampedToScreen="false" mouseEnabled="true" movable="false" hidden="false" tier="LOW">
                     <Dimensions x="240" y="980"/>
                     <Anchor point="TOPRIGHT" relativeTo="ZO_ChampionPerksCanvas" relativePoint="TOPRIGHT"/>
                     <OnInitialized>
                         self:SetParent(DynamicCPPresetsContainer)
                     </OnInitialized>
                     <Controls>
-                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                        <Control name="$(parent)Sidebar" mouseEnabled="true" tier="MEDIUM">
+                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="LOW"><AnchorFill/></Backdrop>
+                        <Control name="$(parent)Sidebar" mouseEnabled="true" tier="LOW">
                             <Dimensions x="50" y="700"/>
                             <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPLEFT"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT"/>
                             <Controls>
-                                <Backdrop name="$(parent)Backdrop" centerColor="99000000" edgeColor="00000000" hidden="false" tier="MEDIUM">
+                                <Backdrop name="$(parent)Backdrop" centerColor="99000000" edgeColor="00000000" hidden="false" tier="LOW">
                                     <AnchorFill/>
                                     <Edge edgeSize="1"/>
                                 </Backdrop>
-                                <Label name="$(parent)Label" font="ZoFontGameBold" text="Dynamic CP" horizontalAlignment="LEFT" tier="HIGH">
+                                <Label name="$(parent)Label" font="ZoFontGameBold" text="Dynamic CP" horizontalAlignment="LEFT" tier="MEDIUM">
                                     <Dimensions x="300"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="TOP" offsetY="20"/>
                                     <OnInitialized>
@@ -164,12 +164,12 @@
                                         self:SetTransformRotationZ(math.rad(90))
                                     </OnInitialized>
                                 </Label>
-                                <Texture name="$(parent)Close" textureFile="/esoui/art/buttons/large_rightarrow_up.dds" tier="HIGH">
+                                <Texture name="$(parent)Close" textureFile="/esoui/art/buttons/large_rightarrow_up.dds" tier="MEDIUM">
                                     <Anchor point="BOTTOM" relativeTo="$(parent)" relativePoint="BOTTOM" offsetX="0" offsetY="-10" />
                                     <Dimensions x="32" y="32" />
                                     <!-- <OnClicked>DynamicCP.OnSidebarClicked()</OnClicked> -->
                                 </Texture>
-                                <Button name="$(parent)Options" alpha="1" topmost="true" tier="HIGH">
+                                <Button name="$(parent)Options" alpha="1" topmost="true" tier="MEDIUM">
                                     <Textures normal="/esoui/art/chatwindow/chat_options_up.dds" mouseOver="/esoui/art/chatwindow/chat_options_over.dds"/>
                                     <Anchor point="BOTTOM" relativeTo="$(parent)Close" relativePoint="TOP" offsetY="0"/>
                                     <Dimensions x="36" y="36" />
@@ -180,11 +180,11 @@
                                 DynamicCP.OnSidebarClicked()
                             </OnMouseUp>
                         </Control>
-                        <Control name="$(parent)Inner" hidden="false" tier="HIGH">
+                        <Control name="$(parent)Inner" hidden="false" tier="MEDIUM">
                             <AnchorFill/>
                             <Controls>
                                 <!-- GREEN TREE -->
-                                <Control name="$(parent)Green" tier="HIGH">
+                                <Control name="$(parent)Green" tier="MEDIUM">
                                     <Dimensions x="200" y="300"/>
                                     <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="10"/>
                                     <OnInitialized>
@@ -192,7 +192,7 @@
                                         CreateControlFromVirtual("$(parent)Messages", self, "DynamicCPSideMessagesTemplate", "")
                                     </OnInitialized>
                                     <Controls>
-                                        <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_stamina_icon-hud-32.dds" tier="HIGH">
+                                        <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_stamina_icon-hud-32.dds" tier="MEDIUM">
                                             <Dimensions x="32" y="32"/>
                                             <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP"/>
                                         </Texture>
@@ -200,7 +200,7 @@
                                             <Dimensions x="200"/>
                                             <Anchor point="TOP" relativeTo="$(parent)Icon" relativePoint="BOTTOM" offsetY="8"/>
                                         </Control>
-                                        <Label name="$(parent)LastPreset" font="$(MEDIUM_FONT)|$(KB_13)|soft-shadow-thin" color="BBBBBB" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="true" text="Last preset:">
+                                        <Label name="$(parent)LastPreset" font="$(MEDIUM_FONT)|$(KB_13)|soft-shadow-thin" color="BBBBBB" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="MEDIUM" hidden="true" text="Last preset:">
                                             <Dimensions x="190" y="24"/>
                                             <Anchor point="BOTTOM" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="-18"/>
                                         </Label>
@@ -208,7 +208,7 @@
                                 </Control>
 
                                 <!-- BLUE TREE -->
-                                <Control name="$(parent)Blue" tier="HIGH">
+                                <Control name="$(parent)Blue" tier="MEDIUM">
                                     <Dimensions x="200" y="300"/>
                                     <Anchor point="TOP" relativeTo="$(parent)Green" relativePoint="BOTTOM"/>
                                     <OnInitialized>
@@ -216,7 +216,7 @@
                                         CreateControlFromVirtual("$(parent)Messages", self, "DynamicCPSideMessagesTemplate", "")
                                     </OnInitialized>
                                     <Controls>
-                                        <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_magicka_icon-hud-32.dds" tier="HIGH">
+                                        <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_magicka_icon-hud-32.dds" tier="MEDIUM">
                                             <Dimensions x="32" y="32"/>
                                             <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP"/>
                                         </Texture>
@@ -224,7 +224,7 @@
                                             <Dimensions x="200"/>
                                             <Anchor point="TOP" relativeTo="$(parent)Icon" relativePoint="BOTTOM" offsetY="8"/>
                                         </Control>
-                                        <Label name="$(parent)LastPreset" font="$(MEDIUM_FONT)|$(KB_13)|soft-shadow-thin" color="BBBBBB" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="true" text="Last preset:">
+                                        <Label name="$(parent)LastPreset" font="$(MEDIUM_FONT)|$(KB_13)|soft-shadow-thin" color="BBBBBB" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="MEDIUM" hidden="true" text="Last preset:">
                                             <Dimensions x="190" y="24"/>
                                             <Anchor point="BOTTOM" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="-18"/>
                                         </Label>
@@ -232,7 +232,7 @@
                                 </Control>
 
                                 <!-- RED TREE -->
-                                <Control name="$(parent)Red" tier="HIGH">
+                                <Control name="$(parent)Red" tier="MEDIUM">
                                     <Dimensions x="200" y="300"/>
                                     <Anchor point="TOP" relativeTo="$(parent)Blue" relativePoint="BOTTOM"/>
                                     <OnInitialized>
@@ -240,7 +240,7 @@
                                         CreateControlFromVirtual("$(parent)Messages", self, "DynamicCPSideMessagesTemplate", "")
                                     </OnInitialized>
                                     <Controls>
-                                        <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_health_icon-hud-32.dds" tier="HIGH">
+                                        <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_health_icon-hud-32.dds" tier="MEDIUM">
                                             <Dimensions x="32" y="32"/>
                                             <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP"/>
                                         </Texture>
@@ -248,30 +248,30 @@
                                             <Dimensions x="200"/>
                                             <Anchor point="TOP" relativeTo="$(parent)Icon" relativePoint="BOTTOM" offsetY="8"/>
                                         </Control>
-                                        <Label name="$(parent)LastPreset" font="$(MEDIUM_FONT)|$(KB_13)|soft-shadow-thin" color="BBBBBB" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="HIGH" hidden="true" text="Last preset:">
+                                        <Label name="$(parent)LastPreset" font="$(MEDIUM_FONT)|$(KB_13)|soft-shadow-thin" color="BBBBBB" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="MEDIUM" hidden="true" text="Last preset:">
                                             <Dimensions x="190" y="24"/>
                                             <Anchor point="BOTTOM" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="-18"/>
                                         </Label>
                                     </Controls>
                                 </Control>
 
-                                <Control name="$(parent)GreenBlueDivider" tier="HIGH">
+                                <Control name="$(parent)GreenBlueDivider" tier="MEDIUM">
                                     <Dimensions x="200" y="4"/>
                                     <Anchor point="TOP" relativeTo="$(parent)Green" relativePoint="BOTTOM" offsetY="-20"/>
-                                    <Controls><Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
+                                    <Controls><Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="LOW"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
                                 </Control>
-                                <Control name="$(parent)BlueRedDivider" tier="HIGH">
+                                <Control name="$(parent)BlueRedDivider" tier="MEDIUM">
                                     <Dimensions x="200" y="4"/>
                                     <Anchor point="TOP" relativeTo="$(parent)Blue" relativePoint="BOTTOM" offsetY="-20"/>
-                                    <Controls><Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
+                                    <Controls><Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="LOW"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
                                 </Control>
-                                <Control name="$(parent)RedDivider" tier="HIGH">
+                                <Control name="$(parent)RedDivider" tier="MEDIUM">
                                     <Dimensions x="200" y="4"/>
                                     <Anchor point="TOP" relativeTo="$(parent)Red" relativePoint="BOTTOM" offsetY="-20"/>
-                                    <Controls><Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="MEDIUM"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
+                                    <Controls><Backdrop name="$(parent)Backdrop" centerColor="75000000" edgeColor="88000000" tier="LOW"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
                                 </Control>
 
-                                <Button name="$(parent)CancelButton" inherits="ZO_DefaultButton" tier="HIGH" text="Cancel" hidden="true">
+                                <Button name="$(parent)CancelButton" inherits="ZO_DefaultButton" tier="MEDIUM" text="Cancel" hidden="true">
                                     <Dimensions x="240"/>
                                     <Anchor point="BOTTOM" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="-10"/>
                                     <OnClicked>DynamicCP:OnCancelClicked(self)</OnClicked>
@@ -280,7 +280,7 @@
                                     </OnMouseEnter>
                                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                                 </Button>
-                                <Button name="$(parent)ConfirmButton" inherits="ZO_DefaultButton" tier="HIGH" text="Confirm" hidden="true">
+                                <Button name="$(parent)ConfirmButton" inherits="ZO_DefaultButton" tier="MEDIUM" text="Confirm" hidden="true">
                                     <Dimensions x="240"/>
                                     <Anchor point="BOTTOM" relativeTo="$(parent)CancelButton" relativePoint="TOP" offsetY="-6"/>
                                     <OnInitialized>self:SetText("Confirm (" .. tostring(GetChampionRespecCost()) .. " |t18:18:esoui/art/currency/currency_gold.dds|t)")</OnInitialized>
@@ -291,19 +291,19 @@
                                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                                 </Button>
 
-                                <Control name="$(parent)Instructions" tier="HIGH">
+                                <Control name="$(parent)Instructions" tier="LOW">
                                     <Controls>
-                                        <Label name="$(parent)1" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="HIGH" hidden="false"
+                                        <Label name="$(parent)1" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="LOW" hidden="false"
                                             text="Select a preset from a dropdown and click &quot;Apply&quot; to apply the preset to your Champion Points, then click &quot;Confirm&quot; below to commit your points.">
                                             <Anchor point="TOP" relativeTo="DynamicCPSidePresetsInnerGreenDropdown" relativePoint="BOTTOM" offsetY="10"/>
                                             <Dimensions x="200" y="500"/>
                                         </Label>
-                                        <Label name="$(parent)2" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="HIGH" hidden="false"
+                                        <Label name="$(parent)2" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="LOW" hidden="false"
                                             text="To create a new preset, commit your current points, select &quot;Create New&quot; from the dropdown, and click &quot;Save&quot; once you have renamed it.">
                                             <Anchor point="TOP" relativeTo="DynamicCPSidePresetsInnerBlueDropdown" relativePoint="BOTTOM" offsetY="10"/>
                                             <Dimensions x="200" y="500"/>
                                         </Label>
-                                        <Label name="$(parent)3" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="HIGH" hidden="false"
+                                        <Label name="$(parent)3" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="LOW" hidden="false"
                                             text="Note: presets only save your allocated points, not which stars you have slotted!">
                                             <Anchor point="TOP" relativeTo="DynamicCPSidePresetsInnerRedDropdown" relativePoint="BOTTOM" offsetY="10"/>
                                             <Dimensions x="200" y="500"/>
