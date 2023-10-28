@@ -76,6 +76,7 @@ DynamicCP.TRIAL_ZONEIDS = {
 DynamicCP.GROUP_ARENA_ZONEIDS = {
     ["635" ] = true,  -- Dragonstar Arena
     ["1082"] = true,  -- Blackrose Prison
+    ["1436"] = true,  -- Endless Archive
 }
 
 -- Solo arena zoneIds
