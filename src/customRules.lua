@@ -12,6 +12,7 @@ DynamicCP.TRIGGER_OVERLAND             = "Overland"
 DynamicCP.TRIGGER_CYRO                 = "Cyrodiil"
 DynamicCP.TRIGGER_IC                   = "Imperial City"
 DynamicCP.TRIGGER_ZONEID               = "Specific Zone ID"
+DynamicCP.TRIGGER_MAPID                = "Specific Map ID"
 DynamicCP.TRIGGER_ZONENAMEMATCH        = "Zone Name Match" -- tbd
 DynamicCP.TRIGGER_HOUSE                = "Player House"
 DynamicCP.TRIGGER_BOSSNAME             = "Specific Boss Name"
@@ -140,13 +141,17 @@ local function GetSortedRulesForTrigger(trigger, isVet, param1)
                 if (param1 == nil) then
                     table.insert(ruleNames, {name = name, priority = rule.priority})
                 else
-                    -- Split param1 on pipe char and attempt to match each one
-                    for str in string.gmatch(rule.param1, "([^%%]+)") do
-                        str = string.gsub(str, "^%s+", "")
-                        str = string.gsub(str, "%s+$", "")
-                        if (param1 == str) then
-                            table.insert(ruleNames, {name = name, priority = rule.priority})
-                            break
+                    if (rule.param1 == "*") then
+                        table.insert(ruleNames, {name = name, priority = rule.priority})
+                    else
+                        -- Split param1 on pipe char and attempt to match each one
+                        for str in string.gmatch(rule.param1, "([^%%]+)") do
+                            str = string.gsub(str, "^%s+", "")
+                            str = string.gsub(str, "%s+$", "")
+                            if (param1 == str) then
+                                table.insert(ruleNames, {name = name, priority = rule.priority})
+                                break
+                            end
                         end
                     end
                 end
@@ -392,6 +397,19 @@ local function OnEnteredZoneID(initial)
         tostring(GetZoneId(GetUnitZoneIndex("player"))))
 end
 
+--------------------
+-- Map ID
+local function OnEnteredZoneWithMapID(initial)
+    -- Do NOT check for initial, because we want this to trigger on same zone
+    -- if (not initial) then return {} end
+    DynamicCP.dbg(string.format("|cFF4444Entered Map ID %d|r", GetCurrentMapId()))
+
+    -- GetSortedRulesForTrigger(trigger, isVet, param1, param2)
+    return GetSortedRulesForTrigger(DynamicCP.TRIGGER_MAPID,
+        GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_VETERAN,
+        tostring(GetCurrentMapId()))
+end
+
 
 ---------------------------------------------------------------------
 -- Mappings
@@ -408,6 +426,7 @@ local triggerDisplayNames = {
     [DynamicCP.TRIGGER_HOUSE]           = "You entered player house",
     [DynamicCP.TRIGGER_OVERLAND]        = "You entered overland zone",
     [DynamicCP.TRIGGER_ZONEID]          = "You entered zone",
+    [DynamicCP.TRIGGER_MAPID]           = "You entered zone (mapId trigger)",
     [DynamicCP.TRIGGER_BOSSNAME]        = "You entered boss area in",
     [DynamicCP.TRIGGER_LEAVE_BOSSNAME]  = "You left boss area in",
     [DynamicCP.TRIGGER_BOSS_DIED]       = "Boss died in",
@@ -425,6 +444,7 @@ local triggerToFunction = {
     [DynamicCP.TRIGGER_HOUSE]           = OnEnteredPlayerHouse,
     [DynamicCP.TRIGGER_OVERLAND]        = OnEnteredOverland,
     [DynamicCP.TRIGGER_ZONEID]          = OnEnteredZoneID,
+    [DynamicCP.TRIGGER_MAPID]           = OnEnteredZoneWithMapID,
 }
 
 
@@ -465,7 +485,7 @@ local function GetTriggersForZoneId(zoneId)
     local groupOwnable = IsActiveWorldGroupOwnable()
     local inDungeon = IsUnitInDungeon("player")
 
-    local triggers = {DynamicCP.TRIGGER_ZONEID}
+    local triggers = {DynamicCP.TRIGGER_ZONEID, DynamicCP.TRIGGER_MAPID}
     local initialSize = #triggers
 
     if (DynamicCP.TRIAL_ZONEIDS[tostring(zoneId)]) then

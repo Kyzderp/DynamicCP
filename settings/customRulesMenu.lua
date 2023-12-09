@@ -18,6 +18,7 @@ local triggerDisplays = {
     DynamicCP.TRIGGER_IC,
     DynamicCP.TRIGGER_HOUSE,
     DynamicCP.TRIGGER_ZONEID,
+    DynamicCP.TRIGGER_MAPID,
     DynamicCP.TRIGGER_BOSSNAME,
     DynamicCP.TRIGGER_LEAVE_BOSSNAME,
     DynamicCP.TRIGGER_BOSS_DIED,
@@ -37,6 +38,7 @@ local triggerToPreview = {
     [DynamicCP.TRIGGER_IC]                   = "entering Imperial City or Sewers",
     [DynamicCP.TRIGGER_HOUSE]                = "entering any player house",
     [DynamicCP.TRIGGER_ZONEID]               = "entering specific zone ID",
+    [DynamicCP.TRIGGER_MAPID]                = "entering zone with specific map ID",
     [DynamicCP.TRIGGER_BOSSNAME]             = "encountering specific bosses with name",
     [DynamicCP.TRIGGER_LEAVE_BOSSNAME]       = "leaving specific bosses with name",
     [DynamicCP.TRIGGER_BOSS_DIED]            = "death of specific bosses with name",
@@ -54,6 +56,7 @@ local hasVet = {
     [DynamicCP.TRIGGER_IC]                   = false,
     [DynamicCP.TRIGGER_HOUSE]                = false,
     [DynamicCP.TRIGGER_ZONEID]               = true,
+    [DynamicCP.TRIGGER_MAPID]                = true,
     [DynamicCP.TRIGGER_BOSSNAME]             = true,
     [DynamicCP.TRIGGER_LEAVE_BOSSNAME]       = true,
     [DynamicCP.TRIGGER_BOSS_DIED]            = true,
@@ -78,6 +81,7 @@ local function GetCurrentPreview()
 
     local rule = DynamicCP.savedOptions.customRules.rules[selectedRuleName]
 
+    -- Build the extra info into a more readable string
     local triggerExtraInfo = ""
     if (rule.trigger == DynamicCP.TRIGGER_ZONEID) then
         local zoneIds = {}
@@ -87,7 +91,7 @@ local function GetCurrentPreview()
             table.insert(zoneIds, string.format("%s (%s)", str, GetZoneNameById(tonumber(str))))
         end
         triggerExtraInfo = " " .. table.concat(zoneIds, ", ")
-    elseif (isBossTrigger[rule.trigger]) then
+    elseif (isBossTrigger[rule.trigger] or rule.trigger == DynamicCP.TRIGGER_MAPID) then
         triggerExtraInfo = " " .. string.gsub(rule.param1, "%%", "|r or |c88FF88")
     end
 
@@ -937,11 +941,15 @@ function DynamicCP.CreateCustomRulesMenu()
                     local trigger = DynamicCP.savedOptions.customRules.rules[selectedRuleName].trigger
                     if (trigger == DynamicCP.TRIGGER_ZONEID) then
                         param1Line.label:SetText("Zone IDs")
-                        param1Line.data.tooltipText = "The specific zone ID(s) to match. Your current zone ID is " .. tostring(GetZoneId(GetUnitZoneIndex("player"))) .. " (" .. GetPlayerActiveZoneName() .. "). You can set this to trigger on multiple zone IDs by separating them with percentage sign %"
+                        param1Line.data.tooltipText = "The specific zone ID(s) to match. Your current zone ID is " .. tostring(GetZoneId(GetUnitZoneIndex("player"))) .. " (" .. GetPlayerActiveZoneName() .. "). You can set this to trigger on multiple zone IDs by separating them with percentage sign %. To match ANY zone ID, put only * in this box"
+                        return false
+                    elseif (trigger == DynamicCP.TRIGGER_MAPID) then
+                        param1Line.label:SetText("Map IDs")
+                        param1Line.data.tooltipText = "The specific map ID(s) to match. Your current map ID is " .. tostring(GetCurrentMapId()) .. ". This is triggered only upon loading, similar to the zone ID rule; it does not trigger when moving without loadscreens from one map to another. You can set this to trigger on multiple map IDs by separating them with percentage sign %. To match ANY map ID, put only * in this box\n\nSome map IDs that may be of interest:\n2418 (EA Cycle boss room)\n2419 (EA Tho'at Boss room)\n2424 (Aramril's Theater of War)"
                         return false
                     elseif (isBossTrigger[trigger]) then
                         param1Line.label:SetText("Boss names")
-                        param1Line.data.tooltipText = "The specific boss name to match. You can set this to trigger on multiple bosses by separating them with percentage sign %"
+                        param1Line.data.tooltipText = "The specific boss name to match. You can set this to trigger on multiple bosses by separating them with percentage sign %. To match ANY boss name, put only * in this box"
                         return false
                     end
                 end
