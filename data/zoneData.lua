@@ -54,6 +54,8 @@ DynamicCP.DUNGEON_ZONEIDS = {
     ["1361"] = true,  -- Graven Deep
     ["1389"] = true,  -- Bal Sunnar
     ["1390"] = true,  -- Scrivener's Hall
+    ["1470"] = true,  -- Oathsworn Pit
+    ["1471"] = true,  -- Bedlam Veil
 }
 
 -- Trial zoneIds
@@ -76,7 +78,7 @@ DynamicCP.TRIAL_ZONEIDS = {
 DynamicCP.GROUP_ARENA_ZONEIDS = {
     ["635" ] = true,  -- Dragonstar Arena
     ["1082"] = true,  -- Blackrose Prison
-    ["1436"] = true,  -- Endless Archive
+    ["1436"] = true,  -- Infinite Archive
 }
 
 -- Solo arena zoneIds
