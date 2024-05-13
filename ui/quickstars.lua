@@ -100,7 +100,7 @@ local function SetSlottableSlot(slotIndex, skillId)
 
             -- If it's currently slotted in a different dropdown, it needs to be removed
             if (currentId == skillId) then
-                local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPQuickstarsList:GetNamedChild("Star" .. tostring(dropdownIndex)))
+                local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPQuickstarsListsGreen:GetNamedChild("Star" .. tostring(dropdownIndex)))
                 dropdown:SelectItem(emptyEntries[dropdownIndex])
             end
         end
@@ -142,7 +142,7 @@ end
 -- Slot selected handler
 ---------------------------------------------------------------------
 local function OnStarSelected(tree, dropdownIndex, skillId, origSkillId)
-    local dropdownControl = DynamicCPQuickstarsList:GetNamedChild("Star" .. tostring(dropdownIndex))
+    local dropdownControl = DynamicCPQuickstarsListsGreen:GetNamedChild("Star" .. tostring(dropdownIndex))
     local slotIndex = offsets[tree] + dropdownIndex
 
     -- Show the unsaved changes icon if it is changed
@@ -157,11 +157,11 @@ local function OnStarSelected(tree, dropdownIndex, skillId, origSkillId)
     -- Show/hide confirm/cancel buttons
     local needsRespec = NeedsSlottableRespec()
     if (needsRespec) then
-        DynamicCPQuickstarsListConfirm:SetHidden(false)
-        DynamicCPQuickstarsListCancel:SetHidden(false)
+        DynamicCPQuickstarsListsConfirm:SetHidden(false)
+        DynamicCPQuickstarsListsCancel:SetHidden(false)
     else
-        DynamicCPQuickstarsListConfirm:SetHidden(true)
-        DynamicCPQuickstarsListCancel:SetHidden(true)
+        DynamicCPQuickstarsListsConfirm:SetHidden(true)
+        DynamicCPQuickstarsListsCancel:SetHidden(true)
     end
 end
 
@@ -188,7 +188,7 @@ local function UpdateDropdowns(tree)
     local availableSlottables = GetAvailableSlottables(tree)
 
     for i = 1, 4 do
-        local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPQuickstarsList:GetNamedChild("Star" .. tostring(i)))
+        local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPQuickstarsListsGreen:GetNamedChild("Star" .. tostring(i)))
         dropdown:ClearItems()
         dropdown:SetSortsItems(false)
         local entryToSelect = nil
@@ -272,9 +272,9 @@ local function SetBackdrops(tree)
         Red = {0.88, 0.4, 0.19, 1},
     }
     local color = colors[tree]
-    DynamicCPQuickstarsListBackdrop:SetCenterColor(unpack(color))
-    DynamicCPQuickstarsListConfirmBackdrop:SetCenterColor(unpack(color))
-    DynamicCPQuickstarsListCancelBackdrop:SetCenterColor(unpack(color))
+    DynamicCPQuickstarsListsGreenBackdrop:SetCenterColor(unpack(color))
+    DynamicCPQuickstarsListsConfirmBackdrop:SetCenterColor(unpack(color))
+    DynamicCPQuickstarsListsCancelBackdrop:SetCenterColor(unpack(color))
 
     DynamicCPQuickstars:GetNamedChild(tree .. "Button"):GetNamedChild("Backdrop"):SetCenterColor(unpack(color))
 end
@@ -295,7 +295,7 @@ function DynamicCP.SelectQuickstarsTab(tree)
     end
     DynamicCP.savedOptions.selectedQuickstarTab = tree
     pendingSlottables = nil
-    DynamicCPQuickstarsList:SetHidden(tree == "NONE")
+    DynamicCPQuickstarsLists:SetHidden(tree == "NONE")
 
     -- Set backdrops to appropriate color
     SetBackdrops(tree)
@@ -304,8 +304,8 @@ function DynamicCP.SelectQuickstarsTab(tree)
     UpdateDropdowns(tree)
 
     -- Hide confirm/cancel buttons
-    DynamicCPQuickstarsListConfirm:SetHidden(true)
-    DynamicCPQuickstarsListCancel:SetHidden(true)
+    DynamicCPQuickstarsListsConfirm:SetHidden(true)
+    DynamicCPQuickstarsListsCancel:SetHidden(true)
 end
 
 -- Keybind to cycle through tabs
@@ -333,19 +333,20 @@ end
 -- Should be called on init and also when user changes window width
 function DynamicCP.ResizeQuickstars()
     local dropdownWidth = DynamicCP.savedOptions.quickstarsWidth
-    DynamicCPQuickstarsList:SetWidth(dropdownWidth + 8)
-    DynamicCPQuickstarsListStar1:SetWidth(dropdownWidth)
-    DynamicCPQuickstarsListStar2:SetWidth(dropdownWidth)
-    DynamicCPQuickstarsListStar3:SetWidth(dropdownWidth)
-    DynamicCPQuickstarsListStar4:SetWidth(dropdownWidth)
+    DynamicCPQuickstarsLists:SetWidth(dropdownWidth + 8)
+    DynamicCPQuickstarsListsGreen:SetWidth(dropdownWidth + 8)
+    DynamicCPQuickstarsListsGreenStar1:SetWidth(dropdownWidth)
+    DynamicCPQuickstarsListsGreenStar2:SetWidth(dropdownWidth)
+    DynamicCPQuickstarsListsGreenStar3:SetWidth(dropdownWidth)
+    DynamicCPQuickstarsListsGreenStar4:SetWidth(dropdownWidth)
 
     -- Orientation
     DynamicCPQuickstarsGreenButton:ClearAnchors()
     DynamicCPQuickstarsBlueButton:ClearAnchors()
     DynamicCPQuickstarsRedButton:ClearAnchors()
-    DynamicCPQuickstarsList:ClearAnchors()
-    DynamicCPQuickstarsListCancel:ClearAnchors()
-    DynamicCPQuickstarsListConfirm:ClearAnchors()
+    DynamicCPQuickstarsLists:ClearAnchors()
+    DynamicCPQuickstarsListsCancel:ClearAnchors()
+    DynamicCPQuickstarsListsConfirm:ClearAnchors()
 
     if (DynamicCP.savedOptions.quickstarsVertical) then
         DynamicCPQuickstars:SetDimensions(dropdownWidth + 8 + 32 + 24, 172)
@@ -354,14 +355,14 @@ function DynamicCP.ResizeQuickstars()
         if (DynamicCP.savedOptions.quickstarsMirrored) then
             -- Opening to the left
             DynamicCPQuickstarsGreenButton:SetAnchor(TOPRIGHT, DynamicCPQuickstars, TOPRIGHT)
-            DynamicCPQuickstarsList:SetAnchor(TOPRIGHT, DynamicCPQuickstarsGreenButton, TOPLEFT)
+            DynamicCPQuickstarsLists:SetAnchor(TOPRIGHT, DynamicCPQuickstarsGreenButton, TOPLEFT)
         else
             -- Opening to the right
             DynamicCPQuickstarsGreenButton:SetAnchor(TOPLEFT, DynamicCPQuickstars, TOPLEFT)
-            DynamicCPQuickstarsList:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, TOPRIGHT)
+            DynamicCPQuickstarsLists:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, TOPRIGHT)
         end
-        DynamicCPQuickstarsListCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsList, BOTTOMRIGHT)
-        DynamicCPQuickstarsListConfirm:SetAnchor(TOPRIGHT, DynamicCPQuickstarsListCancel, TOPLEFT)
+        DynamicCPQuickstarsListsCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsLists, BOTTOMRIGHT)
+        DynamicCPQuickstarsListsConfirm:SetAnchor(TOPRIGHT, DynamicCPQuickstarsListsCancel, TOPLEFT)
     else
         DynamicCPQuickstars:SetDimensions(dropdownWidth + 8 + 24, 204)
         DynamicCPQuickstarsBlueButton:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, TOPRIGHT)
@@ -369,34 +370,34 @@ function DynamicCP.ResizeQuickstars()
         if (DynamicCP.savedOptions.quickstarsMirrored) then
             -- Opening above, also move the confirm buttons above
             DynamicCPQuickstarsGreenButton:SetAnchor(BOTTOMLEFT, DynamicCPQuickstars, BOTTOMLEFT)
-            DynamicCPQuickstarsList:SetAnchor(BOTTOMLEFT, DynamicCPQuickstarsGreenButton, TOPLEFT)
-            DynamicCPQuickstarsListCancel:SetAnchor(BOTTOMRIGHT, DynamicCPQuickstarsList, TOPRIGHT)
-            DynamicCPQuickstarsListConfirm:SetAnchor(BOTTOMRIGHT, DynamicCPQuickstarsListCancel, BOTTOMLEFT)
+            DynamicCPQuickstarsLists:SetAnchor(BOTTOMLEFT, DynamicCPQuickstarsGreenButton, TOPLEFT)
+            DynamicCPQuickstarsListsCancel:SetAnchor(BOTTOMRIGHT, DynamicCPQuickstarsLists, TOPRIGHT)
+            DynamicCPQuickstarsListsConfirm:SetAnchor(BOTTOMRIGHT, DynamicCPQuickstarsListsCancel, BOTTOMLEFT)
         else
             -- Opening below
             DynamicCPQuickstarsGreenButton:SetAnchor(TOPLEFT, DynamicCPQuickstars, TOPLEFT)
-            DynamicCPQuickstarsList:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, BOTTOMLEFT)
-            DynamicCPQuickstarsListCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsList, BOTTOMRIGHT)
-            DynamicCPQuickstarsListConfirm:SetAnchor(TOPRIGHT, DynamicCPQuickstarsListCancel, TOPLEFT)
+            DynamicCPQuickstarsLists:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, BOTTOMLEFT)
+            DynamicCPQuickstarsListsCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsLists, BOTTOMRIGHT)
+            DynamicCPQuickstarsListsConfirm:SetAnchor(TOPRIGHT, DynamicCPQuickstarsListsCancel, TOPLEFT)
         end
     end
 
-    DynamicCPQuickstarsListStar1Unsaved:ClearAnchors()
-    DynamicCPQuickstarsListStar2Unsaved:ClearAnchors()
-    DynamicCPQuickstarsListStar3Unsaved:ClearAnchors()
-    DynamicCPQuickstarsListStar4Unsaved:ClearAnchors()
+    DynamicCPQuickstarsListsGreenStar1Unsaved:ClearAnchors()
+    DynamicCPQuickstarsListsGreenStar2Unsaved:ClearAnchors()
+    DynamicCPQuickstarsListsGreenStar3Unsaved:ClearAnchors()
+    DynamicCPQuickstarsListsGreenStar4Unsaved:ClearAnchors()
     if (DynamicCP.savedOptions.quickstarsVertical and DynamicCP.savedOptions.quickstarsMirrored) then
         -- If it's vertical and opening to the left, the unsaved icons also need to be on the left side
-        DynamicCPQuickstarsListStar1Unsaved:SetAnchor(RIGHT, DynamicCPQuickstarsListStar1, LEFT, -8, 0)
-        DynamicCPQuickstarsListStar2Unsaved:SetAnchor(RIGHT, DynamicCPQuickstarsListStar2, LEFT, -8, 0)
-        DynamicCPQuickstarsListStar3Unsaved:SetAnchor(RIGHT, DynamicCPQuickstarsListStar3, LEFT, -8, 0)
-        DynamicCPQuickstarsListStar4Unsaved:SetAnchor(RIGHT, DynamicCPQuickstarsListStar4, LEFT, -8, 0)
+        DynamicCPQuickstarsListsGreenStar1Unsaved:SetAnchor(RIGHT, DynamicCPQuickstarsListsGreenStar1, LEFT, -8, 0)
+        DynamicCPQuickstarsListsGreenStar2Unsaved:SetAnchor(RIGHT, DynamicCPQuickstarsListsGreenStar2, LEFT, -8, 0)
+        DynamicCPQuickstarsListsGreenStar3Unsaved:SetAnchor(RIGHT, DynamicCPQuickstarsListsGreenStar3, LEFT, -8, 0)
+        DynamicCPQuickstarsListsGreenStar4Unsaved:SetAnchor(RIGHT, DynamicCPQuickstarsListsGreenStar4, LEFT, -8, 0)
     else
         -- Regular unsaved icons on the right
-        DynamicCPQuickstarsListStar1Unsaved:SetAnchor(LEFT, DynamicCPQuickstarsListStar1, RIGHT, 8, 0)
-        DynamicCPQuickstarsListStar2Unsaved:SetAnchor(LEFT, DynamicCPQuickstarsListStar2, RIGHT, 8, 0)
-        DynamicCPQuickstarsListStar3Unsaved:SetAnchor(LEFT, DynamicCPQuickstarsListStar3, RIGHT, 8, 0)
-        DynamicCPQuickstarsListStar4Unsaved:SetAnchor(LEFT, DynamicCPQuickstarsListStar4, RIGHT, 8, 0)
+        DynamicCPQuickstarsListsGreenStar1Unsaved:SetAnchor(LEFT, DynamicCPQuickstarsListsGreenStar1, RIGHT, 8, 0)
+        DynamicCPQuickstarsListsGreenStar2Unsaved:SetAnchor(LEFT, DynamicCPQuickstarsListsGreenStar2, RIGHT, 8, 0)
+        DynamicCPQuickstarsListsGreenStar3Unsaved:SetAnchor(LEFT, DynamicCPQuickstarsListsGreenStar3, RIGHT, 8, 0)
+        DynamicCPQuickstarsListsGreenStar4Unsaved:SetAnchor(LEFT, DynamicCPQuickstarsListsGreenStar4, RIGHT, 8, 0)
     end
 end
 
@@ -452,17 +453,17 @@ end
 function OnCooldownStart()
     if (not DynamicCP.savedOptions.quickstarsShowCooldown) then return end
     local secondsRemaining = DynamicCP.GetCooldownSeconds()
-    DynamicCPQuickstarsListCooldown:SetText(string.format("Cooldown %ds", secondsRemaining))
-    DynamicCPQuickstarsListCooldown:SetHidden(false)
+    DynamicCPQuickstarsListsCooldown:SetText(string.format("Cooldown %ds", secondsRemaining))
+    DynamicCPQuickstarsListsCooldown:SetHidden(false)
 end
 
 function OnCooldownUpdate()
     local secondsRemaining = DynamicCP.GetCooldownSeconds()
-    DynamicCPQuickstarsListCooldown:SetText(string.format("Cooldown %ds", secondsRemaining))
+    DynamicCPQuickstarsListsCooldown:SetText(string.format("Cooldown %ds", secondsRemaining))
 end
 
 function OnCooldownEnd()
-    DynamicCPQuickstarsListCooldown:SetHidden(true)
+    DynamicCPQuickstarsListsCooldown:SetHidden(true)
 end
 
 function DynamicCP.QuickstarsOnPurchased()
@@ -489,12 +490,12 @@ function DynamicCP.InitQuickstars()
     DynamicCPQuickstarsGreenButtonBackdrop:SetAlpha(alpha)
     DynamicCPQuickstarsBlueButtonBackdrop:SetAlpha(alpha)
     DynamicCPQuickstarsRedButtonBackdrop:SetAlpha(alpha)
-    DynamicCPQuickstarsListBackdrop:SetAlpha(alpha)
-    DynamicCPQuickstarsListCancelBackdrop:SetAlpha(alpha)
-    DynamicCPQuickstarsListConfirmBackdrop:SetAlpha(alpha)
+    DynamicCPQuickstarsListsGreenBackdrop:SetAlpha(alpha)
+    DynamicCPQuickstarsListsCancelBackdrop:SetAlpha(alpha)
+    DynamicCPQuickstarsListsConfirmBackdrop:SetAlpha(alpha)
 
     DynamicCPQuickstars:SetScale(DynamicCP.savedOptions.quickstarsScale)
-    DynamicCPQuickstarsListCooldown:SetColor(unpack(DynamicCP.savedOptions.quickstarsCooldownColor))
+    DynamicCPQuickstarsListsCooldown:SetColor(unpack(DynamicCP.savedOptions.quickstarsCooldownColor))
 
     DynamicCP.InitQuickstarsScenes()
 
