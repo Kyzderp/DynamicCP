@@ -34,7 +34,7 @@ end
 function DynamicCP.ShowModelessPrompt(text, callback)
     DynamicCPModelessDialogLabel:SetHeight(800)
     DynamicCPModelessDialogLabel:SetText(text)
-    local labelHeight = DynamicCPModelessDialogLabel:GetTextHeight()
+    local labelHeight = DynamicCPModelessDialogLabel:GetTextHeight() + 5 -- For some reason, U41 makes the text not fit with enough lines?
     DynamicCPModelessDialogLabel:SetHeight(labelHeight)
     DynamicCPModelessDialog:SetHeight(labelHeight + 70)
     DynamicCPModelessDialog:SetHidden(false)
