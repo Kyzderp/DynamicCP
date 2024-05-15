@@ -75,11 +75,9 @@ end
 ---------------------------------------------------------------------
 local function NeedsSlottableRespec()
     if (not pendingSlottables) then
-        d("no pending")
         return false
     end
 
-    d(pendingSlottables)
     local committed = GetFlippedSlottables()
     for slotIndex, skillId in pairs(pendingSlottables) do
         -- If star is not already slotted in the same slot, then we're done
@@ -144,11 +142,9 @@ local function OnStarSelected(tree, dropdownIndex, skillId, origSkillId)
     -- Show/hide confirm/cancel buttons
     local needsRespec = NeedsSlottableRespec()
     if (needsRespec) then
-        d("not hidden")
         DynamicCPQuickstarsPanelConfirm:SetHidden(false)
         DynamicCPQuickstarsPanelCancel:SetHidden(false)
     else
-        d("hidden")
         DynamicCPQuickstarsPanelConfirm:SetHidden(true)
         DynamicCPQuickstarsPanelCancel:SetHidden(true)
     end
@@ -239,7 +235,6 @@ local function UpdateDropdowns(tree, listTree)
                 entryToSelect = entry
             end
             if (data.skillId == -1) then
-                d("setting " .. tostring(i + offset) .. " to " .. tostring(entry))
                 emptyEntries[i + offset] = entry
             end
         end
@@ -254,6 +249,7 @@ local function UpdateAllDropdowns()
     UpdateDropdowns("Blue", "Blue")
     UpdateDropdowns("Red", "Red")
 end
+DynamicCP.UpdateAllDropdowns = UpdateAllDropdowns
 
 
 ---------------------------------------------------------------------
@@ -285,8 +281,8 @@ end
 -- Called when user clicks tab button
 ---------------------------------------------------------------------
 function DynamicCP.SelectQuickstarsTab(tree)
-    if (tree == "REFRESH" or tree == "NONE") then
-        d("REMOVE THIS LATER REE")
+    if (tree ~= "Green" and tree ~= "Blue" and tree ~= "Red") then
+        d("This code should not be reachable! DynamicCP.SelectQuickstarsTab")
         return
     end
 
@@ -415,7 +411,6 @@ DynamicCP.RefreshTreesDisplay = RefreshTreesDisplay
 -- Should be called on init and also when user changes window width
 function DynamicCP.ResizeQuickstars()
     local dropdownWidth = DynamicCP.savedOptions.quickstarsWidth
-    DynamicCPQuickstarsPanel:SetWidth(dropdownWidth + 8)
     DynamicCPQuickstarsPanelLists:SetWidth(dropdownWidth + 8)
 
     DynamicCPQuickstarsPanelListsGreen:SetWidth(dropdownWidth + 8)
@@ -440,7 +435,6 @@ function DynamicCP.ResizeQuickstars()
     DynamicCPQuickstarsGreenButton:ClearAnchors()
     DynamicCPQuickstarsBlueButton:ClearAnchors()
     DynamicCPQuickstarsRedButton:ClearAnchors()
-    DynamicCPQuickstarsPanel:ClearAnchors()
     DynamicCPQuickstarsPanelLists:ClearAnchors()
     DynamicCPQuickstarsPanelCancel:ClearAnchors()
 
@@ -453,12 +447,10 @@ function DynamicCP.ResizeQuickstars()
         if (DynamicCP.savedOptions.quickstarsMirrored) then
             -- Opening to the left
             DynamicCPQuickstarsGreenButton:SetAnchor(TOPRIGHT, DynamicCPQuickstars, TOPRIGHT)
-            DynamicCPQuickstarsPanel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsGreenButton, TOPLEFT)
             DynamicCPQuickstarsPanelLists:SetAnchor(TOPRIGHT, DynamicCPQuickstarsGreenButton, TOPLEFT)
         else
             -- Opening to the right
             DynamicCPQuickstarsGreenButton:SetAnchor(TOPLEFT, DynamicCPQuickstars, TOPLEFT)
-            DynamicCPQuickstarsPanel:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, TOPRIGHT)
             DynamicCPQuickstarsPanelLists:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, TOPRIGHT)
         end
         DynamicCPQuickstarsPanelCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsPanelLists, BOTTOMRIGHT)
@@ -469,13 +461,11 @@ function DynamicCP.ResizeQuickstars()
         if (DynamicCP.savedOptions.quickstarsMirrored) then
             -- Opening above, also move the confirm buttons above
             DynamicCPQuickstarsGreenButton:SetAnchor(BOTTOMLEFT, DynamicCPQuickstars, BOTTOMLEFT)
-            DynamicCPQuickstarsPanel:SetAnchor(BOTTOMLEFT, DynamicCPQuickstarsGreenButton, TOPLEFT)
             DynamicCPQuickstarsPanelCancel:SetAnchor(BOTTOMRIGHT, DynamicCPQuickstarsPanelLists, TOPRIGHT)
             DynamicCPQuickstarsPanelLists:SetAnchor(BOTTOMLEFT, DynamicCPQuickstarsGreenButton, TOPLEFT)
         else
             -- Opening below
             DynamicCPQuickstarsGreenButton:SetAnchor(TOPLEFT, DynamicCPQuickstars, TOPLEFT)
-            DynamicCPQuickstarsPanel:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, BOTTOMLEFT)
             DynamicCPQuickstarsPanelCancel:SetAnchor(TOPRIGHT, DynamicCPQuickstarsPanelLists, BOTTOMRIGHT)
             DynamicCPQuickstarsPanelLists:SetAnchor(TOPLEFT, DynamicCPQuickstarsGreenButton, BOTTOMLEFT)
         end
@@ -616,6 +606,8 @@ function DynamicCP.InitQuickstars()
     DynamicCPQuickstarsBlueButtonBackdrop:SetAlpha(alpha)
     DynamicCPQuickstarsRedButtonBackdrop:SetAlpha(alpha)
     DynamicCPQuickstarsPanelListsGreenBackdrop:SetAlpha(alpha)
+    DynamicCPQuickstarsPanelListsBlueBackdrop:SetAlpha(alpha)
+    DynamicCPQuickstarsPanelListsRedBackdrop:SetAlpha(alpha)
     DynamicCPQuickstarsPanelCancelBackdrop:SetAlpha(alpha)
     DynamicCPQuickstarsPanelConfirmBackdrop:SetAlpha(alpha)
 

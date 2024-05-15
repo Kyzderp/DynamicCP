@@ -480,9 +480,11 @@ function DynamicCP:CreateSettingsMenu()
                         DynamicCPQuickstarsGreenButtonBackdrop:SetAlpha(value / 100)
                         DynamicCPQuickstarsBlueButtonBackdrop:SetAlpha(value / 100)
                         DynamicCPQuickstarsRedButtonBackdrop:SetAlpha(value / 100)
-                        DynamicCPQuickstarsListBackdrop:SetAlpha(value / 100)
-                        DynamicCPQuickstarsListCancelBackdrop:SetAlpha(value / 100)
-                        DynamicCPQuickstarsListConfirmBackdrop:SetAlpha(value / 100)
+                        DynamicCPQuickstarsPanelListsGreenBackdrop:SetAlpha(value / 100)
+                        DynamicCPQuickstarsPanelListsBlueBackdrop:SetAlpha(value / 100)
+                        DynamicCPQuickstarsPanelListsRedBackdrop:SetAlpha(value / 100)
+                        DynamicCPQuickstarsPanelCancelBackdrop:SetAlpha(value / 100)
+                        DynamicCPQuickstarsPanelConfirmBackdrop:SetAlpha(value / 100)
                     end,
                     width = "full",
                 },
@@ -494,7 +496,7 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return DynamicCP.savedOptions.quickstarsDropdownHideSlotted end,
                     setFunc = function(value)
                         DynamicCP.savedOptions.quickstarsDropdownHideSlotted = value
-                        DynamicCP.SelectQuickstarsTab("REFRESH")
+                        DynamicCP.UpdateAllDropdowns()
                     end,
                     width = "full",
                 },
@@ -528,7 +530,7 @@ function DynamicCP:CreateSettingsMenu()
                     getFunc = function() return unpack(DynamicCP.savedOptions.quickstarsCooldownColor) end,
                     setFunc = function(r, g, b)
                         DynamicCP.savedOptions.quickstarsCooldownColor = {r, g, b}
-                        DynamicCPQuickstarsListCooldown:SetColor(unpack(DynamicCP.savedOptions.quickstarsCooldownColor))
+                        DynamicCPQuickstarsPanelCooldown:SetColor(unpack(DynamicCP.savedOptions.quickstarsCooldownColor))
                     end,
                     width = "half",
                     disabled = function() return not DynamicCP.savedOptions.quickstarsShowCooldown end

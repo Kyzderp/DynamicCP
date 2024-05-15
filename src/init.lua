@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "2.1.1"
+DynamicCP.version = "2.2.0"
 
 DynamicCP.experimental = false -- Flip to true when developing. Nothing currently
 
@@ -40,7 +40,6 @@ local defaultOptions = {
     showTotalsLabel = true,
     quickstarsX = GuiRoot:GetWidth() / 4, -- Anchor TOPLEFT
     quickstarsY = GuiRoot:GetHeight() / 4,
-    selectedQuickstarTab = "Green",
     quickstarsShowGreen = true, -- quickstars 2.0
     quickstarsShowBlue = false, -- quickstars 2.0
     quickstarsShowRed = false, -- quickstars 2.0
