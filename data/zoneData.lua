@@ -72,6 +72,7 @@ DynamicCP.TRIAL_ZONEIDS = {
     ["1263"] = true,  -- Rockgrove
     ["1344"] = true,  -- Dreadsail Reef
     ["1427"] = true,  -- Sanity's Edge
+    ["1478"] = true,  -- Lucent Citadel
 }
 
 -- Group arena zoneIds
