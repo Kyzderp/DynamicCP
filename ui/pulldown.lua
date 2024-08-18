@@ -32,8 +32,16 @@ local function GetStarControlFromIndex(index)
 end
 
 ---------------------------------------------------------------------
--- Update every item
+-- Since U43, the ActionBar has deferred initialization, so it's
+-- possible the user hasn't opened the CP screen yet before changing
+-- CP via addons
+DynamicCP.pulldownInitialized = false
+
+---------------------------------------------------------------------
+-- Update every item in the pulldown
 local function ApplyCurrentSlottables(currentSlottables)
+    if (not DynamicCP.pulldownInitialized) then return end
+
     for index = 1, 12 do
         local slottableSkillData = currentSlottables[index]
         local star = GetStarControlFromIndex(index)
@@ -105,4 +113,11 @@ local function InitTree(control, tree)
     star4:SetAnchor(TOPLEFT, star3, BOTTOMLEFT)
     star4.SetColors(color)
 end
-DynamicCP.InitTree = InitTree
+
+function DynamicCP.InitPulldown()
+    InitTree(DynamicCPPulldownGreen, "Green")
+    InitTree(DynamicCPPulldownBlue, "Blue")
+    InitTree(DynamicCPPulldownRed, "Red")
+
+    DynamicCP.pulldownInitialized = true
+end

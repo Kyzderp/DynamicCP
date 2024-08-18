@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "2.2.1"
+DynamicCP.version = "2.2.2"
 
 DynamicCP.experimental = false -- Flip to true when developing. Nothing currently
 
@@ -376,6 +376,7 @@ local function Initialize()
             initialOpened = true
             DynamicCP.InitLabels()
             DynamicCP.InitSlottables()
+            DynamicCP.InitPulldown()
             if (DynamicCP.savedOptions.showLabels) then
                 DynamicCP.RefreshLabels(true)
             end

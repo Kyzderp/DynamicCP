@@ -41,27 +41,18 @@
                         <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
                         <Control name="$(parent)Green" tier="MEDIUM">
                             <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
-                            <OnInitialized>
-                                DynamicCP.InitTree(self, "Green")
-                            </OnInitialized>
                             <Controls>
                                 <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
                             </Controls>
                         </Control>
                         <Control name="$(parent)Blue" tier="MEDIUM">
                             <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
-                            <OnInitialized>
-                                DynamicCP.InitTree(self, "Blue")
-                            </OnInitialized>
                             <Controls>
                                 <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
                             </Controls>
                         </Control>
                         <Control name="$(parent)Red" tier="MEDIUM">
                             <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
-                            <OnInitialized>
-                                DynamicCP.InitTree(self, "Red")
-                            </OnInitialized>
                             <Controls>
                                 <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
                             </Controls>

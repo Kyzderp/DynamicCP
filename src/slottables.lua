@@ -85,8 +85,11 @@ end
 
 local function OnSlotsDoneChanging()
     EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "SlotsChangedTimeout")
-    CollectCurrentSlottables()
-    DynamicCP.ApplyCurrentSlottables(currentSlottables)
+    -- Pulldown is the only listener for this currently :shrug:
+    if (DynamicCP.pulldownInitialized) then
+        CollectCurrentSlottables()
+        DynamicCP.ApplyCurrentSlottables(currentSlottables)
+    end
 end
 
 local function OnSlotsChanged()
