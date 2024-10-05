@@ -32,6 +32,10 @@ local function GetStarControlFromIndex(index)
 end
 
 ---------------------------------------------------------------------
+-- Slot sets
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
 -- Since U43, the ActionBar has deferred initialization, so it's
 -- possible the user hasn't opened the CP screen yet before changing
 -- CP via addons
@@ -92,26 +96,39 @@ DynamicCP.TogglePulldown = TogglePulldown
 ---------------------------------------------------------------------
 -- tree = "Green" "Blue" "Red"
 local function InitTree(control, tree)
+    local width = ZO_ChampionPerksActionBarSlot4:GetRight() - ZO_ChampionPerksActionBarSlot1:GetLeft() + 20
+
     -- Size and position
-    control:SetHeight(84)
-    control:SetWidth(ZO_ChampionPerksActionBarSlot4:GetRight() - ZO_ChampionPerksActionBarSlot1:GetLeft())
+    control:SetHeight(40)
+    control:SetWidth(width)
     control:SetAnchor(TOP, GuiRoot, TOPLEFT, GetMiddlePoint(tree) / 2, ZO_ChampionPerksActionBar:GetBottom())
 
     -- Stars
     local color = TEXT_COLORS[tree]
+    local starNameLength = width / 2 - 20 - (DynamicCP.savedOptions.showPulldownPoints and 20 or 0)
 
     local star1 = CreateControlFromVirtual("$(parent)Star1", control, "DynamicCPPulldownStar", "")
     star1:SetAnchor(TOPLEFT, control, TOPLEFT)
     star1.SetColors(color)
+    star1:GetNamedChild("Name"):SetWidth(starNameLength)
     local star2 = CreateControlFromVirtual("$(parent)Star2", control, "DynamicCPPulldownStar", "")
     star2:SetAnchor(TOPLEFT, star1, BOTTOMLEFT)
     star2.SetColors(color)
+    star2:GetNamedChild("Name"):SetWidth(starNameLength)
     local star3 = CreateControlFromVirtual("$(parent)Star3", control, "DynamicCPPulldownStar", "")
-    star3:SetAnchor(TOPLEFT, star2, BOTTOMLEFT)
+    star3:SetAnchor(LEFT, star1, RIGHT)
     star3.SetColors(color)
+    star3:GetNamedChild("Name"):SetWidth(starNameLength)
     local star4 = CreateControlFromVirtual("$(parent)Star4", control, "DynamicCPPulldownStar", "")
-    star4:SetAnchor(TOPLEFT, star3, BOTTOMLEFT)
+    star4:SetAnchor(LEFT, star2, RIGHT)
     star4.SetColors(color)
+    star4:GetNamedChild("Name"):SetWidth(starNameLength)
+
+    -- Slot set controls
+    local setControls = CreateControlFromVirtual("$(parent)SlotSetControls", control, "DynamicCPPulldownSetControls", "")
+    setControls:SetWidth(width - 10)
+    setControls:GetNamedChild("Dropdown"):SetWidth(width - 40)
+    setControls:GetNamedChild("TextField"):SetWidth(width - 40)
 end
 
 function DynamicCP.InitPulldown()

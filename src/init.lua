@@ -8,11 +8,16 @@ local defaultOptions = {
     firstTime = true,
     cp = {
         Red = {},
-        Green = {},
+        Green = {}, -- ["Fisher"] = { ["roles"] = { ["Healer"] = false, ["Dps"] = true, ["Tank"] = false, }, [1] = { [65] = 0, }, },
         Blue = {},
     },
     pulldownExpanded = true,
     charData = {}, -- {[123214123] = {green="craft", blue="dps", red="magdps", armoryBuilds={[1]={green="craft", blue="dps", red="magdps"}}}}
+    slotGroups = {
+        Red = {}, -- ["Tank"] = {[1] = 12, [2] = 34, [3] = 56, [4] = 78},
+        Green = {},
+        Blue = {},
+    },
 
 -- user options
     hideBackground = false,

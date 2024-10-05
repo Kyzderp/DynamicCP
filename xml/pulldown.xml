@@ -1,26 +1,53 @@
 <GuiXml>
     <Controls>
 <!-- ======================================================================================================================= -->
+        <Control name="DynamicCPPulldownSetControls" virtual="true" tier="MEDIUM">
+            <Anchor point="TOP" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="2"/>
+            <Controls>
+                <Control name="$(parent)Dropdown" inherits="ZO_ComboBox" tier="HIGH">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT"/>
+                </Control>
+                <EditBox name="$(parent)TextField" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" tier="MEDIUM">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Dropdown" relativePoint="BOTTOMLEFT" offsetY="4"/>
+                    <Controls><Backdrop name="$(parent)Backdrop" centerColor="55000000" edgeColor="88000000" tier="LOW"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
+                    <OnInitialized>ZO_EditDefaultText_Initialize(self, "  New slot set")</OnInitialized>
+                    <!-- <OnFocusLost>DynamicCP:OnTextFocusLost(self)</OnFocusLost> -->
+                </EditBox>
+                <Button name="$(parent)Remove" alpha="1" topmost="true" tier="MEDIUM">
+                    <Anchor point="LEFT" relativeTo="$(parent)Dropdown" relativePoint="RIGHT" offsetX="3"/>
+                    <Dimensions x="28" y="28"/>
+                    <Textures normal="/esoui/art/buttons/minus_up.dds" pressed="/esoui/art/buttons/minus_down.dds" mouseOver="/esoui/art/buttons/minus_over.dds" disabled="/esoui/art/buttons/minus_disabled.dds"/>
+                    <OnClicked>d("remove")</OnClicked>
+                </Button>
+                <Button name="$(parent)Save" alpha="1" topmost="true" tier="MEDIUM">
+                    <Anchor point="LEFT" relativeTo="$(parent)TextField" relativePoint="RIGHT" offsetX="4"/>
+                    <Dimensions x="28" y="28"/>
+                    <Textures normal="/esoui/art/buttons/edit_save_up.dds" pressed="/esoui/art/buttons/edit_save_down.dds" mouseOver="/esoui/art/buttons/edit_save_over.dds" disabled="/esoui/art/buttons/edit_save_disabled.dds"/>
+                    <OnClicked>d("save")</OnClicked>
+                </Button>
+            </Controls>
+        </Control>
+<!-- ======================================================================================================================= -->
         <Control name="DynamicCPPulldownStar" virtual="true" tier="MEDIUM">
             <OnInitialized>
                 self:SetHeight(20)
-                self:SetWidth(self:GetParent():GetWidth())
+                self:SetWidth(self:GetParent():GetWidth() / 2)
                 self.SetColors = function(color)
                     self:GetNamedChild("Name"):SetColor(unpack(color))
                     self:GetNamedChild("Points"):SetColor(unpack(color))
                 end
             </OnInitialized>
             <Controls>
-                <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_star_pulse.dds" shape="CIRCLE" pixelRoundingEnabled="false" blendMode="ADD" alpha="0.5" tier="MEDIUM">
-                    <Dimensions x="40" y="40"/>
+                <Texture name="$(parent)Icon" textureFile="esoui/art/ava/ava_rankicon_legate.dds" tier="MEDIUM">
+                    <Dimensions x="14" y="14"/>
                     <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT"/>
-                    <TextureCoords left="0.75" right="1" top="0.5" bottom="0.75"/>
                 </Texture>
-                <Label name="$(parent)Name" font="ZoFontGameSmall" verticalAlignment="CENTER" horizontalAlignment="LEFT" text="Star" tier="MEDIUM">
+                <Label name="$(parent)Name" font="ZoFontGameSmall" wrapMode="ELLIPSIS" verticalAlignment="CENTER" horizontalAlignment="LEFT" text="Star" tier="MEDIUM">
+                    <Dimensions y="20"/>
                     <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT"/>
                 </Label>
                 <Label name="$(parent)Points" font="ZoFontGameSmall" verticalAlignment="CENTER" horizontalAlignment="RIGHT" text="420" tier="MEDIUM">
-                    <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-16"/>
+                    <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="0"/>
                 </Label>
             </Controls>
         </Control>
@@ -32,7 +59,7 @@
             </OnInitialized>
             <Controls>
                 <Control name="DynamicCPPulldown" mouseEnabled="false" movable="false" hidden="false" allowBringToTop="false" tier="MEDIUM">
-                    <Dimensions x="740" y="92"/>
+                    <Dimensions x="740" y="104"/>
                     <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
                     <OnInitialized>
                         self:SetWidth(ZO_ChampionPerksActionBar:GetWidth()*0.92)
@@ -41,21 +68,12 @@
                         <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
                         <Control name="$(parent)Green" tier="MEDIUM">
                             <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
-                            <Controls>
-                                <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                            </Controls>
                         </Control>
                         <Control name="$(parent)Blue" tier="MEDIUM">
                             <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
-                            <Controls>
-                                <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                            </Controls>
                         </Control>
                         <Control name="$(parent)Red" tier="MEDIUM">
                             <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
-                            <Controls>
-                                <Backdrop name="$(parent)Backdrop" centerColor="66000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                            </Controls>
                         </Control>
                     </Controls>
                 </Control>
