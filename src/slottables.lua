@@ -83,6 +83,11 @@ local function CollectCurrentSlottables()
     end
 end
 
+function DynamicCP.GetCurrentUISlottables()
+    CollectCurrentSlottables()
+    return currentSlottables
+end
+
 local function OnSlotsDoneChanging()
     EVENT_MANAGER:UnregisterForUpdate(DynamicCP.name .. "SlotsChangedTimeout")
     -- Pulldown is the only listener for this currently :shrug:

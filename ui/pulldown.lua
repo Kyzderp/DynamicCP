@@ -19,10 +19,22 @@ local TEXT_COLORS = {
     Red = {0.88, 0.4, 0.19},
 }
 
+local TEXT_COLORS_HEX = {
+    Green = "a5d752",
+    Blue = "59bae7",
+    Red = "e46b2e",
+}
+
 local INDEX_TO_TREE = {
     [1] = "Green",
     [2] = "Blue",
     [3] = "Red",
+}
+
+local TREE_TO_FIRST_INDEX = {
+    Green = 1,
+    Blue = 5,
+    Red = 9,
 }
 
 local function GetStarControlFromIndex(index)
@@ -34,6 +46,59 @@ end
 ---------------------------------------------------------------------
 -- Slot sets
 ---------------------------------------------------------------------
+-- Called from pulldown.xml. Disable the save button if no name is specified
+function DynamicCP.OnSlotSetTextFocusLost(editBox)
+    local text = editBox:GetText()
+    local saveButton = editBox:GetParent():GetNamedChild("Save")
+    saveButton:SetEnabled(text and text ~= "")
+end
+
+-- Called from pulldown.xml. Save the UI-pending slottables into a slot set
+local function SaveSlotSet(button)
+    local tree = string.sub(button:GetParent():GetParent():GetName(), 18)
+    local pendingName = button:GetParent():GetNamedChild("TextField"):GetText()
+    if (not pendingName or pendingName == "") then
+        d("|cFF0000Pending name is empty; this shouldn't be reachable!|r")
+        return
+    end
+
+    local firstIndex = TREE_TO_FIRST_INDEX[tree]
+    local currentSlottables = DynamicCP.GetCurrentUISlottables()
+
+    local setData = {}
+    local starsString = ""
+    for i = 1, 4 do
+        local slottableSkillData = currentSlottables[firstIndex + i - 1]
+        local starName = ""
+        if (slottableSkillData) then
+            setData[i] = slottableSkillData.championSkillId
+            starName = GetChampionSkillName(slottableSkillData.championSkillId)
+        end
+
+        starsString = starsString .. zo_strformat("\n|c<<1>><<2>> - <<C:3>>|r",
+            TEXT_COLORS_HEX[tree],
+            i,
+            starName)
+    end
+
+    -- Save in data
+    local overwrite = DynamicCP.savedOptions.slotGroups[tree][pendingName]
+    local function OnSaveConfirmed()
+        DynamicCP.savedOptions.slotGroups[tree][pendingName] = setData
+    end
+
+    LibDialog:RegisterDialog(
+        DynamicCP.name,
+        "ConfirmSaveSlotSet",
+        "Confirm Saving Slottable Set",
+        zo_strformat("Save the following as |c<<1>><<2>>|r?<<3>>", TEXT_COLORS_HEX[tree], pendingName, starsString),
+        OnSaveConfirmed,
+        nil,
+        nil,
+        true)
+    LibDialog:ShowDialog(DynamicCP.name, "ConfirmSaveSlotSet")
+end
+DynamicCP.SaveSlotSet = SaveSlotSet
 
 ---------------------------------------------------------------------
 -- Since U43, the ActionBar has deferred initialization, so it's

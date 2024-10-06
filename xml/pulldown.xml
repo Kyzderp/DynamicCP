@@ -11,19 +11,27 @@
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Dropdown" relativePoint="BOTTOMLEFT" offsetY="4"/>
                     <Controls><Backdrop name="$(parent)Backdrop" centerColor="55000000" edgeColor="88000000" tier="LOW"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
                     <OnInitialized>ZO_EditDefaultText_Initialize(self, "  New slot set")</OnInitialized>
-                    <!-- <OnFocusLost>DynamicCP:OnTextFocusLost(self)</OnFocusLost> -->
+                    <OnFocusLost>DynamicCP.OnSlotSetTextFocusLost(self)</OnFocusLost>
                 </EditBox>
                 <Button name="$(parent)Remove" alpha="1" topmost="true" tier="MEDIUM">
                     <Anchor point="LEFT" relativeTo="$(parent)Dropdown" relativePoint="RIGHT" offsetX="3"/>
                     <Dimensions x="28" y="28"/>
                     <Textures normal="/esoui/art/buttons/minus_up.dds" pressed="/esoui/art/buttons/minus_down.dds" mouseOver="/esoui/art/buttons/minus_over.dds" disabled="/esoui/art/buttons/minus_disabled.dds"/>
                     <OnClicked>d("remove")</OnClicked>
+                    <OnMouseEnter>
+                        ZO_Tooltips_ShowTextTooltip(self, BOTTOMRIGHT, "Delete set")
+                    </OnMouseEnter>
+                    <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>
-                <Button name="$(parent)Save" alpha="1" topmost="true" tier="MEDIUM">
+                <Button name="$(parent)Save" alpha="1" topmost="true" tier="MEDIUM" enabled="false">
                     <Anchor point="LEFT" relativeTo="$(parent)TextField" relativePoint="RIGHT" offsetX="4"/>
                     <Dimensions x="28" y="28"/>
                     <Textures normal="/esoui/art/buttons/edit_save_up.dds" pressed="/esoui/art/buttons/edit_save_down.dds" mouseOver="/esoui/art/buttons/edit_save_over.dds" disabled="/esoui/art/buttons/edit_save_disabled.dds"/>
-                    <OnClicked>d("save")</OnClicked>
+                    <OnClicked>DynamicCP.SaveSlotSet(self)</OnClicked>
+                    <OnMouseEnter>
+                        ZO_Tooltips_ShowTextTooltip(self, BOTTOMRIGHT, "Save set")
+                    </OnMouseEnter>
+                    <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>
             </Controls>
         </Control>
