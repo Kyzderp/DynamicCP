@@ -46,11 +46,13 @@ end
 ---------------------------------------------------------------------
 -- Slot sets
 ---------------------------------------------------------------------
+local currentSelected = {} -- {Green = "Craft",}
+
 -- Called from pulldown.xml. Disable the save button if no name is specified
 function DynamicCP.OnSlotSetTextFocusLost(editBox)
     local text = editBox:GetText()
     local saveButton = editBox:GetParent():GetNamedChild("Save")
-    saveButton:SetEnabled(text and text ~= "")
+    saveButton:SetHidden(text == nil or text == "")
 end
 
 -- Iterate through the UI stars to find the championSkilLData for a skillId
@@ -80,16 +82,19 @@ end
 
 -- Initialize the dropdown with the saved slot sets
 local function InitSlotSetDropdown(tree, nameToSelect)
-    local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPPulldown:GetNamedChild(tree .. "SlotSetControlsDropdown"))
+    local dropdownControl = DynamicCPPulldown:GetNamedChild(tree .. "SlotSetControlsDropdown")
+    local dropdown = ZO_ComboBox_ObjectFromContainer(dropdownControl)
     dropdown:ClearItems()
     dropdown:SetSortsItems(true)
 
     -- Add the data to dropdown
     local entryToSelect
     for setName, setData in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
-        local function OnItemSelected(_, _, entry)
-            d("load " .. setName)
+        local function OnItemSelected()
+            DynamicCP.dbg("Loading " .. setName)
             LoadSlotSet(tree, setName)
+            currentSelected[tree] = setName
+            dropdownControl:GetParent():GetNamedChild("Delete"):SetHidden(false)
         end
 
         local entry = ZO_ComboBox:CreateItemEntry(setName, OnItemSelected)
@@ -103,12 +108,58 @@ local function InitSlotSetDropdown(tree, nameToSelect)
     -- TODO: if pending is cancelled, then need to deselect?
     if (entryToSelect) then
         dropdown:SelectItem(entryToSelect)
+        currentSelected[tree] = nameToSelect
+    else
+        currentSelected[tree] = nil
     end
+    dropdownControl:GetParent():GetNamedChild("Delete"):SetHidden(currentSelected[tree] == nil)
     dropdown:UpdateItems()
 end
 
+local function GetSlotSetString(tree, setData)
+    local firstIndex = TREE_TO_FIRST_INDEX[tree]
+
+    local starsString = ""
+    for i = 1, 4 do
+        local starName = ""
+        if (setData[i]) then
+            starName = GetChampionSkillName(setData[i])
+        end
+
+        starsString = starsString .. zo_strformat("\n|c<<1>><<2>> - <<C:3>>|r",
+            TEXT_COLORS_HEX[tree],
+            i,
+            starName)
+    end
+
+    return starsString
+end
+
+-- Called from pulldown.xml. Delete the currently selected slot set
+function DynamicCP.DeleteSlotSet(button)
+    local tree = string.sub(button:GetParent():GetParent():GetName(), 18)
+    local setName = currentSelected[tree]
+
+    local starsString = GetSlotSetString(tree, DynamicCP.savedOptions.slotGroups[tree][setName])
+    local function OnDeleteConfirmed()
+        DynamicCP.savedOptions.slotGroups[tree][setName] = nil
+        InitSlotSetDropdown(tree)
+    end
+
+    LibDialog:RegisterDialog(
+        DynamicCP.name,
+        "ConfirmDeleteSlotSet",
+        "Confirm Deleting Slottable Set",
+        zo_strformat("Delete |c<<1>><<2>>|r with the following slottables?<<3>>", TEXT_COLORS_HEX[tree], setName, starsString),
+        OnDeleteConfirmed,
+        nil,
+        nil,
+        true)
+    LibDialog:ShowDialog(DynamicCP.name, "ConfirmDeleteSlotSet")
+end
+
 -- Called from pulldown.xml. Save the UI-pending slottables into a slot set
-local function SaveSlotSet(button)
+function DynamicCP.SaveSlotSet(button)
     local tree = string.sub(button:GetParent():GetParent():GetName(), 18)
     local pendingName = button:GetParent():GetNamedChild("TextField"):GetText()
     if (not pendingName or pendingName == "") then
@@ -119,24 +170,19 @@ local function SaveSlotSet(button)
     local firstIndex = TREE_TO_FIRST_INDEX[tree]
     local currentSlottables = DynamicCP.GetCurrentUISlottables()
 
+    -- Collect into setData
     local setData = {}
-    local starsString = ""
     for i = 1, 4 do
         local slottableSkillData = currentSlottables[firstIndex + i - 1]
-        local starName = ""
         if (slottableSkillData) then
             setData[i] = slottableSkillData.championSkillId
-            starName = GetChampionSkillName(slottableSkillData.championSkillId)
         end
-
-        starsString = starsString .. zo_strformat("\n|c<<1>><<2>> - <<C:3>>|r",
-            TEXT_COLORS_HEX[tree],
-            i,
-            starName)
     end
+
 
     -- Save in data
     local overwrite = DynamicCP.savedOptions.slotGroups[tree][pendingName]
+    local starsString = GetSlotSetString(tree, setData)
     local function OnSaveConfirmed()
         DynamicCP.savedOptions.slotGroups[tree][pendingName] = setData
         InitSlotSetDropdown(tree, pendingName)
@@ -153,7 +199,6 @@ local function SaveSlotSet(button)
         true)
     LibDialog:ShowDialog(DynamicCP.name, "ConfirmSaveSlotSet")
 end
-DynamicCP.SaveSlotSet = SaveSlotSet
 
 ---------------------------------------------------------------------
 -- Since U43, the ActionBar has deferred initialization, so it's
