@@ -53,6 +53,60 @@ function DynamicCP.OnSlotSetTextFocusLost(editBox)
     saveButton:SetEnabled(text and text ~= "")
 end
 
+-- Iterate through the UI stars to find the championSkilLData for a skillId
+-- I guess this info is UI-only, so this is Not IdealTM
+local function FindChampionSkillData(skillId)
+    for i = 1, ZO_ChampionPerksCanvas:GetNumChildren() do
+        local child = ZO_ChampionPerksCanvas:GetChild(i)
+        if (child.star and child.star.championSkillData) then
+            local id = child.star.championSkillData.championSkillId
+            if (id == skillId) then
+                return child.star.championSkillData
+            end
+        end
+    end
+end
+
+local function LoadSlotSet(tree, name)
+    local setData = DynamicCP.savedOptions.slotGroups[tree][name]
+    for i = 1, 4 do
+        local slot = CHAMPION_PERKS.championBar:GetSlot(TREE_TO_FIRST_INDEX[tree] + i - 1)
+        slot:ClearSlot()
+        if (setData[i]) then
+            slot:AssignChampionSkillToSlot(FindChampionSkillData(setData[i]))
+        end
+    end
+end
+
+-- Initialize the dropdown with the saved slot sets
+local function InitSlotSetDropdown(tree, nameToSelect)
+    local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPPulldown:GetNamedChild(tree .. "SlotSetControlsDropdown"))
+    dropdown:ClearItems()
+    dropdown:SetSortsItems(true)
+
+    -- Add the data to dropdown
+    local entryToSelect
+    for setName, setData in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
+        local function OnItemSelected(_, _, entry)
+            d("load " .. setName)
+            LoadSlotSet(tree, setName)
+        end
+
+        local entry = ZO_ComboBox:CreateItemEntry(setName, OnItemSelected)
+        dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
+
+        if (setName == nameToSelect) then
+            entryToSelect = entry
+        end
+    end
+
+    -- TODO: if pending is cancelled, then need to deselect?
+    if (entryToSelect) then
+        dropdown:SelectItem(entryToSelect)
+    end
+    dropdown:UpdateItems()
+end
+
 -- Called from pulldown.xml. Save the UI-pending slottables into a slot set
 local function SaveSlotSet(button)
     local tree = string.sub(button:GetParent():GetParent():GetName(), 18)
@@ -85,6 +139,7 @@ local function SaveSlotSet(button)
     local overwrite = DynamicCP.savedOptions.slotGroups[tree][pendingName]
     local function OnSaveConfirmed()
         DynamicCP.savedOptions.slotGroups[tree][pendingName] = setData
+        InitSlotSetDropdown(tree, pendingName)
     end
 
     LibDialog:RegisterDialog(
@@ -194,6 +249,8 @@ local function InitTree(control, tree)
     setControls:SetWidth(width - 10)
     setControls:GetNamedChild("Dropdown"):SetWidth(width - 40)
     setControls:GetNamedChild("TextField"):SetWidth(width - 40)
+
+    InitSlotSetDropdown(tree)
 end
 
 function DynamicCP.InitPulldown()
