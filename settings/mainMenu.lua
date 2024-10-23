@@ -195,26 +195,6 @@ function DynamicCP:CreateSettingsMenu()
                     width = "full",
                 },
                 {
-                    type = "dropdown",
-                    name = "Preset window style",
-                    tooltip = "Side Navigation Menu provides a simpler slideable menu that takes up less horizontal space.\n\nStandalone Window is an older UI from version < 2.0.0 that displays the trees next to each other instead. This option keeps the class icons.",
-                    choices = {"Side Navigation Menu", "Standalone Window"},
-                    choicesValues = {1, 2}, -- Apparently having "false" as a value does not work
-                    getFunc = function()
-                        return DynamicCP.savedOptions.useSidePresets and 1 or 2
-                    end,
-                    setFunc = function(value)
-                        value = value == 1
-                        DynamicCP:OnCancelClicked() -- clear potential stuff from the previous UI
-                        DynamicCP.savedOptions.useSidePresets = value
-                        DynamicCPPresetsContainer:SetHidden(false)
-                        DynamicCPPresets:SetHidden(value)
-                        DynamicCPSidePresets:SetHidden(not value)
-                        DynamicCP:InitializeDropdowns()
-                    end,
-                    width = "full",
-                },
-                {
                     type = "checkbox",
                     name = "Dock standalone window",
                     tooltip = "Display the window in different positions on each constellation to avoid overlapping with stars. Recommend adjusting the scale so it fits in the Fitness tree, between Arcane Alacrity and Bashing Brutality",
