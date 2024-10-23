@@ -20,8 +20,8 @@
                     <OnFocusLost>DynamicCP:OnTextFocusLost(self)</OnFocusLost>
                 </EditBox>
                 <Button name="$(parent)ApplyButton" inherits="ZO_DefaultButton" tier="MEDIUM" text="Apply">
-                    <Dimensions x="190"/>
-                    <Anchor point="TOP" relativeTo="$(parent)TextField" relativePoint="BOTTOM" offsetY="6"/>
+                    <Dimensions x="66"/>
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)TextField" relativePoint="BOTTOMLEFT" offsetX="-5" offsetY="6"/>
                     <OnClicked>DynamicCP:OnApplyClicked(self)</OnClicked>
                     <OnMouseEnter>
                         ZO_Tooltips_ShowTextTooltip(self, LEFT, "Apply this preset to your Champion Points")
@@ -29,8 +29,8 @@
                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>
                 <Button name="$(parent)SaveButton" inherits="ZO_DefaultButton" tier="MEDIUM" text="Save">
-                    <Dimensions x="95"/>
-                    <Anchor point="TOPLEFT" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOMLEFT" offsetY="6"/>
+                    <Dimensions x="66"/>
+                    <Anchor point="TOP" relativeTo="$(parent)TextField" relativePoint="BOTTOM" offsetY="6"/>
                     <OnClicked>DynamicCP:OnSaveClicked(self)</OnClicked>
                     <OnMouseEnter>
                         ZO_Tooltips_ShowTextTooltip(self, LEFT, "Save your current Champion Points to this preset")
@@ -38,17 +38,30 @@
                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>
                 <Button name="$(parent)DeleteButton" inherits="ZO_DefaultButton" tier="MEDIUM" text="Delete">
-                    <Dimensions x="95"/>
-                    <Anchor point="TOPLEFT" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOM" offsetY="6"/>
+                    <Dimensions x="66"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)TextField" relativePoint="BOTTOMRIGHT" offsetX="5" offsetY="6"/>
                     <OnClicked>DynamicCP:OnDeleteClicked(self)</OnClicked>
                     <OnMouseEnter>
                         ZO_Tooltips_ShowTextTooltip(self, LEFT, "Delete this preset")
                     </OnMouseEnter>
                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>
+                <Control name="$(parent)SlotSetDropdown" inherits="ZO_ComboBox" tier="HIGH">
+                    <Dimensions x="160"/>
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="8"/>
+                </Control>
+                <Button name="$(parent)SlotSetHelp" alpha="1" clickSound="Default_Click" topmost="true" tier="MEDIUM">
+                    <Textures normal="/esoui/art/miscellaneous/help_icon.dds"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)DeleteButton" relativePoint="BOTTOMRIGHT" offsetY="8"/>
+                    <Dimensions x="30" y="30"/>
+                    <OnMouseEnter>
+                        ZO_Tooltips_ShowTextTooltip(self, BOTTOM, "You can attach a set of slottables to this preset. To create a Slottables Set, use the pulldown under the slottables bar.")
+                    </OnMouseEnter>
+                    <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
+                </Button>
                 <Control name="$(parent)Buttons" tier="MEDIUM">
-                    <Dimensions x="190" y="34"/>
-                    <Anchor point="TOP" relativeTo="$(parent)ApplyButton" relativePoint="BOTTOM" offsetY="48"/>
+                    <Dimensions x="200" y="34"/>
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)SlotSetDropdown" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="2"/>
                     <Controls>
                         <!-- Role -->
                         <Texture name="$(parent)Tank" textureFile="esoui/art/lfg/lfg_tank_down_no_glow_64.dds" tier="MEDIUM" mouseEnabled="true" movable="false">
@@ -81,7 +94,7 @@
 
                         <Button name="$(parent)Help" alpha="1" clickSound="Default_Click" topmost="true" tier="MEDIUM">
                             <Textures normal="/esoui/art/miscellaneous/help_icon.dds"/>
-                            <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-6" offsetY="2"/>
+                            <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="2"/>
                             <Dimensions x="30" y="30"/>
                             <OnMouseEnter>
                                 ZO_Tooltips_ShowTextTooltip(self, BOTTOM, "Toggle which roles this preset applies to. When your character doesn't match the LFG roles for this preset, the preset will be less prominent.")

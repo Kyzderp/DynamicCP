@@ -97,7 +97,8 @@ local function InitSlotSetDropdown(tree, nameToSelect)
             dropdownControl:GetParent():GetNamedChild("Delete"):SetHidden(false)
         end
 
-        local entry = ZO_ComboBox:CreateItemEntry(setName, OnItemSelected)
+        -- TODO: tooltip on dropdown entry hover with what stars it has?
+        local entry = ZO_ComboBox:CreateItemEntry(string.format("|c%s%s|r", TEXT_COLORS_HEX[tree], setName), OnItemSelected)
         dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
 
         if (setName == nameToSelect) then

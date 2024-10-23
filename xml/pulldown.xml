@@ -10,7 +10,7 @@
                 <EditBox name="$(parent)TextField" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" tier="MEDIUM">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Dropdown" relativePoint="BOTTOMLEFT" offsetY="4"/>
                     <Controls><Backdrop name="$(parent)Backdrop" centerColor="55000000" edgeColor="88000000" tier="LOW"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
-                    <OnInitialized>ZO_EditDefaultText_Initialize(self, "  New slot set")</OnInitialized>
+                    <OnInitialized>ZO_EditDefaultText_Initialize(self, "  New slottable set")</OnInitialized>
                     <OnFocusLost>DynamicCP.OnSlotSetTextFocusLost(self)</OnFocusLost>
                 </EditBox>
                 <Button name="$(parent)Delete" alpha="1" topmost="true" tier="MEDIUM" hidden="true">

@@ -690,7 +690,7 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
             GetSubControl("Inner"):GetNamedChild(tree .. "OptionsTextField"):SetText(presetName)
             GetSubControl("Inner"):GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(false)
             GetSubControl("Inner"):GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(false)
-            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(95)
+            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(66)
             GetSubControl("Inner"):GetNamedChild(tree .. "OptionsButtons"):SetHidden(false)
         end
 
@@ -716,7 +716,7 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
             buttons:GetNamedChild("Help"):SetAnchor(TOP, buttons:GetNamedChild("Necromancer"), BOTTOM, 0, 6)
         else
             buttons:GetNamedChild("Tank"):SetAnchor(TOPLEFT, buttons, TOPLEFT, 2)
-            buttons:GetNamedChild("Help"):SetAnchor(TOPRIGHT, buttons, TOPRIGHT, -2)
+            buttons:GetNamedChild("Help"):SetAnchor(TOPRIGHT, buttons, TOPRIGHT, 0)
         end
 
         if (presetName == CREATE_NEW_STRING) then
