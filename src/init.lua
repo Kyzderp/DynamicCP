@@ -8,7 +8,7 @@ local defaultOptions = {
     firstTime = true,
     cp = {
         Red = {},
-        Green = {}, -- ["Fisher"] = { ["roles"] = { ["Healer"] = false, ["Dps"] = true, ["Tank"] = false, }, [1] = { [65] = 0, }, },
+        Green = {}, -- ["Fisher"] = { ["roles"] = { ["Healer"] = false, ["Dps"] = true, ["Tank"] = false, }, [1] = { [65] = 0, }, ["slotSet"] = "Tank",},
         Blue = {},
     },
     pulldownExpanded = true,

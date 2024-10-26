@@ -663,6 +663,55 @@ DynamicCP.TogglePresetsWindow = TogglePresetsWindow
 
 
 ---------------------------------------------------------------------
+-- Populate the slot set dropdown
+local AUTOMATIC_STRING = "-- Auto slots --"
+
+-- slotSetName: can be nil
+local function UpdateSlotSetDropdown(tree, slotSetName)
+    if (not slotSetName) then
+        slotSetName = AUTOMATIC_STRING
+    end
+
+    local function OnSetSelected(_, _, entry)
+        local slotSetName = entry.name:gsub("|[cC]%x%x%x%x%x%x", ""):gsub("|r", "")
+        if (slotSetName == AUTOMATIC_STRING) then
+            slotSetName = nil
+        end
+        d(slotSetName)
+        -- TODO: update the shown cps
+        -- TODO: save it immediately like the role buttons
+        local presetName = selected[tree]
+        DynamicCP.savedOptions.cp[tree][presetName].slotSet = slotSetName
+    end
+
+
+    local dropdown = ZO_ComboBox_ObjectFromContainer(GetSubControl("Inner"):GetNamedChild(tree .. "OptionsSlotSetDropdown"))
+    local desiredEntry = nil
+    dropdown:ClearItems()
+    local data = DynamicCP.savedOptions.slotGroups[tree]
+    for name, _ in pairs(data) do
+        local entry = ZO_ComboBox:CreateItemEntry("|c9FBFAF" .. name .. "|r", OnSetSelected)
+        dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
+
+        if (name == slotSetName) then
+            desiredEntry = entry
+        end
+    end
+
+    -- Create an -- Automatic -- entry for when there is no attached slot set
+    local automaticEntry = ZO_ComboBox:CreateItemEntry("|cEBDB34" .. AUTOMATIC_STRING .. "|r", OnSetSelected)
+    dropdown:AddItem(automaticEntry, ZO_COMBOBOX_SUPRESS_UPDATE)
+    if (slotSetName == AUTOMATIC_STRING) then
+        desiredEntry = automaticEntry
+    end
+
+    dropdown:UpdateItems()
+    if (desiredEntry) then
+        dropdown:SelectItem(desiredEntry)
+    end
+end
+
+---------------------------------------------------------------------
 -- Populate the dropdown with presets
 function DynamicCP:InitializeDropdown(tree, desiredEntryName)
     if (tree ~= "Red" and tree ~= "Green" and tree ~= "Blue") then
@@ -696,6 +745,9 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
 
 
         local data = DynamicCP.savedOptions.cp[tree][presetName] or {}
+
+        -- Select the slot set
+        UpdateSlotSetDropdown(tree, data.slotSet)
 
         local buttons = GetSubControl("Inner"):GetNamedChild(tree .. "OptionsButtons")
         if (not UseSidePresets()) then
