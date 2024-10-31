@@ -171,6 +171,49 @@ end
 
 
 ---------------------------------------------------------------------
+-- Get the slottables in the selected preset, or what would be
+-- slotted automatically
+local function GetSlottablesFromPreset(tree, slottablesData)
+    -- Return the slottables from the slot set if it exists
+    local presetName = selected[tree]
+    local slotSetName = DynamicCP.savedOptions.cp[tree][presetName].slotSet
+    if (slotSetName ~= nil) then
+        local slotSet = DynamicCP.savedOptions.slotGroups[tree][slotSetName]
+        if (slotSet ~= nil) then
+            return slotSet
+        end
+
+        d("|cFF0000Couldn't find slot set " .. slotSetName .. ", slotting automatically for now.|r")
+    end
+
+    -- Otherwise, slot automatically. Sort by most maxed
+    table.sort(slottablesData, function(item1, item2)
+        local prop1 = item1.points / item1.maxPoints
+        local prop2 = item2.points / item2.maxPoints
+        if (prop1 == prop2) then
+            if (item1.maxPoints == item2.maxPoints) then
+                -- Last resort, sort by skill id
+                return item1.skillId < item2.skillId
+            end
+            -- If proportions are equal, prioritize ones with higher max because idk
+            return item1.maxPoints > item2.maxPoints
+        end
+        return prop1 > prop2
+    end)
+
+    -- Return the first 4
+    local slottablesResult = {}
+    for i = 1, 4 do
+        if (slottablesData[i]) then
+            local skillId = slottablesData[i].skillId
+            slottablesResult[i] = skillId
+        end
+    end
+    return slottablesResult
+end
+
+
+---------------------------------------------------------------------
 -- Find and build string of the diff between two cp sets
 -- TODO: pull the logic portion out into points.lua
 local function GenerateDiff(before, after)
@@ -241,6 +284,20 @@ end
 
 
 ---------------------------------------------------------------------
+-- Apply
+---------------------------------------------------------------------
+-- Apply the slottables
+local function ApplySlottables(tree, slottablesData)
+    local slottablesResult = GetSlottablesFromPreset(tree, slottablesData)
+
+    local offset = HOTBAR_OFFSET[tree]
+    for i = 1, 4 do
+        local skillId = slottablesResult[i] or -1
+        DynamicCP.SetSlottableInIndex(i + offset, skillId)
+        DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(skillId), i + offset))
+    end
+end
+
 -- When apply button is clicked
 function DynamicCP:OnApplyClicked(button)
     local tree = GetTreeName(button:GetName(), GetSubControl():GetName() .. "Inner", "OptionsApplyButton")
@@ -307,31 +364,9 @@ function DynamicCP:OnApplyClicked(button)
     end
 
     -- Apply slottables if applicable
+    -- TODO: remove slotStars
     if (DynamicCP.savedOptions.slotStars) then
-        -- Sort by most maxed
-        table.sort(slottablesData, function(item1, item2)
-            local prop1 = item1.points / item1.maxPoints
-            local prop2 = item2.points / item2.maxPoints
-            if (prop1 == prop2) then
-                if (item1.maxPoints == item2.maxPoints) then
-                    -- Last resort, sort by skill id
-                    return item1.skillId < item2.skillId
-                end
-                -- If proportions are equal, prioritize ones with higher max because idk
-                return item1.maxPoints > item2.maxPoints
-            end
-            return prop1 > prop2
-        end)
-
-        -- Assign the first 4
-        local offset = HOTBAR_OFFSET[tree]
-        for i = 1, 4 do
-            if (slottablesData[i]) then
-                local skillId = slottablesData[i].skillId
-                DynamicCP.SetSlottableInIndex(i + offset, skillId)
-                DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(skillId), i + offset))
-            end
-        end
+        ApplySlottables(tree, slottablesData)
     end
 
     DynamicCP.OnPresetApplied(tree, presetName)
@@ -666,6 +701,11 @@ DynamicCP.TogglePresetsWindow = TogglePresetsWindow
 -- Populate the slot set dropdown
 local AUTOMATIC_STRING = "-- Auto slots --"
 
+local function GetCurrentlySelectedSlotSetName(tree)
+    local presetName = selected[tree]
+    return DynamicCP.savedOptions.cp[tree][presetName].slotSet
+end
+
 -- slotSetName: can be nil
 local function UpdateSlotSetDropdown(tree, slotSetName)
     if (not slotSetName) then
@@ -679,7 +719,9 @@ local function UpdateSlotSetDropdown(tree, slotSetName)
         end
         d(slotSetName)
         -- TODO: update the shown cps
-        -- TODO: save it immediately like the role buttons
+        -- TODO: actually apply the cps
+        -- TODO: update this when the slot sets change, is created or deleted
+        -- TODO: add deprecated warning for preset window
         local presetName = selected[tree]
         DynamicCP.savedOptions.cp[tree][presetName].slotSet = slotSetName
     end
@@ -709,6 +751,14 @@ local function UpdateSlotSetDropdown(tree, slotSetName)
     if (desiredEntry) then
         dropdown:SelectItem(desiredEntry)
     end
+end
+
+function DynamicCP.RefreshPresetsSlotSetDropdown(tree)
+    if (GetSubControl("Inner"):GetNamedChild(tree .. "Options"):IsHidden()) then
+        return
+    end
+
+    UpdateSlotSetDropdown(tree, GetCurrentlySelectedSlotSetName(tree))
 end
 
 ---------------------------------------------------------------------

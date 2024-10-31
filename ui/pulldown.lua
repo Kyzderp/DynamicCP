@@ -136,6 +136,17 @@ local function GetSlotSetString(tree, setData)
     return starsString
 end
 
+local function RemoveSlotSetFromPresets(tree, slotSetName)
+    if (not slotSetName) then return end
+    for presetName, data in pairs(DynamicCP.savedOptions.cp[tree]) do
+        if (data.slotSet == slotSetName) then
+            -- TODO: summarize it
+            d(presetName)
+            data.slotSet = nil
+        end
+    end
+end
+
 -- Called from pulldown.xml. Delete the currently selected slot set
 function DynamicCP.DeleteSlotSet(button)
     local tree = string.sub(button:GetParent():GetParent():GetName(), 18)
@@ -145,6 +156,8 @@ function DynamicCP.DeleteSlotSet(button)
     local function OnDeleteConfirmed()
         DynamicCP.savedOptions.slotGroups[tree][setName] = nil
         InitSlotSetDropdown(tree)
+        RemoveSlotSetFromPresets(tree, setName)
+        DynamicCP.RefreshPresetsSlotSetDropdown(tree)
     end
 
     LibDialog:RegisterDialog(
@@ -187,6 +200,7 @@ function DynamicCP.SaveSlotSet(button)
     local function OnSaveConfirmed()
         DynamicCP.savedOptions.slotGroups[tree][pendingName] = setData
         InitSlotSetDropdown(tree, pendingName)
+        DynamicCP.RefreshPresetsSlotSetDropdown(tree)
     end
 
     LibDialog:RegisterDialog(
