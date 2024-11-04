@@ -89,7 +89,7 @@ local function ShowMessage(tree, text, diffText, color, numChanges, col1, col2)
             numChanges = 1
             messages:GetNamedChild("Tooltip"):SetHeight(numChanges * 19 + 4)
             if (col1) then
-                table.insert(col1, "No changes.")
+                table.insert(col1, "No points changes.")
             end
         end
 
@@ -173,10 +173,9 @@ end
 ---------------------------------------------------------------------
 -- Get the slottables in the selected preset, or what would be
 -- slotted automatically
-local function GetSlottablesFromPreset(tree, slottablesData)
+local function GetSlottablesFromPreset(cp, tree, potentialSlottablesData)
     -- Return the slottables from the slot set if it exists
-    local presetName = selected[tree]
-    local slotSetName = DynamicCP.savedOptions.cp[tree][presetName].slotSet
+    local slotSetName = cp.slotSet
     if (slotSetName ~= nil) then
         local slotSet = DynamicCP.savedOptions.slotGroups[tree][slotSetName]
         if (slotSet ~= nil) then
@@ -186,8 +185,10 @@ local function GetSlottablesFromPreset(tree, slottablesData)
         d("|cFF0000Couldn't find slot set " .. slotSetName .. ", slotting automatically for now.|r")
     end
 
+    if (not potentialSlottablesData) then return {} end
+
     -- Otherwise, slot automatically. Sort by most maxed
-    table.sort(slottablesData, function(item1, item2)
+    table.sort(potentialSlottablesData, function(item1, item2)
         local prop1 = item1.points / item1.maxPoints
         local prop2 = item2.points / item2.maxPoints
         if (prop1 == prop2) then
@@ -204,8 +205,8 @@ local function GetSlottablesFromPreset(tree, slottablesData)
     -- Return the first 4
     local slottablesResult = {}
     for i = 1, 4 do
-        if (slottablesData[i]) then
-            local skillId = slottablesData[i].skillId
+        if (potentialSlottablesData[i]) then
+            local skillId = potentialSlottablesData[i].skillId
             slottablesResult[i] = skillId
         end
     end
@@ -215,6 +216,9 @@ end
 
 ---------------------------------------------------------------------
 -- Find and build string of the diff between two cp sets
+-- result: the entire string
+-- col1: array of the CP names
+-- col2: array of the diff
 -- TODO: pull the logic portion out into points.lua
 local function GenerateDiff(before, after)
     local result = "Changes:"
@@ -250,14 +254,28 @@ local function GenerateDiff(before, after)
     end
 
     if (result == "Changes:") then
-        result = "|cBBBBBBNo changes.|r"
+        result = "|cBBBBBBNo points changes.|r"
     end
     return result, numChanges, col1, col2
 end
 
 
 ---------------------------------------------------------------------
+-- Build string for the slottables in this CP
+local function GenerateTreeSlottables(cp, tree, potentialSlottablesData)
+    local slotSetName = cp.slotSet
+    local slottables = GetSlottablesFromPreset(cp, tree, potentialSlottablesData)
+    local result = {}
+    for i = 1, 4 do
+        local skillId = slottables[i]
+        result[i] = zo_strformat("(+)<<C:1>>", skillId and GetChampionSkillName(skillId) or "")
+    end
+
+    return result
+end
+
 -- Build string for this CP, but only for certain tree
+-- Called when loading or saving a preset
 local function GenerateTree(cp, tree)
     local result = "|cBBBBBB"
     local col1 = {}
@@ -279,7 +297,7 @@ local function GenerateTree(cp, tree)
         end
     end
 
-    return result .. "|r", numLines, col1, col2
+    return result .. "|r", numLines, col1, col2, GenerateTreeSlottables(cp, tree, potentialSlottablesData)
 end
 
 
@@ -287,8 +305,9 @@ end
 -- Apply
 ---------------------------------------------------------------------
 -- Apply the slottables
-local function ApplySlottables(tree, slottablesData)
-    local slottablesResult = GetSlottablesFromPreset(tree, slottablesData)
+local function ApplySlottables(tree, potentialSlottablesData)
+    local presetName = selected[tree]
+    local slottablesResult = GetSlottablesFromPreset(tree, DynamicCP.savedOptions.cp[tree][presetName], potentialSlottablesData)
 
     local offset = HOTBAR_OFFSET[tree]
     for i = 1, 4 do
@@ -329,7 +348,7 @@ function DynamicCP:OnApplyClicked(button)
     -- Apply all stars within the tree
     local cp = DynamicCP.savedOptions.cp[tree][presetName]
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
-    local slottablesData = {}
+    local potentialSlottablesData = {}
     local hasOverMaxPoints = false
     for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
         local skillId = GetChampionSkillId(disciplineIndex, skillIndex)
@@ -357,7 +376,7 @@ function DynamicCP:OnApplyClicked(button)
         -- Collect slottables
         local isSlottable = CanChampionSkillTypeBeSlotted(GetChampionSkillType(skillId))
         if (isSlottable and WouldChampionSkillNodeBeUnlocked(skillId, numPoints)) then
-            table.insert(slottablesData, {skillId = skillId, points = numPoints, maxPoints = GetChampionSkillMaxPoints(skillId)})
+            table.insert(potentialSlottablesData, {skillId = skillId, points = numPoints, maxPoints = GetChampionSkillMaxPoints(skillId)})
         end
 
         DynamicCP.SetStarPoints(disciplineIndex, skillId, numPoints)
@@ -366,7 +385,7 @@ function DynamicCP:OnApplyClicked(button)
     -- Apply slottables if applicable
     -- TODO: remove slotStars
     if (DynamicCP.savedOptions.slotStars) then
-        ApplySlottables(tree, slottablesData)
+        ApplySlottables(tree, potentialSlottablesData)
     end
 
     DynamicCP.OnPresetApplied(tree, presetName)
@@ -723,7 +742,9 @@ local function UpdateSlotSetDropdown(tree, slotSetName)
         -- TODO: update this when the slot sets change, is created or deleted
         -- TODO: add deprecated warning for preset window
         local presetName = selected[tree]
-        DynamicCP.savedOptions.cp[tree][presetName].slotSet = slotSetName
+        if (presetName ~= CREATE_NEW_STRING) then
+            DynamicCP.savedOptions.cp[tree][presetName].slotSet = slotSetName
+        end
     end
 
 
