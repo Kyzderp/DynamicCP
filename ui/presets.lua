@@ -257,13 +257,22 @@ local function GenerateTreeSlottables(cp, tree, slotSetName)
     }
 
     local slottables = GetSlottablesFromPreset(cp, tree, slotSetName)
+    local disciplineIndex = TREE_TO_DISCIPLINE[tree]
     local result = {}
     for i = 1, 4 do
         local skillId = slottables[i]
-        result[i] = zo_strformat("|c<<1>>(+) <<2>>:|r <<C:3>>", color[tree], i, skillId and GetChampionSkillName(skillId) or "")
+        local skillName = ""
+        if (skillId) then
+            if (WouldChampionSkillNodeBeUnlocked(skillId, cp[disciplineIndex][skillId] or 0)) then
+                skillName = zo_strformat("<<C:1>>", GetChampionSkillName(skillId))
+            else
+                -- Display in red if there aren't enough points
+                skillName = zo_strformat("|cFF4444<<C:1>>|r", GetChampionSkillName(skillId))
+            end
+        end
+        result[i] = zo_strformat("|c<<1>>(+) <<2>>:|r <<3>>", color[tree], i, skillName)
     end
 
-    -- TODO: check if there are enough points in the cp for a slottable
     d(result)
     return result
 end
