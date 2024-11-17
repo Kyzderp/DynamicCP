@@ -48,7 +48,6 @@ local HOTBAR_OFFSET = {
 local isRespeccing = false
 
 ---------------------------------------------------------------------
--- TODO: use heuristics to make non-stam/non-mag more grayed out? needs more sorting then
 local selected = {
     Red = nil,
     Green = nil,
@@ -87,6 +86,9 @@ local function ShowMessage(tree, text, diffText, color, numChanges, col1, col2, 
     messages:SetHidden(false)
 
     if (UseSidePresets()) then
+        -- TODO: move this up when deleting floating window
+        if (not text) then text = messages:GetNamedChild("Label"):GetText() end
+
         numChanges = numChanges or 0
 
         -- Append the slottables to the end
@@ -191,9 +193,10 @@ end
 ---------------------------------------------------------------------
 -- Get the slottables in the selected preset, or what would be
 -- slotted automatically
-local function GetSlottablesFromPreset(cp, tree)
+-- slotSetName: optional; or it's obtained from cp
+local function GetSlottablesFromPreset(cp, tree, slotSetName)
     -- Return the slottables from the slot set if it exists
-    local slotSetName = cp.slotSet
+    local slotSetName = cp.slotSet or slotSetName
     if (slotSetName ~= nil) then
         local slotSet = DynamicCP.savedOptions.slotGroups[tree][slotSetName]
         if (slotSet ~= nil) then
@@ -201,6 +204,8 @@ local function GetSlottablesFromPreset(cp, tree)
         end
 
         d("|cFF0000Couldn't find slot set " .. slotSetName .. ", slotting automatically for now.|r")
+    else
+        d("|cFF0000No slotSetName, slotting automatically.|r")
     end
 
     -- Otherwise, slot automatically. Collect slottables from the specified CP
@@ -244,15 +249,14 @@ end
 -- BUILDING STRING
 ---------------------------------------------------------------------
 -- Build string for the slottables in this CP
-local function GenerateTreeSlottables(cp, tree)
+local function GenerateTreeSlottables(cp, tree, slotSetName)
     local color = {
         Green = "a5d752",
         Blue = "59bae7",
         Red = "e46b2e",
     }
 
-    local slotSetName = cp.slotSet
-    local slottables = GetSlottablesFromPreset(cp, tree)
+    local slottables = GetSlottablesFromPreset(cp, tree, slotSetName)
     local result = {}
     for i = 1, 4 do
         local skillId = slottables[i]
@@ -260,7 +264,6 @@ local function GenerateTreeSlottables(cp, tree)
     end
 
     -- TODO: check if there are enough points in the cp for a slottable
-    -- TODO: update the tooltip when changing the slot set during create new
     d(result)
     return result
 end
@@ -313,7 +316,8 @@ end
 
 -- Build string for this CP, but only for certain tree
 -- Called when loading or saving a preset
-local function GenerateTree(cp, tree)
+local function GenerateTree(cp, tree, slotSetName)
+    d(slotSetName)
     local result = "|cBBBBBB"
     local col1 = {}
     local col2 = {}
@@ -334,7 +338,7 @@ local function GenerateTree(cp, tree)
         end
     end
 
-    return result .. "|r", numLines, col1, col2, GenerateTreeSlottables(cp, tree)
+    return result .. "|r", numLines, col1, col2, GenerateTreeSlottables(cp, tree, slotSetName)
 end
 
 
@@ -747,6 +751,21 @@ DynamicCP.TogglePresetsWindow = TogglePresetsWindow
 
 
 ---------------------------------------------------------------------
+-- Show a "tooltip" for the currently selected preset and slot set
+-- Called upon selecting a preset from the dropdown
+---------------------------------------------------------------------
+local function ShowCPPointsOrDiff(tree, createNew, createNewText, createNewSlotSet, existingLoadText, afterCP)
+    if (createNew) then
+        local diffText, numChanges, col1, col2, slottablesText = GenerateTree(DynamicCP.GetCommittedCP(), tree, createNewSlotSet)
+        ShowMessage(tree, createNewText, diffText, {1, 1, 1, 1}, numChanges, col1, col2, slottablesText)
+    else
+        local diffText, numChanges, col1, col2, slottablesText = GenerateDiff(DynamicCP.GetCommittedCP(), afterCP)
+        ShowMessage(tree, existingLoadText, diffText, {1, 1, 1, 1}, numChanges, col1, col2, slottablesText)
+    end
+end
+
+
+---------------------------------------------------------------------
 -- Populate the slot set dropdown
 local AUTOMATIC_STRING = "-- Auto slots --"
 
@@ -767,14 +786,14 @@ local function UpdateSlotSetDropdown(tree, slotSetName)
             slotSetName = nil
         end
         d(slotSetName)
-        -- TODO: update the shown cps
-        -- TODO: actually apply the cps
-        -- TODO: update this when the slot sets change, is created or deleted
         -- TODO: add deprecated warning for preset window
         local presetName = selected[tree]
         if (presetName ~= CREATE_NEW_STRING) then
             DynamicCP.savedOptions.cp[tree][presetName].slotSet = slotSetName
         end
+
+        local after = DynamicCP.savedOptions.cp[tree][presetName] -- Can be nil
+        ShowCPPointsOrDiff(tree, presetName == CREATE_NEW_STRING, nil, slotSetName, nil, after)
     end
 
 
@@ -872,13 +891,13 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
             buttons:GetNamedChild("Help"):SetAnchor(TOPRIGHT, buttons, TOPRIGHT, 0)
         end
 
-        if (presetName == CREATE_NEW_STRING) then
-            local diffText, numChanges, col1, col2, slottablesText = GenerateTree(DynamicCP.GetCommittedCP(), tree)
-            ShowMessage(tree, "Rename and click \"Save\" to create a new preset.", diffText, {1, 1, 1, 1}, numChanges, col1, col2, slottablesText)
-        else
-            local diffText, numChanges, col1, col2, slottablesText = GenerateDiff(DynamicCP.GetCommittedCP(), data)
-            ShowMessage(tree, "Click \"Apply\" to load this preset.", diffText, {1, 1, 1, 1}, numChanges, col1, col2, slottablesText)
-        end
+        ShowCPPointsOrDiff(
+            tree,
+            presetName == CREATE_NEW_STRING,
+            "Rename and click \"Save\" to create a new preset.",
+            nil,
+            "Click \"Apply\" to load this preset.",
+            data)
     end
 
     -- Add entries to dropdown
