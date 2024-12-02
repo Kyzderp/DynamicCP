@@ -545,12 +545,14 @@ function DynamicCP:OnSaveClicked(button, tree)
     end
     -- Also copy the other things like role and class
     if (DynamicCP.savedOptions.cp[tree][presetName]) then
-        for index, _ in pairs(DynamicCP.savedOptions.cp[tree][presetName]) do
-            if (index ~= disciplineIndex and type(index) ~= "number") then
+        for index, value in pairs(DynamicCP.savedOptions.cp[tree][presetName]) do
+            if (index ~= disciplineIndex and type(index) == "table") then
                 newCP[index] = {}
                 for k, v in pairs(DynamicCP.savedOptions.cp[tree][presetName][index]) do
                     newCP[index][k] = v
                 end
+            elseif (index == "slotSet") then
+                newCP[index] = value
             end
         end
     end
