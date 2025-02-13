@@ -56,6 +56,8 @@ DynamicCP.DUNGEON_ZONEIDS = {
     ["1390"] = true,  -- Scrivener's Hall
     ["1470"] = true,  -- Oathsworn Pit
     ["1471"] = true,  -- Bedlam Veil
+    ["1496"] = true,  -- Exiled Redoubt
+    ["1497"] = true,  -- Lep Seclusa
 }
 
 -- Trial zoneIds
