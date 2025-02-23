@@ -30,6 +30,7 @@ settings/customRulesMenu.lua
 ui/presets.lua
 ui/pulldown.lua
 ui/quickstars.lua
+ui/quickstarsSlotGroupMenu.lua
 ui/modelessDialog.lua
 
 xml/presets.xml

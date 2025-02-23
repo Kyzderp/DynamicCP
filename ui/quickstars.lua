@@ -280,9 +280,16 @@ end
 ---------------------------------------------------------------------
 -- Called when user clicks tab button
 ---------------------------------------------------------------------
-function DynamicCP.SelectQuickstarsTab(tree)
+function DynamicCP.SelectQuickstarsTab(tree, button)
     if (tree ~= "Green" and tree ~= "Blue" and tree ~= "Red") then
         d("This code should not be reachable! DynamicCP.SelectQuickstarsTab")
+        return
+    end
+
+    -- Show context menu instead
+    if (button == MOUSE_BUTTON_INDEX_RIGHT) then
+        DynamicCP.ShowSlotGroupMenu(tree)
+        -- DynamicCPQuickstarsContextMenu:SetMouseEnabled(true)
         return
     end
 

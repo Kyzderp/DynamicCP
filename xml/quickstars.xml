@@ -26,7 +26,7 @@
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_stamina_icon-hud-32.dds" tier="MEDIUM" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
-                                    <OnMouseUp>DynamicCP.SelectQuickstarsTab("Green")</OnMouseUp>
+                                    <OnMouseUp>DynamicCP.SelectQuickstarsTab("Green", button)</OnMouseUp>
                                 </Texture>
                             </Controls>
                         </Control>
@@ -38,7 +38,7 @@
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_magicka_icon-hud-32.dds" tier="MEDIUM" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
-                                    <OnMouseUp>DynamicCP.SelectQuickstarsTab("Blue")</OnMouseUp>
+                                    <OnMouseUp>DynamicCP.SelectQuickstarsTab("Blue", button)</OnMouseUp>
                                 </Texture>
                             </Controls>
                         </Control>
@@ -50,7 +50,7 @@
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_health_icon-hud-32.dds" tier="MEDIUM" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
-                                    <OnMouseUp>DynamicCP.SelectQuickstarsTab("Red")</OnMouseUp>
+                                    <OnMouseUp>DynamicCP.SelectQuickstarsTab("Red", button)</OnMouseUp>
                                 </Texture>
                             </Controls>
                         </Control>
@@ -198,72 +198,72 @@
                                         </Control>
                                         <!-- ======================================================================== -->
                                         <Control name="$(parent)Red" tier="MEDIUM">
-                                    <Dimensions x="208" y="144"/>
-                                    <Anchor point="TOPLEFT" relativeTo="$(parent)Blue" relativePoint="BOTTOMLEFT"/>
-                                    <Controls>
-                                        <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="LOW"><AnchorFill/></Backdrop>
-                                        <Control name="$(parent)Star1" inherits="ZO_ComboBox" tier="MEDIUM">
-                                            <Dimensions x="200"/>
-                                            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="4"/>
+                                            <Dimensions x="208" y="144"/>
+                                            <Anchor point="TOPLEFT" relativeTo="$(parent)Blue" relativePoint="BOTTOMLEFT"/>
                                             <Controls>
-                                                <Button name="$(parent)Unsaved" hidden="true" tier="MEDIUM">
-                                                    <Dimensions x="24" y="24"/>
-                                                    <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="8"/>
-                                                    <Textures normal="/esoui/art/miscellaneous/eso_icon_warning.dds"/>
-                                                    <OnMouseEnter>
-                                                        ZO_Tooltips_ShowTextTooltip(self, RIGHT, "Unsaved change")
-                                                    </OnMouseEnter>
-                                                    <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
-                                                </Button>
+                                                <Backdrop name="$(parent)Backdrop" alpha="0.5" centerColor="FF000000" edgeColor="00000000" tier="LOW"><AnchorFill/></Backdrop>
+                                                <Control name="$(parent)Star1" inherits="ZO_ComboBox" tier="MEDIUM">
+                                                    <Dimensions x="200"/>
+                                                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="4"/>
+                                                    <Controls>
+                                                        <Button name="$(parent)Unsaved" hidden="true" tier="MEDIUM">
+                                                            <Dimensions x="24" y="24"/>
+                                                            <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="8"/>
+                                                            <Textures normal="/esoui/art/miscellaneous/eso_icon_warning.dds"/>
+                                                            <OnMouseEnter>
+                                                                ZO_Tooltips_ShowTextTooltip(self, RIGHT, "Unsaved change")
+                                                            </OnMouseEnter>
+                                                            <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
+                                                        </Button>
+                                                    </Controls>
+                                                </Control>
+                                                <Control name="$(parent)Star2" inherits="ZO_ComboBox" tier="MEDIUM">
+                                                    <Dimensions x="200"/>
+                                                    <Anchor point="TOPLEFT" relativeTo="$(parent)Star1" relativePoint="BOTTOMLEFT" offsetY="4"/>
+                                                    <Controls>
+                                                        <Button name="$(parent)Unsaved" hidden="true" tier="MEDIUM">
+                                                            <Dimensions x="24" y="24"/>
+                                                            <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="8"/>
+                                                            <Textures normal="/esoui/art/miscellaneous/eso_icon_warning.dds"/>
+                                                            <OnMouseEnter>
+                                                                ZO_Tooltips_ShowTextTooltip(self, RIGHT, "Unsaved change")
+                                                            </OnMouseEnter>
+                                                            <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
+                                                        </Button>
+                                                    </Controls>
+                                                </Control>
+                                                <Control name="$(parent)Star3" inherits="ZO_ComboBox" tier="MEDIUM">
+                                                    <Dimensions x="200"/>
+                                                    <Anchor point="TOPLEFT" relativeTo="$(parent)Star2" relativePoint="BOTTOMLEFT" offsetY="4"/>
+                                                    <Controls>
+                                                        <Button name="$(parent)Unsaved" hidden="true" tier="MEDIUM">
+                                                            <Dimensions x="24" y="24"/>
+                                                            <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="8"/>
+                                                            <Textures normal="/esoui/art/miscellaneous/eso_icon_warning.dds"/>
+                                                            <OnMouseEnter>
+                                                                ZO_Tooltips_ShowTextTooltip(self, RIGHT, "Unsaved change")
+                                                            </OnMouseEnter>
+                                                            <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
+                                                        </Button>
+                                                    </Controls>
+                                                </Control>
+                                                <Control name="$(parent)Star4" inherits="ZO_ComboBox" tier="MEDIUM">
+                                                    <Dimensions x="200"/>
+                                                    <Anchor point="TOPLEFT" relativeTo="$(parent)Star3" relativePoint="BOTTOMLEFT" offsetY="4"/>
+                                                    <Controls>
+                                                        <Button name="$(parent)Unsaved" hidden="true" tier="MEDIUM">
+                                                            <Dimensions x="24" y="24"/>
+                                                            <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="8"/>
+                                                            <Textures normal="/esoui/art/miscellaneous/eso_icon_warning.dds"/>
+                                                            <OnMouseEnter>
+                                                                ZO_Tooltips_ShowTextTooltip(self, RIGHT, "Unsaved change")
+                                                            </OnMouseEnter>
+                                                            <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
+                                                        </Button>
+                                                    </Controls>
+                                                </Control>
                                             </Controls>
                                         </Control>
-                                        <Control name="$(parent)Star2" inherits="ZO_ComboBox" tier="MEDIUM">
-                                            <Dimensions x="200"/>
-                                            <Anchor point="TOPLEFT" relativeTo="$(parent)Star1" relativePoint="BOTTOMLEFT" offsetY="4"/>
-                                            <Controls>
-                                                <Button name="$(parent)Unsaved" hidden="true" tier="MEDIUM">
-                                                    <Dimensions x="24" y="24"/>
-                                                    <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="8"/>
-                                                    <Textures normal="/esoui/art/miscellaneous/eso_icon_warning.dds"/>
-                                                    <OnMouseEnter>
-                                                        ZO_Tooltips_ShowTextTooltip(self, RIGHT, "Unsaved change")
-                                                    </OnMouseEnter>
-                                                    <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
-                                                </Button>
-                                            </Controls>
-                                        </Control>
-                                        <Control name="$(parent)Star3" inherits="ZO_ComboBox" tier="MEDIUM">
-                                            <Dimensions x="200"/>
-                                            <Anchor point="TOPLEFT" relativeTo="$(parent)Star2" relativePoint="BOTTOMLEFT" offsetY="4"/>
-                                            <Controls>
-                                                <Button name="$(parent)Unsaved" hidden="true" tier="MEDIUM">
-                                                    <Dimensions x="24" y="24"/>
-                                                    <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="8"/>
-                                                    <Textures normal="/esoui/art/miscellaneous/eso_icon_warning.dds"/>
-                                                    <OnMouseEnter>
-                                                        ZO_Tooltips_ShowTextTooltip(self, RIGHT, "Unsaved change")
-                                                    </OnMouseEnter>
-                                                    <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
-                                                </Button>
-                                            </Controls>
-                                        </Control>
-                                        <Control name="$(parent)Star4" inherits="ZO_ComboBox" tier="MEDIUM">
-                                            <Dimensions x="200"/>
-                                            <Anchor point="TOPLEFT" relativeTo="$(parent)Star3" relativePoint="BOTTOMLEFT" offsetY="4"/>
-                                            <Controls>
-                                                <Button name="$(parent)Unsaved" hidden="true" tier="MEDIUM">
-                                                    <Dimensions x="24" y="24"/>
-                                                    <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="8"/>
-                                                    <Textures normal="/esoui/art/miscellaneous/eso_icon_warning.dds"/>
-                                                    <OnMouseEnter>
-                                                        ZO_Tooltips_ShowTextTooltip(self, RIGHT, "Unsaved change")
-                                                    </OnMouseEnter>
-                                                    <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
-                                                </Button>
-                                            </Controls>
-                                        </Control>
-                                    </Controls>
-                                </Control>
                                     </Controls>
                                 </Control>
                                 <Control name="$(parent)Cancel" mouseEnabled="true" tier="MEDIUM">
@@ -296,10 +296,25 @@
                                 </Label>
                             </Controls>
                         </Control>
+                        <Control name="$(parent)ContextMenu" mouseEnabled="true" movable="false" hidden="true" tier="MEDIUM">
+                            <Dimensions x="200" y="100"/>
+                            <Controls>
+                                <Backdrop name="$(parent)Backdrop" centerColor="DD000000" edgeColor="DD000000" tier="MEDIUM" layer="TEXT">
+                                    <Edge edgeSize="2"/>
+                                    <AnchorFill/>
+                                </Backdrop>
+                            </Controls>
+                        </Control>
                     </Controls>
                 </Control>
 <!-- ======================================================================================================================= -->
             </Controls>
         </TopLevelControl>
+<!-- ======================================================================================================================= -->
+        <Button name="DynamicCPQuickstarsMenuEntry" virtual="true" horizontalAlignment="LEFT" font="ZoFontGame" hidden="false" text="Blaaaaaaaah">
+            <FontColors normalColor="FFFFFF" mouseOverColor="80fdff"/>
+            <Dimensions x="200" y="16"/>
+            <OnClicked>DynamicCP.OnQuickstarSlotGroupClicked(self:GetLabelControl():GetText())</OnClicked>
+        </Button>
     </Controls>
 </GuiXml>
