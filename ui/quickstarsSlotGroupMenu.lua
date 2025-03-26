@@ -4,6 +4,7 @@ DynamicCP = DynamicCP or {}
 -- UI
 ---------------------------------------------------------------------
 local numEntries = 0
+local shownTree
 
 local function GetOrCreateMenuButton(index)
     local button = DynamicCPQuickstarsContextMenu:GetNamedChild("Entry" .. tostring(index))
@@ -25,7 +26,14 @@ local function GetOrCreateMenuButton(index)
     return button
 end
 
+local function HideMenu()
+    DynamicCPQuickstarsContextMenu:SetHidden(true)
+end
+DynamicCP.HideSlotGroupMenu = HideMenu
+
 local function ShowMenu(tree)
+    shownTree = tree
+
     -- Sort keys because ugh
     local keys = {}
     for groupName, _ in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
@@ -52,11 +60,36 @@ end
 DynamicCP.ShowSlotGroupMenu = ShowMenu
 -- /script DynamicCP.ShowSlotGroupMenu("Red")
 
+local function ToggleMenu(tree)
+    if (not DynamicCPQuickstarsContextMenu:IsHidden() and tree == shownTree) then
+        HideMenu()
+    else
+        ShowMenu(tree)
+    end
+end
+DynamicCP.ToggleSlotGroupMenu = ToggleMenu
+
 ---------------------------------------------------------------------
 -- On entry clicked in menu
 ---------------------------------------------------------------------
 local function OnQuickstarSlotGroupClicked(text)
     d(text)
-    DynamicCPQuickstarsContextMenu:SetHidden(true)
+    HideMenu()
+
+    local data = DynamicCP.savedOptions.slotGroups[shownTree][text]
+    if (not data) then
+        d("|cFF0000DOES NOT EXIST?|r")
+        return
+    end
+
+    -- Slot each slottable
+    for i = 1, 4 do
+        local skillId = data[i]
+        if (skillId and skillId ~= 0) then
+            DynamicCP.SelectQuickstar(shownTree, i, skillId)
+        else
+            DynamicCP.SelectQuickstar(shownTree, i, -1)
+        end
+    end
 end
 DynamicCP.OnQuickstarSlotGroupClicked = OnQuickstarSlotGroupClicked

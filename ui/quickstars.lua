@@ -9,6 +9,7 @@ local pendingSlottables = nil
 -- [1] = emptyEntry,
 local emptyEntries = {}
 DynamicCP.emptyEntries = emptyEntries
+local skillIdToEntry -- So that we can call this from context menu
 
 local offsets = {
     Green = 0,
@@ -152,6 +153,21 @@ end
 
 
 ---------------------------------------------------------------------
+-- External function for selecting a dropdown item
+---------------------------------------------------------------------
+local function ExternalSelectStar(tree, dropdownIndex, skillId)
+    local entry = skillIdToEntry[tree][dropdownIndex][skillId]
+    if (not entry) then
+        d(tostring(dropdownIndex) .. " " .. GetChampionSkillName(skillId) .. " not unlocked")
+        return
+    end
+
+    local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPQuickstarsPanelLists:GetNamedChild(tree .. "Star" .. tostring(dropdownIndex)))
+    dropdown:SelectItem(entry)
+end
+DynamicCP.SelectQuickstar = ExternalSelectStar
+
+---------------------------------------------------------------------
 -- Reinitialize dropdowns for the particular tree
 ---------------------------------------------------------------------
 local function UpdateDropdowns(tree, listTree)
@@ -237,6 +253,7 @@ local function UpdateDropdowns(tree, listTree)
             if (data.skillId == -1) then
                 emptyEntries[i + offset] = entry
             end
+            skillIdToEntry[tree][i][data.skillId] = entry -- Save it for context menu to call
         end
 
         dropdown:UpdateItems()
@@ -245,6 +262,26 @@ local function UpdateDropdowns(tree, listTree)
 end
 
 local function UpdateAllDropdowns()
+    skillIdToEntry = {
+        ["Green"] = {
+            [1] = {}, -- [skillId] = entry,
+            [2] = {},
+            [3] = {},
+            [4] = {},
+        },
+        ["Blue"] = {
+            [1] = {},
+            [2] = {},
+            [3] = {},
+            [4] = {},
+        },
+        ["Red"] = {
+            [1] = {},
+            [2] = {},
+            [3] = {},
+            [4] = {},
+        },
+    }
     UpdateDropdowns("Green", "Green")
     UpdateDropdowns("Blue", "Blue")
     UpdateDropdowns("Red", "Red")
@@ -288,7 +325,7 @@ function DynamicCP.SelectQuickstarsTab(tree, button)
 
     -- Show context menu instead
     if (button == MOUSE_BUTTON_INDEX_RIGHT) then
-        DynamicCP.ShowSlotGroupMenu(tree)
+        DynamicCP.ToggleSlotGroupMenu(tree)
         -- DynamicCPQuickstarsContextMenu:SetMouseEnabled(true)
         return
     end
@@ -395,6 +432,7 @@ end
 local function RefreshTreesDisplay()
     local numShowing = 0
     local prevTree
+    DynamicCP.HideSlotGroupMenu()
 
     for _, treeName in ipairs(trees) do
         local tree = DynamicCPQuickstarsPanelLists:GetNamedChild(treeName)
