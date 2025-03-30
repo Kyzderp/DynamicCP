@@ -156,7 +156,7 @@ local function GetCurrentPreview()
         }
         for tree, color in pairs(trees) do
             local slotSet = rule.stars[tree]
-            if (slotSet) then
+            if (slotSet and slotSet ~= -1) then
                 local slotSetStars = ""
                 for _, skillId in pairs(DynamicCP.savedOptions.slotGroups[tree][slotSet]) do
                     local comma = ", "

@@ -166,6 +166,33 @@ local function GetSortedRulesForTrigger(trigger, isVet, param1)
     return ruleNames
 end
 
+-- Override the individual ids with the ids from the slot set, if applicable
+local function CombineSlotSetStars(ruleStars)
+    local newStars = {}
+    for i = 1, 12 do
+        newStars[i] = ruleStars[i]
+    end
+
+    local trees = { -- And their offsets
+        ["Green"] = 0,
+        ["Blue"] = 4,
+        ["Red"] = 8,
+    }
+
+    -- Put in the stars from set
+    for tree, offset in pairs(trees) do
+        local slotSet = ruleStars[tree]
+        if (slotSet and slotSet ~= -1) then
+            for i, skillId in ipairs(DynamicCP.savedOptions.slotGroups[tree][slotSet]) do
+                d(i, skillId)
+                newStars[i + offset] = skillId
+            end
+        end
+    end
+
+    return newStars
+end
+
 -- Apply the stars from this rule
 local function ApplyRules(sortedRuleNames, triggerString)
     if (not sortedRuleNames) then return end
@@ -182,7 +209,10 @@ local function ApplyRules(sortedRuleNames, triggerString)
             reevalRuleName = ruleName
             break
         end
-        for slotIndex, skillId in pairs(rule.stars) do
+
+        -- "Inject" the slot set stars into this
+        local starsToApply = CombineSlotSetStars(rule.stars)
+        for slotIndex, skillId in pairs(starsToApply) do
             if (skillId ~= -1) then
                 -- If smart detection is on, we check if the user's max stam or mag is higher, and change the skill accordingly
                 if (DynamicCP.savedOptions.customRules.autoDetectStamMag and (skillId == 47 or skillId == 48)) then
