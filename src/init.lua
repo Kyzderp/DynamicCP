@@ -75,7 +75,7 @@ local defaultOptions = {
         promptConflicts = true,
         applyBossOnCombatEnd = true,
         applyOnCooldownEnd = true,
-        rules = {},
+        rules = {}, -- {["rule"] = {stars = {[1] = 123,}}} (see ruleData)
     },
 
     lastPresetsApplyBehavior = 1,

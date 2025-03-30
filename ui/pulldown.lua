@@ -141,8 +141,18 @@ local function RemoveSlotSetFromPresets(tree, slotSetName)
     for presetName, data in pairs(DynamicCP.savedOptions.cp[tree]) do
         if (data.slotSet == slotSetName) then
             -- TODO: summarize it
-            d(presetName)
+            d("removed from preset " .. presetName)
             data.slotSet = nil
+        end
+    end
+end
+
+local function RemoveSlotSetFromRules(tree, slotSetName)
+    if (not slotSetName) then return end
+    for ruleName, ruleData in pairs(DynamicCP.savedOptions.customRules.rules) do
+        if (ruleData.stars[tree] == slotSetName) then
+            ruleData.stars[tree] = nil
+            d("removed from rule " .. ruleName)
         end
     end
 end
@@ -157,6 +167,7 @@ function DynamicCP.DeleteSlotSet(button)
         DynamicCP.savedOptions.slotGroups[tree][setName] = nil
         InitSlotSetDropdown(tree)
         RemoveSlotSetFromPresets(tree, setName)
+        RemoveSlotSetFromRules(tree, setName)
         DynamicCP.RefreshPresetsSlotSetDropdown(tree)
         DynamicCP.BuildSlotSetDropdowns()
         DynamicCP.UpdateSlotSetDropdowns()

@@ -148,6 +148,25 @@ local function GetCurrentPreview()
 
     -- Add the stars
     if (not rule.reeval) then
+        -- Show slot sets
+        local trees = {
+            ["Green"] = "a5d752",
+            ["Blue"] = "59bae7",
+            ["Red"] = "e46b2e",
+        }
+        for tree, color in pairs(trees) do
+            local slotSet = rule.stars[tree]
+            if (slotSet) then
+                local slotSetStars = ""
+                for _, skillId in pairs(DynamicCP.savedOptions.slotGroups[tree][slotSet]) do
+                    local comma = ", "
+                    if (slotSetStars == "") then comma = "" end
+                    slotSetStars = zo_strformat("<<1>><<2>><<3>>", slotSetStars, comma, GetChampionSkillName(skillId))
+                end
+                preview = zo_strformat("<<1>>\n|c<<2>>Slottable set \"<<3>>\" (Current: <<4>>)", preview, color, slotSet, slotSetStars)
+            end
+        end
+
         for slotIndex, skillId in ipairs(rule.stars) do
             if (skillId ~= -1) then
                 local color = "e46b2e" -- Red
@@ -1136,7 +1155,12 @@ function DynamicCP.CreateCustomRulesMenu()
             setFunc = function(value)
                 if (not selectedRuleName) then return end
                 DynamicCP.dbg("selected " .. tostring(value))
+                if (value == -1) then value = nil end
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Green"] = value
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[1] = -1
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[2] = -1
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[3] = -1
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[4] = -1
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
@@ -1157,7 +1181,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[1] = value
             end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval or DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Green"] ~= nil end,
             reference = "DynamicCP#CraftStar1Dropdown"
         },
         {
@@ -1175,7 +1199,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[2] = value
             end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval or DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Green"] ~= nil end,
             reference = "DynamicCP#CraftStar2Dropdown"
         },
         {
@@ -1193,7 +1217,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[3] = value
             end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval or DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Green"] ~= nil end,
             reference = "DynamicCP#CraftStar3Dropdown"
         },
         {
@@ -1211,7 +1235,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[4] = value
             end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval or DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Green"] ~= nil end,
             reference = "DynamicCP#CraftStar4Dropdown"
         },
         {
@@ -1234,7 +1258,12 @@ function DynamicCP.CreateCustomRulesMenu()
             setFunc = function(value)
                 if (not selectedRuleName) then return end
                 DynamicCP.dbg("selected " .. tostring(value))
+                if (value == -1) then value = nil end
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Blue"] = value
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[5] = -1
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[6] = -1
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[7] = -1
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[8] = -1
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
@@ -1255,7 +1284,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[5] = value
             end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval or DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Blue"] ~= nil end,
             reference = "DynamicCP#WarfareStar1Dropdown"
         },
         {
@@ -1273,7 +1302,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[6] = value
             end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval or DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Blue"] ~= nil end,
             reference = "DynamicCP#WarfareStar2Dropdown"
         },
         {
@@ -1291,7 +1320,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[7] = value
             end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval or DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Blue"] ~= nil end,
             reference = "DynamicCP#WarfareStar3Dropdown"
         },
         {
@@ -1309,7 +1338,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[8] = value
             end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval or DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Blue"] ~= nil end,
             reference = "DynamicCP#WarfareStar4Dropdown"
         },
         {
@@ -1331,7 +1360,12 @@ function DynamicCP.CreateCustomRulesMenu()
             setFunc = function(value)
                 if (not selectedRuleName) then return end
                 DynamicCP.dbg("selected " .. tostring(value))
+                if (value == -1) then value = nil end
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Red"] = value
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[9] = -1
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[10] = -1
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[11] = -1
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[12] = -1
             end,
             width = "full",
             disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
@@ -1352,7 +1386,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[9] = value
             end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval or DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Red"] ~= nil end,
             reference = "DynamicCP#FitnessStar1Dropdown"
         },
         {
@@ -1370,7 +1404,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[10] = value
             end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval or DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Red"] ~= nil end,
             reference = "DynamicCP#FitnessStar2Dropdown"
         },
         {
@@ -1388,7 +1422,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[11] = value
             end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval or DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Red"] ~= nil end,
             reference = "DynamicCP#FitnessStar3Dropdown"
         },
         {
@@ -1406,7 +1440,7 @@ function DynamicCP.CreateCustomRulesMenu()
                 DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars[12] = value
             end,
             width = "full",
-            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval or DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Red"] ~= nil end,
             reference = "DynamicCP#FitnessStar4Dropdown"
         },
     }
