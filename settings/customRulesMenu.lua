@@ -356,6 +356,62 @@ DynamicCP.BuildStarsDropdowns = BuildStarsDropdowns
 
 
 ---------------------------------------------------------------------
+-- Build the slottable set dropdown choices
+local slotSetDisplays = {}
+local slotSetValues = {}
+
+local function UpdateSlotSetDropdowns()
+    local dropdowns = {
+        CraftSlotSetDropdown = "Green",
+        WarfareSlotSetDropdown = "Blue",
+        FitnessSlotSetDropdown = "Red",
+    }
+
+    for reference, tree in pairs(dropdowns) do
+        local dropdown = WINDOW_MANAGER:GetControlByName("DynamicCP#" .. reference)
+        if (dropdown) then -- May not be initialized if menu hasn't been opened yet
+            dropdown:UpdateChoices(slotSetDisplays[tree], slotSetValues[tree])
+        end
+    end
+end
+DynamicCP.UpdateSlotSetDropdowns = UpdateSlotSetDropdowns
+
+local function BuildSlotSetDropdowns()
+    DynamicCP.dbg("building slot set dropdowns")
+    slotSetDisplays = {}
+    slotSetValues = {}
+
+    local treeToColor = {
+        ["Green"] = "a5d752",
+        ["Blue"] = "59bae7",
+        ["Red"] = "e46b2e",
+    }
+    local unsortedSets = {}
+    for tree, color in pairs(treeToColor) do
+        slotSetDisplays[tree] = {"--"}
+        slotSetValues[tree] = {-1}
+        for name, _ in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
+            local displayName = string.format("|c%s%s|r", color, name)
+            table.insert(unsortedSets, {
+                tree = tree,
+                name = name,
+                displayName = displayName,
+            })
+        end
+    end
+
+    table.sort(unsortedSets, function(item1, item2)
+            return item1.name < item2. name
+        end)
+    for _, data in ipairs(unsortedSets) do
+        table.insert(slotSetDisplays[data.tree], data.displayName)
+        table.insert(slotSetValues[data.tree], data.name)
+    end
+end
+DynamicCP.BuildSlotSetDropdowns = BuildSlotSetDropdowns
+
+
+---------------------------------------------------------------------
 -- Build the per-character toggles in advanced options
 local function ToggleCharacterCheckboxes(matchingClassId)
     -- First pass checks if any of the relevant ones are off
@@ -589,6 +645,7 @@ end
 function DynamicCP.CreateCustomRulesMenu()
     DynamicCP.SortRuleKeys()
     BuildStarsDropdowns()
+    BuildSlotSetDropdowns()
 
     local LAM = LibAddonMenu2
     local panelData = {
@@ -1069,6 +1126,24 @@ function DynamicCP.CreateCustomRulesMenu()
         },
         {
             type = "dropdown",
+            name = "Craft Slottable Set",
+            tooltip = "You can reuse a Slottable Set here, so changes to the Set can be used across different rules, instead of individual slottable stars.",
+            choices = slotSetDisplays["Green"],
+            choicesValues = slotSetValues["Green"],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Green"] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Green"] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#CraftSlotSetDropdown"
+        },
+        {
+            type = "dropdown",
             name = "Craft Star 1",
             tooltip = "Which star to slot in slot 1 of the Craft tree",
             choices = starDisplays[1],
@@ -1149,6 +1224,24 @@ function DynamicCP.CreateCustomRulesMenu()
         },
         {
             type = "dropdown",
+            name = "Warfare Slottable Set",
+            tooltip = "You can reuse a Slottable Set here, so changes to the Set can be used across different rules, instead of individual slottable stars.",
+            choices = slotSetDisplays["Blue"],
+            choicesValues = slotSetValues["Blue"],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Blue"] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Blue"] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#WarfareSlotSetDropdown"
+        },
+        {
+            type = "dropdown",
             name = "Warfare Star 1",
             tooltip = "Which star to slot in slot 1 of the Warfare tree",
             choices = starDisplays[2],
@@ -1225,6 +1318,24 @@ function DynamicCP.CreateCustomRulesMenu()
                 return selectedRuleName ~= nil and "|ce46b2eFitness|r" or "|c555555Fitness|r"
             end,
             width = "full",
+        },
+        {
+            type = "dropdown",
+            name = "Fitness Slottable Set",
+            tooltip = "You can reuse a Slottable Set here, so changes to the Set can be used across different rules, instead of individual slottable stars.",
+            choices = slotSetDisplays["Red"],
+            choicesValues = slotSetValues["Red"],
+            getFunc = function()
+                return selectedRuleName ~= nil and DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Red"] or -1
+            end,
+            setFunc = function(value)
+                if (not selectedRuleName) then return end
+                DynamicCP.dbg("selected " .. tostring(value))
+                DynamicCP.savedOptions.customRules.rules[selectedRuleName].stars["Red"] = value
+            end,
+            width = "full",
+            disabled = function() return selectedRuleName == nil or DynamicCP.savedOptions.customRules.rules[selectedRuleName].reeval end,
+            reference = "DynamicCP#FitnessSlotSetDropdown"
         },
         {
             type = "dropdown",

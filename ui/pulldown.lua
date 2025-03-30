@@ -158,6 +158,8 @@ function DynamicCP.DeleteSlotSet(button)
         InitSlotSetDropdown(tree)
         RemoveSlotSetFromPresets(tree, setName)
         DynamicCP.RefreshPresetsSlotSetDropdown(tree)
+        DynamicCP.BuildSlotSetDropdowns()
+        DynamicCP.UpdateSlotSetDropdowns()
     end
 
     LibDialog:RegisterDialog(
@@ -201,6 +203,8 @@ function DynamicCP.SaveSlotSet(button)
         DynamicCP.savedOptions.slotGroups[tree][pendingName] = setData
         InitSlotSetDropdown(tree, pendingName)
         DynamicCP.RefreshPresetsSlotSetDropdown(tree)
+        DynamicCP.BuildSlotSetDropdowns()
+        DynamicCP.UpdateSlotSetDropdowns()
     end
 
     LibDialog:RegisterDialog(

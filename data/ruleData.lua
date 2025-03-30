@@ -7,7 +7,34 @@ DynamicCP = DynamicCP or {}
     [""] = {
         description = "",
         rules = {
-
+            ["House Green Decon"] = {
+                ["dps"] = true,
+                ["healer"] = true,
+                ["name"] = "House Green Decon",
+                ["normal"] = true,
+                ["param1"] = "",
+                ["param2"] = "",
+                ["priority"] = 0,
+                ["reeval"] = false,
+                ["tank"] = true,
+                ["trigger"] = "Player House",
+                ["veteran"] = true,
+                ["stars"] = {
+                    [1] = -1,
+                    [2] = 66, -- Steed's Blessing
+                    [3] = 86, -- Liquid Efficiency
+                    [4] = 83, -- Meticulous Disassembly
+                    [5] = -1,
+                    [6] = -1,
+                    [7] = -1,
+                    [8] = -1,
+                    [9] = -1,
+                    [10] = -1,
+                    [11] = -1,
+                    [12] = -1,
+                    ["Red"] = "DPS Rez",
+                },
+            },
         },
     },
 ]]
