@@ -58,6 +58,13 @@ end
 -- Iterate through the UI stars to find the championSkilLData for a skillId
 -- I guess this info is UI-only, so this is Not IdealTM
 local function FindChampionSkillData(skillId)
+    local skillDataFromManager = CHAMPION_DATA_MANAGER:GetChampionSkillData(skillId)
+    if (skillDataFromManager) then
+        return skillDataFromManager
+    end
+
+    -- Not sure if this is still needed. I didn't have the above previously,
+    -- but I don't remember if there was a reason I didn't use that or I just didn't know
     for i = 1, ZO_ChampionPerksCanvas:GetNumChildren() do
         local child = ZO_ChampionPerksCanvas:GetChild(i)
         if (child.star and child.star.championSkillData) then
