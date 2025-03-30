@@ -27,6 +27,7 @@ local function GetOrCreateMenuButton(index)
 end
 
 local function HideMenu()
+    EVENT_MANAGER:UnregisterForEvent(DynamicCP.name .. "QSMouseUpHide", EVENT_GLOBAL_MOUSE_UP)
     DynamicCPQuickstarsContextMenu:SetHidden(true)
 end
 DynamicCP.HideSlotGroupMenu = HideMenu
@@ -56,6 +57,16 @@ local function ShowMenu(tree)
     DynamicCPQuickstarsContextMenu:SetHeight(#keys * 20 + 8)
     DynamicCPQuickstarsContextMenu:SetAnchor(TOPLEFT, DynamicCPQuickstars:GetNamedChild(tree .. "Button"), TOPRIGHT)
     DynamicCPQuickstarsContextMenu:SetHidden(false)
+
+    -- Add a mouse listener to close menu when "losing focus"
+    EVENT_MANAGER:UnregisterForEvent(DynamicCP.name .. "QSMouseUpHide", EVENT_GLOBAL_MOUSE_UP)
+    zo_callLater(function()
+        EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "QSMouseUpHide", EVENT_GLOBAL_MOUSE_UP, function()
+            if (not DynamicCPQuickstarsContextMenu:IsHidden() and not MouseIsOver(DynamicCPQuickstarsContextMenu)) then
+                HideMenu()
+            end
+        end)
+    end, 250)
 end
 DynamicCP.ShowSlotGroupMenu = ShowMenu
 -- /script DynamicCP.ShowSlotGroupMenu("Red")
