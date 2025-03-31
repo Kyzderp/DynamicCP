@@ -87,6 +87,53 @@ local function LoadSlotSet(tree, name)
     end
 end
 
+local function ShowSlottables(tree, data)
+    for i = 1, 4 do
+        local starControl = GetStarControlFromIndex(i + TREE_TO_FIRST_INDEX[tree] - 1)
+        local skillId = data[i]
+
+        local color = TEXT_COLORS[tree]
+        if (skillId) then
+            -- Show it in yellow if it's not unlocked
+            local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
+            if (not unlocked) then
+                color = {1, 1, 0.5}
+            end
+            starControl:GetNamedChild("Name"):SetText(zo_strformat("<<C:1>>", GetChampionSkillName(skillId)))
+            if (DynamicCP.savedOptions.showPulldownPoints) then
+                starControl:GetNamedChild("Points"):SetText(GetNumPointsSpentOnChampionSkill(skillId))
+            else
+                starControl:GetNamedChild("Points"):SetText("")
+            end
+        else
+            starControl:GetNamedChild("Name"):SetText("")
+            starControl:GetNamedChild("Points"):SetText("")
+        end
+        starControl.SetColors(color)
+    end
+end
+
+local function PreviewSlotGroup(tree, slotSetName)
+    local data = DynamicCP.savedOptions.slotGroups[tree][slotSetName]
+    ShowSlottables(tree, data)
+end
+
+local function RestoreSlotGroup(tree)
+    local currentSlottables = DynamicCP.GetCurrentUISlottables()
+
+    -- Put it into [1], [2], [3], [4]
+    local data = {}
+    for i = 1, 4 do
+        local index = TREE_TO_FIRST_INDEX[tree] + i - 1
+        local slottableSkillData = currentSlottables[index]
+        if (slottableSkillData) then
+            data[i] = slottableSkillData.championSkillId
+        end
+    end
+
+    ShowSlottables(tree, data)
+end
+
 -- Initialize the dropdown with the saved slot sets
 local function InitSlotSetDropdown(tree, nameToSelect)
     local dropdownControl = DynamicCPPulldown:GetNamedChild(tree .. "SlotSetControlsDropdown")
@@ -106,6 +153,8 @@ local function InitSlotSetDropdown(tree, nameToSelect)
 
         -- TODO: tooltip on dropdown entry hover with what stars it has?
         local entry = ZO_ComboBox:CreateItemEntry(string.format("|c%s%s|r", TEXT_COLORS_HEX[tree], setName), OnItemSelected)
+        ZO_ComboBox:SetItemOnEnter(entry, function() PreviewSlotGroup(tree, setName) end)
+        ZO_ComboBox:SetItemOnExit(entry, function() RestoreSlotGroup(tree) end)
         dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
 
         if (setName == nameToSelect) then
