@@ -22,7 +22,6 @@ local defaultOptions = {
 -- user options
     hideBackground = false,
     showLabels = true,
-    dockWithSpace = true,
     scale = 1.0,
     debug = false,
     showLeaveWarning = true,
@@ -33,7 +32,6 @@ local defaultOptions = {
     showPresetsWithCP = true,
     showPulldownPoints = false,
     showPointGainedMessage = true,
-    useSidePresets = true,
     presetsBackdropAlpha = 0.5,
     presetsShowClassButtons = true, -- Not settable by user - side presets don't have class buttons
     passiveLabelColor = {1, 1, 0.5},
@@ -360,12 +358,9 @@ local function Initialize()
     -- Register events
     RegisterEvents()
 
-    DynamicCPPresets:SetScale(DynamicCP.savedOptions.scale)
     DynamicCPSidePresets:SetScale(DynamicCP.savedOptions.scale)
-    DynamicCPPresetsBackdrop:SetAlpha(DynamicCP.savedOptions.presetsBackdropAlpha)
     DynamicCPSidePresetsBackdrop:SetAlpha(DynamicCP.savedOptions.presetsBackdropAlpha)
-    DynamicCPPresets:SetHidden(UseSidePresets())
-    DynamicCPSidePresets:SetHidden(not UseSidePresets())
+    DynamicCPSidePresets:SetHidden(false)
 
     CHAMPION_PERKS_CONSTELLATIONS_FRAGMENT:RegisterCallback("StateChange", function(oldState, newState)
         if (newState == SCENE_HIDDEN) then

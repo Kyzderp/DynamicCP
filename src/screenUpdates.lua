@@ -50,34 +50,6 @@ function DynamicCP.RefreshLabels(show)
 end
 
 
--- We want a window width of about GuiRoot:GetWidth()*.27, at least on my resolution... /script d("actual") d(DynamicCPPresets:GetWidth()) d("desired") d(GuiRoot:GetWidth()*.28)
--- Unsure what happens on wider screens
----------------------------------------------------------------------
--- Dock the window
-local function DockWindow(activeConstellation)
-    local ox, oy = DynamicCPPresets:GetCenter()
-    local tx, ty = DynamicCPPresets:GetCenter()
-
-    if (activeConstellation == "All" or activeConstellation == "Green" or activeConstellation == "Cluster") then
-        tx = GuiRoot:GetWidth() - DynamicCPPresets:GetWidth() / 2 - 10
-        ty = DynamicCPPresets:GetHeight() / 2 + 10
-    elseif (activeConstellation == "Blue") then
-        tx = GuiRoot:GetWidth() - DynamicCPPresets:GetWidth() / 2 - 10
-        ty = GuiRoot:GetHeight() * 0.35
-    elseif (activeConstellation == "Red") then
-        tx = GuiRoot:GetWidth() * 0.6875
-        ty = GuiRoot:GetHeight() * 0.27
-    end
-
-    -- Play animation
-    local dx = tx - ox
-    local dy = ty - oy
-    DynamicCPPresets.slide:SetDeltaOffsetX(dx)
-    DynamicCPPresets.slide:SetDeltaOffsetY(dy)
-    DynamicCPPresets.slideAnimation:PlayFromStart()
-end
-
-
 ---------------------------------------------------------------------
 -- utils
 local function IsInBounds(control)
@@ -113,10 +85,6 @@ local function OnCanvasAnimationStopped()
         activeConstellation = "Cluster"
         DynamicCP.RefreshLabels(DynamicCP.savedOptions.showLabels)
         DynamicCP.AddMouseDoubleClickStars()
-    end
-
-    if (DynamicCP.savedOptions.dockWithSpace) then
-        DockWindow(activeConstellation)
     end
 end
 
@@ -248,8 +216,4 @@ function DynamicCP.InitLabels()
     ZO_ChampionPerksCanvasConstellation1:SetHandler("OnRectChanged", function()
         EVENT_MANAGER:RegisterForUpdate(DynamicCP.name .. "RectTimeout", 200, OnCanvasAnimationStopped)
     end)
-
-    -- Create sliding animation
-    DynamicCPPresets.slideAnimation = GetAnimationManager():CreateTimelineFromVirtual("ZO_LootSlideInAnimation", DynamicCPPresets)
-    DynamicCPPresets.slide = DynamicCPPresets.slideAnimation:GetFirstAnimation()
 end

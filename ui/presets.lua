@@ -55,20 +55,12 @@ local selected = {
 }
 
 ---------------------------------------------------------------------
-function UseSidePresets()
-    return DynamicCP.savedOptions.useSidePresets
-end
-
 function GetSubControl(name)
     if (not name) then
         name = ""
     end
 
-    if (UseSidePresets()) then
-        return DynamicCPSidePresets:GetNamedChild(name)
-    else
-        return DynamicCPPresets:GetNamedChild(name)
-    end
+    return DynamicCPSidePresets:GetNamedChild(name)
 end
 DynamicCP.GetSubControl = GetSubControl
 
@@ -85,85 +77,74 @@ local function ShowMessage(tree, text, diffText, color, numChanges, col1, col2, 
     if (not diffText) then diffText = "" end
     messages:SetHidden(false)
 
-    if (UseSidePresets()) then
-        -- TODO: move this up when deleting floating window
-        if (not text) then text = messages:GetNamedChild("Label"):GetText() end
+    if (not text) then text = messages:GetNamedChild("Label"):GetText() end
 
-        numChanges = numChanges or 0
+    numChanges = numChanges or 0
 
-        -- Append the slottables to the end
-        if (slottablesText) then
-            for i, slottableString in ipairs(slottablesText) do
-                table.insert(col1, slottableString)
-                table.insert(col2, "")
-                numChanges = numChanges + 1
-            end
+    -- Append the slottables to the end
+    if (slottablesText) then
+        for i, slottableString in ipairs(slottablesText) do
+            table.insert(col1, slottableString)
+            table.insert(col2, "")
+            numChanges = numChanges + 1
         end
+    end
 
-        messages:GetNamedChild("Backdrop"):SetEdgeColor(unpack(color))
-        messages:GetNamedChild("Label"):SetText(text)
-        messages:GetNamedChild("Tooltip"):SetHidden(diffText == nil or diffText == "")
+    messages:GetNamedChild("Backdrop"):SetEdgeColor(unpack(color))
+    messages:GetNamedChild("Label"):SetText(text)
+    messages:GetNamedChild("Tooltip"):SetHidden(diffText == nil or diffText == "")
+    messages:GetNamedChild("Tooltip"):SetHeight(numChanges * 19 + 4)
+
+    if (numChanges == 0) then
+        numChanges = 1
         messages:GetNamedChild("Tooltip"):SetHeight(numChanges * 19 + 4)
-
-        if (numChanges == 0) then
-            numChanges = 1
-            messages:GetNamedChild("Tooltip"):SetHeight(numChanges * 19 + 4)
-            if (col1) then
-                table.insert(col1, "No points changes.")
-            end
+        if (col1) then
+            table.insert(col1, "No points changes.")
         end
+    end
 
-        if (col1 ~= nil and col2 ~= nil) then
-            -- Adjust width of the popup
-            local col1Text = table.concat(col1, "\n")
-            local col2Text = table.concat(col2, "\n")
-            messages:GetNamedChild("TooltipLabel"):SetText(col1Text)
-            messages:GetNamedChild("TooltipLabel2"):SetText(col2Text)
-            messages:GetNamedChild("Tooltip"):SetWidth(500)
-            messages:GetNamedChild("Tooltip"):SetWidth(messages:GetNamedChild("TooltipLabel"):GetTextWidth() + messages:GetNamedChild("TooltipLabel2"):GetTextWidth() + MESSAGES_TOOLTIP_GAP)
-        else
-            messages:GetNamedChild("TooltipLabel"):SetText(diffText)
-            messages:GetNamedChild("TooltipLabel2"):SetText("")
-        end
-
-        -- Do a second panel
-        if (numChanges >= 12 and col1 ~= nil and col2 ~= nil) then
-            local halfLines = math.floor((numChanges + 1) / 2)
-
-            local col1Text = table.concat(col1, "\n", 1, halfLines)
-            local col2Text = table.concat(col2, "\n", 1, halfLines)
-            messages:GetNamedChild("Tooltip"):SetHeight(halfLines * 19 + 4)
-            messages:GetNamedChild("TooltipLabel"):SetText(col1Text)
-            messages:GetNamedChild("TooltipLabel2"):SetText(col2Text)
-            messages:GetNamedChild("Tooltip"):SetWidth(500)
-            messages:GetNamedChild("Tooltip"):SetWidth(messages:GetNamedChild("TooltipLabel"):GetTextWidth() + messages:GetNamedChild("TooltipLabel2"):GetTextWidth() + MESSAGES_TOOLTIP_GAP)
-
-            col1Text = table.concat(col1, "\n", halfLines + 1, #col1)
-            col2Text = table.concat(col2, "\n", halfLines + 1, #col2)
-            messages:GetNamedChild("TooltipExtra"):SetHidden(false)
-            messages:GetNamedChild("TooltipExtra"):SetHeight(halfLines * 19 + 4)
-            messages:GetNamedChild("TooltipExtraLabel"):SetText(col1Text)
-            messages:GetNamedChild("TooltipExtraLabel2"):SetText(col2Text)
-            messages:GetNamedChild("TooltipExtra"):SetWidth(500)
-            messages:GetNamedChild("TooltipExtra"):SetWidth(messages:GetNamedChild("TooltipExtraLabel"):GetTextWidth() + messages:GetNamedChild("TooltipExtraLabel2"):GetTextWidth() + MESSAGES_TOOLTIP_GAP + 10)
-        else
-            messages:GetNamedChild("TooltipExtra"):SetHidden(true)
-        end
-
-        -- Need to move it upwards if it's a "delete" which means nothing is selected and it looks empty
-        if (GetSubControl("Inner"):GetNamedChild(tree .. "Options"):IsHidden()) then
-            messages:SetAnchor(TOP, GetSubControl("Inner"):GetNamedChild(tree .. "Dropdown"), BOTTOM, 0, 4)
-        else
-            messages:SetAnchor(TOP, GetSubControl("Inner"):GetNamedChild(tree .. "OptionsButtons"), BOTTOM, 0, 0)
-        end
+    if (col1 ~= nil and col2 ~= nil) then
+        -- Adjust width of the popup
+        local col1Text = table.concat(col1, "\n")
+        local col2Text = table.concat(col2, "\n")
+        messages:GetNamedChild("TooltipLabel"):SetText(col1Text)
+        messages:GetNamedChild("TooltipLabel2"):SetText(col2Text)
+        messages:GetNamedChild("Tooltip"):SetWidth(500)
+        messages:GetNamedChild("Tooltip"):SetWidth(messages:GetNamedChild("TooltipLabel"):GetTextWidth() + messages:GetNamedChild("TooltipLabel2"):GetTextWidth() + MESSAGES_TOOLTIP_GAP)
     else
-        messages:SetText(diffText .. "\n\n" .. text)
-        -- Need to move it upwards if it's a "delete" which means nothing is selected and it looks empty
-        if (GetSubControl("Inner"):GetNamedChild(tree .. "Options"):IsHidden()) then
-            messages:SetAnchor(TOP, GetSubControl("Inner"):GetNamedChild(tree), TOP, 0, 80)
-        else
-            messages:SetAnchor(TOP, GetSubControl("Inner"):GetNamedChild(tree), TOP, 0, 300)
-        end
+        messages:GetNamedChild("TooltipLabel"):SetText(diffText)
+        messages:GetNamedChild("TooltipLabel2"):SetText("")
+    end
+
+    -- Do a second panel
+    if (numChanges >= 12 and col1 ~= nil and col2 ~= nil) then
+        local halfLines = math.floor((numChanges + 1) / 2)
+
+        local col1Text = table.concat(col1, "\n", 1, halfLines)
+        local col2Text = table.concat(col2, "\n", 1, halfLines)
+        messages:GetNamedChild("Tooltip"):SetHeight(halfLines * 19 + 4)
+        messages:GetNamedChild("TooltipLabel"):SetText(col1Text)
+        messages:GetNamedChild("TooltipLabel2"):SetText(col2Text)
+        messages:GetNamedChild("Tooltip"):SetWidth(500)
+        messages:GetNamedChild("Tooltip"):SetWidth(messages:GetNamedChild("TooltipLabel"):GetTextWidth() + messages:GetNamedChild("TooltipLabel2"):GetTextWidth() + MESSAGES_TOOLTIP_GAP)
+
+        col1Text = table.concat(col1, "\n", halfLines + 1, #col1)
+        col2Text = table.concat(col2, "\n", halfLines + 1, #col2)
+        messages:GetNamedChild("TooltipExtra"):SetHidden(false)
+        messages:GetNamedChild("TooltipExtra"):SetHeight(halfLines * 19 + 4)
+        messages:GetNamedChild("TooltipExtraLabel"):SetText(col1Text)
+        messages:GetNamedChild("TooltipExtraLabel2"):SetText(col2Text)
+        messages:GetNamedChild("TooltipExtra"):SetWidth(500)
+        messages:GetNamedChild("TooltipExtra"):SetWidth(messages:GetNamedChild("TooltipExtraLabel"):GetTextWidth() + messages:GetNamedChild("TooltipExtraLabel2"):GetTextWidth() + MESSAGES_TOOLTIP_GAP + 10)
+    else
+        messages:GetNamedChild("TooltipExtra"):SetHidden(true)
+    end
+
+    -- Need to move it upwards if it's a "delete" which means nothing is selected and it looks empty
+    if (GetSubControl("Inner"):GetNamedChild(tree .. "Options"):IsHidden()) then
+        messages:SetAnchor(TOP, GetSubControl("Inner"):GetNamedChild(tree .. "Dropdown"), BOTTOM, 0, 4)
+    else
+        messages:SetAnchor(TOP, GetSubControl("Inner"):GetNamedChild(tree .. "OptionsButtons"), BOTTOM, 0, 0)
     end
 end
 
@@ -657,11 +638,6 @@ local function AdjustDividers()
     local b = not GetSubControl("Inner"):GetNamedChild("BlueOptions"):IsHidden() or not GetSubControl("Inner"):GetNamedChild("BlueMessages"):IsHidden()
 
     GetSubControl("InnerInstructions"):SetHidden(r or g or b)
-
-    if (UseSidePresets()) then return end
-
-    GetSubControl("InnerGreenBlueDivider"):SetHeight((g or b) and 230 or 60)
-    GetSubControl("InnerBlueRedDivider"):SetHeight((r or g) and 230 or 60)
 end
 
 local function UnhideOptions(tree)
@@ -878,26 +854,12 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
         UpdateSlotSetDropdown(tree, data.slotSet)
 
         local buttons = GetSubControl("Inner"):GetNamedChild(tree .. "OptionsButtons")
-        if (not UseSidePresets()) then
-            for class, _ in pairs(CLASSES) do
-                local button = buttons:GetNamedChild(class)
-                SetTextureButtonEnabled(button, data.classes == nil or data.classes[class] == nil or data.classes[class]) -- Both nil or true
-                -- Completely hide button rows
-                button:SetHidden(not DynamicCP.savedOptions.presetsShowClassButtons)
-            end
-        end
         for role, _ in pairs(ROLES) do
             SetTextureButtonEnabled(buttons:GetNamedChild(role), data.roles == nil or data.roles[role] == nil or data.roles[role]) -- Both nil or true
         end
 
-        -- If class buttons are hidden, role buttons should be anchored higher
-        if (DynamicCP.savedOptions.presetsShowClassButtons and not UseSidePresets()) then
-            buttons:GetNamedChild("Tank"):SetAnchor(TOP, buttons:GetNamedChild("Dragonknight"), BOTTOM, 4, 6)
-            buttons:GetNamedChild("Help"):SetAnchor(TOP, buttons:GetNamedChild("Necromancer"), BOTTOM, 0, 6)
-        else
-            buttons:GetNamedChild("Tank"):SetAnchor(TOPLEFT, buttons, TOPLEFT, 2)
-            buttons:GetNamedChild("Help"):SetAnchor(TOPRIGHT, buttons, TOPRIGHT, 0)
-        end
+        buttons:GetNamedChild("Tank"):SetAnchor(TOPLEFT, buttons, TOPLEFT, 2)
+        buttons:GetNamedChild("Help"):SetAnchor(TOPRIGHT, buttons, TOPRIGHT, 0)
 
         ShowCPPointsOrDiff(
             tree,

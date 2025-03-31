@@ -195,18 +195,6 @@ function DynamicCP:CreateSettingsMenu()
                     width = "full",
                 },
                 {
-                    type = "checkbox",
-                    name = "Dock standalone window",
-                    tooltip = "Display the window in different positions on each constellation to avoid overlapping with stars. Recommend adjusting the scale so it fits in the Fitness tree, between Arcane Alacrity and Bashing Brutality",
-                    default = true,
-                    getFunc = function() return DynamicCP.savedOptions.dockWithSpace end,
-                    setFunc = function(value)
-                        DynamicCP.savedOptions.dockWithSpace = value
-                    end,
-                    width = "full",
-                    disabled = function() return DynamicCP.savedOptions.useSidePresets end
-                },
-                {
                     type = "slider",
                     name = "Window scale %",
                     tooltip = "Scale of the window to display. Some spacing may look weird especially at more extreme values",
@@ -219,7 +207,6 @@ function DynamicCP:CreateSettingsMenu()
                         DynamicCP.savedOptions.scale = value / 100
                         DynamicCPPresetsContainer:SetHidden(false)
                         DynamicCP.GetSubControl():SetHidden(false)
-                        DynamicCPPresets:SetScale(value / 100)
                         DynamicCPSidePresets:SetScale(value / 100)
                     end,
                     width = "full",
@@ -237,7 +224,6 @@ function DynamicCP:CreateSettingsMenu()
                         DynamicCP.savedOptions.presetsBackdropAlpha = value / 100
                         DynamicCPPresetsContainer:SetHidden(false)
                         DynamicCP.GetSubControl():SetHidden(false)
-                        DynamicCPPresetsBackdrop:SetAlpha(value / 100)
                         DynamicCPSidePresetsBackdrop:SetAlpha(value / 100)
                     end,
                     width = "full",
