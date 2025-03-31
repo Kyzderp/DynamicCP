@@ -272,6 +272,8 @@ function DynamicCP.SaveSlotSet(button)
         DynamicCP.RefreshPresetsSlotSetDropdown(tree)
         DynamicCP.BuildSlotSetDropdowns()
         DynamicCP.UpdateSlotSetDropdowns()
+        button:GetParent():GetNamedChild("TextField"):SetText("")
+        button:GetParent():GetNamedChild("Save"):SetHidden(true)
     end
 
     LibDialog:RegisterDialog(
