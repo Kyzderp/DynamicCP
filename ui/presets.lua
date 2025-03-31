@@ -203,9 +203,9 @@ local function GetSlottablesFromPreset(cp, tree, slotSetName)
             return slotSet
         end
 
-        d("|cFF0000Couldn't find slot set " .. slotSetName .. ", slotting automatically for now.|r")
+        DynamicCP.dbg("|cFF0000Couldn't find slot set " .. slotSetName .. ", slotting automatically for now.|r")
     else
-        d("|cFF0000No slotSetName, slotting automatically.|r")
+        DynamicCP.dbg("|cFF0000No slotSetName, slotting automatically.|r")
     end
 
     -- Otherwise, slot automatically. Collect slottables from the specified CP
@@ -273,7 +273,6 @@ local function GenerateTreeSlottables(cp, tree, slotSetName)
         result[i] = zo_strformat("|c<<1>>(+) <<2>>:|r <<3>>", color[tree], i, skillName)
     end
 
-    d(result)
     return result
 end
 
@@ -326,7 +325,6 @@ end
 -- Build string for this CP, but only for certain tree
 -- Called when loading or saving a preset
 local function GenerateTree(cp, tree, slotSetName)
-    d(slotSetName)
     local result = "|cBBBBBB"
     local col1 = {}
     local col2 = {}
@@ -796,7 +794,6 @@ local function UpdateSlotSetDropdown(tree, slotSetName)
         if (slotSetName == AUTOMATIC_STRING) then
             slotSetName = nil
         end
-        d(slotSetName)
         -- TODO: add deprecated warning for preset window
         local presetName = selected[tree]
         if (presetName ~= CREATE_NEW_STRING) then

@@ -184,7 +184,6 @@ local function CombineSlotSetStars(ruleStars)
         local slotSet = ruleStars[tree]
         if (slotSet and slotSet ~= -1) then
             for i, skillId in ipairs(DynamicCP.savedOptions.slotGroups[tree][slotSet]) do
-                d(i, skillId)
                 newStars[i + offset] = skillId
             end
         end

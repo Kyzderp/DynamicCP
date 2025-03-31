@@ -158,7 +158,7 @@ end
 local function ExternalSelectStar(tree, dropdownIndex, skillId)
     local entry = skillIdToEntry[tree][dropdownIndex][skillId]
     if (not entry) then
-        d(tostring(dropdownIndex) .. " " .. GetChampionSkillName(skillId) .. " not unlocked")
+        DynamicCP.dbg(tostring(dropdownIndex) .. " " .. GetChampionSkillName(skillId) .. " not unlocked")
         return
     end
 

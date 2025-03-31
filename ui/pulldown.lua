@@ -148,7 +148,7 @@ local function RemoveSlotSetFromPresets(tree, slotSetName)
     for presetName, data in pairs(DynamicCP.savedOptions.cp[tree]) do
         if (data.slotSet == slotSetName) then
             -- TODO: summarize it
-            d("removed from preset " .. presetName)
+            DynamicCP.msg("Removed slot set from preset " .. presetName)
             data.slotSet = nil
         end
     end
@@ -159,7 +159,7 @@ local function RemoveSlotSetFromRules(tree, slotSetName)
     for ruleName, ruleData in pairs(DynamicCP.savedOptions.customRules.rules) do
         if (ruleData.stars[tree] == slotSetName) then
             ruleData.stars[tree] = nil
-            d("removed from rule " .. ruleName)
+            DynamicCP.msg("Removed slot set from custom rule " .. ruleName)
         end
     end
 end

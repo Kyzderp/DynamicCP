@@ -84,7 +84,6 @@ DynamicCP.ToggleSlotGroupMenu = ToggleMenu
 -- On entry clicked in menu
 ---------------------------------------------------------------------
 local function OnQuickstarSlotGroupClicked(text)
-    d(text)
     HideMenu()
 
     local data = DynamicCP.savedOptions.slotGroups[shownTree][text]
