@@ -303,6 +303,23 @@
                                     <Edge edgeSize="2"/>
                                     <AnchorFill/>
                                 </Backdrop>
+                                <Label name="$(parent)Hint" font="ZoFontGame" color="BBBBBB" text="No slottable sets." hidden="true" tier="HIGH" layer="TEXT">
+                                    <Dimensions x="200" y="16"/>
+                                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="4"/>
+                                </Label>
+                                <Control name="$(parent)Preview" mouseEnabled="false" movable="false" hidden="true" tier="MEDIUM">
+                                    <Dimensions x="200" y="104"/>
+                                    <Controls>
+                                        <Backdrop name="$(parent)Backdrop" centerColor="DD000000" edgeColor="DD000000" tier="MEDIUM" layer="TEXT">
+                                            <Edge edgeSize="2"/>
+                                            <AnchorFill/>
+                                        </Backdrop>
+                                        <Label name="$(parent)Label" font="ZoFontGame" color="FFFFFF" text="Celerity" hidden="false" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="HIGH" layer="TEXT">
+                                            <Dimensions x="200" y="120"/>
+                                            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="4"/>
+                                        </Label>
+                                    </Controls>
+                                </Control>
                             </Controls>
                         </Control>
                     </Controls>
@@ -315,6 +332,8 @@
             <FontColors normalColor="FFFFFF" mouseOverColor="80fdff"/>
             <Dimensions x="200" y="16"/>
             <OnClicked>DynamicCP.OnQuickstarSlotGroupClicked(self:GetLabelControl():GetText())</OnClicked>
+            <OnMouseEnter>DynamicCP.OnQuickstarSlotGroupEnter(self:GetLabelControl():GetText())</OnMouseEnter>
+            <OnMouseExit>DynamicCP.OnQuickstarSlotGroupExit(self:GetLabelControl():GetText())</OnMouseExit>
         </Button>
     </Controls>
 </GuiXml>

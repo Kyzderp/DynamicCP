@@ -174,8 +174,6 @@ local function InitSlotSetDropdown(tree, nameToSelect)
 end
 
 local function GetSlotSetString(tree, setData)
-    local firstIndex = TREE_TO_FIRST_INDEX[tree]
-
     local starsString = ""
     for i = 1, 4 do
         local starName = ""

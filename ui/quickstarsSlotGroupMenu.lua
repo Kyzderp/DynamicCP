@@ -54,7 +54,13 @@ local function ShowMenu(tree)
     end
 
     -- Adjust backdrop
-    DynamicCPQuickstarsContextMenu:SetHeight(#keys * 20 + 8)
+    if (#keys == 0) then
+        DynamicCPQuickstarsContextMenu:SetHeight(20 + 8)
+        DynamicCPQuickstarsContextMenuHint:SetHidden(false)
+    else
+        DynamicCPQuickstarsContextMenu:SetHeight(#keys * 20 + 8)
+        DynamicCPQuickstarsContextMenuHint:SetHidden(true)
+    end
     DynamicCPQuickstarsContextMenu:SetAnchor(TOPLEFT, DynamicCPQuickstars:GetNamedChild(tree .. "Button"), TOPRIGHT)
     DynamicCPQuickstarsContextMenu:SetHidden(false)
 
@@ -103,3 +109,54 @@ local function OnQuickstarSlotGroupClicked(text)
     end
 end
 DynamicCP.OnQuickstarSlotGroupClicked = OnQuickstarSlotGroupClicked
+
+
+---------------------------------------------------------------------
+-- On hover over entry in menu
+---------------------------------------------------------------------
+local function GetSlotSetString(tree, setData)
+    local TEXT_COLORS_HEX = {
+        Green = "a5d752",
+        Blue = "59bae7",
+        Red = "e46b2e",
+    }
+
+    local starsString = ""
+    for i = 1, 4 do
+        local starName = ""
+        local skillId = setData[i]
+        local color = TEXT_COLORS_HEX[tree]
+        if (skillId) then
+            starName = GetChampionSkillName(skillId)
+            local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
+            if (not unlocked) then
+                color = "ffff80"
+            end
+        end
+
+        starsString = starsString .. zo_strformat("|c<<1>><<2>> - <<C:3>>|r\n",
+            color,
+            i,
+            starName)
+    end
+
+    return starsString
+end
+
+function DynamicCP.OnQuickstarSlotGroupEnter(text)
+    local data = DynamicCP.savedOptions.slotGroups[shownTree][text]
+    if (not data) then
+        d("|cFF0000DOES NOT EXIST?|r")
+        return
+    end
+    local text = GetSlotSetString(shownTree, data)
+
+    DynamicCPQuickstarsContextMenuPreview:ClearAnchors()
+    DynamicCPQuickstarsContextMenuPreview:SetAnchor(TOPLEFT, DynamicCPQuickstarsContextMenu, TOPRIGHT, 2)
+    DynamicCPQuickstarsContextMenuPreview:SetHidden(false)
+    DynamicCPQuickstarsContextMenuPreviewLabel:SetText(text)
+end
+
+function DynamicCP.OnQuickstarSlotGroupExit(text)
+    DynamicCPQuickstarsContextMenuPreview:SetHidden(true)
+end
