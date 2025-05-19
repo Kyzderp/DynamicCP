@@ -756,10 +756,13 @@ local AUTOMATIC_STRING = "-- Auto slots --"
 
 local function GetCurrentlySelectedSlotSetName(tree)
     local presetName = selected[tree]
+    if (presetName == CREATE_NEW_STRING) then
+        return nil
+    end
     return DynamicCP.savedOptions.cp[tree][presetName].slotSet
 end
 
--- slotSetName: can be nil
+-- slotSetName: the slotSet to select after updating the dropdown, can be nil
 local function UpdateSlotSetDropdown(tree, slotSetName)
     if (not slotSetName) then
         slotSetName = AUTOMATIC_STRING
