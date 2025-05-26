@@ -188,6 +188,21 @@ local function ClearPendingSlottables()
 end
 DynamicCP.ClearPendingSlottables = ClearPendingSlottables
 
+
+---------------------------------------------------------------------
+-- Utils for Slottable Sets
+---------------------------------------------------------------------
+local function GetSlotSetIdByName(tree, name)
+    for id, data in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
+        if (data.name == name) then
+            return id
+        end
+    end
+    d("|cFF0000Dynamic CP: invalid, GetSlotSetIdByName")
+end
+DynamicCP.GetSlotSetIdByName = GetSlotSetIdByName
+
+
 ---------------------------------------------------------------------
 -- Modifications to slottables UI
 function DynamicCP.InitSlottables()

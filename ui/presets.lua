@@ -174,19 +174,19 @@ end
 ---------------------------------------------------------------------
 -- Get the slottables in the selected preset, or what would be
 -- slotted automatically
--- slotSetName: optional; or it's obtained from cp
-local function GetSlottablesFromPreset(cp, tree, slotSetName)
+-- slotSetId: optional; or it's obtained from cp
+local function GetSlottablesFromPreset(cp, tree, slotSetId)
     -- Return the slottables from the slot set if it exists
-    local slotSetName = cp.slotSet or slotSetName
-    if (slotSetName ~= nil) then
-        local slotSet = DynamicCP.savedOptions.slotGroups[tree][slotSetName]
+    local slotSetId = cp.slotSet or slotSetId
+    if (slotSetId ~= nil) then
+        local slotSet = DynamicCP.savedOptions.slotGroups[tree][slotSetId]
         if (slotSet ~= nil) then
             return slotSet
         end
 
-        DynamicCP.dbg("|cFF0000Couldn't find slot set " .. slotSetName .. ", slotting automatically for now.|r")
+        DynamicCP.dbg("|cFF0000Couldn't find slot set " .. slotSetId .. ", slotting automatically for now.|r")
     else
-        DynamicCP.dbg("|cFF0000No slotSetName, slotting automatically.|r")
+        DynamicCP.dbg("|cFF0000No slotSetId, slotting automatically.|r")
     end
 
     -- Otherwise, slot automatically. Collect slottables from the specified CP
@@ -230,14 +230,14 @@ end
 -- BUILDING STRING
 ---------------------------------------------------------------------
 -- Build string for the slottables in this CP
-local function GenerateTreeSlottables(cp, tree, slotSetName)
+local function GenerateTreeSlottables(cp, tree, slotSetId)
     local color = {
         Green = "a5d752",
         Blue = "59bae7",
         Red = "e46b2e",
     }
 
-    local slottables = GetSlottablesFromPreset(cp, tree, slotSetName)
+    local slottables = GetSlottablesFromPreset(cp, tree, slotSetId)
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
     local result = {}
     for i = 1, 4 do
@@ -305,7 +305,7 @@ end
 
 -- Build string for this CP, but only for certain tree
 -- Called when loading or saving a preset
-local function GenerateTree(cp, tree, slotSetName)
+local function GenerateTree(cp, tree, slotSetId)
     local result = "|cBBBBBB"
     local col1 = {}
     local col2 = {}
@@ -326,7 +326,7 @@ local function GenerateTree(cp, tree, slotSetName)
         end
     end
 
-    return result .. "|r", numLines, col1, col2, GenerateTreeSlottables(cp, tree, slotSetName)
+    return result .. "|r", numLines, col1, col2, GenerateTreeSlottables(cp, tree, slotSetId)
 end
 
 
@@ -739,9 +739,9 @@ DynamicCP.TogglePresetsWindow = TogglePresetsWindow
 -- Show a "tooltip" for the currently selected preset and slot set
 -- Called upon selecting a preset from the dropdown
 ---------------------------------------------------------------------
-local function ShowCPPointsOrDiff(tree, createNew, createNewText, createNewSlotSet, existingLoadText, afterCP)
+local function ShowCPPointsOrDiff(tree, createNew, createNewText, slotSetId, existingLoadText, afterCP)
     if (createNew) then
-        local diffText, numChanges, col1, col2, slottablesText = GenerateTree(DynamicCP.GetCommittedCP(), tree, createNewSlotSet)
+        local diffText, numChanges, col1, col2, slottablesText = GenerateTree(DynamicCP.GetCommittedCP(), tree, slotSetId)
         ShowMessage(tree, createNewText, diffText, {1, 1, 1, 1}, numChanges, col1, col2, slottablesText)
     else
         local diffText, numChanges, col1, col2, slottablesText = GenerateDiff(DynamicCP.GetCommittedCP(), afterCP)
@@ -754,7 +754,7 @@ end
 -- Populate the slot set dropdown
 local AUTOMATIC_STRING = "-- Auto slots --"
 
-local function GetCurrentlySelectedSlotSetName(tree)
+local function GetCurrentlySelectedSlotSetId(tree)
     local presetName = selected[tree]
     if (presetName == CREATE_NEW_STRING) then
         return nil
@@ -762,8 +762,8 @@ local function GetCurrentlySelectedSlotSetName(tree)
     return DynamicCP.savedOptions.cp[tree][presetName].slotSet
 end
 
--- slotSetName: the slotSet to select after updating the dropdown, can be nil
-local function UpdateSlotSetDropdown(tree, slotSetName)
+-- slotSetId: the slotSet to select after updating the dropdown, can be nil
+local function UpdateSlotSetDropdown(tree, slotSetId)
     if (not slotSetName) then
         slotSetName = AUTOMATIC_STRING
     end
@@ -773,14 +773,17 @@ local function UpdateSlotSetDropdown(tree, slotSetName)
         if (slotSetName == AUTOMATIC_STRING) then
             slotSetName = nil
         end
+
+        local selectedSlotSetId = DynamicCP.GetSlotSetIdByName(tree, slotSetName)
+
         -- TODO: add deprecated warning for preset window
         local presetName = selected[tree]
         if (presetName ~= CREATE_NEW_STRING) then
-            DynamicCP.savedOptions.cp[tree][presetName].slotSet = slotSetName
+            DynamicCP.savedOptions.cp[tree][presetName].slotSet = selectedSlotSetId
         end
 
         local after = DynamicCP.savedOptions.cp[tree][presetName] -- Can be nil
-        ShowCPPointsOrDiff(tree, presetName == CREATE_NEW_STRING, nil, slotSetName, nil, after)
+        ShowCPPointsOrDiff(tree, presetName == CREATE_NEW_STRING, nil, slotSetId, nil, after)
     end
 
 
@@ -815,7 +818,7 @@ function DynamicCP.RefreshPresetsSlotSetDropdown(tree)
         return
     end
 
-    UpdateSlotSetDropdown(tree, GetCurrentlySelectedSlotSetName(tree))
+    UpdateSlotSetDropdown(tree, GetCurrentlySelectedSlotSetId(tree))
 end
 
 ---------------------------------------------------------------------

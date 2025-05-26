@@ -155,15 +155,19 @@ local function GetCurrentPreview()
             ["Red"] = "e46b2e",
         }
         for tree, color in pairs(trees) do
-            local slotSet = rule.stars[tree]
-            if (slotSet and slotSet ~= -1) then
+            local slotSetId = rule.stars[tree]
+            if (slotSetId and slotSetId ~= -1) then
+                local slotSet = DynamicCP.savedOptions.slotGroups[tree][slotSetId]
                 local slotSetStars = ""
-                for _, skillId in pairs(DynamicCP.savedOptions.slotGroups[tree][slotSet]) do
-                    local comma = ", "
-                    if (slotSetStars == "") then comma = "" end
-                    slotSetStars = zo_strformat("<<1>><<2>><<3>>", slotSetStars, comma, GetChampionSkillName(skillId))
+                for i = 1, 4 do
+                    local skillId = slotSet[i]
+                    if (skillId) then
+                        local comma = ", "
+                        if (slotSetStars == "") then comma = "" end
+                        slotSetStars = zo_strformat("<<1>><<2>><<3>>", slotSetStars, comma, GetChampionSkillName(skillId))
+                    end
                 end
-                preview = zo_strformat("<<1>>\n|c<<2>>Slottable set \"<<3>>\" (Current: <<4>>)", preview, color, slotSet, slotSetStars)
+                preview = zo_strformat("<<1>>\n|c<<2>>Slottable set \"<<3>>\" (Current: <<4>>)", preview, color, slotSet.name, slotSetStars)
             end
         end
 

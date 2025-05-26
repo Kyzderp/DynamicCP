@@ -37,15 +37,17 @@ local function ShowMenu(tree)
 
     -- Sort keys because ugh
     local keys = {}
-    for groupName, _ in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
-        table.insert(keys, groupName)
+    local nameToId = {}
+    for setId, setData in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
+        table.insert(keys, setData.name)
+        nameToId[setData.name] = setId
     end
     table.sort(keys)
 
     -- Create a button for each
     for i, key in ipairs(keys) do
         local button = GetOrCreateMenuButton(i)
-        button:SetText(key)
+        button:SetText(nameToId[key])
     end
 
     -- Hide unused entries
@@ -92,7 +94,8 @@ DynamicCP.ToggleSlotGroupMenu = ToggleMenu
 local function OnQuickstarSlotGroupClicked(text)
     HideMenu()
 
-    local data = DynamicCP.savedOptions.slotGroups[shownTree][text]
+    local setId = DynamicCP.GetSlotSetIdByName(shownTree, text)
+    local data = DynamicCP.savedOptions.slotGroups[shownTree][setId]
     if (not data) then
         d("|cFF0000DOES NOT EXIST?|r")
         return
@@ -144,17 +147,18 @@ local function GetSlotSetString(tree, setData)
 end
 
 function DynamicCP.OnQuickstarSlotGroupEnter(text)
-    local data = DynamicCP.savedOptions.slotGroups[shownTree][text]
+    local setId = DynamicCP.GetSlotSetIdByName(shownTree, text)
+    local data = DynamicCP.savedOptions.slotGroups[shownTree][setId]
     if (not data) then
         d("|cFF0000DOES NOT EXIST?|r")
         return
     end
-    local text = GetSlotSetString(shownTree, data)
+    local slotSetString = GetSlotSetString(shownTree, data)
 
     DynamicCPQuickstarsContextMenuPreview:ClearAnchors()
     DynamicCPQuickstarsContextMenuPreview:SetAnchor(TOPLEFT, DynamicCPQuickstarsContextMenu, TOPRIGHT, 2)
     DynamicCPQuickstarsContextMenuPreview:SetHidden(false)
-    DynamicCPQuickstarsContextMenuPreviewLabel:SetText(text)
+    DynamicCPQuickstarsContextMenuPreviewLabel:SetText(slotSetString)
 end
 
 function DynamicCP.OnQuickstarSlotGroupExit(text)

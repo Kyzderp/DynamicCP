@@ -13,8 +13,8 @@ local defaultOptions = {
     },
     pulldownExpanded = true,
     charData = {}, -- {[123214123] = {green="craft", blue="dps", red="magdps", armoryBuilds={[1]={green="craft", blue="dps", red="magdps"}}}}
-    slotGroups = {
-        Red = {}, -- ["Tank"] = {[1] = 12, [2] = 34, [3] = 56, [4] = 78},
+    slotGroups = { -- Key them by ID, so that they're easily renamable
+        Red = {}, -- [1] = {["name"] = "DPS", [1] = 12, [2] = 34, [3] = 56, [4] = 78}, ["Tank"] = {["name"] = "Tank", [1] = 12, [2] = 34, [3] = 56, [4] = 78},
         Green = {},
         Blue = {},
     },
@@ -339,6 +339,15 @@ local function Initialize()
         DynamicCP.savedOptions.quickstarsShowOnHudUi = DynamicCP.savedOptions.quickstarsShowOnHud
     end
     DynamicCP.savedOptions.settingsVersion = 1
+
+    -- Add names to slottable sets if they already exist (from testing version, which only used names, not IDs)
+    for tree, _ in pairs(DynamicCP.savedOptions.slotGroups) do
+        for id, data in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
+            if (not data.name) then
+                DynamicCP.savedOptions.slotGroups[tree][id].name = id
+            end
+        end
+    end
 
     -- Settings menu
     DynamicCP:CreateSettingsMenu()

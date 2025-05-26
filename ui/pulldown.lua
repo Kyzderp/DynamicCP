@@ -76,8 +76,8 @@ local function FindChampionSkillData(skillId)
     end
 end
 
-local function LoadSlotSet(tree, name)
-    local setData = DynamicCP.savedOptions.slotGroups[tree][name]
+local function LoadSlotSet(tree, id)
+    local setData = DynamicCP.savedOptions.slotGroups[tree][id]
     for i = 1, 4 do
         local slot = CHAMPION_PERKS.championBar:GetSlot(TREE_TO_FIRST_INDEX[tree] + i - 1)
         slot:ClearSlot()
@@ -113,8 +113,8 @@ local function ShowSlottables(tree, data)
     end
 end
 
-local function PreviewSlotGroup(tree, slotSetName)
-    local data = DynamicCP.savedOptions.slotGroups[tree][slotSetName]
+local function PreviewSlotGroup(tree, slotSetId)
+    local data = DynamicCP.savedOptions.slotGroups[tree][slotSetId]
     ShowSlottables(tree, data)
 end
 
@@ -135,7 +135,7 @@ local function RestoreSlotGroup(tree)
 end
 
 -- Initialize the dropdown with the saved slot sets
-local function InitSlotSetDropdown(tree, nameToSelect)
+local function InitSlotSetDropdown(tree, idToSelect)
     local dropdownControl = DynamicCPPulldown:GetNamedChild(tree .. "SlotSetControlsDropdown")
     local dropdown = ZO_ComboBox_ObjectFromContainer(dropdownControl)
     dropdown:ClearItems()
@@ -143,21 +143,21 @@ local function InitSlotSetDropdown(tree, nameToSelect)
 
     -- Add the data to dropdown
     local entryToSelect
-    for setName, setData in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
+    for setId, setData in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
         local function OnItemSelected()
-            DynamicCP.dbg("Loading " .. setName)
-            LoadSlotSet(tree, setName)
-            currentSelected[tree] = setName
+            DynamicCP.dbg("Loading " .. tostring(setId) .. " " .. setData.name)
+            LoadSlotSet(tree, setId)
+            currentSelected[tree] = setId
             dropdownControl:GetParent():GetNamedChild("Delete"):SetHidden(false)
         end
 
         -- TODO: tooltip on dropdown entry hover with what stars it has?
-        local entry = ZO_ComboBox:CreateItemEntry(string.format("|c%s%s|r", TEXT_COLORS_HEX[tree], setName), OnItemSelected)
-        ZO_ComboBox:SetItemOnEnter(entry, function() PreviewSlotGroup(tree, setName) end)
+        local entry = ZO_ComboBox:CreateItemEntry(string.format("|c%s%s|r", TEXT_COLORS_HEX[tree], setData.name), OnItemSelected)
+        ZO_ComboBox:SetItemOnEnter(entry, function() PreviewSlotGroup(tree, setId) end)
         ZO_ComboBox:SetItemOnExit(entry, function() RestoreSlotGroup(tree) end)
         dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
 
-        if (setName == nameToSelect) then
+        if (setId == idToSelect) then
             entryToSelect = entry
         end
     end
@@ -165,7 +165,7 @@ local function InitSlotSetDropdown(tree, nameToSelect)
     -- TODO: if pending is cancelled, then need to deselect?
     if (entryToSelect) then
         dropdown:SelectItem(entryToSelect)
-        currentSelected[tree] = nameToSelect
+        currentSelected[tree] = idToSelect
     else
         currentSelected[tree] = nil
     end
@@ -190,10 +190,10 @@ local function GetSlotSetString(tree, setData)
     return starsString
 end
 
-local function RemoveSlotSetFromPresets(tree, slotSetName)
-    if (not slotSetName) then return end
+local function RemoveSlotSetFromPresets(tree, slotSetId)
+    if (not slotSetId) then return end
     for presetName, data in pairs(DynamicCP.savedOptions.cp[tree]) do
-        if (data.slotSet == slotSetName) then
+        if (data.slotSet == slotSetId) then
             -- TODO: summarize it
             DynamicCP.msg("Removed slot set from preset " .. presetName)
             data.slotSet = nil
@@ -201,10 +201,10 @@ local function RemoveSlotSetFromPresets(tree, slotSetName)
     end
 end
 
-local function RemoveSlotSetFromRules(tree, slotSetName)
-    if (not slotSetName) then return end
+local function RemoveSlotSetFromRules(tree, slotSetId)
+    if (not slotSetId) then return end
     for ruleName, ruleData in pairs(DynamicCP.savedOptions.customRules.rules) do
-        if (ruleData.stars[tree] == slotSetName) then
+        if (ruleData.stars[tree] == slotSetId) then
             ruleData.stars[tree] = nil
             DynamicCP.msg("Removed slot set from custom rule " .. ruleName)
         end
@@ -214,19 +214,20 @@ end
 -- Called from pulldown.xml. Delete the currently selected slot set
 function DynamicCP.DeleteSlotSet(button)
     local tree = string.sub(button:GetParent():GetParent():GetName(), 18)
-    local setName = currentSelected[tree]
+    local setId = currentSelected[tree]
 
-    local starsString = GetSlotSetString(tree, DynamicCP.savedOptions.slotGroups[tree][setName])
+    local starsString = GetSlotSetString(tree, DynamicCP.savedOptions.slotGroups[tree][setId])
     local function OnDeleteConfirmed()
-        DynamicCP.savedOptions.slotGroups[tree][setName] = nil
+        DynamicCP.savedOptions.slotGroups[tree][setId] = nil
         InitSlotSetDropdown(tree)
-        RemoveSlotSetFromPresets(tree, setName)
-        RemoveSlotSetFromRules(tree, setName)
+        RemoveSlotSetFromPresets(tree, setId)
+        RemoveSlotSetFromRules(tree, setId)
         DynamicCP.RefreshPresetsSlotSetDropdown(tree)
         DynamicCP.BuildSlotSetDropdowns()
         DynamicCP.UpdateSlotSetDropdowns()
     end
 
+    local setName = DynamicCP.savedOptions.slotGroups[tree][setId].name
     LibDialog:RegisterDialog(
         DynamicCP.name,
         "ConfirmDeleteSlotSet",
@@ -237,6 +238,17 @@ function DynamicCP.DeleteSlotSet(button)
         nil,
         true)
     LibDialog:ShowDialog(DynamicCP.name, "ConfirmDeleteSlotSet")
+end
+
+local function GetNewSlotSetId(tree)
+    local i = 1
+    while true do
+        local attempt = tree .. tostring(i)
+        if (not DynamicCP.savedOptions.slotGroups[tree][attempt]) then
+            return attempt
+        end
+        i = i + 1
+    end
 end
 
 -- Called from pulldown.xml. Save the UI-pending slottables into a slot set
@@ -260,13 +272,12 @@ function DynamicCP.SaveSlotSet(button)
         end
     end
 
-
     -- Save in data
-    local overwrite = DynamicCP.savedOptions.slotGroups[tree][pendingName]
+    local setId = GetNewSlotSetId(tree)
     local starsString = GetSlotSetString(tree, setData)
     local function OnSaveConfirmed()
-        DynamicCP.savedOptions.slotGroups[tree][pendingName] = setData
-        InitSlotSetDropdown(tree, pendingName)
+        DynamicCP.savedOptions.slotGroups[tree][setId] = setData
+        InitSlotSetDropdown(tree, setId)
         DynamicCP.RefreshPresetsSlotSetDropdown(tree)
         DynamicCP.BuildSlotSetDropdowns()
         DynamicCP.UpdateSlotSetDropdowns()
