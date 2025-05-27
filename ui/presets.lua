@@ -776,7 +776,6 @@ local function UpdateSlotSetDropdown(tree, slotSetId)
 
         local selectedSlotSetId = DynamicCP.GetSlotSetIdByName(tree, slotSetName)
 
-        -- TODO: add deprecated warning for preset window
         local presetName = selected[tree]
         if (presetName ~= CREATE_NEW_STRING) then
             DynamicCP.savedOptions.cp[tree][presetName].slotSet = selectedSlotSetId

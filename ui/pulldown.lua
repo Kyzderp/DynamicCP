@@ -1,5 +1,7 @@
 DynamicCP = DynamicCP or {}
 
+local CREATE_NEW_STRING = "-- Create New --"
+
 ---------------------------------------------------------------------
 -- Per-tree values
 local function GetMiddlePoint(tree)
@@ -47,13 +49,6 @@ end
 -- Slot sets
 ---------------------------------------------------------------------
 local currentSelected = {} -- {Green = "Craft",}
-
--- Called from pulldown.xml. Disable the save button if no name is specified
-function DynamicCP.OnSlotSetTextFocusLost(editBox)
-    local text = editBox:GetText()
-    local saveButton = editBox:GetParent():GetNamedChild("Save")
-    saveButton:SetHidden(text == nil or text == "")
-end
 
 -- Iterate through the UI stars to find the championSkilLData for a skillId
 -- I guess this info is UI-only, so this is Not IdealTM
@@ -134,6 +129,26 @@ local function RestoreSlotGroup(tree)
     ShowSlottables(tree, data)
 end
 
+-- Generate a unique starting name for the slot set
+local function FindUniqueSlotSetName(tree)
+    local newIndex = 1
+    local conflict = false
+    while (true) do
+        local newName = "Slot Set " .. tostring(newIndex)
+        for _, data in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
+            if (data.name == newName) then
+                conflict = true
+                break
+            end
+        end
+        if (not conflict) then
+            return newName
+        end
+        newIndex = newIndex + 1
+        conflict = false
+    end
+end
+
 -- Initialize the dropdown with the saved slot sets
 local function InitSlotSetDropdown(tree, idToSelect)
     local dropdownControl = DynamicCPPulldown:GetNamedChild(tree .. "SlotSetControlsDropdown")
@@ -149,6 +164,9 @@ local function InitSlotSetDropdown(tree, idToSelect)
             LoadSlotSet(tree, setId)
             currentSelected[tree] = setId
             dropdownControl:GetParent():GetNamedChild("Delete"):SetHidden(false)
+            dropdownControl:GetParent():GetNamedChild("TextField"):SetHidden(false)
+            dropdownControl:GetParent():GetNamedChild("TextField"):SetText(setData.name)
+            dropdownControl:GetParent():GetNamedChild("Save"):SetHidden(false)
         end
 
         -- TODO: tooltip on dropdown entry hover with what stars it has?
@@ -162,6 +180,19 @@ local function InitSlotSetDropdown(tree, idToSelect)
         end
     end
 
+    -- Create New entry
+    local entry = ZO_ComboBox:CreateItemEntry("|cEBDB34" .. CREATE_NEW_STRING .. "|r", function()
+        currentSelected[tree] = nil
+
+        -- Pre-fill the name and show the save button, hide delete button
+        local newName = FindUniqueSlotSetName(tree)
+        dropdownControl:GetParent():GetNamedChild("TextField"):SetHidden(false)
+        dropdownControl:GetParent():GetNamedChild("TextField"):SetText(newName)
+        dropdownControl:GetParent():GetNamedChild("Save"):SetHidden(false)
+        dropdownControl:GetParent():GetNamedChild("Delete"):SetHidden(true)
+    end)
+    dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
+
     -- TODO: if pending is cancelled, then need to deselect?
     if (entryToSelect) then
         dropdown:SelectItem(entryToSelect)
@@ -170,6 +201,8 @@ local function InitSlotSetDropdown(tree, idToSelect)
         currentSelected[tree] = nil
     end
     dropdownControl:GetParent():GetNamedChild("Delete"):SetHidden(currentSelected[tree] == nil)
+    dropdownControl:GetParent():GetNamedChild("TextField"):SetHidden(currentSelected[tree] == nil)
+    dropdownControl:GetParent():GetNamedChild("Save"):SetHidden(currentSelected[tree] == nil)
     dropdown:UpdateItems()
 end
 
@@ -207,6 +240,30 @@ local function RemoveSlotSetFromRules(tree, slotSetId)
         if (ruleData.stars[tree] == slotSetId) then
             ruleData.stars[tree] = nil
             DynamicCP.msg("Removed slot set from custom rule " .. ruleName)
+        end
+    end
+end
+
+-- Called from pulldown.xml. When user is done entering a name, either
+-- rename the currently selected, or if this is for creating a new set,
+-- then do nothing
+function DynamicCP.OnSlotSetTextFocusLost(editBox)
+    local tree = string.sub(editBox:GetParent():GetParent():GetName(), 18)
+    local text = editBox:GetText()
+
+    -- TODO: name validation
+    -- If renaming, do it immediately
+    if (currentSelected[tree]) then
+        if (text == "") then -- Don't allow empty. Put the name back
+            editBox:SetText(DynamicCP.savedOptions.slotGroups[tree][currentSelected[tree]].name)
+            return
+        end
+
+        DynamicCP.savedOptions.slotGroups[tree][currentSelected[tree]].name = text
+        InitSlotSetDropdown(tree, currentSelected[tree])
+    else
+        if (text == "") then -- Don't allow empty. Generate a name again
+            editBox:SetText(FindUniqueSlotSetName(tree))
         end
     end
 end
@@ -271,9 +328,23 @@ function DynamicCP.SaveSlotSet(button)
             setData[i] = slottableSkillData.championSkillId
         end
     end
+    setData.name = pendingName
+
+    local setId
+    local dialogTitle, dialogFormat
+    if (currentSelected[tree] ~= nil) then
+        -- Overwriting the current
+        setId = currentSelected[tree]
+        dialogTitle = "Confirm Overwriting Slottable Set"
+        dialogFormat = "Overwrite |c<<1>><<2>>|r?<<3>>"
+    else
+        -- Or making a new set
+        setId = GetNewSlotSetId(tree)
+        dialogTitle = "Confirm Saving Slottable Set"
+        dialogFormat = "Save the following as |c<<1>><<2>>|r?<<3>>"
+    end
 
     -- Save in data
-    local setId = GetNewSlotSetId(tree)
     local starsString = GetSlotSetString(tree, setData)
     local function OnSaveConfirmed()
         DynamicCP.savedOptions.slotGroups[tree][setId] = setData
@@ -281,15 +352,13 @@ function DynamicCP.SaveSlotSet(button)
         DynamicCP.RefreshPresetsSlotSetDropdown(tree)
         DynamicCP.BuildSlotSetDropdowns()
         DynamicCP.UpdateSlotSetDropdowns()
-        button:GetParent():GetNamedChild("TextField"):SetText("")
-        button:GetParent():GetNamedChild("Save"):SetHidden(true)
     end
 
     LibDialog:RegisterDialog(
         DynamicCP.name,
         "ConfirmSaveSlotSet",
-        "Confirm Saving Slottable Set",
-        zo_strformat("Save the following as |c<<1>><<2>>|r?<<3>>", TEXT_COLORS_HEX[tree], pendingName, starsString),
+        dialogTitle,
+        zo_strformat(dialogFormat, TEXT_COLORS_HEX[tree], pendingName, starsString),
         OnSaveConfirmed,
         nil,
         nil,

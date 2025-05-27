@@ -198,7 +198,7 @@ local function GetSlotSetIdByName(tree, name)
             return id
         end
     end
-    d("|cFF0000Dynamic CP: invalid, GetSlotSetIdByName")
+    -- Can return nil when name is "-- Auto slots --"
 end
 DynamicCP.GetSlotSetIdByName = GetSlotSetIdByName
 
