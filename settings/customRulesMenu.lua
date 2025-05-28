@@ -167,7 +167,7 @@ local function GetCurrentPreview()
                         slotSetStars = zo_strformat("<<1>><<2>><<3>>", slotSetStars, comma, GetChampionSkillName(skillId))
                     end
                 end
-                preview = zo_strformat("<<1>>\n|c<<2>>Slottable set \"<<3>>\" (Current: <<4>>)", preview, color, slotSet.name, slotSetStars)
+                preview = zo_strformat("<<1>>\n|c<<2>>Slottable set \"<<3>>\" (Current: <<4>>)|r", preview, color, slotSet.name, slotSetStars)
             end
         end
 
@@ -278,8 +278,8 @@ local function DeepCopyRule(oldRule, newRule)
     newRule.reeval = oldRule.reeval or false
 
     newRule.stars = {}
-    for i, id in ipairs(oldRule.stars) do
-        newRule.stars[i] = id
+    for k, v in pairs(oldRule.stars) do
+        newRule.stars[k] = v
     end
 
     newRule.chars = {}
@@ -413,22 +413,23 @@ local function BuildSlotSetDropdowns()
     for tree, color in pairs(treeToColor) do
         slotSetDisplays[tree] = {"--"}
         slotSetValues[tree] = {-1}
-        for name, _ in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
-            local displayName = string.format("|c%s%s|r", color, name)
+        for id, setData in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
+            local displayName = string.format("|c%s%s|r", color, setData.name)
             table.insert(unsortedSets, {
                 tree = tree,
-                name = name,
+                name = setData.name,
+                id = id,
                 displayName = displayName,
             })
         end
     end
 
     table.sort(unsortedSets, function(item1, item2)
-            return item1.name < item2. name
+            return item1.name < item2.name
         end)
     for _, data in ipairs(unsortedSets) do
         table.insert(slotSetDisplays[data.tree], data.displayName)
-        table.insert(slotSetValues[data.tree], data.name)
+        table.insert(slotSetValues[data.tree], data.id)
     end
 end
 DynamicCP.BuildSlotSetDropdowns = BuildSlotSetDropdowns
