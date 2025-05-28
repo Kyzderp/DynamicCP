@@ -261,6 +261,9 @@ function DynamicCP.OnSlotSetTextFocusLost(editBox)
 
         DynamicCP.savedOptions.slotGroups[tree][currentSelected[tree]].name = text
         InitSlotSetDropdown(tree, currentSelected[tree])
+        DynamicCP.RefreshPresetsSlotSetDropdown(tree)
+        DynamicCP.BuildSlotSetDropdowns()
+        DynamicCP.UpdateSlotSetDropdowns()
     else
         if (text == "") then -- Don't allow empty. Generate a name again
             editBox:SetText(FindUniqueSlotSetName(tree))

@@ -764,10 +764,6 @@ end
 
 -- slotSetId: the slotSet to select after updating the dropdown, can be nil
 local function UpdateSlotSetDropdown(tree, slotSetId)
-    if (not slotSetName) then
-        slotSetName = AUTOMATIC_STRING
-    end
-
     local function OnSetSelected(_, _, entry)
         local slotSetName = entry.name:gsub("|[cC]%x%x%x%x%x%x", ""):gsub("|r", "")
         if (slotSetName == AUTOMATIC_STRING) then
@@ -790,11 +786,11 @@ local function UpdateSlotSetDropdown(tree, slotSetId)
     local desiredEntry = nil
     dropdown:ClearItems()
     local data = DynamicCP.savedOptions.slotGroups[tree]
-    for name, _ in pairs(data) do
-        local entry = ZO_ComboBox:CreateItemEntry("|c9FBFAF" .. name .. "|r", OnSetSelected)
+    for id, setData in pairs(data) do
+        local entry = ZO_ComboBox:CreateItemEntry("|c9FBFAF" .. setData.name .. "|r", OnSetSelected)
         dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
 
-        if (name == slotSetName) then
+        if (slotSetId == id) then
             desiredEntry = entry
         end
     end
@@ -802,7 +798,7 @@ local function UpdateSlotSetDropdown(tree, slotSetId)
     -- Create an -- Automatic -- entry for when there is no attached slot set
     local automaticEntry = ZO_ComboBox:CreateItemEntry("|cEBDB34" .. AUTOMATIC_STRING .. "|r", OnSetSelected)
     dropdown:AddItem(automaticEntry, ZO_COMBOBOX_SUPRESS_UPDATE)
-    if (slotSetName == AUTOMATIC_STRING) then
+    if (slotSetId == nil) then
         desiredEntry = automaticEntry
     end
 
