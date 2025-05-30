@@ -37,17 +37,15 @@ local function ShowMenu(tree)
 
     -- Sort keys because ugh
     local keys = {}
-    local nameToId = {}
     for setId, setData in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
         table.insert(keys, setData.name)
-        nameToId[setData.name] = setId
     end
     table.sort(keys)
 
     -- Create a button for each
     for i, key in ipairs(keys) do
         local button = GetOrCreateMenuButton(i)
-        button:SetText(nameToId[key])
+        button:SetText(key)
     end
 
     -- Hide unused entries
