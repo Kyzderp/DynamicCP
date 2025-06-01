@@ -274,10 +274,10 @@ local function Initialize()
                 veteran = true,
                 reeval = false,
                 stars = {
-                    [1] = 79, -- Treasure Hunter
-                    [2] = 66, -- Steed's Blessing
-                    [3] = 86, -- Liquid Efficiency
-                    [4] = -1, -- Flex for JoaT Homemaker / Rationer / Upkeep
+                    [1] = 66, -- Steed's Blessing
+                    [2] = -1,
+                    [3] = -1,
+                    [4] = -1,
                     [5] = -1,
                     [6] = -1,
                     [7] = -1,

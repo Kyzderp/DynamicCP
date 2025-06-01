@@ -47,38 +47,40 @@ GetChampionSkillName(GetChampionSkillId(disciplineIndex, skillIndex))
 12 Focused Mending 26
 13 Swift Renewal 28
 14 Piercing 10
-15 Master-at-Arms 264
-16 Weapons Expert 259
-17 Flawless Ritual 17
-18 War Mage 21
-19 Battle Mastery 18
-20 Mighty 22
-21 Deadly Aim 25
-22 Biting Aura 23
-23 Thaumaturge 27
-24 Reaving Blows 30
-25 Wrathful Strikes 8
-26 Occult Overload 32
-27 Backstabber 31
-28 Tireless Discipline 6
-29 Quick Recovery 20
-30 Ironclad 265
-31 Resilience 13
-32 Preparation 14
-33 Elemental Aegis 15
-34 Hardy 16
-35 Enduring Resolve 136
-36 Reinforced 160
-37 Riposte 162
-38 Bulwark 159
-39 Last Stand 161
-40 Cutting Defense 33
-41 Duelist's Rebuff 134
-42 Unassailable 133
-43 Eldritch Insight 99
-44 Endless Endurance 5
-45 Untamed Aggression 4
-46 Arcane Supremacy 3
+15 Exploiter 277
+16 Force of Nature 276
+17 Master-at-Arms 264
+18 Weapons Expert 259
+19 Flawless Ritual 17
+20 War Mage 21
+21 Battle Mastery 18
+22 Mighty 22
+23 Deadly Aim 25
+24 Biting Aura 23
+25 Thaumaturge 27
+26 Reaving Blows 30
+27 Wrathful Strikes 8
+28 Occult Overload 32
+29 Backstabber 31
+30 Tireless Discipline 6
+31 Quick Recovery 20
+32 Ironclad 265
+33 Resilience 13
+34 Preparation 14
+35 Elemental Aegis 15
+36 Hardy 16
+37 Enduring Resolve 136
+38 Reinforced 160
+39 Riposte 162
+40 Bulwark 159
+41 Last Stand 161
+42 Cutting Defense 33
+43 Duelist's Rebuff 134
+44 Unassailable 133
+45 Eldritch Insight 99
+46 Endless Endurance 5
+47 Untamed Aggression 4
+48 Arcane Supremacy 3
 
 1 Sprinter 38
 2 Hasty 42
