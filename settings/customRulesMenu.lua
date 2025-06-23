@@ -81,9 +81,15 @@ local function GetCurrentPreview()
 
     local rule = DynamicCP.savedOptions.customRules.rules[selectedRuleName]
 
+    -- The main trigger of the rule
+    local previewTrigger = triggerToPreview[rule.trigger]
+    if (rule.param1 == "*") then
+        previewTrigger = "entering any zone"
+    end
+
     -- Build the extra info into a more readable string
     local triggerExtraInfo = ""
-    if (rule.trigger == DynamicCP.TRIGGER_ZONEID) then
+    if (rule.trigger == DynamicCP.TRIGGER_ZONEID and rule.param1 ~= "*") then
         local zoneIds = {}
         for str in string.gmatch(rule.param1, "([^%%]+)") do
             str = string.gsub(str, "^%s+", "")
@@ -138,7 +144,7 @@ local function GetCurrentPreview()
 
     -- Format everything so far
     local preview = string.format("Upon |c88FF88%s%s|r%s as |c88FF88%s|r, %sautomatically %s",
-        triggerToPreview[rule.trigger],
+        previewTrigger,
         triggerExtraInfo,
         difficultyString,
         roleString,
