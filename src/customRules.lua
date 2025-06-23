@@ -285,7 +285,16 @@ local function ApplyRules(sortedRuleNames, triggerString)
         -- Third pass to generate text for the dialog. Not the most efficient probably...
         local flipped = GetFlippedSlottables()
         local diffMessages = {}
-        for slotIndex, skillId in pairs(pendingSlottables) do
+
+        -- Sort the keys by slot index so they're not all ugly out of order
+        local pendingSlotIndices = {}
+        for slotIndex, _ in pairs(pendingSlottables) do
+            table.insert(pendingSlotIndices, slotIndex)
+        end
+        table.sort(pendingSlotIndices)
+
+        for _, slotIndex in ipairs(pendingSlotIndices) do
+            local skillId = pendingSlottables[slotIndex]
             local unlocked = WouldChampionSkillNodeBeUnlocked(skillId,
                 GetNumPointsSpentOnChampionSkill(skillId))
             local isSlottable = CanChampionSkillTypeBeSlotted(GetChampionSkillType(skillId))
