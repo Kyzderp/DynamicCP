@@ -18,6 +18,7 @@ src/customRules.lua
 src/points.lua
 src/slottables.lua
 src/lastPresets.lua
+src/smartPresets.lua
 
 data/presetData.lua
 data/zoneData.lua
