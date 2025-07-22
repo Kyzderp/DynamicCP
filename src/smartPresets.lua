@@ -21,12 +21,6 @@ local blue_dps_flex_st = {
     277, -- Exploiter
 }
 
-local function GetFlex(fatecarverUnlocked, index)
-    if (fatecarverUnlocked) then
-        return blue_dps_flex_arc[index]
-    end
-    return blue_dps_flex_st[index]
-end
 
 -----------------------------------------------------------
 -- Passive stats
@@ -49,12 +43,6 @@ local blue_dps_mag = {
     6, -- Tireless Discipline
 }
 
-local function GetPassive(isStamHigher, index)
-    if (isStamHigher) then
-        return blue_dps_stam[index]
-    end
-    return blue_dps_mag[index]
-end
 
 -----------------------------------------------------------
 -- Role presets
@@ -64,67 +52,83 @@ end
 -- If passive is specified, it uses the index in the respective data
 -----------------------------------------------------------
 local BLUE_DPS = {
-    {
-        id = 10, -- Piercing (open nodes)
-        stage = 1,
-    },
-    {
-        flex = 1,
-    },
-    {
-        flex = 2,
-    },
-    {
-        id = 11, -- Precision (open nodes)
-        stage = 1,
-    },
-    {
-        flex = 3,
-    },
-    {
-        flex = 4,
-    },
-    {
-        id = 10, -- Piercing (maxed)
-    },
-    {
-        id = 11, -- Precision (maxed)
-    },
-    {
-        passive = 1, -- Flawless Ritual / Battle Mastery
-    },
-    {
-        passive = 2, -- War Mage / Mighty
-    },
-    {
-        passive = 3, -- Flawless Ritual / Battle Mastery
-    },
-    {
-        passive = 4, -- War Mage / Mighty
-    },
-    {
-        passive = 5, -- Eldritch Insight / Tireless Discipline
-    },
-    {
-        id = 20, -- Quick Recovery (open nodes)
-        stage = 1,
-    },
-    {
-        id = 14, -- Preparation
-    },
-    {
-        id = 15, -- Elemental Aegis
-    },
-    {
-        id = 16, -- Hardy
-    },
-    {
-        id = 20, -- Quick Recovery (maxed)
-    },
-    {
-        id = 108, -- Blessed
+    GetFlex = function(fatecarverUnlocked, index)
+        if (fatecarverUnlocked) then
+            return blue_dps_flex_arc[index]
+        end
+        return blue_dps_flex_st[index]
+    end,
+    GetPassive = function(isStamHigher, index)
+        if (isStamHigher) then
+            return blue_dps_stam[index]
+        end
+        return blue_dps_mag[index]
+    end,
+    nodes = {
+        {
+            id = 10, -- Piercing (open nodes)
+            stage = 1,
+        },
+        {
+            flex = 1,
+        },
+        {
+            flex = 2,
+        },
+        {
+            id = 11, -- Precision (open nodes)
+            stage = 1,
+        },
+        {
+            flex = 3,
+        },
+        {
+            flex = 4,
+        },
+        {
+            id = 10, -- Piercing (maxed)
+        },
+        {
+            id = 11, -- Precision (maxed)
+        },
+        {
+            passive = 1, -- Flawless Ritual / Battle Mastery
+        },
+        {
+            passive = 2, -- War Mage / Mighty
+        },
+        {
+            passive = 3, -- Flawless Ritual / Battle Mastery
+        },
+        {
+            passive = 4, -- War Mage / Mighty
+        },
+        {
+            passive = 5, -- Eldritch Insight / Tireless Discipline
+        },
+        {
+            id = 20, -- Quick Recovery (open nodes)
+            stage = 1,
+        },
+        {
+            id = 14, -- Preparation
+        },
+        {
+            id = 15, -- Elemental Aegis
+        },
+        {
+            id = 16, -- Hardy
+        },
+        {
+            id = 20, -- Quick Recovery (maxed)
+        },
+        {
+            id = 108, -- Blessed
+        },
+        -- 4 slottables and all passives done
     },
 }
+
 
 -----------------------------------------------------------
 -- Apply the preset??
@@ -164,24 +168,23 @@ end
 
 -- We don't care about existing points, i.e. overwrite anything
 -- So just go down the data list and allocate as many as max points allow
-local function ApplySmartPreset(totalPoints)
+local function ApplySmartPreset(preset, totalPoints)
     local fatecarverUnlocked, isStamHigher = GetDecisions()
     DynamicCP.dbg(string.format("%s; %s",
         fatecarverUnlocked and "fatecarver available" or "no fatecarver",
         isStamHigher and "stam higher" or "mag higher"))
 
-    local data = BLUE_DPS
     local currentTotalPoints = 0
     local pendingPoints = {} -- {[10] = 10,}
-    for _, node in ipairs(data) do
+    for _, node in ipairs(preset.nodes) do
         local id, stage
         if (node.id) then
             id = node.id
             stage = node.stage
         elseif (node.flex) then
-            id = GetFlex(fatecarverUnlocked, node.flex)
+            id = preset.GetFlex(fatecarverUnlocked, node.flex)
         elseif (node.passive) then
-            id = GetPassive(isStamHigher, node.passive)
+            id = preset.GetPassive(isStamHigher, node.passive)
         end
 
         -- Get number of points to use, including previous partial opens
@@ -207,3 +210,37 @@ local function ApplySmartPreset(totalPoints)
     DynamicCP.dbg("Finished all desired nodes")
 end
 DynamicCP.ApplySmartPreset = ApplySmartPreset -- /script DynamicCP.ApplySmartPreset(67)
+
+-----------------------------------------------------------
+-- To be called from presets
+-----------------------------------------------------------
+local function ApplyBluePVE()
+    local totalPoints = GetNumSpentChampionPoints(1) + GetNumUnspentChampionPoints(1)
+    -- TODO: role
+    ApplySmartPreset(BLUE_DPS, totalPoints)
+end
+
+local ROLE_ICONS = {
+    [LFG_ROLE_TANK] = "|t100%:100%:esoui/art/lfg/lfg_tank_down_no_glow_64.dds|t",
+    [LFG_ROLE_HEAL] = "|t100%:100%:esoui/art/lfg/lfg_healer_down_no_glow_64.dds|t",
+    [LFG_ROLE_DPS] = "|t100%:100%:esoui/art/lfg/lfg_dps_down_no_glow_64.dds|t",
+}
+
+DynamicCP.SMART_PRESETS = {
+    Green = {},
+    Blue = {
+        {
+            name = function()
+                local fatecarverUnlocked, isStamHigher = GetDecisions()
+                d(fatecarverUnlocked, isStamHigher)
+                return string.format("Auto PvE %s%s%s",
+                    ROLE_ICONS[GetSelectedLFGRole()],
+                    fatecarverUnlocked and " |t80%:80%:esoui/art/icons/ability_arcanist_002_b.dds|t" or "",
+                    isStamHigher and "|t100%:100%:esoui/art/characterwindow/gamepad/gp_charactersheet_staminaicon.dds|t" or "|t100%:100%:esoui/art/characterwindow/gamepad/gp_charactersheet_magickaicon.dds|t"
+                    )
+            end,
+            func = ApplyBluePVE,
+        },
+    },
+    Red = {},
+}

@@ -871,11 +871,22 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
             data)
     end
 
-    -- Add entries to dropdown
+    -- Init/clear dropdown
     local data = DynamicCP.savedOptions.cp[tree]
     local dropdown = ZO_ComboBox_ObjectFromContainer(GetSubControl("Inner"):GetNamedChild(tree .. "Dropdown"))
     local desiredEntry = nil
     dropdown:ClearItems()
+
+    -- Add smart presets
+    for _, data in ipairs(DynamicCP.SMART_PRESETS[tree]) do
+        local displayName = string.format("|c9BDB34%s|r", data.name())
+        local entry = ZO_ComboBox:CreateItemEntry(displayName, function()
+            d("smort")
+        end)
+        dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
+    end
+
+    -- Add saved presets
     for presetName, cp in pairs(data) do
         local name = DecoratePresetName(presetName, cp)
         local entry = ZO_ComboBox:CreateItemEntry(name, OnPresetSelected)
@@ -885,6 +896,8 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
             desiredEntry = entry
         end
     end
+
+    -- Add new item entry
     local entry = ZO_ComboBox:CreateItemEntry("|cEBDB34" .. CREATE_NEW_STRING .. "|r", OnPresetSelected)
     dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
     dropdown:UpdateItems()
