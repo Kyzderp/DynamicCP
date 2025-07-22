@@ -208,10 +208,12 @@ local function ApplySmartPreset(tree, preset, totalPoints)
         end
         local pointsToAllocate = desiredPoints - existingPoints
 
-        -- Not enough CP
+        -- Not enough CP, spend the last bit
         if (currentTotalPoints + pointsToAllocate > totalPoints) then
             DynamicCP.dbg("Ran out of points at " .. GetChampionSkillName(id))
-            return pendingCP
+            local overflow = currentTotalPoints + pointsToAllocate - totalPoints
+            desiredPoints = desiredPoints - overflow
+            pointsToAllocate = totalPoints - currentTotalPoints
         end
 
         -- "Put" the points in
@@ -222,6 +224,11 @@ local function ApplySmartPreset(tree, preset, totalPoints)
         -- If it's slottable, put it in desired slottables
         if (#slottables < 4 and CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))) then
             table.insert(slottables, id)
+        end
+
+        -- Not enough points to continue
+        if (currentTotalPoints >= totalPoints) then
+            return pendingCP
         end
     end
     DynamicCP.dbg("Finished all desired nodes")
