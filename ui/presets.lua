@@ -176,6 +176,11 @@ end
 -- slotted automatically
 -- slotSetId: optional; or it's obtained from cp
 local function GetSlottablesFromPreset(cp, tree, slotSetId)
+    -- Return the slottables if this is a smart preset
+    if (cp.slottables) then
+        return cp.slottables
+    end
+
     -- Return the slottables from the slot set if it exists
     local slotSetId = cp.slotSet or slotSetId
     if (slotSetId ~= nil) then
@@ -336,7 +341,17 @@ end
 -- Apply the slottables
 local function ApplySlottables(tree)
     local presetName = selected[tree]
-    local slottablesResult = GetSlottablesFromPreset(DynamicCP.savedOptions.cp[tree][presetName], tree)
+
+    local slottablesResult
+    -- From smart preset
+    if (DynamicCP.SMART_PRESETS[tree][presetName]) then
+        -- TODO
+        slottablesResult = DynamicCP.SMART_PRESETS[tree][presetName].func().slottables
+    else
+        -- From user preset
+        slottablesResult = GetSlottablesFromPreset(DynamicCP.savedOptions.cp[tree][presetName], tree)
+    end
+
 
     local offset = HOTBAR_OFFSET[tree]
     for i = 1, 4 do
@@ -358,6 +373,15 @@ function DynamicCP:OnApplyClicked(button)
 
     DynamicCP.dbg("Attempting to apply \"" .. presetName .. "\" to the " .. tree .. " tree.")
 
+    -- Either load the saved preset, or use smart preset
+    local cp
+    if (DynamicCP.SMART_PRESETS[tree][presetName]) then
+        cp = DynamicCP.SMART_PRESETS[tree][presetName].func()
+    else
+        cp = DynamicCP.savedOptions.cp[tree][presetName]
+    end
+
+
     local currentCP = DynamicCP.GetCommittedCP()
 
     -- First find all of the slottable skillIds to check them later
@@ -375,7 +399,6 @@ function DynamicCP:OnApplyClicked(button)
     end
 
     -- Apply all stars within the tree
-    local cp = DynamicCP.savedOptions.cp[tree][presetName]
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
     local hasOverMaxPoints = false
     for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
@@ -830,22 +853,28 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
         selected[tree] = presetName
         UnhideOptions(tree)
 
+        local innerControl = GetSubControl("Inner")
         if (presetName == CREATE_NEW_STRING) then
             local newIndex = 1
             while (DynamicCP.savedOptions.cp[tree]["Preset " .. newIndex] ~= nil) do
                 newIndex = newIndex + 1
             end
-            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsTextField"):SetText("Preset " .. newIndex)
-            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(true)
-            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(true)
-            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(190)
-            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsButtons"):SetHidden(true)
+            innerControl:GetNamedChild(tree .. "OptionsTextField"):SetText("Preset " .. newIndex)
+            innerControl:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(true)
+            innerControl:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(true)
+            innerControl:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(190)
+            innerControl:GetNamedChild(tree .. "OptionsButtons"):SetHidden(true)
         else
-            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsTextField"):SetText(presetName)
-            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(false)
-            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(false)
-            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(66)
-            GetSubControl("Inner"):GetNamedChild(tree .. "OptionsButtons"):SetHidden(false)
+            innerControl:GetNamedChild(tree .. "OptionsTextField"):SetHidden(false)
+            innerControl:GetNamedChild(tree .. "OptionsTextField"):SetText(presetName)
+            innerControl:GetNamedChild(tree .. "OptionsApplyButton"):SetWidth(66)
+            innerControl:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(false)
+            innerControl:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(false)
+            innerControl:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(66)
+            innerControl:GetNamedChild(tree .. "OptionsSaveButton"):SetHidden(false)
+            innerControl:GetNamedChild(tree .. "OptionsButtons"):SetHidden(false)
+            innerControl:GetNamedChild(tree .. "OptionsSlotSetDropdown"):SetHidden(false)
+            innerControl:GetNamedChild(tree .. "OptionsSlotSetHelp"):SetHidden(false)
         end
 
 
@@ -878,10 +907,28 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
     dropdown:ClearItems()
 
     -- Add smart presets
-    for _, data in ipairs(DynamicCP.SMART_PRESETS[tree]) do
+    for id, data in pairs(DynamicCP.SMART_PRESETS[tree]) do
         local displayName = string.format("|c9BDB34%s|r", data.name())
         local entry = ZO_ComboBox:CreateItemEntry(displayName, function()
-            d("smort")
+            UnhideOptions(tree)
+            local innerControl = GetSubControl("Inner")
+            innerControl:GetNamedChild(tree .. "OptionsTextField"):SetHidden(true)
+            innerControl:GetNamedChild(tree .. "OptionsApplyButton"):SetWidth(190)
+            innerControl:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(false)
+            innerControl:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(true)
+            innerControl:GetNamedChild(tree .. "OptionsSaveButton"):SetHidden(true)
+            innerControl:GetNamedChild(tree .. "OptionsButtons"):SetHidden(true)
+            innerControl:GetNamedChild(tree .. "OptionsSlotSetDropdown"):SetHidden(true)
+            innerControl:GetNamedChild(tree .. "OptionsSlotSetHelp"):SetHidden(true)
+            selected[tree] = id
+
+            ShowCPPointsOrDiff(
+                tree,
+                presetName == CREATE_NEW_STRING,
+                "Rename and click \"Save\" to create a new preset.",
+                nil,
+                "Click \"Apply\" to load this preset.",
+                data.func())
         end)
         dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
     end

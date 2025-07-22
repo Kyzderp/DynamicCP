@@ -3,6 +3,11 @@ DynamicCP = DynamicCP or {}
 --[[
 ]]
 
+local TREE_TO_DISCIPLINE = {
+    Green = 1,
+    Blue = 2,
+    Red = 3,
+}
 
 -----------------------------------------------------------
 -- Beam vs ST (more later?)
@@ -168,7 +173,7 @@ end
 
 -- We don't care about existing points, i.e. overwrite anything
 -- So just go down the data list and allocate as many as max points allow
-local function ApplySmartPreset(preset, totalPoints)
+local function ApplySmartPreset(tree, preset, totalPoints)
     local fatecarverUnlocked, isStamHigher = GetDecisions()
     DynamicCP.dbg(string.format("%s; %s",
         fatecarverUnlocked and "fatecarver available" or "no fatecarver",
@@ -176,6 +181,12 @@ local function ApplySmartPreset(preset, totalPoints)
 
     local currentTotalPoints = 0
     local pendingPoints = {} -- {[10] = 10,}
+    local slottables = {}
+    local disciplineIndex = TREE_TO_DISCIPLINE[tree]
+    local pendingCP = {
+        [disciplineIndex] = pendingPoints,
+        slottables = slottables,
+    }
     for _, node in ipairs(preset.nodes) do
         local id, stage
         if (node.id) then
@@ -200,14 +211,21 @@ local function ApplySmartPreset(preset, totalPoints)
         -- Not enough CP
         if (currentTotalPoints + pointsToAllocate > totalPoints) then
             DynamicCP.dbg("Ran out of points at " .. GetChampionSkillName(id))
-            return
+            return pendingCP
         end
 
+        -- "Put" the points in
         DynamicCP.dbg(string.format("Putting %d points into %s", pointsToAllocate, GetChampionSkillName(id)))
         pendingPoints[id] = desiredPoints
         currentTotalPoints = currentTotalPoints + pointsToAllocate
+
+        -- If it's slottable, put it in desired slottables
+        if (#slottables < 4 and CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))) then
+            table.insert(slottables, id)
+        end
     end
     DynamicCP.dbg("Finished all desired nodes")
+    return pendingCP
 end
 DynamicCP.ApplySmartPreset = ApplySmartPreset -- /script DynamicCP.ApplySmartPreset(67)
 
@@ -217,7 +235,7 @@ DynamicCP.ApplySmartPreset = ApplySmartPreset -- /script DynamicCP.ApplySmartPre
 local function ApplyBluePVE()
     local totalPoints = GetNumSpentChampionPoints(1) + GetNumUnspentChampionPoints(1)
     -- TODO: role
-    ApplySmartPreset(BLUE_DPS, totalPoints)
+    return ApplySmartPreset("Blue", BLUE_DPS, totalPoints)
 end
 
 local ROLE_ICONS = {
@@ -229,7 +247,7 @@ local ROLE_ICONS = {
 DynamicCP.SMART_PRESETS = {
     Green = {},
     Blue = {
-        {
+        ["DEFAULT_SMART_BLUE_DPS"] = {
             name = function()
                 local fatecarverUnlocked, isStamHigher = GetDecisions()
                 d(fatecarverUnlocked, isStamHigher)
