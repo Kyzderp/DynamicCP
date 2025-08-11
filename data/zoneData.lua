@@ -58,6 +58,8 @@ DynamicCP.DUNGEON_ZONEIDS = {
     ["1471"] = true,  -- Bedlam Veil
     ["1496"] = true,  -- Exiled Redoubt
     ["1497"] = true,  -- Lep Seclusa
+    ["1551"] = true,  -- Naj-Caldeesh
+    ["1552"] = true,  -- Black Gem Foundry
 }
 
 -- Trial zoneIds
