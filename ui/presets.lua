@@ -346,7 +346,7 @@ local function ApplySlottables(tree)
     -- From smart preset
     if (DynamicCP.SMART_PRESETS[tree][presetName]) then
         -- TODO
-        slottablesResult = DynamicCP.SMART_PRESETS[tree][presetName].func().slottables
+        slottablesResult = DynamicCP.SMART_PRESETS[tree][presetName].applyFunc().slottables
     else
         -- From user preset
         slottablesResult = GetSlottablesFromPreset(DynamicCP.savedOptions.cp[tree][presetName], tree)
@@ -376,7 +376,7 @@ function DynamicCP:OnApplyClicked(button)
     -- Either load the saved preset, or use smart preset
     local cp
     if (DynamicCP.SMART_PRESETS[tree][presetName]) then
-        cp = DynamicCP.SMART_PRESETS[tree][presetName].func()
+        cp = DynamicCP.SMART_PRESETS[tree][presetName].applyFunc()
     else
         cp = DynamicCP.savedOptions.cp[tree][presetName]
     end
@@ -928,7 +928,7 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
                 "Rename and click \"Save\" to create a new preset.",
                 nil,
                 "Click \"Apply\" to load this preset.",
-                data.func())
+                data.applyFunc())
         end)
         dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
     end

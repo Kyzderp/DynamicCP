@@ -20,6 +20,7 @@ src/slottables.lua
 src/lastPresets.lua
 
 src/smartPresets/smartPresets.lua
+src/smartPresets/presets/blueAutoPve.lua
 
 data/presetData.lua
 data/zoneData.lua
