@@ -1,7 +1,6 @@
 DynamicCP = DynamicCP or {}
+DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 
---[[
-]]
 
 local TREE_TO_DISCIPLINE = {
     Green = 1,
@@ -48,7 +47,13 @@ end
 
 -- We don't care about existing points, i.e. overwrite anything
 -- So just go down the data list and allocate as many as max points allow
+-- params: tree name as color string, the struct with the preset, total points (for testing) or nil
 local function ApplySmartPreset(tree, preset, totalPoints)
+    local disciplineIndex = TREE_TO_DISCIPLINE[tree]
+    if (not totalPoints) then
+        totalPoints = GetNumSpentChampionPoints(disciplineIndex) + GetNumUnspentChampionPoints(disciplineIndex)
+    end
+
     local fatecarverUnlocked, isStamHigher = GetDecisions()
     DynamicCP.dbg(string.format("%s; %s",
         fatecarverUnlocked and "fatecarver available" or "no fatecarver",
@@ -57,7 +62,6 @@ local function ApplySmartPreset(tree, preset, totalPoints)
     local currentTotalPoints = 0
     local pendingPoints = {} -- {[10] = 10,}
     local slottables = {}
-    local disciplineIndex = TREE_TO_DISCIPLINE[tree]
     local pendingCP = {
         [disciplineIndex] = pendingPoints,
         slottables = slottables,
@@ -133,7 +137,7 @@ DynamicCP.SMART_PRESETS = {
                     isStamHigher and "|t100%:100%:esoui/art/characterwindow/gamepad/gp_charactersheet_staminaicon.dds|t" or "|t100%:100%:esoui/art/characterwindow/gamepad/gp_charactersheet_magickaicon.dds|t"
                     )
             end,
-            applyFunc = DynamicCP.ApplyBluePVE,
+            applyFunc = DynamicCP.SmartPresets.ApplyBluePVE,
         },
     },
     Red = {},

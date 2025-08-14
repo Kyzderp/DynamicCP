@@ -1,4 +1,5 @@
 DynamicCP = DynamicCP or {}
+DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 
 
 -----------------------------------------------------------
@@ -127,12 +128,25 @@ local BLUE_DPS = {
     },
 }
 
+local BLUE_HEAL = {
+    -- TODO
+}
+
+local BLUE_TANK = {
+    -- TODO
+}
+
 
 -----------------------------------------------------------
 -- applyFunc
 -----------------------------------------------------------
-function DynamicCP.ApplyBluePVE()
-    local totalPoints = GetNumSpentChampionPoints(1) + GetNumUnspentChampionPoints(1)
-    -- TODO: role
-    return DynamicCP.ApplySmartPreset("Blue", BLUE_DPS, totalPoints)
+function DynamicCP.SmartPresets.ApplyBluePVE()
+    local role = GetSelectedLFGRole()
+    if (role == LFG_ROLE_TANK) then
+        return DynamicCP.ApplySmartPreset("Blue", BLUE_TANK)
+    elseif (role == LFG_ROLE_HEAL) then
+        return DynamicCP.ApplySmartPreset("Blue", BLUE_HEAL)
+    else
+        return DynamicCP.ApplySmartPreset("Blue", BLUE_DPS)
+    end
 end
