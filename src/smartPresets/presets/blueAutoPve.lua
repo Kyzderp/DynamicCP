@@ -130,10 +130,12 @@ local BLUE_DPS = {
 
 local BLUE_HEAL = {
     -- TODO
+    nodes = {},
 }
 
 local BLUE_TANK = {
     -- TODO
+    nodes = {},
 }
 
 

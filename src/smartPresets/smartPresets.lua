@@ -28,7 +28,7 @@ local function GetDecisions()
             for skillIndex = 1, GetNumSkillAbilities(SKILL_TYPE_CLASS, skillLineIndex) do
                 local progressionId = GetProgressionSkillProgressionId(SKILL_TYPE_CLASS, skillLineIndex, skillIndex)
                 -- d(name .. " " .. tostring(progressionId))
-                -- Herald of the Tome
+                -- Fatecarver
                 if (progressionId == 535) then
                     local _, _, _, _, _, purchased = GetSkillAbilityInfo(SKILL_TYPE_CLASS, skillLineIndex, skillIndex)
                     if (purchased) then
@@ -125,14 +125,30 @@ local ROLE_ICONS = {
 }
 
 DynamicCP.SMART_PRESETS = {
-    Green = {},
+    Green = {
+        ["DEFAULT_SMART_GREEN_COMBAT"] = {
+            name = function()
+                return "Auto Combat |t80%:80%:esoui/art/icons/ability_arcanist_002_b.dds|t" -- TODO: combat icon
+            end,
+            applyFunc = DynamicCP.SmartPresets.ApplyGreenCombat,
+        },
+        ["DEFAULT_SMART_GREEN_LOOT_GOBLIN"] = {
+            name = function()
+                return "Auto Craft/Loot |t80%:80%:esoui/art/icons/ability_arcanist_002_b.dds|t" -- TODO: crafting icon
+            end,
+            applyFunc = DynamicCP.SmartPresets.ApplyGreenLootGoblin,
+        },
+    },
     Blue = {
-        ["DEFAULT_SMART_BLUE_DPS"] = {
+        ["DEFAULT_SMART_BLUE_PVE"] = {
             name = function()
                 local fatecarverUnlocked, isStamHigher = GetDecisions()
-                d(fatecarverUnlocked, isStamHigher)
+                d(string.format("fatecarverUnlocked: %s; isStamHigher: %s, role: %s",
+                    fatecarverUnlocked and "true" or "false",
+                    isStamHigher and "true" or "false",
+                    ROLE_ICONS[GetSelectedLFGRole()] or "?"))
                 return string.format("Auto PvE %s%s%s",
-                    ROLE_ICONS[GetSelectedLFGRole()],
+                    ROLE_ICONS[GetSelectedLFGRole()] or "?",
                     fatecarverUnlocked and " |t80%:80%:esoui/art/icons/ability_arcanist_002_b.dds|t" or "",
                     isStamHigher and "|t100%:100%:esoui/art/characterwindow/gamepad/gp_charactersheet_staminaicon.dds|t" or "|t100%:100%:esoui/art/characterwindow/gamepad/gp_charactersheet_magickaicon.dds|t"
                     )
@@ -140,5 +156,15 @@ DynamicCP.SMART_PRESETS = {
             applyFunc = DynamicCP.SmartPresets.ApplyBluePVE,
         },
     },
-    Red = {},
+    Red = {
+        ["DEFAULT_SMART_RED_PVE"] = {
+            name = function()
+                return string.format("Auto PvE %s%s",
+                    ROLE_ICONS[GetSelectedLFGRole()] or "?",
+                    fatecarverUnlocked and " |t80%:80%:esoui/art/icons/ability_arcanist_002_b.dds|t" or ""
+                    )
+            end,
+            applyFunc = DynamicCP.SmartPresets.ApplyRedPVE,
+        },
+    },
 }

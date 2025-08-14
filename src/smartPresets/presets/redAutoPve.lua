@@ -3,6 +3,18 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 
 
 -----------------------------------------------------------
+-- Pragmatic Fatecarver for Bastion
+-----------------------------------------------------------
+local red_dps_flex_pragmatic = {
+    46, -- Bastion
+}
+
+local red_dps_flex_nonpragmatic = {
+    270, -- Celerity (what else?)
+}
+
+
+-----------------------------------------------------------
 -- Role presets
 -----------------------------------------------------------
 -- If stage is not specified, the star will be maxed out
@@ -10,15 +22,25 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 -- If passive is specified, it uses the index in the respective data
 -----------------------------------------------------------
 local RED_DPS = {
+    -- TODO: Make this pragmatic only, not any fatecarver
+    GetFlex = function(fatecarverUnlocked, index)
+        if (fatecarverUnlocked) then
+            return red_dps_flex_pragmatic[index]
+        end
+        return red_dps_flex_nonpragmatic[index]
+    end,
     -- TODO
+    nodes = {},
 }
 
 local RED_HEAL = {
     -- TODO
+    nodes = {},
 }
 
 local RED_TANK = {
     -- TODO
+    nodes = {},
 }
 
 

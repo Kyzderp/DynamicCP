@@ -18,6 +18,7 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 -- Hunter, Plentiful Harvest, etc
 local GREEN_LOOT = {
     -- TODO
+    nodes = {},
 }
 
 

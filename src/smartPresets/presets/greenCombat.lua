@@ -19,6 +19,7 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 -- Efficiency, and Steed's Blessing
 local GREEN_COMBAT = {
     -- TODO
+    nodes = {},
 }
 
 

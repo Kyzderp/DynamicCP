@@ -19,8 +19,11 @@ src/points.lua
 src/slottables.lua
 src/lastPresets.lua
 
-src/smartPresets/smartPresets.lua
 src/smartPresets/presets/blueAutoPve.lua
+src/smartPresets/presets/greenCombat.lua
+src/smartPresets/presets/greenLootGoblin.lua
+src/smartPresets/presets/redAutoPve.lua
+src/smartPresets/smartPresets.lua
 
 data/presetData.lua
 data/zoneData.lua
