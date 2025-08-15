@@ -22,9 +22,8 @@ local red_dps_flex_nonpragmatic = {
 -- If passive is specified, it uses the index in the respective data
 -----------------------------------------------------------
 local RED_DPS = {
-    -- TODO: Make this pragmatic only, not any fatecarver
-    GetFlex = function(fatecarverUnlocked, index)
-        if (fatecarverUnlocked) then
+    GetFlex = function(fatecarverUnlocked, isPragmatic, index)
+        if (isPragmatic) then
             return red_dps_flex_pragmatic[index]
         end
         return red_dps_flex_nonpragmatic[index]

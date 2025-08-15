@@ -16,6 +16,7 @@ local TREE_TO_DISCIPLINE = {
 local function GetDecisions()
     -- Whether fatecarver is unlocked
     local fatecarverUnlocked = false
+    local pragmatic = false
     for skillLineIndex = 1, GetNumSkillLines(SKILL_TYPE_CLASS) do
         local skillLineId = GetSkillLineId(SKILL_TYPE_CLASS, skillLineIndex)
         -- Herald of the Tome
@@ -33,6 +34,10 @@ local function GetDecisions()
                     local _, _, _, _, _, purchased = GetSkillAbilityInfo(SKILL_TYPE_CLASS, skillLineIndex, skillIndex)
                     if (purchased) then
                         fatecarverUnlocked = true
+                        local morph = GetProgressionSkillCurrentMorphSlot(progressionId)
+                        if (morph == MORPH_SLOT_MORPH_2) then
+                            pragmatic = true
+                        end
                     end
                 end
             end
@@ -42,7 +47,7 @@ local function GetDecisions()
     -- Whether stam or mag is higher
     local _, maxStam, effectiveMaxStam = GetUnitPower("player", COMBAT_MECHANIC_FLAGS_STAMINA)
     local _, maxMag, effectiveMaxMag = GetUnitPower("player", COMBAT_MECHANIC_FLAGS_MAGICKA)
-    return fatecarverUnlocked, maxStam > maxMag
+    return fatecarverUnlocked, maxStam > maxMag, pragmatic
 end
 
 -- We don't care about existing points, i.e. overwrite anything
@@ -54,10 +59,11 @@ local function ApplySmartPreset(tree, preset, totalPoints)
         totalPoints = GetNumSpentChampionPoints(disciplineIndex) + GetNumUnspentChampionPoints(disciplineIndex)
     end
 
-    local fatecarverUnlocked, isStamHigher = GetDecisions()
+    local fatecarverUnlocked, isStamHigher, isPragmatic = GetDecisions()
     DynamicCP.dbg(string.format("%s; %s",
         fatecarverUnlocked and "fatecarver available" or "no fatecarver",
-        isStamHigher and "stam higher" or "mag higher"))
+        isStamHigher and "stam higher" or "mag higher",
+        isPragmatic and "is pragmatic" or "not pragmatic"))
 
     local currentTotalPoints = 0
     local pendingPoints = {} -- {[10] = 10,}
@@ -72,7 +78,7 @@ local function ApplySmartPreset(tree, preset, totalPoints)
             id = node.id
             stage = node.stage
         elseif (node.flex) then
-            id = preset.GetFlex(fatecarverUnlocked, node.flex)
+            id = preset.GetFlex(fatecarverUnlocked, isPragmatic, node.flex)
         elseif (node.passive) then
             id = preset.GetPassive(isStamHigher, node.passive)
         end
@@ -128,13 +134,13 @@ DynamicCP.SMART_PRESETS = {
     Green = {
         ["DEFAULT_SMART_GREEN_COMBAT"] = {
             name = function()
-                return "Auto Combat |t80%:80%:esoui/art/icons/ability_arcanist_002_b.dds|t" -- TODO: combat icon
+                return "Auto Combat |t100%:100%:esoui/art/icons/mapkey/mapkey_raiddungeon.dds|t" -- TODO: combat icon
             end,
             applyFunc = DynamicCP.SmartPresets.ApplyGreenCombat,
         },
         ["DEFAULT_SMART_GREEN_LOOT_GOBLIN"] = {
             name = function()
-                return "Auto Craft/Loot |t80%:80%:esoui/art/icons/ability_arcanist_002_b.dds|t" -- TODO: crafting icon
+                return "Auto Craft/Loot |t80%:80%:esoui/art/icons/ability_tradecraft_005.dds|t"
             end,
             applyFunc = DynamicCP.SmartPresets.ApplyGreenLootGoblin,
         },
@@ -142,14 +148,15 @@ DynamicCP.SMART_PRESETS = {
     Blue = {
         ["DEFAULT_SMART_BLUE_PVE"] = {
             name = function()
-                local fatecarverUnlocked, isStamHigher = GetDecisions()
-                d(string.format("fatecarverUnlocked: %s; isStamHigher: %s, role: %s",
+                local fatecarverUnlocked, isStamHigher, isPragmatic = GetDecisions()
+                d(string.format("fatecarverUnlocked: %s; isStamHigher: %s, isPragmatic: %s, role: %s",
                     fatecarverUnlocked and "true" or "false",
                     isStamHigher and "true" or "false",
+                    isPragmatic and "true" or "false",
                     ROLE_ICONS[GetSelectedLFGRole()] or "?"))
                 return string.format("Auto PvE %s%s%s",
                     ROLE_ICONS[GetSelectedLFGRole()] or "?",
-                    fatecarverUnlocked and " |t80%:80%:esoui/art/icons/ability_arcanist_002_b.dds|t" or "",
+                    fatecarverUnlocked and " |t80%:80%:esoui/art/icons/ability_arcanist_002.dds|t" or "",
                     isStamHigher and "|t100%:100%:esoui/art/characterwindow/gamepad/gp_charactersheet_staminaicon.dds|t" or "|t100%:100%:esoui/art/characterwindow/gamepad/gp_charactersheet_magickaicon.dds|t"
                     )
             end,
@@ -159,9 +166,10 @@ DynamicCP.SMART_PRESETS = {
     Red = {
         ["DEFAULT_SMART_RED_PVE"] = {
             name = function()
+                local fatecarverUnlocked, isStamHigher, isPragmatic = GetDecisions()
                 return string.format("Auto PvE %s%s",
                     ROLE_ICONS[GetSelectedLFGRole()] or "?",
-                    fatecarverUnlocked and " |t80%:80%:esoui/art/icons/ability_arcanist_002_b.dds|t" or ""
+                    isPragmatic and " |t80%:80%:esoui/art/icons/ability_arcanist_002_b.dds|t" or ""
                     )
             end,
             applyFunc = DynamicCP.SmartPresets.ApplyRedPVE,

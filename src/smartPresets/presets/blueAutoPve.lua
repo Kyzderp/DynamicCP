@@ -50,7 +50,7 @@ local blue_dps_mag = {
 -- If passive is specified, it uses the index in the respective data
 -----------------------------------------------------------
 local BLUE_DPS = {
-    GetFlex = function(fatecarverUnlocked, index)
+    GetFlex = function(fatecarverUnlocked, isPragmatic, index)
         if (fatecarverUnlocked) then
             return blue_dps_flex_arc[index]
         end
