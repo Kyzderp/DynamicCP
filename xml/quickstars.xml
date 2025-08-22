@@ -16,6 +16,10 @@
                                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-2" offsetY="-2"/>
                                     <OnMouseUp>DynamicCP.OpenSettingsMenu()</OnMouseUp>
                                 </Texture>
+                                <Label name="$(parent)LockHint" font="ZoFontGameSmall" color="999999" verticalAlignment="TOP" horizontalAlignment="CENTER" text="Once you're done positioning the UI, lock the panel in Quickstar Panel Settings to hide this green box." hidden="false" tier="MEDIUM">
+                                    <Dimensions x="240" y="180"/>
+                                    <Anchor point="TOP" relativeTo="$(parent)" relativePoint="BOTTOM" offsetX="2"/>
+                                </Label>
                             </Controls>
                         </Backdrop>
                         <Control name="$(parent)GreenButton" tier="LOW">
