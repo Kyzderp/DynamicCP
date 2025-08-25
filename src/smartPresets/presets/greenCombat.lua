@@ -11,7 +11,7 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 -----------------------------------------------------------
 
 -- I thought about conditional Discipline Artisan, but it'd
--- be impossible to assume whether the user has lines they
+-- be infeasible to assume whether the user has lines they
 -- want to level
 
 -- Combat-oriented green tree: prioritizes things usable in

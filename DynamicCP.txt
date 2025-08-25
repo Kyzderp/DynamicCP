@@ -22,6 +22,7 @@ src/lastPresets.lua
 src/smartPresets/presets/blueAutoPve.lua
 src/smartPresets/presets/greenCombat.lua
 src/smartPresets/presets/greenLootGoblin.lua
+src/smartPresets/presets/greenThieving.lua
 src/smartPresets/presets/redAutoPve.lua
 src/smartPresets/smartPresets.lua
 

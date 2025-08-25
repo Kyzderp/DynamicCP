@@ -14,34 +14,35 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 -- be infeasible to assume whether the user has lines they
 -- want to level
 
--- Loot/craft-oriented green tree: prioritizes Treasure
--- Hunter, Plentiful Harvest, etc
-local GREEN_LOOT = {
+-- Thieving-oriented green tree
+local GREEN_THIEVING = {
     nodes = {
         {
-            id = 74, -- Gilded Fingers (open nodes)
+            id = 68, -- Out of Sight (open nodes)
             stage = 1,
         },
         {
-            id = 71, -- Fortune's Favor (open nodes)
-            stage = 1,
+            id = 76, -- Friends in Low Places
+            deprioritizeSlotting = true, -- TODO
         },
         {
-            id = 72, -- Inspiration Boost (open nodes)
-            stage = 1,
+            id = 77, -- Infamous
         },
         {
-            id = 83, -- Meticulous Disassembly
+            id = 84, -- Fade Away
         },
         {
-            id = 79, -- Treasure Hunter
+            id = 90, -- Cutpurse's Art
         },
         {
-            id = 72, -- Inspiration Boost -- TODO: flex
+            id = 74, -- Gilded Fingers
         },
         {
             id = 78, -- Master Gatherer (open nodes)
             stage = 1,
+        },
+        {
+            id = 79, -- Treasure Hunter
         },
         {
             id = 81, -- Plentiful Harvest (open nodes)
@@ -51,25 +52,28 @@ local GREEN_LOOT = {
             id = 91, -- Homemaker
         },
         {
-            id = 81, -- Plentiful Harvest (maxed)
+            id = 68, -- Out of Sight (maxed)
         },
         {
-            id = 78, -- Master Gatherer (maxed)
+            id = 71, -- Fortune's Favor
         },
         {
-            id = 74, -- Gilded Fingers (maxed)
-        },
-        {
-            id = 71, -- Fortune's Favor (maxed)
+            id = 83, -- Meticulous Disassembly
         },
         {
             id = 66, -- Steed's Blessing
         },
         {
-            id = 92, -- Gifted Rider
+            id = 67, -- Fleet Phantom
         },
         {
-            id = 279, -- Discipline Artisan
+            id = 65, -- Sustaining Shadows
+        },
+        {
+            id = 80, -- Shadowstrike
+        },
+        {
+            id = 81, -- Plentiful Harvest (maxed)
         },
         {
             id = 75, -- Steadfast Enchantment (open nodes)
@@ -86,52 +90,37 @@ local GREEN_LOOT = {
             id = 85, -- Rationer (maxed)
         },
         {
-            id = 88, -- Reel Technique
-        },
-        {
-            id = 89, -- Angler's Instincts
-        },
-        {
-            id = 70, -- Wanderer
+            id = 279, -- Discipline Artisan
         },
         {
             id = 69, -- Breakfall
         },
         {
-            id = 65, -- Sustaining Shadows
+            id = 72, -- Inspiration Boost -- TODO: flex
         },
         {
-            id = 75, -- Steadfast Enchantment (maxed)
+            id = 92, -- Gifted Rider
         },
         {
-            id = 87, -- Soul Reservoir
+            id = 78, -- Master Gatherer (maxed)
         },
         {
             id = 1, -- Professional Upkeep
         },
         {
-            id = 68, -- Out of Sight
-        },
-        {
-            id = 67, -- Fleet Phantom
+            id = 70, -- Wanderer
         },
         {
             id = 82, -- War Mount
         },
         {
-            id = 76, -- Friends in Low Places
+            id = 87, -- Soul Reservoir
         },
         {
-            id = 77, -- Infamous
+            id = 88, -- Reel Technique
         },
         {
-            id = 84, -- Fade Away
-        },
-        {
-            id = 90, -- Cutpurse's Art
-        },
-        {
-            id = 80, -- Shadowstrike
+            id = 89, -- Angler's Instincts
         },
     },
 }
@@ -140,6 +129,6 @@ local GREEN_LOOT = {
 -----------------------------------------------------------
 -- applyFunc
 -----------------------------------------------------------
-function DynamicCP.SmartPresets.ApplyGreenLootGoblin()
-    return DynamicCP.ApplySmartPreset("Green", GREEN_LOOT)
+function DynamicCP.SmartPresets.ApplyGreenThieving()
+    return DynamicCP.ApplySmartPreset("Green", GREEN_THIEVING)
 end

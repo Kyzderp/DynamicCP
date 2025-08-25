@@ -144,6 +144,12 @@ DynamicCP.SMART_PRESETS = {
             end,
             applyFunc = DynamicCP.SmartPresets.ApplyGreenLootGoblin,
         },
+        ["DEFAULT_SMART_GREEN_THIEVING"] = {
+            name = function()
+                return "Auto Thieving |t100%:100%:esoui/art/icons/crowncrate_sweetroll.dds|t"
+            end,
+            applyFunc = DynamicCP.SmartPresets.ApplyGreenThieving,
+        },
     },
     Blue = {
         ["DEFAULT_SMART_BLUE_PVE"] = {
