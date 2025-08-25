@@ -118,24 +118,193 @@ local BLUE_DPS = {
             id = 16, -- Hardy
         },
         {
+            passive = 6, -- Tireless Discipline / Eldritch Insight
+        },
+        {
             id = 20, -- Quick Recovery (maxed)
         },
         {
             id = 108, -- Blessed
         },
+        -------------------------------------
         -- 4 slottables and all passives done
-        -- TODO: more
+        -- below is bonus
+        -------------------------------------
+        {
+            id = 23, -- Biting Aura
+        },
+        {
+            id = 12, -- Fighting Finesse
+        },
+        {
+            id = 27, -- Thaumaturge
+        },
+        {
+            id = 25, -- Deadly Aim
+        },
+        {
+            id = 30, -- Reaving Blows
+        },
     },
 }
 
 local BLUE_HEAL = {
-    -- TODO
-    nodes = {},
+    nodes = {
+        {
+            id = 99, -- Eldritch Insight
+        },
+        {
+            id = 108, -- Blessed
+        },
+        {
+            id = 20, -- Quick Recovery (open nodes)
+            stage = 1,
+        },
+        {
+            id = 14, -- Preparation
+        },
+        {
+            id = 24, -- Soothing Tide
+        },
+        {
+            id = 28, -- Swift Renewal
+        },
+        {
+            id = 263, -- Enlivening Overflow
+        },
+        {
+            id = 262, -- From the Brink
+        },
+        {
+            id = 11, -- Precision
+        },
+        {
+            id = 6, -- Tireless Discipline
+        },
+        {
+            id = 16, -- Hardy
+        },
+        {
+            id = 15, -- Elemental Aegis
+        },
+        {
+            id = 20, -- Quick Recovery (maxed)
+        },
+        {
+            id = 10, -- Piercing (open nodes)
+            stage = 1,
+        },
+        {
+            id = 17, -- Flawless Ritual
+        },
+        {
+            id = 21, -- War Mage
+        },
+        {
+            id = 10, -- Piercing (maxed)
+        },
+        {
+            id = 18, -- Battle Mastery
+        },
+        {
+            id = 22, -- Mighty
+        },
+        -------------------------------------
+        -- 4 slottables and all passives done
+        -- below is bonus
+        -------------------------------------
+        {
+            id = 9, -- Rejuvenator
+        },
+        {
+            id = 26, -- Focused Mending
+        },
+        {
+            id = 12, -- Fighting Finesse
+        },
+        {
+            id = 4, -- Untamed Aggression
+        },
+    },
 }
 
 local BLUE_TANK = {
-    -- TODO
-    nodes = {},
+    nodes = {
+        {
+            id = 6, -- Tireless Discipline (open nodes)
+            stage = 1,
+        },
+        {
+            id = 20, -- Quick Recovery (open nodes)
+            stage = 1,
+        },
+        {
+            id = 14, -- Preparation
+        },
+        {
+            id = 16, -- Hardy
+        },
+        {
+            id = 15, -- Elemental Aegis
+        },
+        {
+            id = 20, -- Quick Recovery (maxed)
+        },
+        {
+            id = 6, -- Tireless Discipline (maxed)
+        },
+        {
+            id = 99, -- Eldritch Insight
+        },
+        {
+            id = 108, -- Blessed
+        },
+        {
+            id = 133, -- Unassailable (open nodes)
+            stage = 1,
+        },
+        {
+            id = 159, -- Bulwark
+        },
+        {
+            id = 265, -- Ironclad
+        },
+        {
+            id = 134, -- Duelist's Rebuff
+        },
+        {
+            id = 136, -- Enduring Resolve
+        },
+        -------------------------------------
+        -- 4 slottables done
+        -- below is not as important
+        -------------------------------------
+        {
+            id = 11, -- Precision
+        },
+        {
+            id = 133, -- Unassailable (maxed)
+        },
+        {
+            id = 10, -- Piercing (open nodes)
+            stage = 1,
+        },
+        {
+            id = 17, -- Flawless Ritual
+        },
+        {
+            id = 18, -- Battle Mastery
+        },
+        {
+            id = 10, -- Piercing (maxed)
+        },
+        {
+            id = 22, -- Mighty
+        },
+        {
+            id = 21, -- War Mage
+        },
+    },
 }
 
 

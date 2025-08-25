@@ -106,8 +106,8 @@ local function ApplySmartPreset(tree, preset, totalPoints)
         pendingPoints[id] = desiredPoints
         currentTotalPoints = currentTotalPoints + pointsToAllocate
 
-        -- If it's slottable, put it in desired slottables
-        if (#slottables < 4 and CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))) then
+        -- If it's slottable, put it in desired slottables in order of maxing
+        if (#slottables < 4 and CanChampionSkillTypeBeSlotted(GetChampionSkillType(id)) and desiredPoints == GetChampionSkillMaxPoints(id)) then
             table.insert(slottables, id)
         end
 
