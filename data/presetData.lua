@@ -4,34 +4,35 @@ DynamicCP = DynamicCP or {}
 /script for i=1,3 do for j=1,GetNumChampionDisciplineSkills(i) do local id = GetChampionSkillId(i, j) d(string.format("%d %s %d", j, GetChampionSkillName(id), id)) end end
 GetChampionSkillName(GetChampionSkillId(disciplineIndex, skillIndex))
 
-1 Out of Sight 68
-2 Friends in Low Places 76
-3 Fade Away 84
-4 Cutpurse's Art 90
-5 Shadowstrike 80
-6 Master Gatherer 78
-7 Treasure Hunter 79
-8 Steadfast Enchantment 75
-9 Rationer 85
-10 Liquid Efficiency 86
-11 Angler's Instincts 89
-12 Reel Technique 88
-13 Homemaker 91
-14 Wanderer 70
-15 Plentiful Harvest 81
-16 War Mount 82
-17 Gifted Rider 92
-18 Meticulous Disassembly 83
-19 Inspiration Boost 72
-20 Fortune's Favor 71
-21 Infamous 77
-22 Fleet Phantom 67
-23 Gilded Fingers 74
-24 Breakfall 69
-25 Soul Reservoir 87
-26 Steed's Blessing 66
-27 Sustaining Shadows 65
-28 Professional Upkeep 1
+1 Discipline Artisan 279
+2 Out of Sight 68
+3 Friends in Low Places 76
+4 Fade Away 84
+5 Cutpurse's Art 90
+6 Shadowstrike 80
+7 Master Gatherer 78
+8 Treasure Hunter 79
+9 Steadfast Enchantment 75
+10 Rationer 85
+11 Liquid Efficiency 86
+12 Angler's Instincts 89
+13 Reel Technique 88
+14 Homemaker 91
+15 Wanderer 70
+16 Plentiful Harvest 81
+17 War Mount 82
+18 Gifted Rider 92
+19 Meticulous Disassembly 83
+20 Inspiration Boost 72
+21 Fortune's Favor 71
+22 Infamous 77
+23 Fleet Phantom 67
+24 Gilded Fingers 74
+25 Breakfall 69
+26 Soul Reservoir 87
+27 Steed's Blessing 66
+28 Sustaining Shadows 65
+29 Professional Upkeep 1
 
 1 Precision 11
 2 Fighting Finesse 12
