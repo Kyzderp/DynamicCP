@@ -832,7 +832,7 @@ local function UpdateSlotSetDropdown(tree, slotSetId)
 end
 
 function DynamicCP.RefreshPresetsSlotSetDropdown(tree)
-    if (GetSubControl("Inner"):GetNamedChild(tree .. "Options"):IsHidden()) then
+    if (GetSubControl("Inner"):GetNamedChild(tree .. "OptionsSlotSetDropdown"):IsHidden()) then
         return
     end
 
