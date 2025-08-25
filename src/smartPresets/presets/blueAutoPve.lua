@@ -48,9 +48,10 @@ local blue_dps_mag = {
 -- If stage is not specified, the star will be maxed out
 -- If flex is specified, it uses the index in the flex data
 -- If passive is specified, it uses the index in the respective data
+-- If deprioritizeSlotting is specified, only slot it if there is still space after allocating all
 -----------------------------------------------------------
 local BLUE_DPS = {
-    GetFlex = function(fatecarverUnlocked, isPragmatic, index)
+    GetFlex = function(fatecarverUnlocked, _, _, index, totalPoints)
         if (fatecarverUnlocked) then
             return blue_dps_flex_arc[index]
         end

@@ -17,6 +17,12 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 
 -- Thieving-oriented green tree
 local GREEN_THIEVING = {
+    GetFlex = function(_, _, craftingMaxed, index, totalPoints)
+        if (not craftingMaxed) then
+            return 72 -- Inspiration Boost
+        end
+        return -1
+    end,
     nodes = {
         {
             id = 68, -- Out of Sight (open nodes)
@@ -97,7 +103,7 @@ local GREEN_THIEVING = {
             id = 69, -- Breakfall
         },
         {
-            id = 72, -- Inspiration Boost -- TODO: flex
+            flex = 1, -- Inspiration Boost
         },
         {
             id = 92, -- Gifted Rider

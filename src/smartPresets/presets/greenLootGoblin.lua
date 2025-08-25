@@ -18,6 +18,21 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 -- Loot/craft-oriented green tree: prioritizes Treasure
 -- Hunter, Plentiful Harvest, etc
 local GREEN_LOOT = {
+    GetFlex = function(_, _, craftingMaxed, index, totalPoints)
+        if (not craftingMaxed) then
+            return 72 -- Inspiration Boost
+        end
+        if (index == 1) then -- Opening nodes
+            -- It requires 675 in green to allocate without Inspiration Boost for this particular setup
+            if (totalPoints >= 675) then
+                return -1
+            else
+                return 72 -- Inspiration Boost
+            end
+        elseif (index == 2) then -- Maxing it the second time
+            return -1
+        end
+    end,
     nodes = {
         {
             id = 74, -- Gilded Fingers (open nodes)
@@ -28,7 +43,7 @@ local GREEN_LOOT = {
             stage = 1,
         },
         {
-            id = 72, -- Inspiration Boost (open nodes)
+            flex = 1, -- Inspiration Boost (open nodes)
             stage = 1,
         },
         {
@@ -38,7 +53,7 @@ local GREEN_LOOT = {
             id = 79, -- Treasure Hunter
         },
         {
-            id = 72, -- Inspiration Boost -- TODO: flex
+            flex = 2, -- Inspiration Boost
         },
         {
             id = 78, -- Master Gatherer (open nodes)
@@ -141,6 +156,16 @@ local GREEN_LOOT = {
 -----------------------------------------------------------
 -- applyFunc
 -----------------------------------------------------------
-function DynamicCP.SmartPresets.ApplyGreenLootGoblin()
-    return DynamicCP.ApplySmartPreset("Green", GREEN_LOOT)
+function DynamicCP.SmartPresets.ApplyGreenLootGoblin(totalPoints)
+    return DynamicCP.ApplySmartPreset("Green", GREEN_LOOT, totalPoints)
 end
+DynamicCP.TestGreen = DynamicCP.SmartPresets.ApplyGreenLootGoblin
+
+--[[
+/script DynamicCP.TestGreen(0)
+/script DynamicCP.TestGreen(600)
+/script DynamicCP.TestGreen(670)
+/script DynamicCP.TestGreen(674)
+/script DynamicCP.TestGreen(676)
+/script DynamicCP.TestGreen(1000)
+]]

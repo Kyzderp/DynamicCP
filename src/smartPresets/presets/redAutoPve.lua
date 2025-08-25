@@ -23,7 +23,7 @@ local red_dps_flex_nonpragmatic = {
 -- If deprioritizeSlotting is specified, only slot it if there is still space after allocating all
 -----------------------------------------------------------
 local RED_DPS = {
-    GetFlex = function(fatecarverUnlocked, isPragmatic, index)
+    GetFlex = function(_, isPragmatic, _, index, totalPoints)
         if (isPragmatic) then
             return red_dps_flex_pragmatic[index]
         end

@@ -47,7 +47,18 @@ local function GetDecisions()
     -- Whether stam or mag is higher
     local _, maxStam, effectiveMaxStam = GetUnitPower("player", COMBAT_MECHANIC_FLAGS_STAMINA)
     local _, maxMag, effectiveMaxMag = GetUnitPower("player", COMBAT_MECHANIC_FLAGS_MAGICKA)
-    return fatecarverUnlocked, maxStam > maxMag, pragmatic
+
+    -- Whether all crafting lines are maxed
+    local craftingMaxed = true
+    for skillLineIndex = 1, GetNumSkillLines(SKILL_TYPE_TRADESKILL) do
+        local rank = GetSkillLineDynamicInfo(SKILL_TYPE_TRADESKILL, skillLineIndex)
+        if (rank < 50) then
+            craftingMaxed = false
+            break
+        end
+    end
+
+    return fatecarverUnlocked, maxStam > maxMag, pragmatic, craftingMaxed
 end
 
 -- We don't care about existing points, i.e. overwrite anything
@@ -59,11 +70,12 @@ local function ApplySmartPreset(tree, preset, totalPoints)
         totalPoints = GetNumSpentChampionPoints(disciplineIndex) + GetNumUnspentChampionPoints(disciplineIndex)
     end
 
-    local fatecarverUnlocked, isStamHigher, isPragmatic = GetDecisions()
-    DynamicCP.dbg(string.format("%s; %s",
+    local fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed = GetDecisions()
+    DynamicCP.dbg(string.format("%s; %s; %s; %s",
         fatecarverUnlocked and "fatecarver available" or "no fatecarver",
         isStamHigher and "stam higher" or "mag higher",
-        isPragmatic and "is pragmatic" or "not pragmatic"))
+        isPragmatic and "is pragmatic" or "not pragmatic",
+        craftingMaxed and "crafting maxed" or "crafting not maxed"))
 
     local currentTotalPoints = 0
     local pendingPoints = {} -- {[10] = 10,}
@@ -77,56 +89,59 @@ local function ApplySmartPreset(tree, preset, totalPoints)
         local id, stage
         if (node.id) then
             id = node.id
-            stage = node.stage
         elseif (node.flex) then
-            id = preset.GetFlex(fatecarverUnlocked, isPragmatic, node.flex)
+            id = preset.GetFlex(fatecarverUnlocked, isPragmatic, craftingMaxed, node.flex, totalPoints)
         elseif (node.passive) then
             id = preset.GetPassive(isStamHigher, node.passive)
         end
+        stage = node.stage -- can be nil
 
-        -- Get number of points to use, including previous partial opens
-        local existingPoints = pendingPoints[id] or 0
-        local desiredPoints
-        if (stage) then
-            desiredPoints = select(stage + 1, GetChampionSkillJumpPoints(id)) -- 0, 10, 20
-        else
-            desiredPoints = GetChampionSkillMaxPoints(id)
-        end
-        local pointsToAllocate = desiredPoints - existingPoints
-
-        -- Not enough CP, spend the last bit
-        if (currentTotalPoints + pointsToAllocate > totalPoints) then
-            DynamicCP.dbg("Ran out of points at " .. GetChampionSkillName(id))
-            local overflow = currentTotalPoints + pointsToAllocate - totalPoints
-            desiredPoints = desiredPoints - overflow
-            pointsToAllocate = totalPoints - currentTotalPoints
-        end
-
-        -- "Put" the points in
-        DynamicCP.dbg(string.format("Putting %d points into %s", pointsToAllocate, GetChampionSkillName(id)))
-        pendingPoints[id] = desiredPoints
-        currentTotalPoints = currentTotalPoints + pointsToAllocate
-
-        -- If it's slottable, put it in desired slottables in order of maxing
-        if (#slottables < 4 and CanChampionSkillTypeBeSlotted(GetChampionSkillType(id)) and desiredPoints == GetChampionSkillMaxPoints(id)) then
-            if (node.deprioritizeSlotting) then
-                table.insert(deprioritizedSlottables, id)
+        -- id -1 means skip. Likely used for Inspiration Boost flex
+        if (id ~= -1) then
+            -- Get number of points to use, including previous partial opens
+            local existingPoints = pendingPoints[id] or 0
+            local desiredPoints
+            if (stage) then
+                desiredPoints = select(stage + 1, GetChampionSkillJumpPoints(id)) -- 0, 10, 20
             else
-                table.insert(slottables, id)
+                desiredPoints = GetChampionSkillMaxPoints(id)
             end
-        end
+            local pointsToAllocate = desiredPoints - existingPoints
 
-        -- Not enough points to continue
-        if (currentTotalPoints >= totalPoints) then
-            -- If there were deprioritizeSlotting slottables, they can be slotted if there is still space
-            for _, id in ipairs(deprioritizedSlottables) do
-                if (#slottables >= 4) then
-                    break
+            -- Not enough CP, spend the last bit
+            if (currentTotalPoints + pointsToAllocate > totalPoints) then
+                DynamicCP.dbg("Ran out of points at " .. GetChampionSkillName(id))
+                local overflow = currentTotalPoints + pointsToAllocate - totalPoints
+                desiredPoints = desiredPoints - overflow
+                pointsToAllocate = totalPoints - currentTotalPoints
+            end
+
+            -- "Put" the points in
+            DynamicCP.dbg(string.format("Putting %d points into %s", pointsToAllocate, GetChampionSkillName(id)))
+            pendingPoints[id] = desiredPoints
+            currentTotalPoints = currentTotalPoints + pointsToAllocate
+
+            -- If it's slottable, put it in desired slottables in order of maxing
+            if (#slottables < 4 and CanChampionSkillTypeBeSlotted(GetChampionSkillType(id)) and desiredPoints == GetChampionSkillMaxPoints(id)) then
+                if (node.deprioritizeSlotting) then
+                    table.insert(deprioritizedSlottables, id)
+                else
+                    table.insert(slottables, id)
                 end
-                table.insert(slottables, id)
             end
 
-            return pendingCP
+            -- Not enough points to continue
+            if (currentTotalPoints >= totalPoints) then
+                -- If there were deprioritizeSlotting slottables, they can be slotted if there is still space
+                for _, id in ipairs(deprioritizedSlottables) do
+                    if (#slottables >= 4) then
+                        break
+                    end
+                    table.insert(slottables, id)
+                end
+
+                return pendingCP
+            end
         end
     end
     DynamicCP.dbg("Finished all desired nodes")
@@ -147,6 +162,9 @@ DynamicCP.SMART_PRESETS = {
     Green = {
         ["DEFAULT_SMART_GREEN_COMBAT"] = {
             name = function()
+                local _, _, _, craftingMaxed = GetDecisions()
+                d(string.format("craftingMaxed: %s",
+                    craftingMaxed and "true" or "false"))
                 return "Auto Combat |t100%:100%:esoui/art/icons/mapkey/mapkey_raiddungeon.dds|t"
             end,
             applyFunc = DynamicCP.SmartPresets.ApplyGreenCombat,

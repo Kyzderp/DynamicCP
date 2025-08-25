@@ -9,6 +9,7 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 -- If flex is specified, it uses the index in the flex data
 -- If passive is specified, it uses the index in the respective data
 -- If deprioritizeSlotting is specified, only slot it if there is still space after allocating all
+-- If crafting is already maxed, Inspiration Boost is not slotted
 -----------------------------------------------------------
 
 -- I thought about conditional Discipline Artisan, but it'd
@@ -19,6 +20,12 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 -- trials and dungeons, such as Treasure Hunter, Liquid
 -- Efficiency, and Steed's Blessing
 local GREEN_COMBAT = {
+    GetFlex = function(_, _, craftingMaxed, index, totalPoints)
+        if (not craftingMaxed) then
+            return 72 -- Inspiration Boost
+        end
+        return -1
+    end,
     nodes = {
         {
             id = 279, -- Discipline Artisan
@@ -79,7 +86,7 @@ local GREEN_COMBAT = {
             id = 81, -- Plentiful Harvest (maxed)
         },
         {
-            id = 72, -- Inspiration Boost -- TODO: is crafting maxed?
+            flex = 1, -- Inspiration Boost
         },
         {
             id = 69, -- Breakfall
