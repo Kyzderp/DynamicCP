@@ -68,6 +68,7 @@ local function ApplySmartPreset(tree, preset, totalPoints)
     local currentTotalPoints = 0
     local pendingPoints = {} -- {[10] = 10,}
     local slottables = {}
+    local deprioritizedSlottables = {}
     local pendingCP = {
         [disciplineIndex] = pendingPoints,
         slottables = slottables,
@@ -108,11 +109,23 @@ local function ApplySmartPreset(tree, preset, totalPoints)
 
         -- If it's slottable, put it in desired slottables in order of maxing
         if (#slottables < 4 and CanChampionSkillTypeBeSlotted(GetChampionSkillType(id)) and desiredPoints == GetChampionSkillMaxPoints(id)) then
-            table.insert(slottables, id)
+            if (node.deprioritizeSlotting) then
+                table.insert(deprioritizedSlottables, id)
+            else
+                table.insert(slottables, id)
+            end
         end
 
         -- Not enough points to continue
         if (currentTotalPoints >= totalPoints) then
+            -- If there were deprioritizeSlotting slottables, they can be slotted if there is still space
+            for _, id in ipairs(deprioritizedSlottables) do
+                if (#slottables >= 4) then
+                    break
+                end
+                table.insert(slottables, id)
+            end
+
             return pendingCP
         end
     end
@@ -134,7 +147,7 @@ DynamicCP.SMART_PRESETS = {
     Green = {
         ["DEFAULT_SMART_GREEN_COMBAT"] = {
             name = function()
-                return "Auto Combat |t100%:100%:esoui/art/icons/mapkey/mapkey_raiddungeon.dds|t" -- TODO: combat icon
+                return "Auto Combat |t100%:100%:esoui/art/icons/mapkey/mapkey_raiddungeon.dds|t"
             end,
             applyFunc = DynamicCP.SmartPresets.ApplyGreenCombat,
         },

@@ -8,6 +8,7 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 -- If stage is not specified, the star will be maxed out
 -- If flex is specified, it uses the index in the flex data
 -- If passive is specified, it uses the index in the respective data
+-- If deprioritizeSlotting is specified, only slot it if there is still space after allocating all
 -----------------------------------------------------------
 
 -- I thought about conditional Discipline Artisan, but it'd

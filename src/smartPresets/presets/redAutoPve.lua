@@ -20,6 +20,7 @@ local red_dps_flex_nonpragmatic = {
 -- If stage is not specified, the star will be maxed out
 -- If flex is specified, it uses the index in the flex data
 -- If passive is specified, it uses the index in the respective data
+-- If deprioritizeSlotting is specified, only slot it if there is still space after allocating all
 -----------------------------------------------------------
 local RED_DPS = {
     GetFlex = function(fatecarverUnlocked, isPragmatic, index)
