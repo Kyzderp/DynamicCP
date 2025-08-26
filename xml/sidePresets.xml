@@ -317,7 +317,7 @@
                                             <Dimensions x="200" y="500"/>
                                         </Label>
                                         <Label name="$(parent)3" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="LOW" hidden="false"
-                                            text="To specify which stars will be slotted alongside the points, use &quot;New slottable set&quot; at the top of your screen, then attach it to a preset. Otherwise, slottables will be picked automatically.">
+                                            text="To specify which stars will be slotted alongside the points, select &quot;Create New&quot; from the dropdowns at the top of your screen, then attach it to a preset. Otherwise, slottables will be picked automatically.">
                                             <Anchor point="TOP" relativeTo="DynamicCPSidePresetsInnerRedDropdown" relativePoint="BOTTOM" offsetY="10"/>
                                             <Dimensions x="200" y="500"/>
                                         </Label>

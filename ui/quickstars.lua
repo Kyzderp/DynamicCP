@@ -634,6 +634,13 @@ function DynamicCP.QuickstarsOnPurchased()
 end
 
 ---------------------------------------------------------------------
+-- First-time hint
+local function HintRightClick()
+    local hint = WINDOW_MANAGER:CreateControlFromVirtual("$(parent)Hint", DynamicCPQuickstars, "QuickstarsSlotSetHint")
+    hint:SetAnchor(BOTTOMLEFT, DynamicCPQuickstarsGreenButton, TOPLEFT, -10, -5)
+end
+
+---------------------------------------------------------------------
 -- Init
 function DynamicCP.InitQuickstars()
     DynamicCPQuickstars:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, DynamicCP.savedOptions.quickstarsX, DynamicCP.savedOptions.quickstarsY)
@@ -666,4 +673,9 @@ function DynamicCP.InitQuickstars()
     DynamicCP.InitQuickstarsScenes()
 
     DynamicCP.RegisterCooldownListener("Quickstars", OnCooldownStart, OnCooldownUpdate, OnCooldownEnd)
+
+    if (DynamicCP.savedOptions.quickstarsFirstTime) then
+        HintRightClick()
+        -- DynamicCP.savedOptions.quickstarsFirstTime = false
+    end
 end

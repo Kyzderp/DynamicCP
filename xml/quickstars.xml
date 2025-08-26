@@ -30,7 +30,10 @@
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_stamina_icon-hud-32.dds" tier="MEDIUM" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
-                                    <OnMouseUp>DynamicCP.SelectQuickstarsTab("Green", button)</OnMouseUp>
+                                    <OnMouseUp>
+                                        if (DynamicCPQuickstarsHint) then DynamicCPQuickstarsHint:SetHidden(true) end
+                                        DynamicCP.SelectQuickstarsTab("Green", button)
+                                    </OnMouseUp>
                                 </Texture>
                             </Controls>
                         </Control>
@@ -42,7 +45,10 @@
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_magicka_icon-hud-32.dds" tier="MEDIUM" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
-                                    <OnMouseUp>DynamicCP.SelectQuickstarsTab("Blue", button)</OnMouseUp>
+                                    <OnMouseUp>
+                                        if (DynamicCPQuickstarsHint) then DynamicCPQuickstarsHint:SetHidden(true) end
+                                        DynamicCP.SelectQuickstarsTab("Blue", button)
+                                    </OnMouseUp>
                                 </Texture>
                             </Controls>
                         </Control>
@@ -54,7 +60,10 @@
                                 <Texture name="$(parent)Icon" textureFile="esoui/art/champion/champion_points_health_icon-hud-32.dds" tier="MEDIUM" mouseEnabled="true">
                                     <Dimensions x="24" y="24"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
-                                    <OnMouseUp>DynamicCP.SelectQuickstarsTab("Red", button)</OnMouseUp>
+                                    <OnMouseUp>
+                                        if (DynamicCPQuickstarsHint) then DynamicCPQuickstarsHint:SetHidden(true) end
+                                        DynamicCP.SelectQuickstarsTab("Red", button)
+                                    </OnMouseUp>
                                 </Texture>
                             </Controls>
                         </Control>
@@ -307,7 +316,7 @@
                                     <Edge edgeSize="2"/>
                                     <AnchorFill/>
                                 </Backdrop>
-                                <Label name="$(parent)Hint" font="ZoFontGame" color="BBBBBB" text="No slottable sets. Create one from the CP menu!" hidden="true" tier="HIGH" layer="TEXT">
+                                <Label name="$(parent)Hint" font="ZoFontGame" color="BBBBBB" text="No slottable sets! Create one from the CP menu." hidden="true" tier="HIGH" layer="TEXT">
                                     <Dimensions x="200" y="58"/>
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="4"/>
                                 </Label>
@@ -339,5 +348,20 @@
             <OnMouseEnter>DynamicCP.OnQuickstarSlotGroupEnter(self:GetLabelControl():GetText())</OnMouseEnter>
             <OnMouseExit>DynamicCP.OnQuickstarSlotGroupExit(self:GetLabelControl():GetText())</OnMouseExit>
         </Button>
+        <Control name="QuickstarsSlotSetHint" virtual="true">
+            <Dimensions x="250" y="120"/>
+            <Controls>
+                <Texture name="$(parent)Arrow" textureFile="esoui/art/housing/rotation_arrow.dds" tier="MEDIUM" color="FFFFFFFF">
+                    <Dimensions x="40" y="40" />
+                    <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="10"/>
+                    <OnInitialized>
+                        self:SetTransformRotationZ(math.rad(180))
+                    </OnInitialized>
+                </Texture>
+                <Label name="$(parent)Label" font="ZoFontGameBold" color="DDDDDD" text="Right click these buttons to use slottable sets, and left click to toggle individual trees." hidden="false" verticalAlignment="BOTTOM" horizontalAlignment="LEFT" tier="HIGH" layer="TEXT">
+                    <AnchorFill/>
+                </Label>
+            </Controls>
+        </Control>
     </Controls>
 </GuiXml>

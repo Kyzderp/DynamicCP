@@ -6,7 +6,7 @@ local changelogs = {
         callback = function() DynamicCP.OpenSettingsMenu() end,
         text = [[[Version 3.0.0]
 
-- Added "slottable sets": At the top of your CP menu, you can now create sets of slottable stars. These sets can then be attached to CP presets, custom rules, or used in quickstars (right click). If you change the stars in your slottable set, it's automatically updated in the places that you use them.
+- Added "slottable sets": At the top of your CP menu, you can now create sets of slottable stars. These sets can then be attached to CP presets, custom rules, or used in quickstars. If you change the stars in your slottable set, it's automatically updated in the places that you use them.
 
 - Added "automatic presets": These are the green options at the top of presets, with icons showing what CP they will prioritize. They use as many points as you have available, until stars useful for your detected build are allocated. More info can be found in Dynamic CP > Preset Settings, where you can also delete the old hardcoded presets.
 

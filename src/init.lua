@@ -45,6 +45,8 @@ local defaultOptions = {
     clusterLabelColor = {1, 0.7, 1},
     clusterLabelSize = 13,
     showTotalsLabel = true,
+
+    quickstarsFirstTime = true,
     quickstarsX = GuiRoot:GetWidth() / 4, -- Anchor TOPLEFT
     quickstarsY = GuiRoot:GetHeight() / 4,
     quickstarsShowGreen = true, -- quickstars 2.0

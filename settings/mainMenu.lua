@@ -540,7 +540,7 @@ function DynamicCP:CreateSettingsMenu()
         {
             type = "button",
             name = "Show latest changelog",
-            tooltip = "Show the changelog from the last version",
+            tooltip = "Show the changelog from the last major version",
             func = function()
                 DynamicCP.MaybeShowChangelog(true)
             end,
