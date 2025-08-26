@@ -307,8 +307,8 @@
                                     <Edge edgeSize="2"/>
                                     <AnchorFill/>
                                 </Backdrop>
-                                <Label name="$(parent)Hint" font="ZoFontGame" color="BBBBBB" text="No slottable sets." hidden="true" tier="HIGH" layer="TEXT">
-                                    <Dimensions x="200" y="16"/>
+                                <Label name="$(parent)Hint" font="ZoFontGame" color="BBBBBB" text="No slottable sets. Create one from the CP menu!" hidden="true" tier="HIGH" layer="TEXT">
+                                    <Dimensions x="200" y="58"/>
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="4"/>
                                 </Label>
                                 <Control name="$(parent)Preview" mouseEnabled="false" movable="false" hidden="true" tier="MEDIUM">

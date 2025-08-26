@@ -55,7 +55,7 @@ local function ShowMenu(tree)
 
     -- Adjust backdrop
     if (#keys == 0) then
-        DynamicCPQuickstarsContextMenu:SetHeight(20 + 8)
+        DynamicCPQuickstarsContextMenu:SetHeight(58)
         DynamicCPQuickstarsContextMenuHint:SetHidden(false)
     else
         DynamicCPQuickstarsContextMenu:SetHeight(#keys * 20 + 8)

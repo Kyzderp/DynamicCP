@@ -15,6 +15,8 @@ local defaultOptions = {
     },
     pulldownExpanded = true,
     charData = {}, -- {[123214123] = {green="craft", blue="dps", red="magdps", armoryBuilds={[1]={green="craft", blue="dps", red="magdps"}}}}
+
+    slotGroupsFirstTime = true,
     slotGroups = { -- Key them by ID, so that they're easily renamable
         Red = {}, -- [1] = {["name"] = "DPS", [1] = 12, [2] = 34, [3] = 56, [4] = 78}, ["Tank"] = {["name"] = "Tank", [1] = 12, [2] = 34, [3] = 56, [4] = 78},
         Green = {},
@@ -332,6 +334,18 @@ local function Initialize()
         DynamicCP.AddOptionsForEachCharacter("Example Trial Dps")
         DynamicCP.ShowFirstTimeDialog()
         DynamicCP.savedOptions.customRules.firstTime = false
+    end
+
+    -- Populate slottable sets
+    if (DynamicCP.savedOptions.slotGroupsFirstTime) then
+        DynamicCP.savedOptions.slotGroupsFirstTime = false
+        DynamicCP.savedOptions.slotGroups.Blue["Blue1"] = {
+            [1] = 23,
+            [2] = 277,
+            [3] = 8,
+            [4] = 264,
+            ["name"] = "Example PvE AoE",
+        }
     end
 
     -- Migrate settings versions if applicable
