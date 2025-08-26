@@ -3,9 +3,9 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 
 
 -----------------------------------------------------------
--- Beam vs ST (more later?)
+-- AOE vs ST (more later?)
 -----------------------------------------------------------
-local blue_dps_flex_arc = {
+local blue_dps_flex_aoe = {
     264, -- Master-at-Arms
     23, -- Biting Aura
     8, -- Wrathful Strikes
@@ -51,9 +51,9 @@ local blue_dps_mag = {
 -- If deprioritizeSlotting is specified, only slot it if there is still space after allocating all
 -----------------------------------------------------------
 local BLUE_DPS = {
-    GetFlex = function(fatecarverUnlocked, _, _, index, totalPoints)
-        if (fatecarverUnlocked) then
-            return blue_dps_flex_arc[index]
+    GetFlex = function(hasAoeSpammable, _, _, index, totalPoints)
+        if (hasAoeSpammable) then
+            return blue_dps_flex_aoe[index]
         end
         return blue_dps_flex_st[index]
     end,

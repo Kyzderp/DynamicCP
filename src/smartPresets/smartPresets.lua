@@ -12,20 +12,17 @@ local TREE_TO_DISCIPLINE = {
 -----------------------------------------------------------
 -- Apply the preset??
 -----------------------------------------------------------
--- returns: fatecarverUnlocked, isStamHigher
+-- returns: fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed
 local function GetDecisions()
-    -- Whether fatecarver is unlocked
+    -- Whether skills are unlocked
     local fatecarverUnlocked = false
+    local jabsUnlocked = false
     local pragmatic = false
     for skillLineIndex = 1, GetNumSkillLines(SKILL_TYPE_CLASS) do
         local skillLineId = GetSkillLineId(SKILL_TYPE_CLASS, skillLineIndex)
-        -- Herald of the Tome
-        if (skillLineId == 218) then
-            local _, _, isActive = GetSkillLineDynamicInfo(SKILL_TYPE_CLASS, skillLineIndex)
-            if (not isActive) then
-                break
-            end
-
+        local _, _, isActive = GetSkillLineDynamicInfo(SKILL_TYPE_CLASS, skillLineIndex)
+        -- Aedric Spear and Herald of the Tome
+        if (isActive and skillLineId == 22 or skillLineId == 218) then
             for skillIndex = 1, GetNumSkillAbilities(SKILL_TYPE_CLASS, skillLineIndex) do
                 local progressionId = GetProgressionSkillProgressionId(SKILL_TYPE_CLASS, skillLineIndex, skillIndex)
                 -- d(name .. " " .. tostring(progressionId))
@@ -39,6 +36,13 @@ local function GetDecisions()
                             pragmatic = true
                         end
                     end
+                    break
+                elseif (progressionId == 27) then -- Jabs
+                    local _, _, _, _, _, purchased = GetSkillAbilityInfo(SKILL_TYPE_CLASS, skillLineIndex, skillIndex)
+                    if (purchased) then
+                        jabsUnlocked = true
+                    end
+                    break
                 end
             end
         end
@@ -58,7 +62,7 @@ local function GetDecisions()
         end
     end
 
-    return fatecarverUnlocked, maxStam > maxMag, pragmatic, craftingMaxed
+    return fatecarverUnlocked, maxStam > maxMag, pragmatic, craftingMaxed, jabsUnlocked
 end
 
 -- We don't care about existing points, i.e. overwrite anything
@@ -70,12 +74,13 @@ local function ApplySmartPreset(tree, preset, totalPoints)
         totalPoints = GetNumSpentChampionPoints(disciplineIndex) + GetNumUnspentChampionPoints(disciplineIndex)
     end
 
-    local fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed = GetDecisions()
-    DynamicCP.dbg(string.format("%s; %s; %s; %s",
+    local fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed, jabsUnlocked = GetDecisions()
+    DynamicCP.dbg(string.format("%s; %s; %s; %s; %s",
         fatecarverUnlocked and "fatecarver available" or "no fatecarver",
         isStamHigher and "stam higher" or "mag higher",
         isPragmatic and "is pragmatic" or "not pragmatic",
-        craftingMaxed and "crafting maxed" or "crafting not maxed"))
+        craftingMaxed and "crafting maxed" or "crafting not maxed",
+        jabsUnlocked and "jabs" or "no jabs"))
 
     local currentTotalPoints = 0
     local pendingPoints = {} -- {[10] = 10,}
@@ -90,7 +95,8 @@ local function ApplySmartPreset(tree, preset, totalPoints)
         if (node.id) then
             id = node.id
         elseif (node.flex) then
-            id = preset.GetFlex(fatecarverUnlocked, isPragmatic, craftingMaxed, node.flex, totalPoints)
+            local hasAoeSpammable = fatecarverUnlocked or jabsUnlocked
+            id = preset.GetFlex(hasAoeSpammable, isPragmatic, craftingMaxed, node.flex, totalPoints)
         elseif (node.passive) then
             id = preset.GetPassive(isStamHigher, node.passive)
         end
