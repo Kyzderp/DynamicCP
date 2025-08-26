@@ -532,6 +532,20 @@ function DynamicCP:CreateSettingsMenu()
                 },
             },
         },
+        {
+            type = "header",
+            name = "",
+            width = "full",
+        },
+        {
+            type = "button",
+            name = "Show latest changelog",
+            tooltip = "Show the changelog from the last version",
+            func = function()
+                DynamicCP.MaybeShowChangelog(true)
+            end,
+            width = "full",
+        },
     }
 
     DynamicCP.addonPanel = LAM:RegisterAddonPanel("DynamicCPOptions", panelData)

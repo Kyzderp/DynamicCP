@@ -14,13 +14,19 @@ Go to settings?]]
     }
 }
 
-function DynamicCP.MaybeShowChangelog()
+function DynamicCP.MaybeShowChangelog(forceLatest)
     local fullText = "Dynamic CP " .. DynamicCP.version .. " Changelog"
     local last
-    for _, changelog in ipairs(changelogs) do
-        if (changelog.version > DynamicCP.savedOptions.lastChangelog) then
-            fullText = fullText .. "\n\n" .. changelog.text
-            last = changelog
+
+    if (forceLatest) then
+        last = changelogs[#changelogs]
+        fullText = fullText .. "\n\n" .. last.text
+    else
+        for _, changelog in ipairs(changelogs) do
+            if (changelog.version > DynamicCP.savedOptions.lastChangelog) then
+                fullText = fullText .. "\n\n" .. changelog.text
+                last = changelog
+            end
         end
     end
 
