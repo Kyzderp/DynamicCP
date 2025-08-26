@@ -6,6 +6,8 @@ DynamicCP.experimental = false -- Flip to true when developing. Nothing currentl
 
 local defaultOptions = {
     firstTime = true,
+    lastChangelog = 0,
+
     cp = {
         Red = {},
         Green = {}, -- ["Fisher"] = { ["roles"] = { ["Healer"] = false, ["Dps"] = true, ["Tank"] = false, }, [1] = { [65] = 0, }, ["slotSet"] = "Tank",},
@@ -214,11 +216,15 @@ local function Initialize()
 
     DynamicCP.dbg("Initializing...")
 
+    -- Don't show changelog if it's the first install
+    local maybeShowChangelog = true
+
     -- Populate defaults only on first time, otherwise the keys will be remade even if user deletes
     if (DynamicCP.savedOptions.firstTime) then
         DynamicCP.savedOptions.convertedIndices = true
         DynamicCP.savedOptions.usingSkillId = true
         DynamicCP.savedOptions.firstTime = false
+        maybeShowChangelog = false
     end
 
     -- If this isn't a new Blackwood install, we need to convert the old indices
@@ -362,6 +368,8 @@ local function Initialize()
     DynamicCP.InitModelessDialog()
     DynamicCP.InitCooldown()
     DynamicCP.SortRuleKeys()
+
+    DynamicCP.MaybeShowChangelog()
 
     -- Register events
     RegisterEvents()

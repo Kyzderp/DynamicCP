@@ -14,6 +14,7 @@ src/init.lua
 src/cooldown.lua
 src/screenUpdates.lua
 src/customRules.lua
+src/changelog.lua
 
 src/points.lua
 src/slottables.lua
