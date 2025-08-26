@@ -20,7 +20,7 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 -- trials and dungeons, such as Treasure Hunter, Liquid
 -- Efficiency, and Steed's Blessing
 local GREEN_COMBAT = {
-    GetFlex = function(_, _, craftingMaxed, index, totalPoints)
+    GetFlex = function(_, isHABuild, _, craftingMaxed, index, totalPoints)
         if (not craftingMaxed) then
             return 72 -- Inspiration Boost
         end

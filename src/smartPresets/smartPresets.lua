@@ -25,7 +25,7 @@ local function GetDecisions()
         if (isActive and skillLineId == 22 or skillLineId == 218) then
             for skillIndex = 1, GetNumSkillAbilities(SKILL_TYPE_CLASS, skillLineIndex) do
                 local progressionId = GetProgressionSkillProgressionId(SKILL_TYPE_CLASS, skillLineIndex, skillIndex)
-                -- d(name .. " " .. tostring(progressionId))
+
                 -- Fatecarver
                 if (progressionId == 535) then
                     local _, _, _, _, _, purchased = GetSkillAbilityInfo(SKILL_TYPE_CLASS, skillLineIndex, skillIndex)
@@ -37,7 +37,9 @@ local function GetDecisions()
                         end
                     end
                     break
-                elseif (progressionId == 27) then -- Jabs
+
+                -- Jabs
+                elseif (progressionId == 43) then
                     local _, _, _, _, _, purchased = GetSkillAbilityInfo(SKILL_TYPE_CLASS, skillLineIndex, skillIndex)
                     if (purchased) then
                         jabsUnlocked = true
@@ -62,7 +64,18 @@ local function GetDecisions()
         end
     end
 
-    return fatecarverUnlocked, maxStam > maxMag, pragmatic, craftingMaxed, jabsUnlocked
+    -- Whether this is a "heavy attack" build: look for Sergeant's Mail and lightning staff
+    local isHABuild = false
+    local _, _, _, numSergeant = GetItemSetInfo(29)
+    if (numSergeant >= 3) then
+        local function IsLightning(slot)
+            local itemLink = GetItemLink(BAG_WORN, slot)
+            return GetItemLinkWeaponType(itemLink) == WEAPONTYPE_LIGHTNING_STAFF
+        end
+        isHABuild = IsLightning(EQUIP_SLOT_MAIN_HAND) or IsLightning(EQUIP_SLOT_BACKUP_MAIN)
+    end
+
+    return fatecarverUnlocked, maxStam > maxMag, pragmatic, craftingMaxed, jabsUnlocked, isHABuild
 end
 
 -- We don't care about existing points, i.e. overwrite anything
@@ -74,13 +87,14 @@ local function ApplySmartPreset(tree, preset, totalPoints)
         totalPoints = GetNumSpentChampionPoints(disciplineIndex) + GetNumUnspentChampionPoints(disciplineIndex)
     end
 
-    local fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed, jabsUnlocked = GetDecisions()
-    DynamicCP.dbg(string.format("%s; %s; %s; %s; %s",
+    local fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed, jabsUnlocked, isHABuild = GetDecisions()
+    DynamicCP.dbg(string.format("%s; %s; %s; %s; %s; %s",
         fatecarverUnlocked and "fatecarver available" or "no fatecarver",
         isStamHigher and "stam higher" or "mag higher",
         isPragmatic and "is pragmatic" or "not pragmatic",
         craftingMaxed and "crafting maxed" or "crafting not maxed",
-        jabsUnlocked and "jabs" or "no jabs"))
+        jabsUnlocked and "jabs" or "no jabs",
+        isHABuild and "HA" or "not HA"))
 
     local currentTotalPoints = 0
     local pendingPoints = {} -- {[10] = 10,}
@@ -96,7 +110,7 @@ local function ApplySmartPreset(tree, preset, totalPoints)
             id = node.id
         elseif (node.flex) then
             local hasAoeSpammable = fatecarverUnlocked or jabsUnlocked
-            id = preset.GetFlex(hasAoeSpammable, isPragmatic, craftingMaxed, node.flex, totalPoints)
+            id = preset.GetFlex(hasAoeSpammable, isHABuild, isPragmatic, craftingMaxed, node.flex, totalPoints)
         elseif (node.passive) then
             id = preset.GetPassive(isStamHigher, node.passive)
         end
@@ -168,9 +182,6 @@ DynamicCP.SMART_PRESETS = {
     Green = {
         ["DEFAULT_SMART_GREEN_COMBAT"] = {
             name = function()
-                local _, _, _, craftingMaxed = GetDecisions()
-                d(string.format("craftingMaxed: %s",
-                    craftingMaxed and "true" or "false"))
                 return "Auto Combat |t100%:100%:esoui/art/icons/mapkey/mapkey_raiddungeon.dds|t"
             end,
             applyFunc = DynamicCP.SmartPresets.ApplyGreenCombat,
@@ -191,15 +202,20 @@ DynamicCP.SMART_PRESETS = {
     Blue = {
         ["DEFAULT_SMART_BLUE_PVE"] = {
             name = function()
-                local fatecarverUnlocked, isStamHigher, isPragmatic = GetDecisions()
-                d(string.format("fatecarverUnlocked: %s; isStamHigher: %s, isPragmatic: %s, role: %s",
-                    fatecarverUnlocked and "true" or "false",
-                    isStamHigher and "true" or "false",
-                    isPragmatic and "true" or "false",
-                    ROLE_ICONS[GetSelectedLFGRole()] or "?"))
+                local fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed, jabsUnlocked, isHABuild = GetDecisions()
+                local build
+                if (isHABuild) then
+                    build = " |t80%:80%:esoui/art/icons/death_recap_shock_ranged.dds|t"
+                elseif (fatecarverUnlocked) then
+                    build = " |t80%:80%:esoui/art/icons/ability_arcanist_002.dds|t"
+                elseif (jabsUnlocked) then
+                    build = " |t80%:80%:esoui/art/icons/ability_templar_trained_attacker.dds|t"
+                else
+                    build = ""
+                end
                 return string.format("Auto PvE %s%s%s",
                     ROLE_ICONS[GetSelectedLFGRole()] or "?",
-                    fatecarverUnlocked and " |t80%:80%:esoui/art/icons/ability_arcanist_002.dds|t" or "",
+                    build,
                     isStamHigher and "|t100%:100%:esoui/art/characterwindow/gamepad/gp_charactersheet_staminaicon.dds|t" or "|t100%:100%:esoui/art/characterwindow/gamepad/gp_charactersheet_magickaicon.dds|t"
                     )
             end,

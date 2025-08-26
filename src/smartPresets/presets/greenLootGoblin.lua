@@ -18,7 +18,7 @@ DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
 -- Loot/craft-oriented green tree: prioritizes Treasure
 -- Hunter, Plentiful Harvest, etc
 local GREEN_LOOT = {
-    GetFlex = function(_, _, craftingMaxed, index, totalPoints)
+    GetFlex = function(_, isHABuild, _, craftingMaxed, index, totalPoints)
         if (not craftingMaxed) then
             return 72 -- Inspiration Boost
         end

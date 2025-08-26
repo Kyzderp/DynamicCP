@@ -19,6 +19,13 @@ local blue_dps_flex_st = {
     277, -- Exploiter
 }
 
+local blue_dps_flex_ha = {
+    259, -- Weapons Expert
+    12, -- Fighting Finesse
+    25, -- Deadly Aim
+    277, -- Exploiter
+}
+
 
 -----------------------------------------------------------
 -- Passive stats
@@ -51,8 +58,10 @@ local blue_dps_mag = {
 -- If deprioritizeSlotting is specified, only slot it if there is still space after allocating all
 -----------------------------------------------------------
 local BLUE_DPS = {
-    GetFlex = function(hasAoeSpammable, _, _, index, totalPoints)
-        if (hasAoeSpammable) then
+    GetFlex = function(hasAoeSpammable, isHABuild, _, _, index, totalPoints)
+        if (isHABuild) then
+            return blue_dps_flex_ha[index]
+        elseif (hasAoeSpammable) then
             return blue_dps_flex_aoe[index]
         end
         return blue_dps_flex_st[index]
@@ -69,14 +78,14 @@ local BLUE_DPS = {
             stage = 1,
         },
         {
+            id = 11, -- Precision (open nodes)
+            stage = 1,
+        },
+        {
             flex = 1,
         },
         {
             flex = 2,
-        },
-        {
-            id = 11, -- Precision (open nodes)
-            stage = 1,
         },
         {
             flex = 3,
