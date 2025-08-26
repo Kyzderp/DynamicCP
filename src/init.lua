@@ -218,7 +218,6 @@ local function Initialize()
     if (DynamicCP.savedOptions.firstTime) then
         DynamicCP.savedOptions.convertedIndices = true
         DynamicCP.savedOptions.usingSkillId = true
-        DynamicCP.savedOptions.cp = DynamicCP.defaultPresets
         DynamicCP.savedOptions.firstTime = false
     end
 

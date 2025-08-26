@@ -248,9 +248,24 @@ function DynamicCP:CreateSettingsMenu()
                     width = "full",
                 },
                 {
+                    type = "header",
+                    name = "Automatic Presets",
+                    width = "full",
+                },
+                {
                     type = "description",
-                    title = "Manage Default Presets",
-                    text = "You can delete ALL of the default presets using the button below. This will delete any presets that match the names of the default presets, so be careful if you made changes to any!",
+                    text = "Version 3.0 adds auto presets! These are the brighter green options at the top of the preset lists, with icons showing what CP they will prioritize. They will use as many points as you have available, until nodes useful for your build are all allocated. The current presets are:\n\n|c7f9c4f- Auto Combat: prioritizes stars useful in dungeons or trials\n- Auto Craft/Loot: prioritizes crafting and overland looting\n- Auto Thieving: prioritizes nefarious activities\n|c5096b3- Auto PvE: allocates based on your selected LFG role, and if you are a DPS, also allocates based on your max resource and whether you have Fatecarver unlocked (AoE) or not (ST)\n|cb56238- Auto PvE: allocates based on your selected LFG role, and if you are a DPS, also allocates based on whether you have Pragmatic Fatecarver unlocked (Bastion) or not (Rejuvenation)|r\n\nThe green tree presets above also try to skip Inspiration Boost if your crafting skills are maxed, unless you don't have enough points to reach stars without Inspiration Boost.",
+                    width = "full",
+                },
+                {
+                    type = "header",
+                    name = "Old Default (Hardcoded) Presets",
+                    width = "full",
+                },
+                {
+                    type = "description",
+                    title = "Manage Default (Hardcoded) Presets",
+                    text = "You can delete ALL of the default hardcoded presets, from pre-3.0, using the button below. This will delete any presets that match the names of the default presets, so be careful if you made changes to any!",
                     width = "full",
                 },
                 {
@@ -269,45 +284,6 @@ function DynamicCP:CreateSettingsMenu()
                         DynamicCP:InitializeDropdowns()
                     end,
                     warning = "Delete all default presets. This cannot be undone!",
-                    isDangerous = true,
-                    width = "full",
-                },
-                {
-                    type = "description",
-                    title = nil,
-                    text = "You can reset ALL of the default presets using the button below. This will delete any presets that match the names of the default presets, so be careful if you made changes to any! Then, it will add the latest updated default presets to your preset window.",
-                    width = "full",
-                },
-                {
-                    type = "button",
-                    name = "Reset Default Presets",
-                    tooltip = "Reset all default presets. This will delete all default presets and re-add them!",
-                    func = function()
-                        DynamicCP.dbg("Resetting default presets")
-                        for treeName, tree in pairs(DynamicCP.savedOptions.cp) do
-                            for name, data in pairs(tree) do
-                                if (DynamicCP.oldDefaultPresetNames[name] or data.isDefault == true) then
-                                    DynamicCP.savedOptions.cp[treeName][name] = nil
-                                end
-                            end
-                        end
-
-                        -- Now deep copy
-                        for treeName, tree in pairs(DynamicCP.defaultPresets) do
-                            for name, data in pairs(tree) do
-                                DynamicCP.savedOptions.cp[treeName][name] = {}
-                                for disciplineIndex, disciplineData in pairs(data) do
-                                    DynamicCP.savedOptions.cp[treeName][name][disciplineIndex] = {}
-                                    for skillId, points in pairs(disciplineData) do
-                                        DynamicCP.savedOptions.cp[treeName][name][disciplineIndex][skillId] = points
-                                    end
-                                end
-                            end
-                        end
-
-                        DynamicCP:InitializeDropdowns()
-                    end,
-                    warning = "Reset all default presets. This will delete all default presets and re-add them!",
                     isDangerous = true,
                     width = "full",
                 },
