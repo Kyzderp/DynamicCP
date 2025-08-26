@@ -35,7 +35,7 @@ function DynamicCP.MaybeShowChangelog(forceLatest)
         return
     end
 
-    -- DynamicCP.savedOptions.lastChangelog = last.version
+    DynamicCP.savedOptions.lastChangelog = last.version
 
     DynamicCP.ShowModelessPrompt(fullText, last.callback)
 end

@@ -676,6 +676,6 @@ function DynamicCP.InitQuickstars()
 
     if (DynamicCP.savedOptions.quickstarsFirstTime) then
         HintRightClick()
-        -- DynamicCP.savedOptions.quickstarsFirstTime = false
+        DynamicCP.savedOptions.quickstarsFirstTime = false
     end
 end

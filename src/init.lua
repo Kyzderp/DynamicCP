@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "3.0.0-beta5"
+DynamicCP.version = "3.0.0-beta6"
 
 DynamicCP.experimental = false -- Flip to true when developing. Nothing currently
 
@@ -315,14 +315,15 @@ local function Initialize()
                     [2] = -1,
                     [3] = -1,
                     [4] = -1,
-                    [5] = 31, -- Backstabber
-                    [6] = 12, -- Fighting Finesse
-                    [7] = 25, -- Deadly Aim
-                    [8] = 27, -- Thaumaturge
+                    [5] = -1,
+                    [6] = -1,
+                    [7] = -1,
+                    [8] = -1,
                     [9] =  2, -- Boundless Vitality
-                    [10] = 34, -- Ironclad
+                    [10] = 34, -- Fortified
                     [11] = 35, -- Rejuvenation
                     [12] = 56, -- Spirit Mastery
+                    ["Blue"] = "Blue1",
                 },
                 tank = false,
                 healer = false,
@@ -386,7 +387,9 @@ local function Initialize()
     DynamicCP.InitCooldown()
     DynamicCP.SortRuleKeys()
 
-    DynamicCP.MaybeShowChangelog()
+    if (maybeShowChangelog) then
+        DynamicCP.MaybeShowChangelog()
+    end
 
     -- Register events
     RegisterEvents()
