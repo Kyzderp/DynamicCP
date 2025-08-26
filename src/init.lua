@@ -346,6 +346,7 @@ local function Initialize()
             [4] = 264,
             ["name"] = "Example PvE AoE",
         }
+        DynamicCP.savedOptions.pulldownExpanded = true -- So it's actually seen...
     end
 
     -- Migrate settings versions if applicable

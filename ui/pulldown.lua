@@ -167,6 +167,7 @@ local function InitSlotSetDropdown(tree, idToSelect)
             dropdownControl:GetParent():GetNamedChild("TextField"):SetHidden(false)
             dropdownControl:GetParent():GetNamedChild("TextField"):SetText(setData.name)
             dropdownControl:GetParent():GetNamedChild("Save"):SetHidden(false)
+            DynamicCPPulldownHint:SetHidden(true)
         end
 
         -- TODO: tooltip on dropdown entry hover with what stars it has?
@@ -190,6 +191,7 @@ local function InitSlotSetDropdown(tree, idToSelect)
         dropdownControl:GetParent():GetNamedChild("TextField"):SetText(newName)
         dropdownControl:GetParent():GetNamedChild("Save"):SetHidden(false)
         dropdownControl:GetParent():GetNamedChild("Delete"):SetHidden(true)
+        DynamicCPPulldownHint:SetHidden(true)
     end)
     dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
 

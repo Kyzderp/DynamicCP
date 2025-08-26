@@ -83,6 +83,10 @@
                         <Control name="$(parent)Red" tier="MEDIUM">
                             <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
                         </Control>
+                        <Label name="$(parent)Hint" font="ZoFontGame" color="BBBBBB" text="Create slottable sets here to use them manually or with presets or rules." hidden="false" tier="HIGH" layer="TEXT" horizontalAlignment="CENTER" verticalAlignment="BOTTOM">
+                            <Dimensions x="700" y="16"/>
+                            <Anchor point="BOTTOM" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="-12"/>
+                        </Label>
                     </Controls>
                 </Control>
                 <Control name="DynamicCPPulldownTab" mouseEnabled="true" hidden="false" tier="MEDIUM">
