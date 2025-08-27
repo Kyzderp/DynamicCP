@@ -386,6 +386,14 @@ local function ApplyCurrentSlottables(currentSlottables)
         local slottableSkillData = currentSlottables[index]
         local star = GetStarControlFromIndex(index)
 
+        local tree = "Red"
+        if (index <= 4) then
+            tree = "Green"
+        elseif (index <= 8) then
+            tree = "Blue"
+        end
+        star.SetColors(TEXT_COLORS[tree])
+
         -- It could be empty
         if (not slottableSkillData) then
             star:GetNamedChild("Name"):SetText("")
