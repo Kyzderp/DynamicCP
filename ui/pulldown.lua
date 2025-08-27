@@ -482,5 +482,12 @@ function DynamicCP.InitPulldown()
     InitTree(DynamicCPPulldownBlue, "Blue")
     InitTree(DynamicCPPulldownRed, "Red")
 
+    ZO_PreHook(CHAMPION_PERKS:GetChampionBar(), "ResetAllSlots", function()
+        InitSlotSetDropdown("Green")
+        InitSlotSetDropdown("Blue")
+        InitSlotSetDropdown("Red")
+        DynamicCPPulldownHint:SetHidden(false)
+    end)
+
     DynamicCP.pulldownInitialized = true
 end
