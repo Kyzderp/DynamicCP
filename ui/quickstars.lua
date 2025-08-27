@@ -641,6 +641,20 @@ local function HintRightClick()
 end
 
 ---------------------------------------------------------------------
+-- Refreshing all dropdowns on zone change
+-- Presumably users wouldn't have pending stuff between zones. This
+-- also fixes them being in a weird state after (probably) only
+-- Vengeance, when attempting to use and then exiting campaign.
+local prevZone = 0
+local function OnPlayerActivated()
+    local zoneId = GetZoneId(GetUnitZoneIndex("player"))
+    if (zoneId == prevZone) then return end
+
+    prevZone = zoneId
+    UpdateAllDropdowns()
+end
+
+---------------------------------------------------------------------
 -- Init
 function DynamicCP.InitQuickstars()
     DynamicCPQuickstars:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, DynamicCP.savedOptions.quickstarsX, DynamicCP.savedOptions.quickstarsY)
@@ -651,7 +665,8 @@ function DynamicCP.InitQuickstars()
 
     DynamicCP.ResizeQuickstars()
 
-    UpdateAllDropdowns()
+    EVENT_MANAGER:RegisterForEvent(DynamicCP.name .. "QuickstarsPlayerActivated", EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
+    OnPlayerActivated()
 
     local alpha = DynamicCP.savedOptions.quickstarsAlpha
     DynamicCPQuickstarsGreenButtonBackdrop:SetAlpha(alpha)
