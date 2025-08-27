@@ -119,6 +119,7 @@ end
 -- Committed slottables
 ---------------------------------------------------------------------
 -- Get cached
+-- Returns: {[skillId] = index}
 local function GetCommittedSlottables()
     -- Cached to avoid more calls
     if (committedSlottables ~= nil) then

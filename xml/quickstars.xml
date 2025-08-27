@@ -328,7 +328,7 @@
                                             <AnchorFill/>
                                         </Backdrop>
                                         <Label name="$(parent)Label" font="ZoFontGame" color="FFFFFF" text="Celerity" hidden="false" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="HIGH" layer="TEXT">
-                                            <Dimensions x="200" y="120"/>
+                                            <Dimensions x="500" y="120"/>
                                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="4"/>
                                         </Label>
                                     </Controls>

@@ -115,6 +115,13 @@ DynamicCP.OnQuickstarSlotGroupClicked = OnQuickstarSlotGroupClicked
 ---------------------------------------------------------------------
 -- On hover over entry in menu
 ---------------------------------------------------------------------
+local function AdjustHoverWidth()
+    DynamicCPQuickstarsContextMenuPreview:SetWidth(500)
+    local width = DynamicCPQuickstarsContextMenuPreviewLabel:GetTextWidth() + 8
+    if (width < 200) then width = 200 end
+    DynamicCPQuickstarsContextMenuPreview:SetWidth(width)
+end
+
 local function GetSlotSetString(tree, setData)
     local TEXT_COLORS_HEX = {
         Green = "a5d752",
@@ -122,23 +129,27 @@ local function GetSlotSetString(tree, setData)
         Red = "e46b2e",
     }
 
+    local committed = DynamicCP.GetCommittedSlottables()
+
     local starsString = ""
     for i = 1, 4 do
         local starName = ""
         local skillId = setData[i]
         local color = TEXT_COLORS_HEX[tree]
+        local unlocked = true
         if (skillId) then
             starName = GetChampionSkillName(skillId)
-            local unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
-            if (not unlocked) then
+            unlocked = WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))
+            if (not committed[skillId]) then
                 color = "ffff80"
             end
         end
 
-        starsString = starsString .. zo_strformat("|c<<1>><<2>> - <<C:3>>|r\n",
+        starsString = starsString .. zo_strformat("|c<<1>><<2>> - <<C:3>><<4>>|r\n",
             color,
             i,
-            starName)
+            starName,
+            unlocked and "" or " |cFF4444- not unlocked")
     end
 
     return starsString
@@ -157,6 +168,7 @@ function DynamicCP.OnQuickstarSlotGroupEnter(text)
     DynamicCPQuickstarsContextMenuPreview:SetAnchor(TOPLEFT, DynamicCPQuickstarsContextMenu, TOPRIGHT, 2)
     DynamicCPQuickstarsContextMenuPreview:SetHidden(false)
     DynamicCPQuickstarsContextMenuPreviewLabel:SetText(slotSetString)
+    AdjustHoverWidth()
 end
 
 function DynamicCP.OnQuickstarSlotGroupExit(text)
