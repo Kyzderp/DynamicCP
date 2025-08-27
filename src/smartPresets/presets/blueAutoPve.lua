@@ -155,6 +155,9 @@ local BLUE_DPS = {
         {
             id = 30, -- Reaving Blows
         },
+        {
+            id = 31, -- Backstabber
+        },
     },
 }
 
