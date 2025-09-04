@@ -95,7 +95,7 @@ local function OnQuickstarSlotGroupClicked(text)
     local setId = DynamicCP.GetSlotSetIdByName(shownTree, text)
     local data = DynamicCP.savedOptions.slotGroups[shownTree][setId]
     if (not data) then
-        d("|cFF0000DOES NOT EXIST?|r")
+        d("|cFF0000This code shouldn't be reachable. OnQuickstarSlotGroupClicked|r")
         return
     end
 
@@ -159,7 +159,7 @@ function DynamicCP.OnQuickstarSlotGroupEnter(text)
     local setId = DynamicCP.GetSlotSetIdByName(shownTree, text)
     local data = DynamicCP.savedOptions.slotGroups[shownTree][setId]
     if (not data) then
-        d("|cFF0000DOES NOT EXIST?|r")
+        d("|cFF0000This code shouldn't be reachable. OnQuickstarSlotGroupEnter|r")
         return
     end
     local slotSetString = GetSlotSetString(shownTree, data)

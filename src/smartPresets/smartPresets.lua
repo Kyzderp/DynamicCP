@@ -84,8 +84,10 @@ end
 local function ApplySmartPreset(tree, preset, totalPoints)
     local disciplineIndex = TREE_TO_DISCIPLINE[tree]
     if (not totalPoints) then
-        totalPoints = GetNumSpentChampionPoints(disciplineIndex) + GetNumUnspentChampionPoints(disciplineIndex)
+        local disciplineId = GetChampionDisciplineId(disciplineIndex)
+        totalPoints = GetNumSpentChampionPoints(disciplineId) + GetNumUnspentChampionPoints(disciplineId)
     end
+    DynamicCP.dbg(tree .. " using totalPoints " .. tostring(totalPoints))
 
     local fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed, jabsUnlocked, isHABuild = GetDecisions()
     DynamicCP.dbg(string.format("%s; %s; %s; %s; %s; %s",

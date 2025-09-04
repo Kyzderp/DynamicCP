@@ -374,6 +374,10 @@ end
 -- Button click handlers
 ---------------------------------------------------------------------
 function DynamicCP.OnQuickstarConfirm()
+    if (not pendingSlottables) then
+        d("|cFF0000This code shouldn't be reachable! Yell at Kyzer, preferably with what steps you took to get here. OnQuickstarConfirm|r")
+    end
+
     PrepareChampionPurchaseRequest(false)
 
     -- Convert pending points to purchase request
