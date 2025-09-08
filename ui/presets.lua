@@ -859,11 +859,15 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
             while (DynamicCP.savedOptions.cp[tree]["Preset " .. newIndex] ~= nil) do
                 newIndex = newIndex + 1
             end
+            innerControl:GetNamedChild(tree .. "OptionsTextField"):SetHidden(false)
             innerControl:GetNamedChild(tree .. "OptionsTextField"):SetText("Preset " .. newIndex)
+            innerControl:GetNamedChild(tree .. "OptionsSaveButton"):SetHidden(false)
             innerControl:GetNamedChild(tree .. "OptionsApplyButton"):SetHidden(true)
             innerControl:GetNamedChild(tree .. "OptionsDeleteButton"):SetHidden(true)
             innerControl:GetNamedChild(tree .. "OptionsSaveButton"):SetWidth(190)
             innerControl:GetNamedChild(tree .. "OptionsButtons"):SetHidden(true)
+            innerControl:GetNamedChild(tree .. "OptionsSlotSetDropdown"):SetHidden(false)
+            innerControl:GetNamedChild(tree .. "OptionsSlotSetHelp"):SetHidden(false)
         else
             innerControl:GetNamedChild(tree .. "OptionsTextField"):SetHidden(false)
             innerControl:GetNamedChild(tree .. "OptionsTextField"):SetText(presetName)
