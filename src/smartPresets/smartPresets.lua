@@ -12,17 +12,18 @@ local TREE_TO_DISCIPLINE = {
 -----------------------------------------------------------
 -- Apply the preset??
 -----------------------------------------------------------
--- returns: fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed
+-- returns: fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed, jabsUnlocked, isHABuild, blightedBlastbonesUnlocked
 local function GetDecisions()
     -- Whether skills are unlocked
     local fatecarverUnlocked = false
     local jabsUnlocked = false
+    local blightedBlastbonesUnlocked = false
     local pragmatic = false
     for skillLineIndex = 1, GetNumSkillLines(SKILL_TYPE_CLASS) do
         local skillLineId = GetSkillLineId(SKILL_TYPE_CLASS, skillLineIndex)
         local _, _, isActive = GetSkillLineDynamicInfo(SKILL_TYPE_CLASS, skillLineIndex)
-        -- Aedric Spear and Herald of the Tome
-        if (isActive and skillLineId == 22 or skillLineId == 218) then
+        -- Aedric Spear and Herald of the Tome and Grave Lord
+        if (isActive and skillLineId == 22 or skillLineId == 218 or skillLineId == 131) then
             for skillIndex = 1, GetNumSkillAbilities(SKILL_TYPE_CLASS, skillLineIndex) do
                 local progressionId = GetProgressionSkillProgressionId(SKILL_TYPE_CLASS, skillLineIndex, skillIndex)
 
@@ -43,6 +44,17 @@ local function GetDecisions()
                     local _, _, _, _, _, purchased = GetSkillAbilityInfo(SKILL_TYPE_CLASS, skillLineIndex, skillIndex)
                     if (purchased) then
                         jabsUnlocked = true
+                    end
+                    break
+
+                -- Blastbones
+                elseif (progressionId == 444) then
+                    local _, _, _, _, _, purchased = GetSkillAbilityInfo(SKILL_TYPE_CLASS, skillLineIndex, skillIndex)
+                    if (purchased) then
+                        local morph = GetProgressionSkillCurrentMorphSlot(progressionId)
+                        if (morph == MORPH_SLOT_MORPH_1) then
+                            blightedBlastbonesUnlocked = true
+                        end
                     end
                     break
                 end
@@ -75,7 +87,7 @@ local function GetDecisions()
         isHABuild = IsLightning(EQUIP_SLOT_MAIN_HAND) or IsLightning(EQUIP_SLOT_BACKUP_MAIN)
     end
 
-    return fatecarverUnlocked, maxStam > maxMag, pragmatic, craftingMaxed, jabsUnlocked, isHABuild
+    return fatecarverUnlocked, maxStam > maxMag, pragmatic, craftingMaxed, jabsUnlocked, isHABuild, blightedBlastbonesUnlocked
 end
 
 -- We don't care about existing points, i.e. overwrite anything
@@ -89,14 +101,15 @@ local function ApplySmartPreset(tree, preset, totalPoints)
     end
     DynamicCP.dbg(tree .. " using totalPoints " .. tostring(totalPoints))
 
-    local fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed, jabsUnlocked, isHABuild = GetDecisions()
-    DynamicCP.dbg(string.format("%s; %s; %s; %s; %s; %s",
+    local fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed, jabsUnlocked, isHABuild, blightedBlastbonesUnlocked = GetDecisions()
+    DynamicCP.dbg(string.format("%s; %s; %s; %s; %s; %s; %s",
         fatecarverUnlocked and "fatecarver available" or "no fatecarver",
         isStamHigher and "stam higher" or "mag higher",
         isPragmatic and "is pragmatic" or "not pragmatic",
         craftingMaxed and "crafting maxed" or "crafting not maxed",
         jabsUnlocked and "jabs" or "no jabs",
-        isHABuild and "HA" or "not HA"))
+        isHABuild and "HA" or "not HA",
+        blightedBlastbonesUnlocked and "blastbones" or "no bones"))
 
     local currentTotalPoints = 0
     local pendingPoints = {} -- {[10] = 10,}
@@ -111,7 +124,7 @@ local function ApplySmartPreset(tree, preset, totalPoints)
         if (node.id) then
             id = node.id
         elseif (node.flex) then
-            local hasAoeSpammable = fatecarverUnlocked or jabsUnlocked
+            local hasAoeSpammable = fatecarverUnlocked or jabsUnlocked or blightedBlastbonesUnlocked
             id = preset.GetFlex(hasAoeSpammable, isHABuild, isPragmatic, craftingMaxed, node.flex, totalPoints)
         elseif (node.passive) then
             id = preset.GetPassive(isStamHigher, node.passive)
@@ -204,7 +217,7 @@ DynamicCP.SMART_PRESETS = {
     Blue = {
         ["DEFAULT_SMART_BLUE_PVE"] = {
             name = function()
-                local fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed, jabsUnlocked, isHABuild = GetDecisions()
+                local fatecarverUnlocked, isStamHigher, isPragmatic, craftingMaxed, jabsUnlocked, isHABuild, blightedBlastbonesUnlocked = GetDecisions()
                 local build
                 if (isHABuild) then
                     build = " |t80%:80%:esoui/art/icons/death_recap_shock_ranged.dds|t"
@@ -212,6 +225,8 @@ DynamicCP.SMART_PRESETS = {
                     build = " |t80%:80%:esoui/art/icons/ability_arcanist_002.dds|t"
                 elseif (jabsUnlocked) then
                     build = " |t80%:80%:esoui/art/icons/ability_templar_trained_attacker.dds|t"
+                elseif (blightedBlastbonesUnlocked) then
+                    build = " |t80%:80%:esoui/art/icons/ability_necromancer_002_a.dds|t"
                 else
                     build = ""
                 end
