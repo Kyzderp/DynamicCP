@@ -610,6 +610,12 @@ function DynamicCP:OnTextFocusLost(textfield)
 
     local newName = GetSubControl("Inner"):GetNamedChild(tree .. "OptionsTextField"):GetText()
 
+    if (newName:find("|")) then
+        ShowMessage(tree, "|cFF0000\"||\" is not allowed in preset names.|r", nil, {1, 0, 0, 1}, 0)
+        return
+    end
+
+
     if (presetName == newName) then
         return
     end
