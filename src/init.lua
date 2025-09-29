@@ -1,6 +1,6 @@
 DynamicCP = DynamicCP or {}
 DynamicCP.name = "DynamicCP"
-DynamicCP.version = "3.0.1"
+DynamicCP.version = "3.1.0"
 
 local defaultOptions = {
     firstTime = true,
