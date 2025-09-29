@@ -231,65 +231,6 @@ function DynamicCP:CreateSettingsMenu()
             },
         },
 ---------------------------------------------------------------------
--- preset application
-        {
-            type = "submenu",
-            name = "Preset Settings",
-            controls = {
-                {
-                    type = "checkbox",
-                    name = "Automatically slot stars",
-                    tooltip = "After confirming a preset, automatically slot slottable stars. If there are more than 4 slottables, they are prioritized by most maxed, then most points, then star ID",
-                    default = true,
-                    getFunc = function() return DynamicCP.savedOptions.slotStars end,
-                    setFunc = function(value)
-                        DynamicCP.savedOptions.slotStars = value
-                    end,
-                    width = "full",
-                },
-                {
-                    type = "header",
-                    name = "Automatic Presets",
-                    width = "full",
-                },
-                {
-                    type = "description",
-                    text = "Version 3.0 adds auto presets! These are the brighter green options at the top of the preset lists, with icons showing what CP they will prioritize. They will use as many points as you have available, until stars useful for your detected build are all allocated. The current presets are:\n\n|c7f9c4f- Auto Combat: prioritizes stars useful in dungeons or trials\n- Auto Craft/Loot: prioritizes crafting and overland looting\n- Auto Thieving: prioritizes nefarious activities\n|c5096b3- Auto PvE: allocates based on your selected LFG role, and if you are a DPS, also allocates based on your max resource and whether you are a heavy attack build (Sergeant's Mail), have Fatecarver or jabs unlocked (for AoE) or not (single target)\n|cb56238- Auto PvE: allocates based on your selected LFG role, and if you are a DPS, also allocates based on whether you have Pragmatic Fatecarver unlocked (Bastion) or not (Rejuvenation)|r\n\nThe green tree presets above also try to skip Inspiration Boost if your crafting skills are maxed, unless you don't have enough points to reach stars without Inspiration Boost.",
-                    width = "full",
-                },
-                {
-                    type = "header",
-                    name = "Old Default (Hardcoded) Presets",
-                    width = "full",
-                },
-                {
-                    type = "description",
-                    title = "Manage Default (Hardcoded) Presets",
-                    text = "You can delete ALL of the default hardcoded presets, from pre-3.0, using the button below. This will delete any presets that match the names of the default presets, so be careful if you made changes to any!",
-                    width = "full",
-                },
-                {
-                    type = "button",
-                    name = "Delete Default Presets",
-                    tooltip = "Delete all default presets. This cannot be undone!",
-                    func = function()
-                        DynamicCP.dbg("Deleting default presets")
-                        for treeName, tree in pairs(DynamicCP.savedOptions.cp) do
-                            for name, data in pairs(tree) do
-                                if (DynamicCP.oldDefaultPresetNames[name] or data.isDefault == true) then
-                                    DynamicCP.savedOptions.cp[treeName][name] = nil
-                                end
-                            end
-                        end
-                        DynamicCP:InitializeDropdowns()
-                    end,
-                    warning = "Delete all default presets. This cannot be undone!",
-                    isDangerous = true,
-                    width = "full",
-                },
-            },
-        },
----------------------------------------------------------------------
 -- quickstars
         {
             type = "submenu",
@@ -532,6 +473,55 @@ function DynamicCP:CreateSettingsMenu()
                 },
             },
         },
+---------------------------------------------------------------------
+-- preset application
+        {
+            type = "submenu",
+            name = "Default Presets",
+            controls = {
+                {
+                    type = "header",
+                    name = "Automatic Presets",
+                    width = "full",
+                },
+                {
+                    type = "description",
+                    text = "Version 3.0 adds auto presets! These are the brighter green options at the top of the preset lists, with icons showing what CP they will prioritize. They will use as many points as you have available, until stars useful for your detected build are all allocated. The current presets are:\n\n|c7f9c4f- Auto Combat: prioritizes stars useful in dungeons or trials\n- Auto Craft/Loot: prioritizes crafting and overland looting\n- Auto Thieving: prioritizes nefarious activities\n|c5096b3- Auto PvE: allocates based on your selected LFG role, and if you are a DPS, also allocates based on your max resource and whether you are a heavy attack build (Sergeant's Mail), have Fatecarver or jabs unlocked (for AoE) or not (single target)\n|cb56238- Auto PvE: allocates based on your selected LFG role, and if you are a DPS, also allocates based on whether you have Pragmatic Fatecarver unlocked (Bastion) or not (Rejuvenation)|r\n\nThe green tree presets above also try to skip Inspiration Boost if your crafting skills are maxed, unless you don't have enough points to reach stars without Inspiration Boost.",
+                    width = "full",
+                },
+                {
+                    type = "header",
+                    name = "Old Default (Hardcoded) Presets",
+                    width = "full",
+                },
+                {
+                    type = "description",
+                    title = "Manage Default (Hardcoded) Presets",
+                    text = "You can delete ALL of the default hardcoded presets, from pre-3.0, using the button below. This will delete any presets that match the names of the default presets, so be careful if you made changes to any!",
+                    width = "full",
+                },
+                {
+                    type = "button",
+                    name = "Delete Default Presets",
+                    tooltip = "Delete all default presets. This cannot be undone!",
+                    func = function()
+                        DynamicCP.dbg("Deleting default presets")
+                        for treeName, tree in pairs(DynamicCP.savedOptions.cp) do
+                            for name, data in pairs(tree) do
+                                if (DynamicCP.oldDefaultPresetNames[name] or data.isDefault == true) then
+                                    DynamicCP.savedOptions.cp[treeName][name] = nil
+                                end
+                            end
+                        end
+                        DynamicCP:InitializeDropdowns()
+                    end,
+                    warning = "Delete all default presets. This cannot be undone!",
+                    isDangerous = true,
+                    width = "full",
+                },
+            },
+        },
+---------------------------------------------------------------------
         {
             type = "header",
             name = "",

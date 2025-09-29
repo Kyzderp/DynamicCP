@@ -55,7 +55,7 @@
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)DeleteButton" relativePoint="BOTTOMRIGHT" offsetY="8"/>
                     <Dimensions x="30" y="30"/>
                     <OnMouseEnter>
-                        ZO_Tooltips_ShowTextTooltip(self, BOTTOM, "You can attach a set of slottables to this preset. To create a Slottables Set, use the pulldown under the slottables bar. If you choose Automatic, it will attempt to slot maxed out or available stars.")
+                        ZO_Tooltips_ShowTextTooltip(self, BOTTOM, "You can attach a set of slottables to this preset. To create a Slottables Set, use the pulldown under the slottables bar. If you choose Automatic, it will attempt to slot maxed out or available stars. If you do not want to slot any stars, you can create a blank Slottables Set and use it here.")
                     </OnMouseEnter>
                     <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>
                 </Button>

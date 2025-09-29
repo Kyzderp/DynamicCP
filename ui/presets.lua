@@ -418,7 +418,7 @@ function DynamicCP:OnApplyClicked(button)
         end
 
         -- Unslot slottables that are no longer slottable because of not enough points
-        -- We still do this even though slottables are replaced later because user could have slotStars setting off
+        -- We still do this even though slottables are replaced later because user could have slotStars setting off [TODO: is this still needed?]
         if (currentHotbar[skillId] and not WouldChampionSkillNodeBeUnlocked(skillId, numPoints)) then
             DynamicCP.dbg("unslotting" .. GetChampionSkillName(skillId))
             DynamicCP.SetSlottableInIndex(currentHotbar[skillId], -1)
@@ -427,11 +427,8 @@ function DynamicCP:OnApplyClicked(button)
         DynamicCP.SetStarPoints(disciplineIndex, skillId, numPoints)
     end
 
-    -- Apply slottables if applicable
-    -- TODO: remove slotStars
-    if (DynamicCP.savedOptions.slotStars) then
-        ApplySlottables(tree)
-    end
+    -- Slottables
+    ApplySlottables(tree)
 
     DynamicCP.OnPresetApplied(tree, presetName)
 
