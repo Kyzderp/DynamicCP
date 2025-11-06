@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 -- Current POSSIBLY PENDING slottables, updates with the UI, [index] = championSkillData
 -- ONLY for use with the pulldown, because this is UI-only
 local currentSlottables = {}

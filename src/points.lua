@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 ---------------------------------------------------------------------
 --[[ Both of these should be of the format:
 {

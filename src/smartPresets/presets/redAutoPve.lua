@@ -1,7 +1,3 @@
-DynamicCP = DynamicCP or {}
-DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
-
-
 -----------------------------------------------------------
 -- Pragmatic Fatecarver for Bastion
 -----------------------------------------------------------

@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 ---------------------------------------------------------------------
 local SLOTTABLE_COOLDOWN = 30000
 local lastChange = 0

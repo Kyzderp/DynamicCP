@@ -1,7 +1,3 @@
-DynamicCP = DynamicCP or {}
-DynamicCP.SmartPresets = DynamicCP.SmartPresets or {}
-
-
 local TREE_TO_DISCIPLINE = {
     Green = 1,
     Blue = 2,

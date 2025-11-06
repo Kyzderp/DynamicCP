@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 ---------------------------------------------------------------------
 -- Constants
 DynamicCP.TRIGGER_TRIAL                = "Trial"

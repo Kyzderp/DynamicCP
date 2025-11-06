@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 -- I need to fix preset window to use IDs later instead of index...
 -- but for now, just convert the old index to new index
 

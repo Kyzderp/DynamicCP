@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 function DynamicCP:CreateSettingsMenu()
     local LAM = LibAddonMenu2
     local panelData = {

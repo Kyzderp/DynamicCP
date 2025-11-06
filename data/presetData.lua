@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 --[[
 /script for i=1,3 do for j=1,GetNumChampionDisciplineSkills(i) do local id = GetChampionSkillId(i, j) d(string.format("%d %s %d", j, GetChampionSkillName(id), id)) end end
 GetChampionSkillName(GetChampionSkillId(disciplineIndex, skillIndex))

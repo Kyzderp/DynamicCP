@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 local changelogs = {
     {
         version = 30000,

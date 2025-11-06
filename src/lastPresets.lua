@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 ---------------------------------------------------------------------
 -- Apply last presets behavior:
 -- Never apply = 0

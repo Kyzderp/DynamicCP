@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 -- Dungeon zoneIds
 DynamicCP.DUNGEON_ZONEIDS = {
     ["144" ] = true,  -- Spindleclutch I

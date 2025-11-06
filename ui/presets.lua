@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 local CREATE_NEW_STRING = "-- Create New --"
 local MESSAGES_TOOLTIP_GAP = 24
 

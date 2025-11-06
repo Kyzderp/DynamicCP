@@ -1,6 +1,3 @@
-DynamicCP = DynamicCP or {}
-
-
 local selectedRuleName = nil
 -- /script d(DynamicCP.savedOptions.customRules.rules)
 

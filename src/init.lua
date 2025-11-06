@@ -1,6 +1,8 @@
-DynamicCP = DynamicCP or {}
-DynamicCP.name = "DynamicCP"
-DynamicCP.version = "3.1.0"
+DynamicCP = {
+    name = "DynamicCP",
+    version = "3.1.0",
+    SmartPresets = {},
+}
 
 local defaultOptions = {
     firstTime = true,

@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 -- Keep track of our own pending slottables, even though slottables.lua also has it
 -- because slottables.lua is for presets and it's possible the user still has pending
 -- changes in a preset

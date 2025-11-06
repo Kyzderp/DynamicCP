@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 -- ZOS has currently implemented a cooldown on how often you can change slottables
 local SLOTTABLE_COOLDOWN_STRING = "ERROR: Unable to commit changes. This is probably due to ZOS's 30-second cooldown on changing slottables. Try again in %.0f seconds."
 local SLOTTABLE_COOLDOWN = 30000

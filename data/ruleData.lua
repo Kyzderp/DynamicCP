@@ -1,5 +1,3 @@
-DynamicCP = DynamicCP or {}
-
 --[[
 "|ce46b2e" -- Red
 "|c59bae7" -- Blue
