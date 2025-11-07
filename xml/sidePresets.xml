@@ -12,11 +12,10 @@
             <Dimensions x="200"/>
             <Anchor point="TOP" relativeTo="$(parent)Dropdown" relativePoint="BOTTOM" offsetY="4"/>
             <Controls>
-                <EditBox name="$(parent)TextField" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" tier="MEDIUM">
+                <EditBox name="$(parent)TextField" inherits="ZO_DefaultEditForBackdrop" defaultText="   Name" tier="MEDIUM">
                     <Dimensions x="190"/>
                     <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP"/>
                     <Controls><Backdrop name="$(parent)Backdrop" centerColor="55000000" edgeColor="88000000" tier="LOW"><AnchorFill/><Edge edgeSize="1"/></Backdrop></Controls>
-                    <OnInitialized>ZO_EditDefaultText_Initialize(self, "   Name")</OnInitialized>
                     <OnFocusLost>DynamicCP:OnTextFocusLost(self)</OnFocusLost>
                 </EditBox>
                 <Button name="$(parent)ApplyButton" inherits="ZO_DefaultButton" tier="MEDIUM" text="Apply">

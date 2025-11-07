@@ -107,7 +107,7 @@ function DynamicCP.dbg(msg)
     if (not DynamicCP.savedOptions.debug) then return end
     if (debugFilter) then
         debugFilter:AddMessage(tostring(msg))
-    elseif (CHAT_SYSTEM.primaryContainer) then
+    elseif (CHAT_ROUTER) then
         d("|c6666FF[DCP]|r " .. tostring(msg))
     else
         DynamicCP.dbgMessages[#DynamicCP.dbgMessages + 1] = msg
@@ -117,8 +117,8 @@ end
 DynamicCP.messages = {}
 function DynamicCP.msg(msg)
     if (not msg) then return end
-    if (CHAT_SYSTEM.primaryContainer) then
-        CHAT_SYSTEM:AddMessage("|c3bdb5e[DynamicCP]|cAAAAAA " .. tostring(msg) .. "|r")
+    if (CHAT_ROUTER) then
+        CHAT_ROUTER:AddSystemMessage("|c3bdb5e[DynamicCP]|cAAAAAA " .. tostring(msg) .. "|r")
     else
         DynamicCP.messages[#DynamicCP.messages + 1] = msg
     end
@@ -135,7 +135,7 @@ local function OnPlayerActivated(_, initial)
     DynamicCP.dbgMessages = {}
 
     for i = 1, #DynamicCP.messages do
-        CHAT_SYSTEM:AddMessage("|c3bdb5e[DynamicCP]|cAAAAAA " .. tostring(DynamicCP.messages[i]) .. "|r")
+        CHAT_ROUTER:AddSystemMessage("|c3bdb5e[DynamicCP]|cAAAAAA " .. tostring(DynamicCP.messages[i]) .. "|r")
     end
     DynamicCP.messages = {}
 
@@ -184,7 +184,7 @@ local function RegisterEvents()
         function(_, championPointsDelta)
             -- Show CP gained message
             if (DynamicCP.savedOptions.showPointGainedMessage) then
-                CHAT_SYSTEM:AddMessage(string.format("|cAAAAAAGained %d champion point%s|r", championPointsDelta, (championPointsDelta > 1) and "s" or ""))
+                CHAT_ROUTER:AddSystemMessage(string.format("|cAAAAAAGained %d champion point%s|r", championPointsDelta, (championPointsDelta > 1) and "s" or ""))
             end
 
             -- Update totals label

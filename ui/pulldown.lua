@@ -172,7 +172,7 @@ local function InitSlotSetDropdown(tree, idToSelect)
         local entry = ZO_ComboBox:CreateItemEntry(string.format("|c%s%s|r", TEXT_COLORS_HEX[tree], setData.name), OnItemSelected)
         ZO_ComboBox:SetItemOnEnter(entry, function() PreviewSlotGroup(tree, setId) end)
         ZO_ComboBox:SetItemOnExit(entry, function() RestoreSlotGroup(tree) end)
-        dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
+        dropdown:AddItem(entry, ZO_COMBOBOX_SUPPRESS_UPDATE)
 
         if (setId == idToSelect) then
             entryToSelect = entry
@@ -191,7 +191,7 @@ local function InitSlotSetDropdown(tree, idToSelect)
         dropdownControl:GetParent():GetNamedChild("Delete"):SetHidden(true)
         DynamicCPPulldownHint:SetHidden(true)
     end)
-    dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
+    dropdown:AddItem(entry, ZO_COMBOBOX_SUPPRESS_UPDATE)
 
     -- TODO: if pending is cancelled, then need to deselect?
     if (entryToSelect) then
@@ -292,10 +292,7 @@ function DynamicCP.DeleteSlotSet(button)
         "ConfirmDeleteSlotSet",
         "Confirm Deleting Slottable Set",
         zo_strformat("Delete |c<<1>><<2>>|r with the following slottables?<<3>>", TEXT_COLORS_HEX[tree], setName, starsString),
-        OnDeleteConfirmed,
-        nil,
-        nil,
-        true)
+        OnDeleteConfirmed)
 end
 
 local function GetNewSlotSetId(tree)
@@ -359,10 +356,7 @@ function DynamicCP.SaveSlotSet(button)
         "ConfirmSaveSlotSet",
         dialogTitle,
         zo_strformat(dialogFormat, TEXT_COLORS_HEX[tree], pendingName, starsString),
-        OnSaveConfirmed,
-        nil,
-        nil,
-        true)
+        OnSaveConfirmed)
 end
 
 ---------------------------------------------------------------------

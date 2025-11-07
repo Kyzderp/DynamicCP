@@ -696,7 +696,7 @@ local function OnBossesChanged()
     local currentBosses = {}
 
     -- Slightly more efficient to check first if the bosses even changed
-    for i = 1, MAX_BOSSES do
+    for i = 1, BOSS_RANK_ITERATION_END do
         local name = GetUnitName("boss" .. tostring(i))
         if (name and name ~= "") then
             currentBosses[i] = name
@@ -723,7 +723,7 @@ local function OnBossesChanged()
     local numRules = 0
     local trigger = bossesHash ~= "" and DynamicCP.TRIGGER_BOSSNAME or DynamicCP.TRIGGER_LEAVE_BOSSNAME
     -- Get the rules
-    for i = 1, MAX_BOSSES do
+    for i = 1, BOSS_RANK_ITERATION_END do
         local name = bossesHash ~= "" and GetUnitName("boss" .. tostring(i)) or lastBosses[i]
         if (name and name ~= "") then
             local rules = GetSortedRulesForTrigger(

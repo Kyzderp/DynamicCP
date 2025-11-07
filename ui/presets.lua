@@ -476,10 +476,7 @@ function DynamicCP:OnConfirmClicked(button)
         "ConfirmConfirmation",
         "Confirm Changes",
         "Are you sure you want to commit your points?" .. (needsRespec and respecCost or ""),
-        CommitPoints,
-        nil,
-        nil,
-        true)
+        CommitPoints)
 end
 
 
@@ -576,10 +573,7 @@ function DynamicCP:OnSaveClicked(button, tree)
             "OverwriteConfirmation",
             "Overwrite Preset",
             "Overwrite the \"" .. newName .. "\" preset?\n" .. GenerateDiff(DynamicCP.savedOptions.cp[tree][newName], currentCP),
-            OverwritePreset,
-            nil,
-            nil,
-            true)
+            OverwritePreset)
 
     else
         d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnSaveClicked fallthrough")
@@ -641,10 +635,7 @@ function DynamicCP:OnDeleteClicked(button)
         "DeleteConfirmation",
         "Delete Preset",
         "Delete the \"" .. presetName .. "\" preset?",
-        DeletePreset,
-        nil,
-        nil,
-        true)
+        DeletePreset)
 end
 
 
@@ -806,7 +797,7 @@ local function UpdateSlotSetDropdown(tree, slotSetId)
     local data = DynamicCP.savedOptions.slotGroups[tree]
     for id, setData in pairs(data) do
         local entry = ZO_ComboBox:CreateItemEntry(setData.name, OnSetSelected)
-        dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
+        dropdown:AddItem(entry, ZO_COMBOBOX_SUPPRESS_UPDATE)
 
         if (slotSetId == id) then
             desiredEntry = entry
@@ -815,7 +806,7 @@ local function UpdateSlotSetDropdown(tree, slotSetId)
 
     -- Create an -- Automatic -- entry for when there is no attached slot set
     local automaticEntry = ZO_ComboBox:CreateItemEntry(AUTOMATIC_STRING, OnSetSelected)
-    dropdown:AddItem(automaticEntry, ZO_COMBOBOX_SUPRESS_UPDATE)
+    dropdown:AddItem(automaticEntry, ZO_COMBOBOX_SUPPRESS_UPDATE)
     if (slotSetId == nil) then
         desiredEntry = automaticEntry
     end
@@ -929,14 +920,14 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
                 "Click \"Apply\" to load this preset.",
                 data.applyFunc())
         end)
-        dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
+        dropdown:AddItem(entry, ZO_COMBOBOX_SUPPRESS_UPDATE)
     end
 
     -- Add saved presets
     for presetName, cp in pairs(data) do
         local name = DecoratePresetName(presetName, cp)
         local entry = ZO_ComboBox:CreateItemEntry(name, OnPresetSelected)
-        dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
+        dropdown:AddItem(entry, ZO_COMBOBOX_SUPPRESS_UPDATE)
 
         if (presetName == desiredEntryName) then
             desiredEntry = entry
@@ -945,7 +936,7 @@ function DynamicCP:InitializeDropdown(tree, desiredEntryName)
 
     -- Add new item entry
     local entry = ZO_ComboBox:CreateItemEntry("|cEBDB34" .. CREATE_NEW_STRING .. "|r", OnPresetSelected)
-    dropdown:AddItem(entry, ZO_COMBOBOX_SUPRESS_UPDATE)
+    dropdown:AddItem(entry, ZO_COMBOBOX_SUPPRESS_UPDATE)
     dropdown:UpdateItems()
 
     if (desiredEntry) then
