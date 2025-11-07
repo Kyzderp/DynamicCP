@@ -288,8 +288,7 @@ function DynamicCP.DeleteSlotSet(button)
     end
 
     local setName = DynamicCP.savedOptions.slotGroups[tree][setId].name
-    LibDialog:RegisterDialog(
-        DynamicCP.name,
+    DynamicCP.ShowConfirmationDialog(
         "ConfirmDeleteSlotSet",
         "Confirm Deleting Slottable Set",
         zo_strformat("Delete |c<<1>><<2>>|r with the following slottables?<<3>>", TEXT_COLORS_HEX[tree], setName, starsString),
@@ -297,7 +296,6 @@ function DynamicCP.DeleteSlotSet(button)
         nil,
         nil,
         true)
-    LibDialog:ShowDialog(DynamicCP.name, "ConfirmDeleteSlotSet")
 end
 
 local function GetNewSlotSetId(tree)
@@ -357,8 +355,7 @@ function DynamicCP.SaveSlotSet(button)
         DynamicCP.UpdateSlotSetDropdowns()
     end
 
-    LibDialog:RegisterDialog(
-        DynamicCP.name,
+    DynamicCP.ShowConfirmationDialog(
         "ConfirmSaveSlotSet",
         dialogTitle,
         zo_strformat(dialogFormat, TEXT_COLORS_HEX[tree], pendingName, starsString),
@@ -366,7 +363,6 @@ function DynamicCP.SaveSlotSet(button)
         nil,
         nil,
         true)
-    LibDialog:ShowDialog(DynamicCP.name, "ConfirmSaveSlotSet")
 end
 
 ---------------------------------------------------------------------

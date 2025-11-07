@@ -12,7 +12,9 @@
 ## AddOnVersion: 30100
 ## APIVersion: 101047
 
-## DependsOn: LibAddonMenu-2.0>=40 LibDialog>=127
+## DependsOn: LibAddonMenu-2.0>=41
+## PCDependsOn: LibDialog>=127
+## ConsoleDependsOn: LibConsoleDialogs
 ## OptionalDependsOn: LibFilteredChatPanel
 
 ## SavedVariables: DynamicCPSavedVariables
@@ -26,6 +28,8 @@ src/changelog.lua
 src/points.lua
 src/slottables.lua
 src/lastPresets.lua
+
+src/common/Dialog.lua
 
 src/smartPresets/presets/blueAutoPve.lua
 src/smartPresets/presets/greenCombat.lua

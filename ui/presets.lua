@@ -472,16 +472,14 @@ function DynamicCP:OnConfirmClicked(button)
     end
 
     local respecCost = "\nRedistribution cost: "  .. GetChampionRespecCost() .. " |t18:18:esoui/art/currency/currency_gold.dds|t"
-    LibDialog:RegisterDialog(
-            DynamicCP.name,
-            "ConfirmConfirmation",
-            "Confirm Changes",
-            "Are you sure you want to commit your points?" .. (needsRespec and respecCost or ""),
-            CommitPoints,
-            nil,
-            nil,
-            true)
-    LibDialog:ShowDialog(DynamicCP.name, "ConfirmConfirmation")
+    DynamicCP.ShowConfirmationDialog(
+        "ConfirmConfirmation",
+        "Confirm Changes",
+        "Are you sure you want to commit your points?" .. (needsRespec and respecCost or ""),
+        CommitPoints,
+        nil,
+        nil,
+        true)
 end
 
 
@@ -574,8 +572,7 @@ function DynamicCP:OnSaveClicked(button, tree)
                 "|c00FF00Done! Overwrote preset \"" .. presetName .. "\"|r")
         end
 
-        LibDialog:RegisterDialog(
-            DynamicCP.name,
+        DynamicCP.ShowConfirmationDialog(
             "OverwriteConfirmation",
             "Overwrite Preset",
             "Overwrite the \"" .. newName .. "\" preset?\n" .. GenerateDiff(DynamicCP.savedOptions.cp[tree][newName], currentCP),
@@ -583,7 +580,6 @@ function DynamicCP:OnSaveClicked(button, tree)
             nil,
             nil,
             true)
-        LibDialog:ShowDialog(DynamicCP.name, "OverwriteConfirmation")
 
     else
         d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. OnSaveClicked fallthrough")
@@ -641,8 +637,7 @@ function DynamicCP:OnDeleteClicked(button)
         ShowMessage(tree, "|c00FF00Preset \"" .. presetName .. "\" deleted.|r", nil, {0, 1, 0, 1}, 0)
     end
 
-    LibDialog:RegisterDialog(
-        DynamicCP.name,
+    DynamicCP.ShowConfirmationDialog(
         "DeleteConfirmation",
         "Delete Preset",
         "Delete the \"" .. presetName .. "\" preset?",
@@ -650,7 +645,6 @@ function DynamicCP:OnDeleteClicked(button)
         nil,
         nil,
         true)
-    LibDialog:ShowDialog(DynamicCP.name, "DeleteConfirmation")
 end
 
 
