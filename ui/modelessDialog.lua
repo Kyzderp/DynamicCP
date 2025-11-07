@@ -30,6 +30,7 @@ end
 ---------------------------------------------------------------------
 -- API
 function DynamicCP.ShowModelessPrompt(text, callback)
+    DynamicCPModelessDialogLabel:SetFont(DynamicCP.GetStyles().gameFont)
     DynamicCPModelessDialogLabel:SetHeight(800)
     DynamicCPModelessDialogLabel:SetText(text)
     local labelHeight = DynamicCPModelessDialogLabel:GetTextHeight() + 5 -- For some reason, U41 makes the text not fit with enough lines?
@@ -42,6 +43,7 @@ function DynamicCP.ShowModelessPrompt(text, callback)
     local layerIndex, categoryIndex, actionIndex = GetActionIndicesFromName("DCP_DIALOG_CONFIRM")
     local keyCode, mod1, mod2, mod3, mod4 = GetActionBindingInfo(layerIndex, categoryIndex, actionIndex, 1)
     local confirmString = ZO_Keybindings_GetBindingStringFromKeys(keyCode, mod1, mod2, mod3, mod4)
+    DynamicCPModelessDialogConfirmLabel:SetFont(DynamicCP.GetStyles().smallFont)
     DynamicCPModelessDialogConfirmLabel:SetText(confirmString)
     DynamicCPModelessDialogConfirmLabel:SetWidth(80)
     DynamicCPModelessDialogConfirmLabel:SetWidth(DynamicCPModelessDialogConfirmLabel:GetTextWidth())
@@ -49,6 +51,7 @@ function DynamicCP.ShowModelessPrompt(text, callback)
     layerIndex, categoryIndex, actionIndex = GetActionIndicesFromName("DCP_DIALOG_CANCEL")
     keyCode, mod1, mod2, mod3, mod4 = GetActionBindingInfo(layerIndex, categoryIndex, actionIndex, 1)
     local cancelString = ZO_Keybindings_GetBindingStringFromKeys(keyCode, mod1, mod2, mod3, mod4)
+    DynamicCPModelessDialogCancelLabel:SetFont(DynamicCP.GetStyles().smallFont)
     DynamicCPModelessDialogCancelLabel:SetText(cancelString)
 end
 

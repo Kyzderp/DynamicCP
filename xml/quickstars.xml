@@ -16,7 +16,7 @@
                                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-2" offsetY="-2"/>
                                     <OnMouseUp>DynamicCP.OpenSettingsMenu()</OnMouseUp>
                                 </Texture>
-                                <Label name="$(parent)LockHint" font="ZoFontGameSmall" color="999999" verticalAlignment="TOP" horizontalAlignment="CENTER" text="Once you're done positioning the UI, lock the panel in Quickstar Panel Settings to hide this green box." hidden="false" tier="MEDIUM">
+                                <Label name="$(parent)LockHint" color="999999" verticalAlignment="TOP" horizontalAlignment="CENTER" text="Once you're done positioning the UI, lock the panel in Quickstar Panel Settings to hide this green box." hidden="false" tier="MEDIUM">
                                     <Dimensions x="240" y="180"/>
                                     <Anchor point="TOP" relativeTo="$(parent)" relativePoint="BOTTOM" offsetX="2"/>
                                 </Label>
@@ -303,7 +303,7 @@
                                         </Texture>
                                     </Controls>
                                 </Control>
-                                <Label name="$(parent)Cooldown" font="ZoFontGameSmall" color="AAAAAA" verticalAlignment="CENTER" horizontalAlignment="RIGHT" text="Cooldown 30s" hidden="true" tier="MEDIUM">
+                                <Label name="$(parent)Cooldown" color="AAAAAA" verticalAlignment="CENTER" horizontalAlignment="RIGHT" text="Cooldown 30s" hidden="true" tier="MEDIUM">
                                     <Dimensions x="100" y="16"/>
                                     <Anchor point="RIGHT" relativeTo="$(parent)Confirm" relativePoint="LEFT" offsetX="-4"/>
                                 </Label>
@@ -316,7 +316,7 @@
                                     <Edge edgeSize="2"/>
                                     <AnchorFill/>
                                 </Backdrop>
-                                <Label name="$(parent)Hint" font="ZoFontGame" color="BBBBBB" text="No slottable sets! Create one from the CP menu." hidden="true" tier="HIGH" layer="TEXT">
+                                <Label name="$(parent)Hint" color="BBBBBB" text="No slottable sets! Create one from the CP menu." hidden="true" tier="HIGH" layer="TEXT">
                                     <Dimensions x="200" y="58"/>
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="4"/>
                                 </Label>
@@ -327,7 +327,7 @@
                                             <Edge edgeSize="2"/>
                                             <AnchorFill/>
                                         </Backdrop>
-                                        <Label name="$(parent)Label" font="ZoFontGame" color="FFFFFF" text="Celerity" hidden="false" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="HIGH" layer="TEXT">
+                                        <Label name="$(parent)Label" color="FFFFFF" text="Celerity" hidden="false" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="HIGH" layer="TEXT">
                                             <Dimensions x="500" y="120"/>
                                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="4"/>
                                         </Label>
@@ -341,7 +341,7 @@
             </Controls>
         </TopLevelControl>
 <!-- ======================================================================================================================= -->
-        <Button name="DynamicCPQuickstarsMenuEntry" virtual="true" horizontalAlignment="LEFT" font="ZoFontGame" hidden="false" text="Blaaaaaaaah">
+        <Button name="DynamicCPQuickstarsMenuEntry" virtual="true" horizontalAlignment="LEFT" hidden="false" text="Blaaaaaaaah">
             <FontColors normalColor="FFFFFF" mouseOverColor="80fdff"/>
             <Dimensions x="200" y="16"/>
             <OnClicked>DynamicCP.OnQuickstarSlotGroupClicked(self:GetLabelControl():GetText())</OnClicked>
@@ -358,7 +358,7 @@
                         self:SetTransformRotationZ(math.rad(180))
                     </OnInitialized>
                 </Texture>
-                <Label name="$(parent)Label" font="ZoFontGameBold" color="DDDDDD" text="Right click these buttons to use slottable sets, and left click to toggle individual trees." hidden="false" verticalAlignment="BOTTOM" horizontalAlignment="LEFT" tier="HIGH" layer="TEXT">
+                <Label name="$(parent)Label" color="DDDDDD" text="Right click these buttons to use slottable sets, and left click to toggle individual trees." hidden="false" verticalAlignment="BOTTOM" horizontalAlignment="LEFT" tier="HIGH" layer="TEXT">
                     <AnchorFill/>
                 </Label>
             </Controls>

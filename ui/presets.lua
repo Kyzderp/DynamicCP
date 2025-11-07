@@ -155,6 +155,7 @@ end
 ---------------------------------------------------------------------
 local function DisplayMildWarning(text)
     DynamicCPMildWarningLabel:SetText(text)
+    DynamicCPMildWarningLabel:SetFont(DynamicCP.GetStyles().gameFont)
     DynamicCPMildWarning:SetHidden(false)
     DynamicCPMildWarning:ClearAnchors()
     DynamicCPMildWarning:SetAnchor(BOTTOM, DynamicCPWarning, TOP, 0, -10)
@@ -975,6 +976,27 @@ end
 
 ---------------------------------------------------------------------
 -- Entry point
+local function ApplyPresetsFonts()
+    local smallFont = DynamicCP.GetStyles().smallFont
+    for tree, _ in pairs(TREE_TO_DISCIPLINE) do
+        -- At this rate, I wonder if it's better to just walk the tree dynamically...
+        local innerTree = DynamicCPSidePresetsInner:GetNamedChild(tree)
+        innerTree:GetNamedChild("MessagesLabel"):SetFont(smallFont)
+        innerTree:GetNamedChild("MessagesTooltipLabel"):SetFont(smallFont)
+        innerTree:GetNamedChild("MessagesTooltipLabel2"):SetFont(smallFont)
+        innerTree:GetNamedChild("MessagesTooltipExtraLabel"):SetFont(smallFont)
+        innerTree:GetNamedChild("MessagesTooltipExtraLabel2"):SetFont(smallFont)
+    end
+
+    DynamicCPSidePresetsSidebarLabel:SetFont(DynamicCP.GetStyles().gameBoldFont)
+
+    local gameFont = DynamicCP.GetStyles().gameFont
+    DynamicCPSidePresetsInnerInstructions1:SetFont(gameFont)
+    DynamicCPSidePresetsInnerInstructions2:SetFont(gameFont)
+    DynamicCPSidePresetsInnerInstructions3:SetFont(gameFont)
+end
+DynamicCP.ApplyPresetsFonts = ApplyPresetsFonts
+
 function DynamicCP:InitializeDropdowns()
     if (isRespeccing) then return end -- Skip doing this so we don't overwrite
 
@@ -996,6 +1018,8 @@ function DynamicCP:InitializeDropdowns()
     HideMessage("Red")
     HideMessage("Green")
     HideMessage("Blue")
+
+    ApplyPresetsFonts()
 
     DynamicCP.UpdateLastPresetsUI()
 end

@@ -19,6 +19,10 @@
 ## SavedVariables: DynamicCPSavedVariables
 
 src/init.lua
+
+src/common/Style.lua
+src/common/Dialog.lua
+
 src/cooldown.lua
 src/screenUpdates.lua
 src/customRules.lua
@@ -27,8 +31,6 @@ src/changelog.lua
 src/points.lua
 src/slottables.lua
 src/lastPresets.lua
-
-src/common/Dialog.lua
 
 src/smartPresets/presets/blueAutoPve.lua
 src/smartPresets/presets/greenCombat.lua

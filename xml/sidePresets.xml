@@ -110,7 +110,7 @@
             <Dimensions x="190" y="42"/>
             <Controls>
                 <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="88000000" edgeColor="8800FF00" tier="MEDIUM"><Edge edgeSize="2"/><AnchorFill/></Backdrop>
-                <Label name="$(parent)Label" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="MEDIUM" hidden="false" text="Preset loaded&#13;&#10;5 changes">
+                <Label name="$(parent)Label" color="DDDDDD" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="MEDIUM" hidden="false" text="Preset loaded&#13;&#10;5 changes">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-2"/>
                 </Label>
@@ -119,11 +119,11 @@
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="-12"/>
                     <Controls>
                         <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="CC000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                        <Label name="$(parent)Label" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="MEDIUM" hidden="false" text="Done">
+                        <Label name="$(parent)Label" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="MEDIUM" hidden="false" text="Done">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-2"/>
                         </Label>
-                        <Label name="$(parent)Label2" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="RIGHT" tier="MEDIUM" hidden="false" text="">
+                        <Label name="$(parent)Label2" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="RIGHT" tier="MEDIUM" hidden="false" text="">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-2"/>
                         </Label>
@@ -133,11 +133,11 @@
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT"/>
                             <Controls>
                                 <Backdrop name="$(parent)Backdrop" alpha="1" centerColor="CC000000" edgeColor="00000000" tier="MEDIUM"><AnchorFill/></Backdrop>
-                                <Label name="$(parent)Label" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="MEDIUM" hidden="false" text="Done">
+                                <Label name="$(parent)Label" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="MEDIUM" hidden="false" text="Done">
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-2"/>
                                 </Label>
-                                <Label name="$(parent)Label2" font="ZoFontGameSmall" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="RIGHT" tier="MEDIUM" hidden="false" text="">
+                                <Label name="$(parent)Label2" color="DDDDDD" verticalAlignment="TOP" horizontalAlignment="RIGHT" tier="MEDIUM" hidden="false" text="">
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="2"/>
                                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-14" offsetY="-2"/>
                                 </Label>
@@ -168,7 +168,7 @@
                                     <AnchorFill/>
                                     <Edge edgeSize="1"/>
                                 </Backdrop>
-                                <Label name="$(parent)Label" font="ZoFontGameBold" text="Dynamic CP" horizontalAlignment="LEFT" tier="LOW">
+                                <Label name="$(parent)Label" text="Dynamic CP" horizontalAlignment="LEFT" tier="LOW">
                                     <Dimensions x="300"/>
                                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="TOP" offsetY="20"/>
                                     <OnInitialized>
@@ -305,17 +305,17 @@
 
                                 <Control name="$(parent)Instructions" tier="LOW">
                                     <Controls>
-                                        <Label name="$(parent)1" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="LOW" hidden="false"
+                                        <Label name="$(parent)1" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="LOW" hidden="false"
                                             text="Select a preset from a dropdown and click &quot;Apply&quot; to apply the preset to your Champion Points, then click &quot;Confirm&quot; below to commit your points.">
                                             <Anchor point="TOP" relativeTo="DynamicCPSidePresetsInnerGreenDropdown" relativePoint="BOTTOM" offsetY="10"/>
                                             <Dimensions x="200" y="500"/>
                                         </Label>
-                                        <Label name="$(parent)2" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="LOW" hidden="false"
+                                        <Label name="$(parent)2" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="LOW" hidden="false"
                                             text="To create a new preset, commit your current points, select &quot;Create New&quot; from the dropdown, and click &quot;Save&quot; once you have renamed it.">
                                             <Anchor point="TOP" relativeTo="DynamicCPSidePresetsInnerBlueDropdown" relativePoint="BOTTOM" offsetY="10"/>
                                             <Dimensions x="200" y="500"/>
                                         </Label>
-                                        <Label name="$(parent)3" font="ZoFontGame" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="LOW" hidden="false"
+                                        <Label name="$(parent)3" color="BBBBBB" verticalAlignment="TOP" horizontalAlignment="CENTER" tier="LOW" hidden="false"
                                             text="To specify which stars will be slotted alongside the points, select &quot;Create New&quot; from the dropdowns at the top of your screen, then attach it to a preset. Otherwise, slottables will be picked automatically.">
                                             <Anchor point="TOP" relativeTo="DynamicCPSidePresetsInnerRedDropdown" relativePoint="BOTTOM" offsetY="10"/>
                                             <Dimensions x="200" y="500"/>

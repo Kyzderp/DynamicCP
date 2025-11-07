@@ -14,7 +14,7 @@ local function GetOrCreateMenuButton(index)
             button:SetAnchor(TOPLEFT, DynamicCPQuickstarsContextMenu:GetNamedChild("Entry" .. tostring(index - 1)), BOTTOMLEFT, 0, 4)
         end
         button:SetDrawTier(DT_HIGH)
-        -- button:GetLabelControl():SetDrawLayer()
+        button:GetLabelControl():SetFont(DynamicCP.GetStyles().gameFont)
     end
     if (index > numEntries) then
         numEntries = index
@@ -22,6 +22,15 @@ local function GetOrCreateMenuButton(index)
 
     button:SetHidden(false)
     return button
+end
+
+function DynamicCP.ApplyQuickstarsSlotGroupMenuFonts()
+    for i = 1, numEntries do
+        local button = DynamicCPQuickstarsContextMenu:GetNamedChild("Entry" .. tostring(i))
+        if (button) then
+            button:GetLabelControl():SetFont(DynamicCP.GetStyles().gameFont)
+        end
+    end
 end
 
 local function HideMenu()

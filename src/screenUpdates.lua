@@ -6,6 +6,7 @@ local lastSlottableChange = 0
 ---------------------------------------------------------------------
 -- Refresh/reset star labels to the default
 function DynamicCP.RefreshLabels(show)
+    local styles = DynamicCP.GetStyles()
     for i = 1, ZO_ChampionPerksCanvas:GetNumChildren() do
         local child = ZO_ChampionPerksCanvas:GetChild(i)
         if (child.star and child.star.championSkillData) then
@@ -19,10 +20,10 @@ function DynamicCP.RefreshLabels(show)
 
             local slottable = CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))
             if (slottable) then
-                n:SetFont(string.format("$(BOLD_FONT)|%d|soft-shadow-thick", DynamicCP.savedOptions.slottableLabelSize))
+                n:SetFont(styles.GetSizedFont(DynamicCP.savedOptions.slottableLabelSize))
                 n:SetColor(unpack(DynamicCP.savedOptions.slottableLabelColor))
             else
-                n:SetFont(string.format("$(BOLD_FONT)|%d|soft-shadow-thick", DynamicCP.savedOptions.passiveLabelSize))
+                n:SetFont(styles.GetSizedFont(DynamicCP.savedOptions.passiveLabelSize))
                 n:SetColor(unpack(DynamicCP.savedOptions.passiveLabelColor))
             end
             n:SetText(zo_strformat("<<C:1>>", GetChampionSkillName(id)))
@@ -39,7 +40,7 @@ function DynamicCP.RefreshLabels(show)
                 n:SetInheritScale(false)
                 n:SetAnchor(CENTER, child, CENTER, 0, -20)
             end
-            n:SetFont(string.format("$(BOLD_FONT)|%d|soft-shadow-thin", DynamicCP.savedOptions.clusterLabelSize))
+            n:SetFont(styles.GetSizedFont(DynamicCP.savedOptions.clusterLabelSize))
             n:SetColor(unpack(DynamicCP.savedOptions.clusterLabelColor))
             n:SetText(text)
             n:SetHidden(not show)
@@ -91,6 +92,7 @@ end
 -- Check for unsaved changes when exiting screen
 local function DisplayWarning(text)
     DynamicCPWarningLabel:SetText(text)
+    DynamicCPWarningLabel:SetFont(DynamicCP.GetStyles().gameFont)
     DynamicCPWarning:SetHidden(false)
     DynamicCPWarning:ClearAnchors()
     DynamicCPWarning:SetAnchor(BOTTOM, ZO_Dialog1, TOP, 0, -10)

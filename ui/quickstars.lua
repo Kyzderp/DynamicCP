@@ -640,6 +640,7 @@ end
 local function HintRightClick()
     local hint = WINDOW_MANAGER:CreateControlFromVirtual("$(parent)Hint", DynamicCPQuickstars, "QuickstarsSlotSetHint")
     hint:SetAnchor(BOTTOMLEFT, DynamicCPQuickstarsGreenButton, TOPLEFT, -10, -5)
+    hint:SetFont(DynamicCP.GetStyles().gameBoldFont)
 end
 
 ---------------------------------------------------------------------
@@ -658,6 +659,16 @@ end
 
 ---------------------------------------------------------------------
 -- Init
+local function ApplyQuickstarsFonts()
+    local styles = DynamicCP.GetStyles()
+    DynamicCPQuickstarsBackdropLockHint:SetFont(styles.smallFont)
+    DynamicCPQuickstarsPanelCooldown:SetFont(styles.smallFont)
+    DynamicCPQuickstarsContextMenuHint:SetFont(styles.gameFont)
+    DynamicCPQuickstarsContextMenuPreviewLabel:SetFont(styles.gameFont)
+
+    DynamicCP.ApplyQuickstarsSlotGroupMenuFonts()
+end
+
 function DynamicCP.InitQuickstars()
     DynamicCPQuickstars:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, DynamicCP.savedOptions.quickstarsX, DynamicCP.savedOptions.quickstarsY)
     DynamicCPQuickstars:SetHidden(not DynamicCP.savedOptions.showQuickstars)
@@ -688,6 +699,8 @@ function DynamicCP.InitQuickstars()
     DynamicCPQuickstarsPanelCooldown:SetColor(unpack(DynamicCP.savedOptions.quickstarsCooldownColor))
 
     DynamicCP.InitQuickstarsScenes()
+
+    ApplyQuickstarsFonts()
 
     DynamicCP.RegisterCooldownListener("Quickstars", OnCooldownStart, OnCooldownUpdate, OnCooldownEnd)
 

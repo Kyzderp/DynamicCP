@@ -159,6 +159,7 @@ local function OnPlayerActivated(_, initial)
     end
 
     DynamicCPInfoLabel:SetHidden(not DynamicCP.savedOptions.showTotalsLabel)
+    DynamicCPInfoLabel:SetFont(DynamicCP.GetStyles().gameBoldFont)
 
     EVENT_MANAGER:UnregisterForEvent(DynamicCP.name .. "Activated", EVENT_PLAYER_ACTIVATED)
 end
@@ -218,6 +219,8 @@ local function Initialize()
     end
 
     DynamicCP.dbg("Initializing...")
+
+    DynamicCP.InitializeStyles()
 
     -- Don't show changelog if it's the first install
     local maybeShowChangelog = true

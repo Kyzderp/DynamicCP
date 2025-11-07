@@ -465,10 +465,19 @@ local function InitTree(control, tree)
     InitSlotSetDropdown(tree)
 end
 
+local function ApplyPulldownFonts()
+    for i = 1, 12 do
+        GetStarControlFromIndex(i):GetNamedChild("Name"):SetFont(DynamicCP.GetStyles().smallFont)
+    end
+    DynamicCPPulldownHint:SetFont(DynamicCP.GetStyles().gameFont)
+end
+DynamicCP.ApplyPulldownFonts = ApplyPulldownFonts
+
 function DynamicCP.InitPulldown()
     InitTree(DynamicCPPulldownGreen, "Green")
     InitTree(DynamicCPPulldownBlue, "Blue")
     InitTree(DynamicCPPulldownRed, "Red")
+    ApplyPulldownFonts()
 
     ZO_PreHook(CHAMPION_PERKS:GetChampionBar(), "ResetAllSlots", function()
         InitSlotSetDropdown("Green")

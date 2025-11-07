@@ -49,11 +49,11 @@
                     <Dimensions x="14" y="14"/>
                     <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT"/>
                 </Texture>
-                <Label name="$(parent)Name" font="ZoFontGameSmall" wrapMode="ELLIPSIS" verticalAlignment="CENTER" horizontalAlignment="LEFT" text="Star" tier="MEDIUM">
+                <Label name="$(parent)Name" wrapMode="ELLIPSIS" verticalAlignment="CENTER" horizontalAlignment="LEFT" text="Star" tier="MEDIUM">
                     <Dimensions y="20"/>
                     <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT"/>
                 </Label>
-                <Label name="$(parent)Points" font="ZoFontGameSmall" verticalAlignment="CENTER" horizontalAlignment="RIGHT" text="420" tier="MEDIUM">
+                <Label name="$(parent)Points" verticalAlignment="CENTER" horizontalAlignment="RIGHT" text="420" tier="MEDIUM">
                     <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="0"/>
                 </Label>
             </Controls>
@@ -82,7 +82,7 @@
                         <Control name="$(parent)Red" tier="MEDIUM">
                             <Anchor point="TOP" relativeTo="ZO_ChampionPerksActionBar" relativePoint="BOTTOM"/>
                         </Control>
-                        <Label name="$(parent)Hint" font="ZoFontGame" color="BBBBBB" text="Create slottable sets here to use them manually or with presets or rules." hidden="false" tier="HIGH" layer="TEXT" horizontalAlignment="CENTER" verticalAlignment="BOTTOM">
+                        <Label name="$(parent)Hint" color="BBBBBB" text="Create slottable sets here to use them manually or with presets or rules." hidden="false" tier="HIGH" layer="TEXT" horizontalAlignment="CENTER" verticalAlignment="BOTTOM">
                             <Dimensions x="700" y="16"/>
                             <Anchor point="BOTTOM" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="-12"/>
                         </Label>

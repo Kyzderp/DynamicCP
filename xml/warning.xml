@@ -14,7 +14,7 @@
                         DynamicCPWarning:SetHidden(true)
                     </OnClicked>
                 </Button>
-                <Label name="$(parent)Label" font="ZoFontGame" color="FF0000" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="MEDIUM" hidden="false" text="Warning: You have left the Champion Points screen with unsaved points and slottables.">
+                <Label name="$(parent)Label" color="FF0000" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="MEDIUM" hidden="false" text="Warning: You have left the Champion Points screen with unsaved points and slottables.">
                     <Dimensions x="680" y="60"/>
                     <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER"/>
                 </Label>

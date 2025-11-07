@@ -7,7 +7,7 @@
                 GAMEPAD_CHAMPION_PERKS_SCENE:AddFragment(ZO_HUDFadeSceneFragment:New(self))
             </OnInitialized>
             <Controls>
-                <Label name="DynamicCPInfoLabel" font="ZoFontWinH4" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="MEDIUM">
+                <Label name="DynamicCPInfoLabel" verticalAlignment="TOP" horizontalAlignment="LEFT" tier="MEDIUM">
                     <Anchor point="TOPLEFT" relativeTo="ZO_ChampionPerksKeyboardStatusPointHeader" relativePoint="BOTTOMLEFT" offsetY="4"/>
                     <OnInitialized>
                         self:SetText(string.format(
