@@ -30,7 +30,6 @@ src/changelog.lua
 
 src/points.lua
 src/slottables.lua
-src/lastPresets.lua
 
 src/smartPresets/presets/blueAutoPve.lua
 src/smartPresets/presets/greenCombat.lua

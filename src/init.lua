@@ -81,9 +81,6 @@ local defaultOptions = {
         rules = {}, -- {["rule"] = {stars = {[1] = 123,}}} (see ruleData)
     },
 
-    lastPresetsApplyBehavior = 1,
-    lastPresetsHasVisitedSettings = false,
-
 -- Internal
     modelessX = GuiRoot:GetWidth() / 4, -- Anchor center
     modelessY = 0,

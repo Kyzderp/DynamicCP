@@ -212,10 +212,6 @@
                                             <Dimensions x="200"/>
                                             <Anchor point="TOP" relativeTo="$(parent)Icon" relativePoint="BOTTOM" offsetY="8"/>
                                         </Control>
-                                        <Label name="$(parent)LastPreset" font="$(MEDIUM_FONT)|$(KB_13)|soft-shadow-thin" color="BBBBBB" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="MEDIUM" hidden="true" text="Last preset:">
-                                            <Dimensions x="190" y="24"/>
-                                            <Anchor point="BOTTOM" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="-18"/>
-                                        </Label>
                                     </Controls>
                                 </Control>
 
@@ -236,10 +232,6 @@
                                             <Dimensions x="200"/>
                                             <Anchor point="TOP" relativeTo="$(parent)Icon" relativePoint="BOTTOM" offsetY="8"/>
                                         </Control>
-                                        <Label name="$(parent)LastPreset" font="$(MEDIUM_FONT)|$(KB_13)|soft-shadow-thin" color="BBBBBB" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="MEDIUM" hidden="true" text="Last preset:">
-                                            <Dimensions x="190" y="24"/>
-                                            <Anchor point="BOTTOM" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="-18"/>
-                                        </Label>
                                     </Controls>
                                 </Control>
 
@@ -260,10 +252,6 @@
                                             <Dimensions x="200"/>
                                             <Anchor point="TOP" relativeTo="$(parent)Icon" relativePoint="BOTTOM" offsetY="8"/>
                                         </Control>
-                                        <Label name="$(parent)LastPreset" font="$(MEDIUM_FONT)|$(KB_13)|soft-shadow-thin" color="BBBBBB" verticalAlignment="CENTER" horizontalAlignment="CENTER" tier="MEDIUM" hidden="true" text="Last preset:">
-                                            <Dimensions x="190" y="24"/>
-                                            <Anchor point="BOTTOM" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="-18"/>
-                                        </Label>
                                     </Controls>
                                 </Control>
 

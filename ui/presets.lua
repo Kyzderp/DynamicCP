@@ -1020,6 +1020,4 @@ function DynamicCP:InitializeDropdowns()
     HideMessage("Blue")
 
     ApplyPresetsFonts()
-
-    DynamicCP.UpdateLastPresetsUI()
 end
