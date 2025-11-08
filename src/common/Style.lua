@@ -14,7 +14,7 @@ local GAMEPAD_STYLE = {
     gameFont = "$(GAMEPAD_MEDIUM_FONT)|18|soft-shadow-thick",
     gameBoldFont = "$(GAMEPAD_BOLD_FONT)|18|soft-shadow-thick",
     GetSizedFont = function(size)
-        return string.format("$(GAMEPAD_BOLD_FONT)|%d|soft-shadow-thick", math.floor(size))
+        return string.format("$(GAMEPAD_MEDIUM_FONT)|%d|soft-shadow-thick", math.floor(size))
     end,
 }
 
@@ -27,9 +27,21 @@ local function ApplyStyle(style)
     activeStyles = style
 
     DynamicCP.ApplyPulldownFonts()
+    DynamicCP.ReanchorPulldown()
+
     DynamicCP.ApplyQuickstarsFonts()
+
     DynamicCP.ApplyPresetsFonts()
+
     DynamicCPInfoLabel:SetFont(style.gameBoldFont)
+    DynamicCPInfoLabel:ClearAnchors()
+    if (activeStyles == GAMEPAD_STYLE) then
+        DynamicCPInfoLabel:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, 8, 8)
+    else
+        DynamicCPInfoLabel:SetAnchor(TOPLEFT, ZO_ChampionPerksKeyboardStatusPointHeader, BOTTOMLEFT, 0, 4)
+    end
+
+    DynamicCP.RefreshLabels(DynamicCP.savedOptions.showLabels)
 end
 
 local function GetStyles()

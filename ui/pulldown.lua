@@ -466,6 +466,8 @@ local function InitTree(control, tree)
 end
 
 local function ApplyPulldownFonts()
+    if (not DynamicCP.pulldownInitialized) then return end
+
     for i = 1, 12 do
         GetStarControlFromIndex(i):GetNamedChild("Name"):SetFont(DynamicCP.GetStyles().smallFont)
     end
@@ -473,11 +475,19 @@ local function ApplyPulldownFonts()
 end
 DynamicCP.ApplyPulldownFonts = ApplyPulldownFonts
 
+local function ReanchorPulldown()
+    if (not DynamicCP.pulldownInitialized) then return end
+
+    DynamicCPPulldownGreen:SetAnchor(TOP, GuiRoot, TOPLEFT, GetMiddlePoint("Green") / 2, ZO_ChampionPerksActionBar:GetBottom())
+    DynamicCPPulldownBlue:SetAnchor(TOP, GuiRoot, TOPLEFT, GetMiddlePoint("Blue") / 2, ZO_ChampionPerksActionBar:GetBottom())
+    DynamicCPPulldownRed:SetAnchor(TOP, GuiRoot, TOPLEFT, GetMiddlePoint("Red") / 2, ZO_ChampionPerksActionBar:GetBottom())
+end
+DynamicCP.ReanchorPulldown = ReanchorPulldown
+
 function DynamicCP.InitPulldown()
     InitTree(DynamicCPPulldownGreen, "Green")
     InitTree(DynamicCPPulldownBlue, "Blue")
     InitTree(DynamicCPPulldownRed, "Red")
-    ApplyPulldownFonts()
 
     ZO_PreHook(CHAMPION_PERKS:GetChampionBar(), "ResetAllSlots", function()
         InitSlotSetDropdown("Green")
@@ -487,4 +497,6 @@ function DynamicCP.InitPulldown()
     end)
 
     DynamicCP.pulldownInitialized = true
+
+    ApplyPulldownFonts()
 end

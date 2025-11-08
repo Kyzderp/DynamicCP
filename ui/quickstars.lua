@@ -668,6 +668,7 @@ local function ApplyQuickstarsFonts()
 
     DynamicCP.ApplyQuickstarsSlotGroupMenuFonts()
 end
+DynamicCP.ApplyQuickstarsFonts = ApplyQuickstarsFonts
 
 function DynamicCP.InitQuickstars()
     DynamicCPQuickstars:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, DynamicCP.savedOptions.quickstarsX, DynamicCP.savedOptions.quickstarsY)
