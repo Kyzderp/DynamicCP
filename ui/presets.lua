@@ -393,7 +393,6 @@ function DynamicCP:OnApplyClicked(button)
     if (not isRespeccing) then
         DynamicCP.ClearPendingCP()
         DynamicCP.ClearPendingSlottables()
-        DynamicCP.ClearPendingPresets()
         isRespeccing = true
     end
 
@@ -429,8 +428,6 @@ function DynamicCP:OnApplyClicked(button)
     -- Slottables
     ApplySlottables(tree)
 
-    DynamicCP.OnPresetApplied(tree, presetName)
-
     local diffText, numChanges, col1, col2, slottablesText = GenerateDiff(DynamicCP.GetCommittedCP(), cp)
     ShowMessage(tree, "|c00FF00Preset loaded!\nPress \"Confirm\" to commit.|r", diffText, {0, 1, 0, 1}, numChanges, col1, col2, slottablesText)
     -- Unhide confirm button and also update the cost
@@ -464,7 +461,6 @@ function DynamicCP:OnConfirmClicked(button)
         isRespeccing = false
         DynamicCP.ClearPendingCP()
         DynamicCP.ClearPendingSlottables()
-        DynamicCP.ConfirmPendingPresets()
         GetSubControl("InnerConfirmButton"):SetHidden(true)
         GetSubControl("InnerCancelButton"):SetHidden(true)
         HideMessage("Green")
@@ -487,7 +483,6 @@ function DynamicCP:OnCancelClicked()
     isRespeccing = false
     DynamicCP.ClearPendingCP()
     DynamicCP.ClearPendingSlottables()
-    DynamicCP.ClearPendingPresets()
     GetSubControl("InnerConfirmButton"):SetHidden(true)
     GetSubControl("InnerCancelButton"):SetHidden(true)
     HideMessage("Green")
@@ -504,10 +499,6 @@ local function SavePreset(tree, oldName, presetName, newCP, message)
     end
 
     DynamicCP.savedOptions.cp[tree][presetName] = newCP
-
-    -- If we're saving to this preset, that means we're also "applying" it
-    -- for the purposes of last-used preset
-    DynamicCP.OnPresetSaved(tree, presetName)
 
     DynamicCP:InitializeDropdown(tree, presetName)
     DynamicCP.dbg("|c00FF00Saved preset \"" .. presetName .. "\"|r")
