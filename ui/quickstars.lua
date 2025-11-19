@@ -666,6 +666,16 @@ local function ApplyQuickstarsFonts()
     DynamicCPQuickstarsContextMenuHint:SetFont(styles.gameFont)
     DynamicCPQuickstarsContextMenuPreviewLabel:SetFont(styles.gameFont)
 
+    local dropdown
+    for i = 1, 4 do
+        dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPQuickstarsPanelListsGreen:GetNamedChild("Star" .. i))
+        dropdown:SetFont(styles.gameFont)
+        dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPQuickstarsPanelListsBlue:GetNamedChild("Star" .. i))
+        dropdown:SetFont(styles.gameFont)
+        dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPQuickstarsPanelListsRed:GetNamedChild("Star" .. i))
+        dropdown:SetFont(styles.gameFont)
+    end
+
     DynamicCP.ApplyQuickstarsSlotGroupMenuFonts()
 end
 DynamicCP.ApplyQuickstarsFonts = ApplyQuickstarsFonts

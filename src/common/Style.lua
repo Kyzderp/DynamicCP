@@ -10,7 +10,7 @@ local KEYBOARD_STYLE = {
 }
 
 local GAMEPAD_STYLE = {
-    smallFont = "$(GAMEPAD_MEDIUM_FONT)|13|soft-shadow-thick",
+    smallFont = "$(GAMEPAD_BOLD_FONT)|13|soft-shadow-thick",
     gameFont = "$(GAMEPAD_MEDIUM_FONT)|18|soft-shadow-thick",
     gameBoldFont = "$(GAMEPAD_BOLD_FONT)|18|soft-shadow-thick",
     GetSizedFont = function(size)
