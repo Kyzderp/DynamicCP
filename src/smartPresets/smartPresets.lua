@@ -153,11 +153,16 @@ local function ApplySmartPreset(tree, preset, totalPoints)
             currentTotalPoints = currentTotalPoints + pointsToAllocate
 
             -- If it's slottable, put it in desired slottables in order of maxing
-            if (#slottables < 4 and CanChampionSkillTypeBeSlotted(GetChampionSkillType(id)) and desiredPoints == GetChampionSkillMaxPoints(id)) then
-                if (node.deprioritizeSlotting) then
+            if (#slottables < 4 and CanChampionSkillTypeBeSlotted(GetChampionSkillType(id))) then
+                if (desiredPoints == GetChampionSkillMaxPoints(id)) then
+                    if (node.deprioritizeSlotting) then
+                        table.insert(deprioritizedSlottables, id)
+                    else
+                        table.insert(slottables, id)
+                    end
+                elseif (WouldChampionSkillNodeBeUnlocked(id, desiredPoints)) then
+                    -- Or if it's not maxed, deprioritize it
                     table.insert(deprioritizedSlottables, id)
-                else
-                    table.insert(slottables, id)
                 end
             end
 
