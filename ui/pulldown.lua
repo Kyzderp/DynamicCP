@@ -468,10 +468,21 @@ end
 local function ApplyPulldownFonts()
     if (not DynamicCP.pulldownInitialized) then return end
 
+    local styles = DynamicCP.GetStyles()
+
+    -- Star names
     for i = 1, 12 do
-        GetStarControlFromIndex(i):GetNamedChild("Name"):SetFont(DynamicCP.GetStyles().smallFont)
+        GetStarControlFromIndex(i):GetNamedChild("Name"):SetFont(styles.smallFont)
     end
-    DynamicCPPulldownHint:SetFont(DynamicCP.GetStyles().gameFont)
+
+    -- Slot set dropdowns
+    for tree, _ in pairs(TREE_TO_FIRST_INDEX) do
+        local dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPPulldown:GetNamedChild(tree .. "SlotSetControlsDropdown"))
+        dropdown:SetFont(styles.gameFont)
+    end
+
+    -- Hint
+    DynamicCPPulldownHint:SetFont(styles.gameFont)
 end
 DynamicCP.ApplyPulldownFonts = ApplyPulldownFonts
 

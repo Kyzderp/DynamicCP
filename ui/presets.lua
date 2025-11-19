@@ -718,8 +718,6 @@ function DynamicCP:ToggleOptionButton(textureButton)
     itemData.name = DecoratePresetName(presetName, DynamicCP.savedOptions.cp[tree][presetName])
     dropdown:UpdateItems()
     dropdown:SelectItem(itemData)
-
-    ZO_ComboBox_ObjectFromContainer(GetSubControl("InnerRedDropdown"))
 end
 
 
@@ -969,6 +967,9 @@ end
 -- Entry point
 local function ApplyPresetsFonts()
     local smallFont = DynamicCP.GetStyles().smallFont
+    local gameFont = DynamicCP.GetStyles().gameFont
+
+
     for tree, _ in pairs(TREE_TO_DISCIPLINE) do
         -- At this rate, I wonder if it's better to just walk the tree dynamically...
         local innerTree = DynamicCPSidePresetsInner:GetNamedChild(tree)
@@ -977,11 +978,13 @@ local function ApplyPresetsFonts()
         innerTree:GetNamedChild("MessagesTooltipLabel2"):SetFont(smallFont)
         innerTree:GetNamedChild("MessagesTooltipExtraLabel"):SetFont(smallFont)
         innerTree:GetNamedChild("MessagesTooltipExtraLabel2"):SetFont(smallFont)
+
+        ZO_ComboBox_ObjectFromContainer(innerTree:GetNamedChild("Dropdown")):SetFont(gameFont)
+        ZO_ComboBox_ObjectFromContainer(innerTree:GetNamedChild("OptionsSlotSetDropdown")):SetFont(gameFont)
     end
 
     DynamicCPSidePresetsSidebarLabel:SetFont(DynamicCP.GetStyles().gameBoldFont)
 
-    local gameFont = DynamicCP.GetStyles().gameFont
     DynamicCPSidePresetsInnerInstructions1:SetFont(gameFont)
     DynamicCPSidePresetsInnerInstructions2:SetFont(gameFont)
     DynamicCPSidePresetsInnerInstructions3:SetFont(gameFont)
