@@ -43,8 +43,8 @@ data/zoneData.lua
 data/ruleData.lua
 data/convertDataIndices.lua
 
-settings/mainMenu.lua
-settings/customRulesMenu.lua
+PC/Settings.lua
+PC/CustomRulesSettings.lua
 
 ui/presets.lua
 ui/pulldown.lua
@@ -61,4 +61,4 @@ xml/pulldown.xml
 xml/quickstars.xml
 xml/modelessDialog.xml
 
-bindings.xml
+PC/bindings.xml
