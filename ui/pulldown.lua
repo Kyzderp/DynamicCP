@@ -408,7 +408,7 @@ DynamicCP.ApplyCurrentSlottables = ApplyCurrentSlottables
 local function TogglePulldown()
     if (DynamicCPPulldown:IsHidden()) then
         -- Expand it
-        DynamicCPPulldownTabArrowExpanded:SetHidden(false)
+        DynamicCPPulldownTabArrowExpanded:SetHidden(IsConsoleUI())
         DynamicCPPulldownTabArrowHidden:SetHidden(true)
         DynamicCPPulldown:SetHidden(false)
         DynamicCPPulldownTab:SetAnchor(TOP, DynamicCPPulldown, BOTTOM)
@@ -416,7 +416,7 @@ local function TogglePulldown()
     else
         -- Hide it
         DynamicCPPulldownTabArrowExpanded:SetHidden(true)
-        DynamicCPPulldownTabArrowHidden:SetHidden(false)
+        DynamicCPPulldownTabArrowHidden:SetHidden(IsConsoleUI())
         DynamicCPPulldown:SetHidden(true)
         DynamicCPPulldownTab:SetAnchor(TOP, ZO_ChampionPerksActionBar, BOTTOM)
         DynamicCP.savedOptions.pulldownExpanded = false

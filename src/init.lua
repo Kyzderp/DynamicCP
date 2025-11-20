@@ -150,7 +150,7 @@ local function OnPlayerActivated(_, initial)
     -- Hide the pulldown because it's expanded by default
     if (not DynamicCP.savedOptions.pulldownExpanded) then
         DynamicCPPulldownTabArrowExpanded:SetHidden(true)
-        DynamicCPPulldownTabArrowHidden:SetHidden(false)
+        DynamicCPPulldownTabArrowHidden:SetHidden(IsConsoleUI())
         DynamicCPPulldown:SetHidden(true)
         DynamicCPPulldownTab:SetAnchor(TOP, ZO_ChampionPerksActionBar, BOTTOM)
     end
