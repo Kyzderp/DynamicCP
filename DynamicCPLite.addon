@@ -36,7 +36,8 @@ src/smartPresets/presets/greenThieving.lua
 src/smartPresets/presets/redAutoPve.lua
 src/smartPresets/smartPresets.lua
 
-settings/mainMenu.lua
+
+PC/Settings.lua
 
 ui/presets.lua
 ui/pulldown.lua
@@ -49,4 +50,4 @@ xml/mildWarning.xml
 xml/pulldown.xml
 xml/quickstars.xml
 
-bindings.xml
+PC/bindings.xml
