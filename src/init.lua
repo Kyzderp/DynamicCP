@@ -1,6 +1,6 @@
 DynamicCP = {
     name = "DynamicCPLite",
-    version = "3.1.1",
+    version = "0.0.0",
     SmartPresets = {},
 }
 
