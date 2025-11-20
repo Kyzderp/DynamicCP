@@ -640,7 +640,7 @@ end
 local function HintRightClick()
     local hint = WINDOW_MANAGER:CreateControlFromVirtual("$(parent)Hint", DynamicCPQuickstars, "QuickstarsSlotSetHint")
     hint:SetAnchor(BOTTOMLEFT, DynamicCPQuickstarsGreenButton, TOPLEFT, -10, -5)
-    hint:SetFont(DynamicCP.GetStyles().gameBoldFont)
+    hint:GetNamedChild("Label"):SetFont(DynamicCP.GetStyles().gameBoldFont)
 end
 
 ---------------------------------------------------------------------
