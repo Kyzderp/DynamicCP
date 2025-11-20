@@ -99,7 +99,6 @@ local function SetSlottableSlot(tree, slotIndex, skillId)
     end
     pendingSlottables[slotIndex] = skillId
 
-
     -- Check the other slots
     local committed = GetFlippedSlottables()
     if (skillId == -1) then return end
@@ -321,13 +320,6 @@ function DynamicCP.SelectQuickstarsTab(tree, button)
         return
     end
 
-    -- Show context menu instead
-    if (button == MOUSE_BUTTON_INDEX_RIGHT) then
-        DynamicCP.ToggleSlotGroupMenu(tree)
-        -- DynamicCPQuickstarsContextMenu:SetMouseEnabled(true)
-        return
-    end
-
     DynamicCP.savedOptions["quickstarsShow" .. tree] = not DynamicCP.savedOptions["quickstarsShow" .. tree]
     RefreshDisplay()
 end
@@ -434,7 +426,6 @@ end
 local function RefreshTreesDisplay()
     local numShowing = 0
     local prevTree
-    DynamicCP.HideSlotGroupMenu()
 
     for _, treeName in ipairs(trees) do
         local tree = DynamicCPQuickstarsPanelLists:GetNamedChild(treeName)
@@ -636,14 +627,6 @@ function DynamicCP.QuickstarsOnPurchased()
 end
 
 ---------------------------------------------------------------------
--- First-time hint
-local function HintRightClick()
-    local hint = WINDOW_MANAGER:CreateControlFromVirtual("$(parent)Hint", DynamicCPQuickstars, "QuickstarsSlotSetHint")
-    hint:SetAnchor(BOTTOMLEFT, DynamicCPQuickstarsGreenButton, TOPLEFT, -10, -5)
-    hint:GetNamedChild("Label"):SetFont(DynamicCP.GetStyles().gameBoldFont)
-end
-
----------------------------------------------------------------------
 -- Refreshing all dropdowns on zone change
 -- Presumably users wouldn't have pending stuff between zones. This
 -- also fixes them being in a weird state after (probably) only
@@ -675,8 +658,6 @@ local function ApplyQuickstarsFonts()
         dropdown = ZO_ComboBox_ObjectFromContainer(DynamicCPQuickstarsPanelListsRed:GetNamedChild("Star" .. i))
         dropdown:SetFont(styles.gameFont)
     end
-
-    DynamicCP.ApplyQuickstarsSlotGroupMenuFonts()
 end
 DynamicCP.ApplyQuickstarsFonts = ApplyQuickstarsFonts
 
@@ -714,9 +695,4 @@ function DynamicCP.InitQuickstars()
     ApplyQuickstarsFonts()
 
     DynamicCP.RegisterCooldownListener("Quickstars", OnCooldownStart, OnCooldownUpdate, OnCooldownEnd)
-
-    if (DynamicCP.savedOptions.quickstarsFirstTime) then
-        HintRightClick()
-        DynamicCP.savedOptions.quickstarsFirstTime = false
-    end
 end

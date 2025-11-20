@@ -348,20 +348,5 @@
             <OnMouseEnter>DynamicCP.OnQuickstarSlotGroupEnter(self:GetLabelControl():GetText())</OnMouseEnter>
             <OnMouseExit>DynamicCP.OnQuickstarSlotGroupExit(self:GetLabelControl():GetText())</OnMouseExit>
         </Button>
-        <Control name="QuickstarsSlotSetHint" virtual="true">
-            <Dimensions x="250" y="120"/>
-            <Controls>
-                <Texture name="$(parent)Arrow" textureFile="esoui/art/housing/rotation_arrow.dds" tier="MEDIUM" color="FFFFFFFF">
-                    <Dimensions x="40" y="40" />
-                    <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="10"/>
-                    <OnInitialized>
-                        self:SetTransformRotationZ(math.rad(180))
-                    </OnInitialized>
-                </Texture>
-                <Label name="$(parent)Label" color="DDDDDD" text="Right click these buttons to use slottable sets, and left click to toggle individual trees." hidden="false" verticalAlignment="BOTTOM" horizontalAlignment="LEFT" tier="HIGH" layer="TEXT">
-                    <AnchorFill/>
-                </Label>
-            </Controls>
-        </Control>
     </Controls>
 </GuiXml>

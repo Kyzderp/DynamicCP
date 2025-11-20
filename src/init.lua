@@ -11,7 +11,6 @@ local defaultOptions = {
     pulldownExpanded = true,
 
 -- user options
-    hideBackground = false,
     showLabels = true,
     scale = 1.0,
     debug = false,
@@ -100,14 +99,6 @@ local function OnPlayerActivated(_, initial)
 
     -- Post load init
     DynamicCP.InitQuickstars()
-    DynamicCP.InitCustomRules() -- Do this here so we don't do rules on login/reload
-
-    if (DynamicCP.savedOptions.hideBackground) then
-        local backgroundOverride = function(line) return "/esoui/art/scrying/backdrop_stars.dds" end
-        GetChampionDisciplineZoomedInBackground = backgroundOverride
-        GetChampionDisciplineZoomedOutBackground = backgroundOverride
-        GetChampionDisciplineSelectedZoomedOutOverlay = backgroundOverride
-    end
 
     -- Hide the pulldown because it's expanded by default
     if (not DynamicCP.savedOptions.pulldownExpanded) then
@@ -200,8 +191,6 @@ local function Initialize()
         end
 
         if (newState ~= SCENE_SHOWN) then return end
-        DynamicCP.GetSubControl():SetHidden(not DynamicCP.savedOptions.showPresetsWithCP)
-        DynamicCP:InitializeDropdowns() -- Call it every time in case LFG role is changed
 
         -- First time opened calls
         if (not initialOpened) then

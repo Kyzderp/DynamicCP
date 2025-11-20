@@ -139,18 +139,6 @@ function DynamicCP:CreateSettingsMenu()
                 },
                 {
                     type = "checkbox",
-                    name = "Hide background",
-                    tooltip = "Hide the constellation background texture, useful if you have difficulty seeing the stars or don't like the extra clutter",
-                    default = false,
-                    getFunc = function() return DynamicCP.savedOptions.hideBackground end,
-                    setFunc = function(value)
-                        DynamicCP.savedOptions.hideBackground = value
-                    end,
-                    width = "full",
-                    requiresReload = true,
-                },
-                {
-                    type = "checkbox",
                     name = "Double click to slot or unslot stars",
                     tooltip = "Double click the slottable stars to add or remove them to the hotbar, or double click the hotbar stars to unslot them",
                     default = true,
