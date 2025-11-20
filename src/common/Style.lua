@@ -31,8 +31,6 @@ local function ApplyStyle(style)
 
     DynamicCP.ApplyQuickstarsFonts()
 
-    DynamicCP.ApplyPresetsFonts()
-
     DynamicCPInfoLabel:SetFont(style.gameBoldFont)
     DynamicCPInfoLabel:ClearAnchors()
     if (activeStyles == GAMEPAD_STYLE) then

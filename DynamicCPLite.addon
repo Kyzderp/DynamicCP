@@ -25,8 +25,6 @@ src/common/Dialog.lua
 
 src/cooldown.lua
 src/screenUpdates.lua
-src/customRules.lua
-src/changelog.lua
 
 src/points.lua
 src/slottables.lua
@@ -38,27 +36,17 @@ src/smartPresets/presets/greenThieving.lua
 src/smartPresets/presets/redAutoPve.lua
 src/smartPresets/smartPresets.lua
 
-data/presetData.lua
-data/zoneData.lua
-data/ruleData.lua
-data/convertDataIndices.lua
-
 settings/mainMenu.lua
-settings/customRulesMenu.lua
 
 ui/presets.lua
 ui/pulldown.lua
 ui/quickstars.lua
 ui/quickstarsSlotGroupMenu.lua
-ui/modelessDialog.lua
 
-xml/presets.xml
-xml/sidePresets.xml
 xml/infolabel.xml
 xml/warning.xml
 xml/mildWarning.xml
 xml/pulldown.xml
 xml/quickstars.xml
-xml/modelessDialog.xml
 
 bindings.xml

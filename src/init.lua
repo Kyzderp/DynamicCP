@@ -1,5 +1,5 @@
 DynamicCP = {
-    name = "DynamicCP",
+    name = "DynamicCPLite",
     version = "3.1.1",
     SmartPresets = {},
 }
@@ -8,20 +8,7 @@ local defaultOptions = {
     firstTime = true,
     lastChangelog = 0,
 
-    cp = {
-        Red = {},
-        Green = {}, -- ["Fisher"] = { ["roles"] = { ["Healer"] = false, ["Dps"] = true, ["Tank"] = false, }, [1] = { [65] = 0, }, ["slotSet"] = "Tank",},
-        Blue = {},
-    },
     pulldownExpanded = true,
-    charData = {}, -- {[123214123] = {green="craft", blue="dps", red="magdps", armoryBuilds={[1]={green="craft", blue="dps", red="magdps"}}}}
-
-    slotGroupsFirstTime = true,
-    slotGroups = { -- Key them by ID, so that they're easily renamable
-        Red = {}, -- [1] = {["name"] = "DPS", [1] = 12, [2] = 34, [3] = 56, [4] = 78}, ["Tank"] = {["name"] = "Tank", [1] = 12, [2] = 34, [3] = 56, [4] = 78},
-        Green = {},
-        Blue = {},
-    },
 
 -- user options
     hideBackground = false,
@@ -30,13 +17,10 @@ local defaultOptions = {
     debug = false,
     showLeaveWarning = true,
     showCooldownWarning = true,
-    slotHigherStars = true,
     doubleClick = true,
     showPresetsWithCP = true,
     showPulldownPoints = false,
     showPointGainedMessage = true,
-    presetsBackdropAlpha = 0.5,
-    presetsShowClassButtons = true, -- Not settable by user - side presets don't have class buttons
     passiveLabelColor = {1, 1, 0.5},
     passiveLabelSize = 24,
     slottableLabelColor = {1, 1, 1},
@@ -67,29 +51,7 @@ local defaultOptions = {
     quickstarsPlaySound = true,
     quickstarsShowSlotSet = true,
 
-    customRules = {
-        playSound = true, -- CHAMPION_POINTS_COMMITTED
-        showInChat = true,
-        extraChat = true,
-        firstTime = true,
-        overrideOrder = true,
-        autoSlot = false,
-        autoDetectStamMag = true,
-        promptConflicts = true,
-        applyBossOnCombatEnd = true,
-        applyOnCooldownEnd = true,
-        rules = {}, -- {["rule"] = {stars = {[1] = 123,}}} (see ruleData)
-    },
-
 -- Internal
-    modelessX = GuiRoot:GetWidth() / 4, -- Anchor center
-    modelessY = 0,
-
-    convertedIndices = false, -- Pre-Blackwood to Blackwood indices
-    usingSkillId = false, -- Converted from Blackwood indices to saving using skilLId
-
-    -- 1: added quickstarsShowOnHudUi, which should inherit quickstarsShowOnHud
-    -- settingsVersion = 1,
 }
 
 ---------------------------------------------------------------------
@@ -219,183 +181,17 @@ local function Initialize()
 
     DynamicCP.InitializeStyles()
 
-    -- Don't show changelog if it's the first install
-    local maybeShowChangelog = true
-
-    -- Populate defaults only on first time, otherwise the keys will be remade even if user deletes
-    if (DynamicCP.savedOptions.firstTime) then
-        DynamicCP.savedOptions.convertedIndices = true
-        DynamicCP.savedOptions.usingSkillId = true
-        DynamicCP.savedOptions.firstTime = false
-        maybeShowChangelog = false
-    end
-
-    -- If this isn't a new Blackwood install, we need to convert the old indices
-    -- TODO: change everything to index by ID later
-    if (not DynamicCP.savedOptions.convertedIndices) then
-        DynamicCP.dbg("CONVERTING TO NEW INDICES")
-        for treeName, tree in pairs(DynamicCP.savedOptions.cp) do
-            for cpName, cp in pairs(tree) do
-                DynamicCP.dbg(cpName)
-                for disciplineIndex, data in pairs(cp) do
-                    DynamicCP.dbg("disciplineIndex" .. tostring(disciplineIndex))
-                    local newData = {}
-                    for oldSkillIndex, points in pairs(data) do
-                        local converted = type(oldSkillIndex) == "number" and DynamicCP.convertIndex(disciplineIndex, oldSkillIndex) or oldSkillIndex
-                        newData[converted] = points
-                    end
-                    DynamicCP.savedOptions.cp[treeName][cpName][disciplineIndex] = newData
-                end
-            end
-        end
-        DynamicCP.savedOptions.convertedIndices = true
-    end
-
-    -- If user is still on old data storage method with indices, we should convert them to id instead
-    if (not DynamicCP.savedOptions.usingSkillId) then
-        DynamicCP.dbg("CONVERTING TO IDS HALP PLZ DON'T BREAK")
-        for treeName, tree in pairs(DynamicCP.savedOptions.cp) do
-            for cpName, cp in pairs(tree) do
-                DynamicCP.dbg(cpName)
-                for disciplineIndex, data in pairs(cp) do
-                    DynamicCP.dbg("disciplineIndex" .. tostring(disciplineIndex))
-                    local newData = {}
-                    for oldSkillIndex, points in pairs(data) do
-                        local converted = type(oldSkillIndex) == "number" and DynamicCP.convertBlackwoodToId(disciplineIndex, oldSkillIndex) or oldSkillIndex
-                        newData[converted] = points
-                    end
-                    DynamicCP.savedOptions.cp[treeName][cpName][disciplineIndex] = newData
-                end
-            end
-        end
-        DynamicCP.savedOptions.usingSkillId = true
-    end
-
-    -- Populate with example custom rule
-    if (DynamicCP.savedOptions.customRules.firstTime) then
-        DynamicCP.savedOptions.customRules.rules = {
-            ["Example Trial"] = {
-                name = "Example Trial",
-                trigger = DynamicCP.TRIGGER_TRIAL,
-                priority = 100,
-                normal = true,
-                veteran = true,
-                reeval = false,
-                stars = {
-                    [1] = 66, -- Steed's Blessing
-                    [2] = -1,
-                    [3] = -1,
-                    [4] = -1,
-                    [5] = -1,
-                    [6] = -1,
-                    [7] = -1,
-                    [8] = -1,
-                    [9] = -1,
-                    [10] = -1,
-                    [11] = -1,
-                    [12] = -1,
-                },
-                tank = true,
-                healer = true,
-                dps = true,
-                chars = {},
-                param1 = "",
-                param2 = "",
-            },
-            ["Example Trial Dps"] = {
-                name = "Example Trial Dps",
-                trigger = DynamicCP.TRIGGER_TRIAL,
-                priority = 101,
-                normal = true,
-                veteran = true,
-                reeval = false,
-                stars = {
-                    [1] = -1,
-                    [2] = -1,
-                    [3] = -1,
-                    [4] = -1,
-                    [5] = -1,
-                    [6] = -1,
-                    [7] = -1,
-                    [8] = -1,
-                    [9] =  2, -- Boundless Vitality
-                    [10] = 34, -- Fortified
-                    [11] = 35, -- Rejuvenation
-                    [12] = 56, -- Spirit Mastery
-                    ["Blue"] = "Blue1",
-                },
-                tank = false,
-                healer = false,
-                dps = true,
-                chars = {},
-                param1 = "",
-                param2 = "",
-            },
-        }
-        DynamicCP.AddOptionsForEachCharacter("Example Trial")
-        DynamicCP.AddOptionsForEachCharacter("Example Trial Dps")
-        DynamicCP.ShowFirstTimeDialog()
-        DynamicCP.savedOptions.customRules.firstTime = false
-    end
-
-    -- Populate slottable sets
-    if (DynamicCP.savedOptions.slotGroupsFirstTime) then
-        DynamicCP.savedOptions.slotGroupsFirstTime = false
-        DynamicCP.savedOptions.slotGroups.Blue["Blue1"] = {
-            [1] = 23,
-            [2] = 277,
-            [3] = 8,
-            [4] = 264,
-            ["name"] = "Example PvE AoE",
-        }
-        DynamicCP.savedOptions.pulldownExpanded = true -- So it's actually seen...
-    end
-
-    -- Migrate settings versions if applicable
-    if (not DynamicCP.savedOptions.settingsVersion) then
-        DynamicCP.savedOptions.settingsVersion = 0
-    end
-    if (DynamicCP.savedOptions.settingsVersion < 1) then
-        -- Inherit HUD setting for HUD_UI
-        DynamicCP.dbg("Inheriting HUD option " .. tostring(DynamicCP.savedOptions.quickstarsShowOnHud))
-        DynamicCP.savedOptions.quickstarsShowOnHudUi = DynamicCP.savedOptions.quickstarsShowOnHud
-    end
-    DynamicCP.savedOptions.settingsVersion = 1
-
-    -- Add names to slottable sets if they already exist (from testing version, which only used names, not IDs)
-    for tree, _ in pairs(DynamicCP.savedOptions.slotGroups) do
-        for id, data in pairs(DynamicCP.savedOptions.slotGroups[tree]) do
-            if (not data.name) then
-                DynamicCP.savedOptions.slotGroups[tree][id].name = id
-            end
-        end
-    end
-
     -- Settings menu
     DynamicCP:CreateSettingsMenu()
-    DynamicCP.CreateCustomRulesMenu()
 
-    ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_MENU", "Toggle CP Preset Window")
     ZO_CreateStringId("SI_BINDING_NAME_DCP_TOGGLE_QUICKSTARS", "Toggle Quickstars Panel")
     ZO_CreateStringId("SI_BINDING_NAME_DCP_CYCLE_QUICKSTARS", "Cycle Quickstars Tab")
-    ZO_CreateStringId("SI_BINDING_NAME_DCP_DIALOG_CONFIRM", "Confirm Custom Rules Dialog")
-    ZO_CreateStringId("SI_BINDING_NAME_DCP_DIALOG_CANCEL", "Cancel Custom Rules Dialog")
 
     -- Initialize
-    DynamicCP.InitModelessDialog()
     DynamicCP.InitCooldown()
-    DynamicCP.SortRuleKeys()
-
-    if (maybeShowChangelog) then
-        DynamicCP.MaybeShowChangelog()
-    end
 
     -- Register events
     RegisterEvents()
-
-    DynamicCPSidePresets:SetScale(DynamicCP.savedOptions.scale)
-    DynamicCPSidePresetsBackdrop:SetAlpha(DynamicCP.savedOptions.presetsBackdropAlpha)
-    DynamicCPSidePresets:SetHidden(false)
 
     CHAMPION_PERKS_CONSTELLATIONS_FRAGMENT:RegisterCallback("StateChange", function(oldState, newState)
         if (newState == SCENE_HIDDEN) then
@@ -422,16 +218,10 @@ local function Initialize()
     SLASH_COMMANDS["/dcp"] = function(arg)
         if (arg == "quickstar" or arg == "quickstars" or arg == "q" or arg == "qs") then
             DynamicCP.ToggleQuickstars()
-        elseif (arg == "rule" or arg == "rules") then
-            DynamicCP.OpenCustomRulesMenu()
         elseif (arg == "settings") then
             DynamicCP.OpenSettingsMenu()
-        elseif (arg == "eval") then
-            DynamicCP.ReEval()
-        elseif (arg == "preset" or arg == "presets") then
-            DynamicCP.TogglePresetsWindow()
         else
-            DynamicCP.msg("Usage: /dcp <presets || quickstar || settings || rules>")
+            DynamicCP.msg("Usage: /dcp <quickstar || settings>")
         end
     end
 end
