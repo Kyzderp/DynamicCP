@@ -254,3 +254,110 @@ DynamicCP.SMART_PRESETS = {
         },
     },
 }
+
+
+---------------------------------------------------------------------
+-- Apply, yoinked from presets.lua
+---------------------------------------------------------------------
+local isRespeccing = false
+
+local HOTBAR_OFFSET = {
+    Green = 0,
+    Blue = 4,
+    Red = 8,
+}
+
+-- Apply the slottables
+local function ApplySlottables(tree, presetName)
+    local slottablesResult
+
+    -- From smart preset
+    slottablesResult = DynamicCP.SMART_PRESETS[tree][presetName].applyFunc().slottables
+
+
+    local offset = HOTBAR_OFFSET[tree]
+    for i = 1, 4 do
+        local skillId = slottablesResult[i] or -1
+        DynamicCP.SetSlottableInIndex(i + offset, skillId)
+        DynamicCP.dbg(zo_strformat("adding <<C:1>> to slot <<2>>", GetChampionSkillName(skillId), i + offset))
+    end
+end
+
+-- When apply button is clicked
+local function ApplyPreset(tree, presetName)
+    DynamicCP.dbg("Attempting to apply \"" .. presetName .. "\" to the " .. tree .. " tree.")
+
+    -- Use smart preset
+    local cp = DynamicCP.SMART_PRESETS[tree][presetName].applyFunc()
+
+
+    local currentCP = DynamicCP.GetCommittedCP()
+
+    -- First find all of the slottable skillIds to check them later
+    local currentHotbar = {}
+    for slotIndex = 1, 12 do
+        local skillId = GetSlotBoundId(slotIndex, HOTBAR_CATEGORY_CHAMPION)
+        currentHotbar[skillId] = slotIndex
+    end
+
+    if (not isRespeccing) then
+        DynamicCP.ClearPendingCP()
+        DynamicCP.ClearPendingSlottables()
+        isRespeccing = true
+    end
+
+    -- Apply all stars within the tree
+    local disciplineIndex = TREE_TO_DISCIPLINE[tree]
+    local hasOverMaxPoints = false
+    for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
+        local skillId = GetChampionSkillId(disciplineIndex, skillIndex)
+        local numPoints = 0
+        if (cp[disciplineIndex] and cp[disciplineIndex][skillId] ~= nil) then
+            local maxPoints = GetChampionSkillMaxPoints(skillId)
+            if (cp[disciplineIndex][skillId] > maxPoints) then
+                numPoints = maxPoints
+                hasOverMaxPoints = true
+            else
+                numPoints = cp[disciplineIndex][skillId]
+            end
+        else
+            DynamicCP.dbg("else" .. GetChampionSkillName(skillId))
+            numPoints = 0
+        end
+
+        -- Unslot slottables that are no longer slottable because of not enough points
+        -- We still do this even though slottables are replaced later because user could have slotStars setting off [TODO: is this still needed?]
+        if (currentHotbar[skillId] and not WouldChampionSkillNodeBeUnlocked(skillId, numPoints)) then
+            DynamicCP.dbg("unslotting" .. GetChampionSkillName(skillId))
+            DynamicCP.SetSlottableInIndex(currentHotbar[skillId], -1)
+        end
+
+        DynamicCP.SetStarPoints(disciplineIndex, skillId, numPoints)
+    end
+
+    -- Slottables
+    ApplySlottables(tree, presetName)
+
+    -- TODO
+    -- if (DynamicCP.NeedsRespec()) then
+    --     GetSubControl("InnerConfirmButton"):SetText("Confirm (" .. tostring(GetChampionRespecCost()) .. " |t18:18:esoui/art/currency/currency_gold.dds|t)")
+    -- else
+    --     GetSubControl("InnerConfirmButton"):SetText("Confirm")
+    -- end
+end
+DynamicCP.ApplySmartPresetFromSettings = ApplyPreset
+
+local function ConfirmPresets()
+    local needsRespec = DynamicCP.NeedsRespec()
+    DynamicCP.dbg("needs respec? " .. (needsRespec and "yes" or "no"))
+
+    PrepareChampionPurchaseRequest(needsRespec)
+    DynamicCP.ConvertPendingPointsToPurchase()
+    DynamicCP.ConvertPendingSlottablesToPurchase()
+    SendChampionPurchaseRequest()
+
+    DynamicCP.ClearPendingCP()
+    DynamicCP.ClearPendingSlottables()
+    isRespeccing = false
+end
+DynamicCP.ConfirmSmartPresetsFromSettings = ConfirmPresets
