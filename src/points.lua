@@ -50,8 +50,7 @@ DynamicCP.ClearCommittedCP = ClearCommittedCP
 -- Also removes any pending points that are the same as the committed
 local function NeedsRespec()
     if (not pendingCP) then
-        d("You shouldn't be seeing this message! Please leave Kyzer a message saying which buttons you clicked to get here. NeedsRespec")
-        return true -- Assume respec needed
+        return false
     end
 
     local cleaned = {}

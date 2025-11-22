@@ -345,7 +345,22 @@ local function ApplyPreset(tree, presetName)
     --     GetSubControl("InnerConfirmButton"):SetText("Confirm")
     -- end
 end
-DynamicCP.ApplySmartPresetFromSettings = ApplyPreset
+
+local function RefreshSmartPresets(green, blue, red)
+    DynamicCP.ClearPendingCP()
+    DynamicCP.ClearPendingSlottables()
+
+    if (green and green ~= "NONE") then
+        ApplyPreset("Green", green)
+    end
+    if (blue and blue ~= "NONE") then
+        ApplyPreset("Blue", blue)
+    end
+    if (red and red ~= "NONE") then
+        ApplyPreset("Red", red)
+    end
+end
+DynamicCP.RefreshSmartPresetsApplicationFromSettings = RefreshSmartPresets
 
 local function ConfirmPresets()
     local needsRespec = DynamicCP.NeedsRespec()

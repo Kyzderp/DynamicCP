@@ -402,9 +402,7 @@ function DynamicCP:CreateSettingsMenu()
                     setFunc = function(value)
                         selectedGreen = value
 
-                        if (value and value ~= "NONE") then
-                            DynamicCP.ApplySmartPresetFromSettings("Green", value)
-                        end
+                        DynamicCP.RefreshSmartPresetsApplicationFromSettings(selectedGreen, selectedBlue, selectedRed)
                     end,
                     width = "full",
                     reference = "DCP_SmartGreenDropdown",
@@ -423,9 +421,7 @@ function DynamicCP:CreateSettingsMenu()
                     setFunc = function(value)
                         selectedBlue = value
 
-                        if (value and value ~= "NONE") then
-                            DynamicCP.ApplySmartPresetFromSettings("Blue", value)
-                        end
+                        DynamicCP.RefreshSmartPresetsApplicationFromSettings(selectedGreen, selectedBlue, selectedRed)
                     end,
                     width = "full",
                     reference = "DCP_SmartBlueDropdown",
@@ -444,9 +440,7 @@ function DynamicCP:CreateSettingsMenu()
                     setFunc = function(value)
                         selectedRed = value
 
-                        if (value and value ~= "NONE") then
-                            DynamicCP.ApplySmartPresetFromSettings("Red", value)
-                        end
+                        DynamicCP.RefreshSmartPresetsApplicationFromSettings(selectedGreen, selectedBlue, selectedRed)
                     end,
                     width = "full",
                     reference = "DCP_SmartRedDropdown",
@@ -460,9 +454,12 @@ function DynamicCP:CreateSettingsMenu()
                             return "Confirm"
                         end
                     end,
-                    tooltip = "Confirm applying the above champion point presets",
+                    tooltip = "Confirm applying the points below",
                     func = function()
                         DynamicCP.ConfirmSmartPresetsFromSettings()
+                        selectedGreen = nil
+                        selectedBlue = nil
+                        selectedRed = nil
                     end,
                     width = "full",
                     disabled = function()
@@ -470,7 +467,9 @@ function DynamicCP:CreateSettingsMenu()
                     end,
                     isDangerous = true,
                     warning = function()
-                        if (DynamicCP.NeedsRespec()) then
+                        if ((not selectedGreen or selectedGreen == "NONE") and (not selectedBlue or selectedBlue == "NONE") and (not selectedRed or selectedRed == "NONE")) then
+                            return "Apply these champion points?"
+                        elseif (DynamicCP.NeedsRespec()) then
                             return "Apply these champion points? (Cost: " .. tostring(GetChampionRespecCost()) .. " |t18:18:esoui/art/currency/currency_gold.dds|t)"
                         else
                             return "Apply these champion points? (Free)"
@@ -503,7 +502,6 @@ function DynamicCP:CreateSettingsMenu()
                         return result
                     end,
                 },
-                -- TODO: stop respeccing when leaving menu so it doesn't interfere with other addons
             },
         },
     }
