@@ -19,9 +19,9 @@ end
 -- Get the slottables in the selected preset, or what would be
 -- slotted automatically
 
--- TODO: remove for lite
+-- Lite does not have slot sets
 local function GetSlottablesFromSlotSet(tree, slotSetId)
-    return DynamicCP.savedOptions.slotGroups[tree][slotSetId]
+    return nil
 end
 
 -- slotSetId: optional; or it's obtained from cp
