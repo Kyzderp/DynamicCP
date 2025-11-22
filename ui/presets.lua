@@ -1,3 +1,5 @@
+local PSB = DynamicCP.PointsStringBuilder
+
 local CREATE_NEW_STRING = "-- Create New --"
 local MESSAGES_TOOLTIP_GAP = 24
 
@@ -28,14 +30,6 @@ local TREE_TO_DISCIPLINE = {
     Blue = 2,
     Red = 3,
 }
-
-local function GetTreeFromDisciplineIndex(disciplineIndex)
-    for tree, index in pairs(TREE_TO_DISCIPLINE) do
-        if (index == disciplineIndex) then
-            return tree
-        end
-    end
-end
 
 local HOTBAR_OFFSET = {
     Green = 0,
@@ -171,170 +165,6 @@ end
 
 
 ---------------------------------------------------------------------
--- Get the slottables in the selected preset, or what would be
--- slotted automatically
--- slotSetId: optional; or it's obtained from cp
-local function GetSlottablesFromPreset(cp, tree, slotSetId)
-    -- Return the slottables if this is a smart preset
-    if (cp.slottables) then
-        return cp.slottables
-    end
-
-    -- Return the slottables from the slot set if it exists
-    local slotSetId = cp.slotSet or slotSetId
-    if (slotSetId ~= nil) then
-        local slotSet = DynamicCP.savedOptions.slotGroups[tree][slotSetId]
-        if (slotSet ~= nil) then
-            return slotSet
-        end
-
-        DynamicCP.dbg("|cFF0000Couldn't find slot set " .. slotSetId .. ", slotting automatically for now.|r")
-    else
-        DynamicCP.dbg("|cFF0000No slotSetId, slotting automatically.|r")
-    end
-
-    -- Otherwise, slot automatically. Collect slottables from the specified CP
-    local disciplineIndex = TREE_TO_DISCIPLINE[tree]
-    local potentialSlottablesData = {}
-    for skillId, numPoints in pairs(cp[disciplineIndex]) do
-        local isSlottable = CanChampionSkillTypeBeSlotted(GetChampionSkillType(skillId))
-        if (isSlottable and WouldChampionSkillNodeBeUnlocked(skillId, numPoints)) then
-            table.insert(potentialSlottablesData, {skillId = skillId, points = numPoints, maxPoints = GetChampionSkillMaxPoints(skillId)})
-        end
-    end
-
-    -- Sort by most maxed
-    table.sort(potentialSlottablesData, function(item1, item2)
-        local prop1 = item1.points / item1.maxPoints
-        local prop2 = item2.points / item2.maxPoints
-        if (prop1 == prop2) then
-            if (item1.maxPoints == item2.maxPoints) then
-                -- Last resort, sort by skill id
-                return item1.skillId < item2.skillId
-            end
-            -- If proportions are equal, prioritize ones with higher max because idk
-            return item1.maxPoints > item2.maxPoints
-        end
-        return prop1 > prop2
-    end)
-
-    -- Return the first 4
-    local slottablesResult = {}
-    for i = 1, 4 do
-        if (potentialSlottablesData[i]) then
-            local skillId = potentialSlottablesData[i].skillId
-            slottablesResult[i] = skillId
-        end
-    end
-    return slottablesResult
-end
-
-
----------------------------------------------------------------------
--- BUILDING STRING
----------------------------------------------------------------------
--- Build string for the slottables in this CP
-local function GenerateTreeSlottables(cp, tree, slotSetId)
-    local color = {
-        Green = "a5d752",
-        Blue = "59bae7",
-        Red = "e46b2e",
-    }
-
-    local slottables = GetSlottablesFromPreset(cp, tree, slotSetId)
-    local disciplineIndex = TREE_TO_DISCIPLINE[tree]
-    local result = {}
-    for i = 1, 4 do
-        local skillId = slottables[i]
-        local skillName = ""
-        if (skillId) then
-            if (WouldChampionSkillNodeBeUnlocked(skillId, cp[disciplineIndex][skillId] or 0)) then
-                skillName = zo_strformat("<<C:1>>", GetChampionSkillName(skillId))
-            else
-                -- Display in red if there aren't enough points
-                skillName = zo_strformat("|cFF4444<<C:1>>|r", GetChampionSkillName(skillId))
-            end
-        end
-        result[i] = zo_strformat("|c<<1>>(+) <<2>>:|r <<3>>", color[tree], i, skillName)
-    end
-
-    return result
-end
-
--- Find and build string of the diff between two cp sets
--- result: the entire string
--- col1: array of the CP names
--- col2: array of the diff
--- TODO: pull the logic portion out into points.lua
-local function GenerateDiff(before, after)
-    local result = "Changes:"
-    local col1 = {}
-    local col2 = {}
-
-    local numChanges = 0
-    local assumedIndex = 1
-    for disciplineIndex = 1, GetNumChampionDisciplines() do
-        if (before[disciplineIndex] and after[disciplineIndex]) then
-            assumedIndex = disciplineIndex
-            for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
-                local skillId = GetChampionSkillId(disciplineIndex, skillIndex)
-                local first = before[disciplineIndex][skillId] or 0
-                local second = after[disciplineIndex][skillId] or 0
-                if (first ~= second and (first ~= 0 or second ~= 0)) then
-                    local line = zo_strformat("\n|cBBBBBB<<C:1>>:  <<2>> → <<3>>",
-                        GetChampionSkillName(skillId),
-                        first,
-                        second)
-
-                    table.insert(col1, zo_strformat("<<C:1>>", GetChampionSkillName(skillId)))
-                    if (first < second) then
-                        line = line .. "|c00FF00↑|r"
-                        table.insert(col2, zo_strformat("<<1>> → <<2>>|c00FF00↑|r", first, second))
-                    else
-                        line = line .. "|cFF0000↓|r"
-                        table.insert(col2, zo_strformat("<<1>> → <<2>>|cFF0000↓|r", first, second))
-                    end
-                    result = result .. line
-                    numChanges = numChanges + 1
-                end
-            end
-        end
-    end
-
-    if (result == "Changes:") then
-        result = "|cBBBBBBNo points changes.|r"
-    end
-    return result, numChanges, col1, col2, GenerateTreeSlottables(after, GetTreeFromDisciplineIndex(assumedIndex))
-end
-
--- Build string for this CP, but only for certain tree
--- Called when loading or saving a preset
-local function GenerateTree(cp, tree, slotSetId)
-    local result = "|cBBBBBB"
-    local col1 = {}
-    local col2 = {}
-    local numLines = 0
-
-    local disciplineIndex = TREE_TO_DISCIPLINE[tree]
-    for skillIndex = 1, GetNumChampionDisciplineSkills(disciplineIndex) do
-        local skillId = GetChampionSkillId(disciplineIndex, skillIndex)
-        local points = cp[disciplineIndex][skillId]
-        if (points ~= 0) then
-            local line = zo_strformat("\n<<C:1>>:  <<2>>",
-                GetChampionSkillName(skillId),
-                points)
-            result = result .. line
-            numLines = numLines + 1
-            table.insert(col1, zo_strformat("<<C:1>>", GetChampionSkillName(skillId)))
-            table.insert(col2, zo_strformat("<<1>>", points))
-        end
-    end
-
-    return result .. "|r", numLines, col1, col2, GenerateTreeSlottables(cp, tree, slotSetId)
-end
-
-
----------------------------------------------------------------------
 -- Apply
 ---------------------------------------------------------------------
 -- Apply the slottables
@@ -428,7 +258,7 @@ function DynamicCP:OnApplyClicked(button)
     -- Slottables
     ApplySlottables(tree)
 
-    local diffText, numChanges, col1, col2, slottablesText = GenerateDiff(DynamicCP.GetCommittedCP(), cp)
+    local diffText, numChanges, col1, col2, slottablesText = PSB.GenerateDiff(DynamicCP.GetCommittedCP(), cp)
     ShowMessage(tree, "|c00FF00Preset loaded!\nPress \"Confirm\" to commit.|r", diffText, {0, 1, 0, 1}, numChanges, col1, col2, slottablesText)
     -- Unhide confirm button and also update the cost
     GetSubControl("InnerConfirmButton"):SetHidden(false)
@@ -504,7 +334,7 @@ local function SavePreset(tree, oldName, presetName, newCP, message)
     DynamicCP.dbg("|c00FF00Saved preset \"" .. presetName .. "\"|r")
 
     message = message or ("|c00FF00Done! Saved preset \"" .. presetName .. "\"|r")
-    local treeText, numChanges, col1, col2, slottablesText = GenerateTree(newCP, tree)
+    local treeText, numChanges, col1, col2, slottablesText = PSB.GenerateTree(newCP, tree)
     ShowMessage(tree, message, treeText, {0, 1, 0, 1}, numChanges, col1, col2, slottablesText)
 end
 
@@ -564,7 +394,7 @@ function DynamicCP:OnSaveClicked(button, tree)
         DynamicCP.ShowConfirmationDialog(
             "OverwriteConfirmation",
             "Overwrite Preset",
-            "Overwrite the \"" .. newName .. "\" preset?\n" .. GenerateDiff(DynamicCP.savedOptions.cp[tree][newName], currentCP),
+            "Overwrite the \"" .. newName .. "\" preset?\n" .. PSB.GenerateDiff(DynamicCP.savedOptions.cp[tree][newName], currentCP),
             OverwritePreset)
 
     else
@@ -740,10 +570,10 @@ DynamicCP.TogglePresetsWindow = TogglePresetsWindow
 ---------------------------------------------------------------------
 local function ShowCPPointsOrDiff(tree, createNew, createNewText, slotSetId, existingLoadText, afterCP)
     if (createNew) then
-        local diffText, numChanges, col1, col2, slottablesText = GenerateTree(DynamicCP.GetCommittedCP(), tree, slotSetId)
+        local diffText, numChanges, col1, col2, slottablesText = PSB.GenerateTree(DynamicCP.GetCommittedCP(), tree, slotSetId)
         ShowMessage(tree, createNewText, diffText, {1, 1, 1, 1}, numChanges, col1, col2, slottablesText)
     else
-        local diffText, numChanges, col1, col2, slottablesText = GenerateDiff(DynamicCP.GetCommittedCP(), afterCP)
+        local diffText, numChanges, col1, col2, slottablesText = PSB.GenerateDiff(DynamicCP.GetCommittedCP(), afterCP)
         ShowMessage(tree, existingLoadText, diffText, {1, 1, 1, 1}, numChanges, col1, col2, slottablesText)
     end
 end
