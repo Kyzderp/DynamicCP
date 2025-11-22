@@ -174,7 +174,8 @@ local function InitTree(control, tree)
 
     -- Stars
     local color = TEXT_COLORS[tree]
-    local starNameLength = width / 2 - 20 - (DynamicCP.savedOptions.showPulldownPoints and 20 or 0)
+    local starNameLength = width - 20 - (DynamicCP.savedOptions.showPulldownPoints and 20 or 0)
+    -- local starNameLength = width / 2 - 20 - (DynamicCP.savedOptions.showPulldownPoints and 20 or 0)
 
     local star1 = CreateControlFromVirtual("$(parent)Star1", control, "DynamicCPPulldownStar", "")
     star1:SetAnchor(TOPLEFT, control, TOPLEFT)
@@ -185,11 +186,11 @@ local function InitTree(control, tree)
     star2.SetColors(color)
     star2:GetNamedChild("Name"):SetWidth(starNameLength)
     local star3 = CreateControlFromVirtual("$(parent)Star3", control, "DynamicCPPulldownStar", "")
-    star3:SetAnchor(LEFT, star1, RIGHT)
+    star3:SetAnchor(TOPLEFT, star2, BOTTOMLEFT)
     star3.SetColors(color)
     star3:GetNamedChild("Name"):SetWidth(starNameLength)
     local star4 = CreateControlFromVirtual("$(parent)Star4", control, "DynamicCPPulldownStar", "")
-    star4:SetAnchor(LEFT, star2, RIGHT)
+    star4:SetAnchor(TOPLEFT, star3, BOTTOMLEFT)
     star4.SetColors(color)
     star4:GetNamedChild("Name"):SetWidth(starNameLength)
 end
@@ -203,9 +204,6 @@ local function ApplyPulldownFonts()
     for i = 1, 12 do
         GetStarControlFromIndex(i):GetNamedChild("Name"):SetFont(styles.smallFont)
     end
-
-    -- Hint
-    DynamicCPPulldownHint:SetFont(styles.gameFont)
 end
 DynamicCP.ApplyPulldownFonts = ApplyPulldownFonts
 
