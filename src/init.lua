@@ -2,6 +2,7 @@ DynamicCP = {
     name = "DynamicCPLite",
     version = "0.0.0",
     SmartPresets = {},
+    PointsStringBuilder = {},
 }
 
 local defaultOptions = {
