@@ -1,3 +1,20 @@
+local selectedGreen, selectedBlue, selectedRed
+local smartPresetChoices = {Green = {}, Blue = {}, Red = {}} -- displayed name
+local smartPresetValues = {Green = {}, Blue = {}, Red = {}} -- ID
+
+local function RefreshSmartPresets(tree)
+    ZO_ClearTable(smartPresetChoices[tree])
+    ZO_ClearTable(smartPresetValues[tree])
+
+    table.insert(smartPresetChoices[tree], "-- None --")
+    table.insert(smartPresetValues[tree], "NONE")
+
+    for id, preset in pairs(DynamicCP.SMART_PRESETS[tree]) do
+        table.insert(smartPresetChoices[tree], preset.name())
+        table.insert(smartPresetValues[tree], id)
+    end
+end
+
 function DynamicCP:CreateSettingsMenu()
     local LAM = LibAddonMenu2
     local panelData = {
@@ -368,8 +385,71 @@ function DynamicCP:CreateSettingsMenu()
             controls = {
                 {
                     type = "description",
-                    text = "Version 3.0 adds auto presets! These are the brighter green options at the top of the preset lists, with icons showing what CP they will prioritize. They will use as many points as you have available, until stars useful for your detected build are all allocated. The current presets are:\n\n|c7f9c4f- Auto Combat: prioritizes stars useful in dungeons or trials\n- Auto Craft/Loot: prioritizes crafting and overland looting\n- Auto Thieving: prioritizes nefarious activities\n|c5096b3- Auto PvE: allocates based on your selected LFG role, and if you are a DPS, also allocates based on your max resource and whether you are a heavy attack build (Sergeant's Mail), have Fatecarver or jabs or Blighted Blastbones unlocked (for AoE) or not (single target)\n|cb56238- Auto PvE: allocates based on your selected LFG role, and if you are a DPS, also allocates based on whether you have Pragmatic Fatecarver unlocked (Bastion) or not (Rejuvenation)|r\n\nThe green tree presets above also try to skip Inspiration Boost if your crafting skills are maxed, unless you don't have enough points to reach stars without Inspiration Boost.",
+                    text = "Automatic presets will use as many points as you have available, until stars useful for your detected build are all allocated. The icons (e.g. tank, healer, dps, fatecarver, etc.) reflect the \"build\" that will be prioritized. The current presets are:\n\n|c7f9c4f- Auto Combat: prioritizes stars useful in dungeons or trials\n- Auto Craft/Loot: prioritizes crafting and overland looting\n- Auto Thieving: prioritizes nefarious activities\n|c5096b3- Auto PvE: allocates based on your selected LFG role, and if you are a DPS, also allocates based on your max resource and whether you are a heavy attack build (Sergeant's Mail), have Fatecarver or jabs or Blighted Blastbones unlocked (for AoE) or not (single target)\n|cb56238- Auto PvE: allocates based on your selected LFG role, and if you are a DPS, also allocates based on whether you have Pragmatic Fatecarver unlocked (Bastion) or not (Rejuvenation)|r\n\nThe green tree presets above also try to skip Inspiration Boost if your crafting skills are maxed, unless you don't have enough points to reach stars without Inspiration Boost.",
                     width = "full",
+                },
+                {
+                    type = "dropdown",
+                    name = "|c7f9c4fCraft|r",
+                    tooltip = function() return "yeet" end, -- TODO
+                    choices = {},
+                    choicesValues = {},
+                    getFunc = function()
+                        RefreshSmartPresets("Green")
+                        DCP_SmartGreenDropdown:UpdateChoices(smartPresetChoices.Green, smartPresetValues.Green)
+                        return selectedGreen
+                    end,
+                    setFunc = function(value)
+                        selectedGreen = value
+                    end,
+                    width = "full",
+                    reference = "DCP_SmartGreenDropdown",
+                },
+                {
+                    type = "dropdown",
+                    name = "|c5096b3Warfare|r",
+                    tooltip = function() return "yeet" end, -- TODO
+                    choices = {},
+                    choicesValues = {},
+                    getFunc = function()
+                        RefreshSmartPresets("Blue")
+                        DCP_SmartBlueDropdown:UpdateChoices(smartPresetChoices.Blue, smartPresetValues.Blue)
+                        return selectedBlue
+                    end,
+                    setFunc = function(value)
+                        selectedBlue = value
+                    end,
+                    width = "full",
+                    reference = "DCP_SmartBlueDropdown",
+                },
+                {
+                    type = "dropdown",
+                    name = "|cb56238Fitness|r",
+                    tooltip = function() return "yeet" end, -- TODO
+                    choices = {},
+                    choicesValues = {},
+                    getFunc = function()
+                        RefreshSmartPresets("Red")
+                        DCP_SmartRedDropdown:UpdateChoices(smartPresetChoices.Red, smartPresetValues.Red)
+                        return selectedRed
+                    end,
+                    setFunc = function(value)
+                        selectedRed = value
+                    end,
+                    width = "full",
+                    reference = "DCP_SmartRedDropdown",
+                },
+                {
+                    type = "button",
+                    name = "Confirm", -- TODO: cost
+                    tooltip = "Confirm applying the above champion point presets",
+                    func = function()
+                        -- TODO: apply + confirm
+                    end,
+                    width = "full",
+                    disabled = function()
+                        -- TODO
+                    end,
                 },
             },
         },

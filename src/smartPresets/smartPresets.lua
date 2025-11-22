@@ -194,6 +194,7 @@ local ROLE_ICONS = {
     [LFG_ROLE_DPS] = "|t100%:100%:esoui/art/lfg/lfg_dps_down_no_glow_64.dds|t",
 }
 
+-- "apply" is a misnomer; it just returns the CP table with the desired points
 DynamicCP.SMART_PRESETS = {
     Green = {
         ["DEFAULT_SMART_GREEN_COMBAT"] = {
