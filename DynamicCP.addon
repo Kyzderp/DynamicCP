@@ -22,6 +22,7 @@ src/init.lua
 
 src/common/Style.lua
 src/common/Dialog.lua
+src/common/PointsStringBuilder.lua
 
 src/cooldown.lua
 src/screenUpdates.lua
