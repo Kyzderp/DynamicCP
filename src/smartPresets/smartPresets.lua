@@ -337,13 +337,6 @@ local function ApplyPreset(tree, presetName)
 
     -- Slottables
     ApplySlottables(tree, presetName)
-
-    -- TODO
-    -- if (DynamicCP.NeedsRespec()) then
-    --     GetSubControl("InnerConfirmButton"):SetText("Confirm (" .. tostring(GetChampionRespecCost()) .. " |t18:18:esoui/art/currency/currency_gold.dds|t)")
-    -- else
-    --     GetSubControl("InnerConfirmButton"):SetText("Confirm")
-    -- end
 end
 
 local function RefreshSmartPresets(green, blue, red)
