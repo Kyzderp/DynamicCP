@@ -455,6 +455,19 @@ function DynamicCP:CreateSettingsMenu()
                     setFunc = function(value)
                         DynamicCP.savedOptions.showPulldownPoints = value
                         DynamicCP.OnSlotsChanged()
+                        DynamicCP.ReanchorPulldown()
+                    end,
+                    width = "full",
+                },
+                {
+                    type = "checkbox",
+                    name = "Show slottable sets on pulldown",
+                    tooltip = "Show dropdown menus for creating slottable sets in the pulldown beneath the slottables hotbar",
+                    default = true,
+                    getFunc = function() return DynamicCP.savedOptions.showPulldownSlottableSets end,
+                    setFunc = function(value)
+                        DynamicCP.savedOptions.showPulldownSlottableSets = value
+                        DynamicCP.ReanchorPulldown()
                     end,
                     width = "full",
                 },

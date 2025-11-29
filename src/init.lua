@@ -35,6 +35,7 @@ local defaultOptions = {
     doubleClick = true,
     showPresetsWithCP = true,
     showPulldownPoints = false,
+    showPulldownSlottableSets = true,
     showPointGainedMessage = true,
     presetsBackdropAlpha = 0.5,
     presetsShowClassButtons = true, -- Not settable by user - side presets don't have class buttons

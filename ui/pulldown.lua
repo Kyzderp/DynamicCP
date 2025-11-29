@@ -437,24 +437,18 @@ local function InitTree(control, tree)
 
     -- Stars
     local color = TEXT_COLORS[tree]
-    local starNameLength = width / 2 - 20 - (DynamicCP.savedOptions.showPulldownPoints and 20 or 0)
 
+    -- Widths are set on reanchor, star 3 & 4 anchors also
     local star1 = CreateControlFromVirtual("$(parent)Star1", control, "DynamicCPPulldownStar", "")
     star1:SetAnchor(TOPLEFT, control, TOPLEFT)
     star1.SetColors(color)
-    star1:GetNamedChild("Name"):SetWidth(starNameLength)
     local star2 = CreateControlFromVirtual("$(parent)Star2", control, "DynamicCPPulldownStar", "")
     star2:SetAnchor(TOPLEFT, star1, BOTTOMLEFT)
     star2.SetColors(color)
-    star2:GetNamedChild("Name"):SetWidth(starNameLength)
     local star3 = CreateControlFromVirtual("$(parent)Star3", control, "DynamicCPPulldownStar", "")
-    star3:SetAnchor(LEFT, star1, RIGHT)
     star3.SetColors(color)
-    star3:GetNamedChild("Name"):SetWidth(starNameLength)
     local star4 = CreateControlFromVirtual("$(parent)Star4", control, "DynamicCPPulldownStar", "")
-    star4:SetAnchor(LEFT, star2, RIGHT)
     star4.SetColors(color)
-    star4:GetNamedChild("Name"):SetWidth(starNameLength)
 
     -- Slot set controls
     local setControls = CreateControlFromVirtual("$(parent)SlotSetControls", control, "DynamicCPPulldownSetControls", "")
@@ -487,12 +481,67 @@ local function ApplyPulldownFonts()
 end
 DynamicCP.ApplyPulldownFonts = ApplyPulldownFonts
 
+local function ResetSlots()
+    InitSlotSetDropdown("Green")
+    InitSlotSetDropdown("Blue")
+    InitSlotSetDropdown("Red")
+    DynamicCPPulldownHint:SetHidden(false)
+end
+
 local function ReanchorPulldown()
     if (not DynamicCP.pulldownInitialized) then return end
 
     DynamicCPPulldownGreen:SetAnchor(TOP, GuiRoot, TOPLEFT, GetMiddlePoint("Green") / 2, ZO_ChampionPerksActionBar:GetBottom())
     DynamicCPPulldownBlue:SetAnchor(TOP, GuiRoot, TOPLEFT, GetMiddlePoint("Blue") / 2, ZO_ChampionPerksActionBar:GetBottom())
     DynamicCPPulldownRed:SetAnchor(TOP, GuiRoot, TOPLEFT, GetMiddlePoint("Red") / 2, ZO_ChampionPerksActionBar:GetBottom())
+
+    -- Slottable sets enabled/disabled below
+    local useSlotSets = DynamicCP.savedOptions.showPulldownSlottableSets
+    DynamicCPPulldown:SetHeight(useSlotSets and 104 or 92)
+
+    ResetSlots()
+    if (not useSlotSets) then
+        DynamicCPPulldownHint:SetHidden(true)
+    end
+    DynamicCPPulldownGreenSlotSetControls:SetHidden(not useSlotSets)
+    DynamicCPPulldownBlueSlotSetControls:SetHidden(not useSlotSets)
+    DynamicCPPulldownRedSlotSetControls:SetHidden(not useSlotSets)
+
+    local width = ZO_ChampionPerksActionBarSlot4:GetRight() - ZO_ChampionPerksActionBarSlot1:GetLeft()
+    local starNameLength = (useSlotSets and width / 2 or width) - (DynamicCP.savedOptions.showPulldownPoints and 20 or 0)
+
+    for _, tree in pairs(INDEX_TO_TREE) do
+        DynamicCPPulldown:GetNamedChild(tree):SetWidth(width + 20) -- TODO
+
+        local star1 = DynamicCPPulldown:GetNamedChild(tree .. "Star1")
+        local star2 = DynamicCPPulldown:GetNamedChild(tree .. "Star2")
+        local star3 = DynamicCPPulldown:GetNamedChild(tree .. "Star3")
+        local star4 = DynamicCPPulldown:GetNamedChild(tree .. "Star4")
+
+        star1:GetNamedChild("Name"):SetWidth(starNameLength)
+        star2:GetNamedChild("Name"):SetWidth(starNameLength)
+        star3:GetNamedChild("Name"):SetWidth(starNameLength)
+        star4:GetNamedChild("Name"):SetWidth(starNameLength)
+
+        star3:ClearAnchors()
+        star4:ClearAnchors()
+
+        if (useSlotSets) then
+            star1:SetWidth((width + 20) / 2)
+            star2:SetWidth((width + 20) / 2)
+            star3:SetWidth((width + 20) / 2)
+            star4:SetWidth((width + 20) / 2)
+            star3:SetAnchor(LEFT, star1, RIGHT)
+            star4:SetAnchor(LEFT, star2, RIGHT)
+        else
+            star1:SetWidth(width + 20)
+            star2:SetWidth(width + 20)
+            star3:SetWidth(width + 20)
+            star4:SetWidth(width + 20)
+            star3:SetAnchor(TOPLEFT, star2, BOTTOMLEFT)
+            star4:SetAnchor(TOPLEFT, star3, BOTTOMLEFT)
+        end
+    end
 end
 DynamicCP.ReanchorPulldown = ReanchorPulldown
 
@@ -501,14 +550,10 @@ function DynamicCP.InitPulldown()
     InitTree(DynamicCPPulldownBlue, "Blue")
     InitTree(DynamicCPPulldownRed, "Red")
 
-    ZO_PreHook(CHAMPION_PERKS:GetChampionBar(), "ResetAllSlots", function()
-        InitSlotSetDropdown("Green")
-        InitSlotSetDropdown("Blue")
-        InitSlotSetDropdown("Red")
-        DynamicCPPulldownHint:SetHidden(false)
-    end)
+    ZO_PreHook(CHAMPION_PERKS:GetChampionBar(), "ResetAllSlots", ResetSlots)
 
     DynamicCP.pulldownInitialized = true
 
     ApplyPulldownFonts()
+    ReanchorPulldown()
 end
