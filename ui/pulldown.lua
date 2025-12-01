@@ -485,7 +485,10 @@ local function ResetSlots()
     InitSlotSetDropdown("Green")
     InitSlotSetDropdown("Blue")
     InitSlotSetDropdown("Red")
-    DynamicCPPulldownHint:SetHidden(false)
+
+    if (DynamicCP.savedOptions.showPulldownSlottableSets) then
+        DynamicCPPulldownHint:SetHidden(false)
+    end
 end
 
 local function ReanchorPulldown()
