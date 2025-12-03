@@ -38,7 +38,7 @@
         <Control name="DynamicCPPulldownStar" virtual="true" tier="MEDIUM">
             <OnInitialized>
                 self:SetHeight(20)
-                self:SetWidth(self:GetParent():GetWidth() / 2)
+                self:SetWidth(self:GetParent():GetWidth())
                 self.SetColors = function(color)
                     self:GetNamedChild("Name"):SetColor(unpack(color))
                     self:GetNamedChild("Points"):SetColor(unpack(color))
