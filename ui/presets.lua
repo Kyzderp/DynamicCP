@@ -177,8 +177,8 @@ local function ApplySlottables(tree)
         -- TODO
         slottablesResult = DynamicCP.SMART_PRESETS[tree][presetName].applyFunc().slottables
     else
-        -- From user preset
-        slottablesResult = GetSlottablesFromPreset(DynamicCP.savedOptions.cp[tree][presetName], tree)
+        -- From user preset or automatic
+        slottablesResult = DynamicCP.GetSlottablesDynamically(DynamicCP.savedOptions.cp[tree][presetName], tree)
     end
 
 

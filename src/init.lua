@@ -1,6 +1,6 @@
 DynamicCP = {
     name = "DynamicCP",
-    version = "3.2.1",
+    version = "3.2.2",
     SmartPresets = {},
     PointsStringBuilder = {},
 }

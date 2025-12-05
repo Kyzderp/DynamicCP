@@ -24,6 +24,7 @@ local function GetSlottablesFromSlotSet(tree, slotSetId)
     return DynamicCP.savedOptions.slotGroups[tree][slotSetId]
 end
 
+-- TODO: this prob shouldn't be here, used in presets.lua too
 -- slotSetId: optional; or it's obtained from cp
 local function GetSlottablesDynamically(cp, tree, slotSetId)
     -- Return the slottables if this is a smart preset
@@ -79,6 +80,7 @@ local function GetSlottablesDynamically(cp, tree, slotSetId)
     end
     return slottablesResult
 end
+DynamicCP.GetSlottablesDynamically = GetSlottablesDynamically
 
 -- Build string for the slottables in this CP
 local function GenerateTreeSlottables(cp, tree, slotSetId)
