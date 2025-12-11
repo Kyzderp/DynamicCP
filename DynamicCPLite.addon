@@ -16,7 +16,7 @@
 ## PCDependsOn: LibDialog>=127
 ## OptionalDependsOn: LibFilteredChatPanel
 
-## SavedVariables: DynamicCPSavedVariables
+## SavedVariables: DynamicCPLiteSavedVariables
 
 src/init.lua
 

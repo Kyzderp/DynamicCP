@@ -29,7 +29,6 @@ local defaultOptions = {
     clusterLabelSize = 13,
     showTotalsLabel = true,
 
-    quickstarsFirstTime = true,
     quickstarsX = GuiRoot:GetWidth() / 4, -- Anchor TOPLEFT
     quickstarsY = GuiRoot:GetHeight() / 4,
     quickstarsShowGreen = true, -- quickstars 2.0
@@ -162,7 +161,7 @@ end
 ---------------------------------------------------------------------
 -- Initialize
 local function Initialize()
-    DynamicCP.savedOptions = ZO_SavedVars:NewAccountWide("DynamicCPSavedVariables", 1, "Options", defaultOptions)
+    DynamicCP.savedOptions = ZO_SavedVars:NewAccountWide("DynamicCPLiteSavedVariables", 1, "Options", defaultOptions)
 
     -- Debug chat panel
     if (LibFilteredChatPanel) then
