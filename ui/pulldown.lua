@@ -203,6 +203,7 @@ local function ApplyPulldownFonts()
     -- Star names
     for i = 1, 12 do
         GetStarControlFromIndex(i):GetNamedChild("Name"):SetFont(styles.smallFont)
+        GetStarControlFromIndex(i):GetNamedChild("Points"):SetFont(styles.smallFont)
     end
 end
 DynamicCP.ApplyPulldownFonts = ApplyPulldownFonts
