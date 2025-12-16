@@ -5,11 +5,11 @@
 ; https://account.elderscrollsonline.com/add-on-terms
 
 ## Title: Dynamic CP Lite
-## Champion Point automatic presets, quality of life changes, and more!
+## Description: Champion Point automatic presets, quality of life changes, and more!
 ## Author: Kyzeragon
-## Contributors (from original Dynamic CP): Raijindono (UX), camrenis (testing & feedback), Plonkerr (testing & feedback)
-## Version: 0.0.0
-## AddOnVersion: 0
+## Contributors: from original Dynamic CP: Raijindono (UX), camrenis (testing & feedback), Plonkerr (testing & feedback)
+## Version: 1.0.0-beta1
+## AddOnVersion: 90
 ## APIVersion: 101048
 
 ## DependsOn: LibAddonMenu-2.0>=41
@@ -36,7 +36,6 @@ src/smartPresets/presets/greenLootGoblin.lua
 src/smartPresets/presets/greenThieving.lua
 src/smartPresets/presets/redAutoPve.lua
 src/smartPresets/smartPresets.lua
-
 
 PC/Settings.lua
 
