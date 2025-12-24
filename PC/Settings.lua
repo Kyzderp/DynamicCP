@@ -484,19 +484,19 @@ function DynamicCP:CreateSettingsMenu()
                         if (selectedGreen and selectedGreen ~= "NONE") then
                             local cp = DynamicCP.SMART_PRESETS.Green[selectedGreen].applyFunc()
                             local diffText, numChanges, col1, col2, slottablesText = DynamicCP.PointsStringBuilder.GenerateDiff(DynamicCP.GetCommittedCP(), cp)
-                            result = result .. "Craft " .. diffText .. "\n"
+                            result = result .. "|ca5d752Craft|r " .. diffText .. "\n" .. table.concat(slottablesText, "\n") .. "\n\n"
                         end
 
                         if (selectedBlue and selectedBlue ~= "NONE") then
                             local cp = DynamicCP.SMART_PRESETS.Blue[selectedBlue].applyFunc()
                             local diffText, numChanges, col1, col2, slottablesText = DynamicCP.PointsStringBuilder.GenerateDiff(DynamicCP.GetCommittedCP(), cp)
-                            result = result .. "Warfare " .. diffText .. "\n"
+                            result = result .. "|c59bae7Warfare|r " .. diffText .. "\n" .. table.concat(slottablesText, "\n") .. "\n\n"
                         end
 
                         if (selectedRed and selectedRed ~= "NONE") then
                             local cp = DynamicCP.SMART_PRESETS.Red[selectedRed].applyFunc()
                             local diffText, numChanges, col1, col2, slottablesText = DynamicCP.PointsStringBuilder.GenerateDiff(DynamicCP.GetCommittedCP(), cp)
-                            result = result .. "Fitness " .. diffText .. "\n"
+                            result = result .. "|ce46b2eFitness|r " .. diffText .. "\n" .. table.concat(slottablesText, "\n") .. "\n\n"
                         end
 
                         return result
