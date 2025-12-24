@@ -8,8 +8,8 @@
 ## Description: Champion Point automatic presets, quality of life changes, and more!
 ## Author: Kyzeragon
 ## Contributors: from original Dynamic CP: Raijindono (UX), camrenis (testing & feedback), Plonkerr (testing & feedback)
-## Version: 1.0.0
-## AddOnVersion: 100
+## Version: 1.0.1
+## AddOnVersion: 10001
 ## APIVersion: 101048
 
 ## DependsOn: LibAddonMenu-2.0>=41
