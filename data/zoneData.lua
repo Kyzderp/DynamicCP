@@ -58,6 +58,9 @@ DynamicCP.DUNGEON_ZONEIDS = {
     ["1497"] = true,  -- Lep Seclusa
     ["1551"] = true,  -- Naj-Caldeesh
     ["1552"] = true,  -- Black Gem Foundry
+    ["1562"] = true,  -- Gossamer Crypt (Night Market)
+    ["1563"] = true,  -- Mournful Catacomb (Night Market)
+    ["1564"] = true,  -- Timeless Wallow (Night Market)
 }
 
 -- Trial zoneIds
@@ -76,6 +79,7 @@ DynamicCP.TRIAL_ZONEIDS = {
     ["1427"] = true,  -- Sanity's Edge
     ["1478"] = true,  -- Lucent Citadel
     ["1548"] = true,  -- Ossein Cage
+    ["1565"] = true,  -- Opulent Ordeal (Night Market)
 }
 
 -- Group arena zoneIds
