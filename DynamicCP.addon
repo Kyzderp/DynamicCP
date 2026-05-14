@@ -32,6 +32,8 @@ src/changelog.lua
 src/points.lua
 src/slottables.lua
 
+src/API.lua
+
 src/smartPresets/presets/blueAutoPve.lua
 src/smartPresets/presets/greenCombat.lua
 src/smartPresets/presets/greenLootGoblin.lua
