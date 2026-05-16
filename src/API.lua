@@ -10,6 +10,12 @@ local OFFSETS = { -- For slotIndex
     [DCP.RED] = 8,
 }
 
+local COLORS = {
+    [DCP.GREEN] = "a5d752",
+    [DCP.BLUE] = "59bae7",
+    [DCP.RED] = "e46b2e",
+}
+
 local function IsTreeValid(tree)
     if (not OFFSETS[tree]) then return false end
     return true
@@ -63,16 +69,16 @@ end
 ---------------------------------------------------------------------
 -- Sends a champion purchase request with all the slottable sets you have previously queued
 -- @param uniqueName - a unique name, e.g. your addon name
-function DCP.CommitSlottableSets(uniqueName)
+-- @param suppressMessages - whether to not print messages of what slottables were slotted
+function DCP.CommitSlottableSets(uniqueName, suppressMessages)
     local sets = pendingSets[uniqueName]
-    if (ZO_IsTableEmpty(sets)) then
-        DCP.dbg("No pending slottable sets for " .. uniqueName)
-        return
-    end
+    if (ZO_IsTableEmpty(sets)) then return end
 
-    PrepareChampionPurchaseRequest(false)
+    -- Do a first pass to collect wanted skillIds because we don't want to prepare purchase request if unneeded
+    local desiredSlottables = {} -- {[slotIndex] = skillId}
+    local valid = {}
+    local unavailable = {}
 
-    -- TODO: will it complain if there are no changes?
     for tree, slotSetId in pairs(sets) do
         if (slotSetId ~= -1) then
             local slotSet = DCP.savedOptions.slotGroups[tree][slotSetId]
@@ -80,15 +86,39 @@ function DCP.CommitSlottableSets(uniqueName)
                 for i = 1, 4 do
                     local skillId = slotSet[i]
                     if (skillId) then
-                        AddHotbarSlotToChampionPurchaseRequest(OFFSETS[tree] + i, skillId)
+                        if (WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))) then
+                            desiredSlottables[OFFSETS[tree] + i] = skillId
+                            table.insert(valid, zo_strformat("|c<<2>><<C:1>>|r", GetChampionSkillName(skillId), COLORS[tree]))
+                        else
+                            table.insert(unavailable, zo_strformat("|c<<2>><<C:1>>|r", GetChampionSkillName(skillId), COLORS[tree]))
+                        end
                     end
                 end
             else
-                DCP.msg(string.format("|cFF0000Unable to apply slottable set %s in %s tree; was it deleted?", slotSetId, tree))
+                if (not suppressMessages) then
+                    DCP.msg(string.format("|cFF0000Unable to apply slottable set %s in %s tree; was it deleted?", slotSetId, tree))
+                end
             end
         end
     end
 
+    if (ZO_IsTableEmpty(desiredSlottables)) then return end
+
+    -- Actual purchase request
+    PrepareChampionPurchaseRequest(false)
+    for slotIndex, skillId in pairs(desiredSlottables) do
+        AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
+    end
     SendChampionPurchaseRequest()
     PlaySound(SOUNDS.CHAMPION_POINTS_COMMITTED)
+
+    -- Feedback
+    if (not suppressMessages) then
+        if (#valid > 0) then
+            DCP.msg("Slotting: " .. table.concat(valid, "|cAAAAAA, |r"))
+        end
+        if (#unavailable > 0) then
+            DCP.msg("Unavailable: " .. table.concat(unavailable, "|cAAAAAA, |r"))
+        end
+    end
 end
