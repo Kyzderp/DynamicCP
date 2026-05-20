@@ -77,6 +77,7 @@ function DCP.CommitSlottableSets(uniqueName, suppressMessages)
     -- Do a first pass to collect wanted skillIds because we don't want to prepare purchase request if unneeded
     local desiredSlottables = {} -- {[slotIndex] = skillId}
     local valid = {}
+    local alreadySlotted = {}
     local unavailable = {}
 
     for tree, slotSetId in pairs(sets) do
@@ -86,7 +87,10 @@ function DCP.CommitSlottableSets(uniqueName, suppressMessages)
                 for i = 1, 4 do
                     local skillId = slotSet[i]
                     if (skillId) then
-                        if (WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))) then
+                        if (GetSlotBoundId(OFFSETS[tree] + i, HOTBAR_CATEGORY_CHAMPION) == skillId) then
+                            DCP.dbg(GetChampionSkillName(skillId) .. " already slotted in " .. (OFFSETS[tree] + i))
+                            table.insert(alreadySlotted, zo_strformat("|c<<2>><<C:1>>|r", GetChampionSkillName(skillId), COLORS[tree]))
+                        elseif (WouldChampionSkillNodeBeUnlocked(skillId, GetNumPointsSpentOnChampionSkill(skillId))) then
                             desiredSlottables[OFFSETS[tree] + i] = skillId
                             table.insert(valid, zo_strformat("|c<<2>><<C:1>>|r", GetChampionSkillName(skillId), COLORS[tree]))
                         else
@@ -102,20 +106,23 @@ function DCP.CommitSlottableSets(uniqueName, suppressMessages)
         end
     end
 
-    if (ZO_IsTableEmpty(desiredSlottables)) then return end
-
-    -- Actual purchase request
-    PrepareChampionPurchaseRequest(false)
-    for slotIndex, skillId in pairs(desiredSlottables) do
-        AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
+    -- Actual purchase request if there are things to slot
+    if (next(desiredSlottables)) then
+        PrepareChampionPurchaseRequest(false)
+        for slotIndex, skillId in pairs(desiredSlottables) do
+            AddHotbarSlotToChampionPurchaseRequest(slotIndex, skillId)
+        end
+        SendChampionPurchaseRequest()
+        PlaySound(SOUNDS.CHAMPION_POINTS_COMMITTED)
     end
-    SendChampionPurchaseRequest()
-    PlaySound(SOUNDS.CHAMPION_POINTS_COMMITTED)
 
     -- Feedback
     if (not suppressMessages) then
         if (#valid > 0) then
             DCP.msg("Slotting: " .. table.concat(valid, "|cAAAAAA, |r"))
+        end
+        if (#alreadySlotted > 0) then
+            DCP.msg("Already slotted: " .. table.concat(alreadySlotted, "|cAAAAAA, |r"))
         end
         if (#unavailable > 0) then
             DCP.msg("Unavailable: " .. table.concat(unavailable, "|cAAAAAA, |r"))
