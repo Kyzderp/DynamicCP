@@ -128,4 +128,6 @@ function DCP.CommitSlottableSets(uniqueName, suppressMessages)
             DCP.msg("Unavailable: " .. table.concat(unavailable, "|cAAAAAA, |r"))
         end
     end
+
+    pendingSets[uniqueName] = nil
 end
