@@ -75,6 +75,7 @@ function DCP.CommitSlottableSets(uniqueName, suppressMessages)
     if (ZO_IsTableEmpty(sets)) then return end
 
     -- Do a first pass to collect wanted skillIds because we don't want to prepare purchase request if unneeded
+    local slotSetNames = {}
     local desiredSlottables = {} -- {[slotIndex] = skillId}
     local valid = {}
     local alreadySlotted = {}
@@ -84,6 +85,7 @@ function DCP.CommitSlottableSets(uniqueName, suppressMessages)
         if (slotSetId ~= -1) then
             local slotSet = DCP.savedOptions.slotGroups[tree][slotSetId]
             if (slotSet) then
+                table.insert(slotSetNames, string.format("|c%s%s|r", COLORS[tree], slotSet.name))
                 for i = 1, 4 do
                     local skillId = slotSet[i]
                     if (skillId) then
@@ -118,6 +120,7 @@ function DCP.CommitSlottableSets(uniqueName, suppressMessages)
 
     -- Feedback
     if (not suppressMessages) then
+        DCP.msg("Attempting to apply slottable sets: " .. table.concat(slotSetNames, "|cAAAAAA, |r"))
         if (#valid > 0) then
             DCP.msg("Slotting: " .. table.concat(valid, "|cAAAAAA, |r"))
         end
