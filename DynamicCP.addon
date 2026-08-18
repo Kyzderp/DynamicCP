@@ -35,10 +35,13 @@ src/slottables.lua
 src/API.lua
 
 src/smartPresets/presets/blueAutoPve.lua
+src/smartPresets/presets/blueGeneralPvp.lua
 src/smartPresets/presets/greenCombat.lua
 src/smartPresets/presets/greenLootGoblin.lua
 src/smartPresets/presets/greenThieving.lua
 src/smartPresets/presets/redAutoPve.lua
+src/smartPresets/presets/redSpeed.lua
+src/smartPresets/presets/redGeneralPvp.lua
 src/smartPresets/smartPresets.lua
 
 data/presetData.lua
