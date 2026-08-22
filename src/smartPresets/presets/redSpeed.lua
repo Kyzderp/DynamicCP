@@ -66,9 +66,19 @@ local RED_SPEED = {
         {
             id = 53, -- Mystic Tenacity
         },
-        ---------------------
-        -- most passives done
-        ---------------------
+        {
+            id = 45, -- Piercing Gaze (open nodes)
+            stage = 1,
+        },
+        {
+            id = 58, -- Tempered Soul
+        },
+        {
+            id = 45, -- Piercing Gaze (maxed)
+        },
+        ----------------
+        -- passives done
+        ----------------
         {
             id = 52, -- Slippery
         },
@@ -83,19 +93,6 @@ local RED_SPEED = {
         },
         {
             id = 48, -- Bloody Renewal
-        },
-        ------
-        -- rez
-        ------
-        {
-            id = 45, -- Piercing Gaze (open nodes)
-            stage = 1,
-        },
-        {
-            id = 58, -- Tempered Soul
-        },
-        {
-            id = 45, -- Piercing Gaze (maxed)
         },
         {
             id = 56, -- Spirit Mastery
